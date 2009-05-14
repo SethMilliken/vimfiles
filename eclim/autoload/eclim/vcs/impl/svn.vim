@@ -1,24 +1,24 @@
 " Author:  Eric Van Dewoestine
-" Version: $Revision$
 "
 " Description: {{{
 "   see http://eclim.sourceforge.net/vim/common/vcs.html
 "
 " License:
 "
-" Copyright (c) 2005 - 2008
+" Copyright (C) 2005 - 2009  Eric Van Dewoestine
 "
-" Licensed under the Apache License, Version 2.0 (the "License");
-" you may not use this file except in compliance with the License.
-" You may obtain a copy of the License at
+" This program is free software: you can redistribute it and/or modify
+" it under the terms of the GNU General Public License as published by
+" the Free Software Foundation, either version 3 of the License, or
+" (at your option) any later version.
 "
-"      http://www.apache.org/licenses/LICENSE-2.0
+" This program is distributed in the hope that it will be useful,
+" but WITHOUT ANY WARRANTY; without even the implied warranty of
+" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+" GNU General Public License for more details.
 "
-" Unless required by applicable law or agreed to in writing, software
-" distributed under the License is distributed on an "AS IS" BASIS,
-" WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-" See the License for the specific language governing permissions and
-" limitations under the License.
+" You should have received a copy of the GNU General Public License
+" along with this program.  If not, see <http://www.gnu.org/licenses/>.
 "
 " }}}
 
@@ -28,8 +28,12 @@ else
   finish
 endif
 
-" GetAnnotations (revision) {{{
-function! eclim#vcs#impl#svn#GetAnnotations (revision)
+" Script Variables {{{
+  let s:trackerIdPattern = join(eclim#vcs#command#EclimVcsTrackerIdPatterns, '\|')
+" }}}
+
+" GetAnnotations(revision) {{{
+function! eclim#vcs#impl#svn#GetAnnotations(revision)
   let cmd = 'annotate -v'
   if a:revision != ''
     let cmd .= ' -r ' . a:revision
@@ -56,7 +60,7 @@ function! eclim#vcs#impl#svn#GetAnnotations (revision)
 endfunction " }}}
 
 " GetRelativePath(dir, file) {{{
-function eclim#vcs#impl#svn#GetRelativePath (dir, file)
+function eclim#vcs#impl#svn#GetRelativePath(dir, file)
   let info = eclim#vcs#impl#svn#Svn('info')
   if type(info) == 0
     return
@@ -79,7 +83,7 @@ function eclim#vcs#impl#svn#GetRelativePath (dir, file)
 endfunction " }}}
 
 " GetPreviousRevision([file, revision]) {{{
-function eclim#vcs#impl#svn#GetPreviousRevision (...)
+function eclim#vcs#impl#svn#GetPreviousRevision(...)
   let path = exists('b:vcs_props') && has_key(b:vcs_props, 'svn_root_url') ?
     \ (b:vcs_props.svn_root_url . a:000[0]) : expand('%:t')
 
@@ -100,7 +104,7 @@ function eclim#vcs#impl#svn#GetPreviousRevision (...)
 endfunction " }}}
 
 " GetRevision(file) {{{
-function eclim#vcs#impl#svn#GetRevision (file)
+function eclim#vcs#impl#svn#GetRevision(file)
   let path = exists('b:vcs_props') ? b:vcs_props.svn_root_url . '/' . a:file : a:file
   let info = eclim#vcs#impl#svn#Svn('info "' . path . '"')
   if type(info) == 0
@@ -115,7 +119,7 @@ function eclim#vcs#impl#svn#GetRevision (file)
 endfunction " }}}
 
 " GetRevisions() {{{
-function eclim#vcs#impl#svn#GetRevisions ()
+function eclim#vcs#impl#svn#GetRevisions()
   let log = eclim#vcs#impl#svn#Svn('log -q "' . expand('%:t') . '"')
   if type(log) == 0
     return
@@ -127,7 +131,7 @@ function eclim#vcs#impl#svn#GetRevisions ()
 endfunction " }}}
 
 " GetRoot() {{{
-function eclim#vcs#impl#svn#GetRoot ()
+function eclim#vcs#impl#svn#GetRoot()
   let info = eclim#vcs#impl#svn#Svn('info')
   if type(info) == 0
     return
@@ -147,15 +151,27 @@ function eclim#vcs#impl#svn#GetRoot ()
   return dir
 endfunction " }}}
 
-" GetViewvcPath([file]) {{{
-function eclim#vcs#impl#svn#GetViewvcPath (...)
-  let file = len(a:000) > 0 ? a:000[0] : expand('%')
-  let url_root = s:GetUrlAndRoot(file)
-  return substitute(url_root.url, url_root.root, '', '')
+" GetEditorFile() {{{
+function eclim#vcs#impl#svn#GetEditorFile()
+  let line = getline('.')
+  if line =~ '^M\s\+.*'
+    return substitute(line, '^M\s\+\(.*\)\s*', '\1', '')
+  endif
+  return ''
+endfunction " }}}
+
+" GetVcsWebPath() {{{
+function eclim#vcs#impl#svn#GetVcsWebPath()
+  let url_root = s:GetUrlAndRoot(expand('%'))
+  let path = substitute(url_root.url, url_root.root, '', '')
+  if path =~ '^/'
+    let path = path[1:]
+  endif
+  return path
 endfunction " }}}
 
 " ChangeSet(revision) {{{
-function eclim#vcs#impl#svn#ChangeSet (revision)
+function eclim#vcs#impl#svn#ChangeSet(revision)
   if exists('b:vcs_props') && has_key(b:vcs_props, 'svn_root_url')
     let url_root = {'root': b:vcs_props.svn_root_url}
     if isdirectory(b:vcs_props.path) || filereadable(b:vcs_props.path)
@@ -191,7 +207,7 @@ function eclim#vcs#impl#svn#ChangeSet (revision)
 endfunction " }}}
 
 " Info() {{{
-function eclim#vcs#impl#svn#Info ()
+function eclim#vcs#impl#svn#Info()
   let result = eclim#vcs#impl#svn#Svn('info "' . expand('%:t') . '"')
   if type(result) == 0
     return
@@ -202,7 +218,7 @@ function eclim#vcs#impl#svn#Info ()
 endfunction " }}}
 
 " ListDir([path]) {{{
-function eclim#vcs#impl#svn#ListDir (...)
+function eclim#vcs#impl#svn#ListDir(...)
   if len(a:000) > 0
     if exists('b:vcs_props') && has_key(b:vcs_props, 'svn_root_url')
       let url_root = {'root': b:vcs_props.svn_root_url}
@@ -240,7 +256,7 @@ function eclim#vcs#impl#svn#ListDir (...)
 endfunction " }}}
 
 " Log([file]) {{{
-function eclim#vcs#impl#svn#Log (...)
+function eclim#vcs#impl#svn#Log(...)
   let root_dir = ''
   if len(a:000) > 0
     let path = a:000[0]
@@ -296,7 +312,7 @@ function eclim#vcs#impl#svn#Log (...)
 endfunction " }}}
 
 " ViewFileRevision(path, revision) {{{
-function! eclim#vcs#impl#svn#ViewFileRevision (path, revision)
+function! eclim#vcs#impl#svn#ViewFileRevision(path, revision)
   let path = has_key(b:vcs_props, 'svn_root_url') ?
     \ b:vcs_props.svn_root_url . '/' . a:path : a:path
   let content = eclim#vcs#impl#svn#Svn('cat -r ' . a:revision . ' "' . path . '"')
@@ -305,12 +321,12 @@ endfunction " }}}
 
 " Svn(args) {{{
 " Executes 'svn' with the supplied args.
-function eclim#vcs#impl#svn#Svn (args)
+function eclim#vcs#impl#svn#Svn(args)
   return eclim#vcs#util#Vcs('svn', a:args)
 endfunction " }}}
 
 " s:GetRootUrl() {{{
-function s:GetRootUrl ()
+function s:GetRootUrl()
   let info = eclim#vcs#impl#svn#Svn('info')
   if type(info) == 0
     return
@@ -330,7 +346,7 @@ function s:GetUrl(...)
 endfunction " }}}
 
 " s:GetUrlAndRoot([file]) {{{
-function s:GetUrlAndRoot (...)
+function s:GetUrlAndRoot(...)
   let path = len(a:000) > 0 ? fnamemodify(a:000[0], ':t') : ''
   let info = eclim#vcs#impl#svn#Svn('info ' . path)
   if type(info) == 0
@@ -342,7 +358,7 @@ function s:GetUrlAndRoot (...)
 endfunction " }}}
 
 " s:Breadcrumb(url_root) {{{
-function! s:Breadcrumb (url_root)
+function! s:Breadcrumb(url_root)
   if a:url_root.root . '/' == a:url_root.url
     return '/'
   endif
@@ -354,14 +370,14 @@ function! s:Breadcrumb (url_root)
 endfunction " }}}
 
 " s:ParseSvnInfo(entry, line) {{{
-function! s:ParseSvnInfo (entry, line)
+function! s:ParseSvnInfo(entry, line)
   let a:entry['revision'] = substitute(a:line, '^r\(\w\+\).*', '\1', '')
   let a:entry['author'] = substitute(a:line, '.\{-}|\s*\(\S\+\)\s*|.*', '\1', '')
   let a:entry['date'] = substitute(a:line, '.\{-}|.\{-}|\s*\(.\{-}\)\s\+[+-].\{-}|.*', '\1', '')
 endfunction " }}}
 
 " s:ParseSvnLog(lines) {{{
-function! s:ParseSvnLog (lines)
+function! s:ParseSvnLog(lines)
   let log = []
   let section = 'head'
   let index = 0
@@ -392,7 +408,8 @@ function! s:ParseSvnLog (lines)
       if len(entry.comment) == 0 && line =~ '^\s*$'
         continue
       endif
-      let line = substitute(line, '\(#\d\+\)', '|\1|', 'g')
+      let line = substitute(
+        \ line, '\(' . s:trackerIdPattern . '\)', '|\1|', 'g')
       call add(entry.comment, line)
     endif
   endfor

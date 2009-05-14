@@ -1,24 +1,24 @@
 " Author:  Eric Van Dewoestine
-" Version: $Revision: 1677 $
 "
 " Description: {{{
 "   see http://eclim.sourceforge.net/vim/java/bean.html
 "
 " License:
 "
-" Copyright (c) 2005 - 2008
+" Copyright (C) 2005 - 2009  Eric Van Dewoestine
 "
-" Licensed under the Apache License, Version 2.0 (the "License");
-" you may not use this file except in compliance with the License.
-" You may obtain a copy of the License at
+" This program is free software: you can redistribute it and/or modify
+" it under the terms of the GNU General Public License as published by
+" the Free Software Foundation, either version 3 of the License, or
+" (at your option) any later version.
 "
-"      http://www.apache.org/licenses/LICENSE-2.0
+" This program is distributed in the hope that it will be useful,
+" but WITHOUT ANY WARRANTY; without even the implied warranty of
+" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+" GNU General Public License for more details.
 "
-" Unless required by applicable law or agreed to in writing, software
-" distributed under the License is distributed on an "AS IS" BASIS,
-" WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-" See the License for the specific language governing permissions and
-" limitations under the License.
+" You should have received a copy of the GNU General Public License
+" along with this program.  If not, see <http://www.gnu.org/licenses/>.
 "
 " }}}
 
@@ -31,7 +31,7 @@ endif
 " Script Variables {{{
 let s:command_properties =
   \ '-command java_bean_properties -p "<project>" -f "<file>" ' .
-  \ '-o <offset> -t <type> -r <properties> <indexed>'
+  \ '-o <offset> -e <encoding> -t <type> -r <properties> <indexed>'
 
 let s:no_properties =
   \ 'Unable to find property at current cursor position: ' .
@@ -39,7 +39,7 @@ let s:no_properties =
 " }}}
 
 " GetterSetter(first, last, type) {{{
-function! eclim#java#bean#GetterSetter (first, last, type)
+function! eclim#java#bean#GetterSetter(first, last, type)
   if !eclim#project#util#IsCurrentFileInProject()
     return
   endif
@@ -50,7 +50,7 @@ function! eclim#java#bean#GetterSetter (first, last, type)
   let properties = eclim#java#util#GetSelectedFields(a:first, a:last)
 
   if len(properties) == 0
-    call eclim#util#EchoError (s:no_properties)
+    call eclim#util#EchoError(s:no_properties)
     return
   endif
 
@@ -59,7 +59,8 @@ function! eclim#java#bean#GetterSetter (first, last, type)
   let command = s:command_properties
   let command = substitute(command, '<project>', project, '')
   let command = substitute(command, '<file>', eclim#java#util#GetFilename(), '')
-  let command = substitute(command, '<offset>', eclim#util#GetCharacterOffset(), '')
+  let command = substitute(command, '<offset>', eclim#util#GetOffset(), '')
+  let command = substitute(command, '<encoding>', eclim#util#GetEncoding(), '')
   let command = substitute(command, '<type>', a:type, '')
   let command = substitute(command, '<properties>', join(properties, ','), '')
   let command = substitute(command, '<indexed>', indexed, '')

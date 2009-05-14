@@ -1,5 +1,4 @@
 " Author: Eric Van Dewoestine
-" Version: $Revision$
 "
 " Description: {{{
 "   Javascript indent file using IndentAnything.
@@ -10,19 +9,20 @@
 "
 " License:
 "
-" Copyright (c) 2005 - 2008
+" Copyright (C) 2005 - 2009  Eric Van Dewoestine
 "
-" Licensed under the Apache License, Version 2.0 (the "License");
-" you may not use this file except in compliance with the License.
-" You may obtain a copy of the License at
+" This program is free software: you can redistribute it and/or modify
+" it under the terms of the GNU General Public License as published by
+" the Free Software Foundation, either version 3 of the License, or
+" (at your option) any later version.
 "
-"      http://www.apache.org/licenses/LICENSE-2.0
+" This program is distributed in the hope that it will be useful,
+" but WITHOUT ANY WARRANTY; without even the implied warranty of
+" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+" GNU General Public License for more details.
 "
-" Unless required by applicable law or agreed to in writing, software
-" distributed under the License is distributed on an "AS IS" BASIS,
-" WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-" See the License for the specific language governing permissions and
-" limitations under the License.
+" You should have received a copy of the GNU General Public License
+" along with this program.  If not, see <http://www.gnu.org/licenses/>.
 "
 " }}}
 
@@ -38,7 +38,7 @@ setlocal indentexpr=EclimGetJavascriptIndent(v:lnum)
 setlocal indentkeys+=0),0},),;
 
 " EclimGetJavascriptIndent(lnum) {{{
-function! EclimGetJavascriptIndent (lnum)
+function! EclimGetJavascriptIndent(lnum)
   let line = getline(a:lnum)
   let prevlnum = prevnonblank(a:lnum - 1)
   let prevline = getline(prevlnum)
@@ -51,6 +51,7 @@ function! EclimGetJavascriptIndent (lnum)
       let col = col('.')
       call cursor(0, col('$'))
 
+      let matchstart = 0
       while search(')\|}\|\]', 'bcW', line('.')) && col('.') != 1
         let end = line[col('.') - 1]
         let start = ''
@@ -72,10 +73,13 @@ function! EclimGetJavascriptIndent (lnum)
       if matchstart > 0
         return indent(matchstart)
       endif
+    endif
+  endfor
 
+  for trio in b:indentTrios
     " if the previous line starts with any of the ending trios, then indent
     " one level to compensate for our adjustment above.
-    elseif prevline =~ '^\s*' . trio[2] && prevline !~ pattern_heads . '$'
+    if prevline =~ '^\s*' . trio[2] && prevline !~ pattern_heads . '$'
       let col = col('.')
       call cursor(a:lnum - 1, 1)
       let matchstart = searchpair(trio[0], '', trio[2], 'bnW', 'InCommentOrString()')
@@ -89,11 +93,12 @@ function! EclimGetJavascriptIndent (lnum)
       return indent(prevlnum)
     endif
   endfor
+
   return IndentAnything()
 endfunction " }}}
 
 " JavascriptIndentAnythingSettings() {{{
-function! JavascriptIndentAnythingSettings ()
+function! JavascriptIndentAnythingSettings()
   " Syntax name REs for comments and strings.
   let b:commentRE      = 'javaScript\(Line\)\?Comment'
   let b:lineCommentRE  = 'javaScriptLineComment'

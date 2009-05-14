@@ -1,36 +1,41 @@
 " Author:  Eric Van Dewoestine
-" Version: $Revision: 1677 $
 "
 " Description: {{{
 "   see http://eclim.sourceforge.net/vim/java/tools.html
 "
 " License:
 "
-" Copyright (c) 2005 - 2008
+" Copyright (C) 2005 - 2009  Eric Van Dewoestine
 "
-" Licensed under the Apache License, Version 2.0 (the "License");
-" you may not use this file except in compliance with the License.
-" You may obtain a copy of the License at
+" This program is free software: you can redistribute it and/or modify
+" it under the terms of the GNU General Public License as published by
+" the Free Software Foundation, either version 3 of the License, or
+" (at your option) any later version.
 "
-"      http://www.apache.org/licenses/LICENSE-2.0
+" This program is distributed in the hope that it will be useful,
+" but WITHOUT ANY WARRANTY; without even the implied warranty of
+" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+" GNU General Public License for more details.
 "
-" Unless required by applicable law or agreed to in writing, software
-" distributed under the License is distributed on an "AS IS" BASIS,
-" WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-" See the License for the specific language governing permissions and
-" limitations under the License.
+" You should have received a copy of the GNU General Public License
+" along with this program.  If not, see <http://www.gnu.org/licenses/>.
 "
 " }}}
 
 " Script Variables {{{
+  let s:open_console = 'Open jconsole'
   let s:view_info = 'View Info'
   let s:view_stacks = 'View Stacks'
   let s:view_map = 'View Memory Map'
   let s:args_main = 'Arguments To Main Method'
   let s:args_vm = 'Arguments To JVM'
 
-  let s:supported_command =
-    \ '\(' . s:view_info . '\|' . s:view_stacks . '\|' . s:view_map . '\)'
+  let s:supported_command = '\(' .
+      \ s:open_console . '\|' .
+      \ s:view_info . '\|' .
+      \ s:view_stacks . '\|' .
+      \ s:view_map .
+    \ '\)'
 
   hi link JpsArguments Normal
   hi link JpsViewAdditional Normal
@@ -40,7 +45,7 @@
 " Jps() {{{
 " Function to execute jps and push the results into a new window where the
 " user can perform additional commands.
-function eclim#java#tools#Jps ()
+function eclim#java#tools#Jps()
   call eclim#util#Echo('Executing...')
 
   let content = []
@@ -55,6 +60,10 @@ function eclim#java#tools#Jps ()
     endif
 
     call add(content, process.id . ' - ' . process.name)
+
+    if executable('jconsole')
+      call add(content, "\t" . s:open_console)
+    endif
 
     if executable('jinfo')
       call add(content, "\t" . s:view_info)
@@ -71,16 +80,18 @@ function eclim#java#tools#Jps ()
     call add(content, "")
 
     call add(content, "\t" . s:args_main . " {")
-    let args_main = map(split(process.args_main), '"\t\t" . v:val')
+    let args_main = has_key(process, 'args_main') ?
+      \ map(split(process.args_main), '"\t\t" . v:val') : []
     let content = content + args_main
     call add(content, "\t}")
 
-    call add(content, "")
-
-    call add(content, "\t" . s:args_vm . " {")
-    let args_vm = map(split(process.args_vm), '"\t\t" . v:val')
-    let content = content + args_vm
-    call add(content, "\t}")
+    if has_key(process, 'args_vm')
+      call add(content, "")
+      call add(content, "\t" . s:args_vm . " {")
+      let args_vm = map(split(process.args_vm), '"\t\t" . v:val')
+      let content = content + args_vm
+      call add(content, "\t}")
+    endif
   endfor
 
   if len(content) == 0
@@ -111,7 +122,7 @@ endfunction " }}}
 " name - The classname or jar file the process was started from.
 " args_main - Any arguments passed to the main method.
 " args_vm - Any arguments passed to the vm.
-function eclim#java#tools#GetJavaProcesses ()
+function eclim#java#tools#GetJavaProcesses()
   let java_processes = []
   let result = eclim#util#System('jps -vV')
   if v:shell_error
@@ -150,97 +161,18 @@ function eclim#java#tools#GetJavaProcesses ()
   return java_processes
 endfunction " }}}
 
-" GetJavaProcessInfo(id) {{{
-" Gets content returned by jinfo for the given process id as a list.
-" Returns empty list if jinfo not supported on this platform.
-function eclim#java#tools#GetJavaProcessInfo (id)
-  if executable('jinfo')
-    let output = split(eclim#util#System('jinfo ' . a:id), '\n')
-    if v:shell_error
-      call eclim#util#EchoError('Unable to execute jps.')
-      return []
-    endif
-
-    " could not connect to process.
-    if len(output) == 2
-      return []
-    endif
-
-    " first 4 lines are just status info as the command connects to the vm.
-    return output[4:]
-  endif
-
-  return []
-endfunction " }}}
-
-" GetJavaProcessStacks(id) {{{
-" Gets a list of lists where each entry in the outer list is a list of thread
-" stacks.
-" Returns empty list if jstack not supported on this platform.
-function eclim#java#tools#GetJavaProcessStacks (id)
-  if executable('jstack')
-    let output = split(eclim#util#System('jstack ' . a:id), '\n')
-
-    if v:shell_error
-      call eclim#util#EchoError('Unable to execute jps.')
-      return []
-    endif
-
-    " could not connect to process.
-    if len(output) == 2
-      return []
-    endif
-
-    let stacks = []
-    for line in output[4:]
-      if line =~ '^Thread'
-        let stack = [line]
-        call add(stacks, stack)
-      elseif line !~ '^\s*$'
-        call add(stack, line)
-      endif
-    endfor
-
-    return stacks
-  endif
-
-  return []
-endfunction " }}}
-
-" GetJavaProcessMap(id) {{{
-" Gets content returned by jmap for the given process id as a list.
-" Returns empty list if jmap not supported on this platform.
-function eclim#java#tools#GetJavaProcessMap (id)
-  if executable('jmap')
-    let output = split(eclim#util#System('jmap ' . a:id), '\n')
-
-    if v:shell_error
-      call eclim#util#EchoError('Unable to execute jps.')
-      return []
-    endif
-
-    " could not connect to process.
-    if len(output) == 2
-      return []
-    endif
-
-    " first 4 lines are just status info as the command connects to the vm.
-    return output[4:]
-  endif
-
-  return []
-endfunction " }}}
-
 " ViewAdditionalInfo() {{{
 " Invoked by mapping on jps window.
-function s:ViewAdditionalInfo ()
+function s:ViewAdditionalInfo()
   let line = getline('.')
   if line =~ '^\s*' . s:supported_command . '$'
     " get the process id.
     let lnum = search('^[0-9]\+ - ', 'bn')
     let id = substitute(getline(lnum), '^\([0-9]\+\) - .*', '\1', '')
 
-    if line =~ '^\s*' . s:view_info . '$'
+    if line =~ '^\s*' . s:open_console . '$'
+      call s:OpenConsole(id)
+    elseif line =~ '^\s*' . s:view_info . '$'
       call s:ViewInfo(id)
     elseif line =~ '^\s*' . s:view_stacks . '$'
       call s:ViewStacks(id)
@@ -250,49 +182,78 @@ function s:ViewAdditionalInfo ()
   endif
 endfunction " }}}
 
-" ViewInfo(id) {{{
-" Open a window with extended info for the process with the given id.
-function s:ViewInfo (id)
+" OpenConsole(id) {{{
+" Open jconsole for the process with the given id.
+function s:OpenConsole(id)
   call eclim#util#Echo('Executing...')
 
-  call eclim#util#TempWindow('Java_Process_Info_' . a:id,
-    \ eclim#java#tools#GetJavaProcessInfo(a:id))
-  setlocal ft=jproperties
+  if has('win32') || has('win64')
+    call eclim#util#Exec('silent! !start jconsole ' . a:id)
+  else
+    call eclim#util#Exec('silent! !jconsole ' . a:id . ' &')
+  endif
+  exec "normal! \<c-l>"
 
   call eclim#util#Echo(' ')
+endfunction " }}}
+
+" ViewInfo(id) {{{
+" Open a window with extended info for the process with the given id.
+function s:ViewInfo(id)
+  if executable('jinfo')
+    call eclim#util#Echo('Executing...')
+
+    let content = split(eclim#util#System('jinfo ' . a:id), '\n')
+    if v:shell_error
+      call eclim#util#EchoError('Unable to execute jinfo.')
+      return
+    endif
+
+    call eclim#util#TempWindow('Java_Process_Info_' . a:id, content)
+    setlocal ft=jproperties
+
+    call eclim#util#Echo(' ')
+  endif
 endfunction " }}}
 
 " ViewStacks(id) {{{
 " Open a window containing thread stacks for the process with the given id.
-function s:ViewStacks (id)
-  call eclim#util#Echo('Executing...')
+function s:ViewStacks(id)
+  if executable('jstack')
+    call eclim#util#Echo('Executing...')
+    let content = split(eclim#util#System('jstack ' . a:id), '\n')
 
-  let content = []
-  for thread in eclim#java#tools#GetJavaProcessStacks(a:id)
-    if len(content) > 0
-      call add(content, "")
+    if v:shell_error
+      call eclim#util#EchoError('Unable to execute jstack.')
+      return
     endif
 
-    call add(content, thread[0])
-    call map(thread, '"\t" . v:val')
-    let content = content + thread[1:]
-  endfor
+    call map(content, 'substitute(v:val, "^   \\(\\S\\)", "  \\1", "")')
+    call map(content, 'substitute(v:val, "^\t", "      ", "")')
 
-  call eclim#util#TempWindow('Java_Process_Stacks_' . a:id, content)
-  setlocal ft=java
+    call eclim#util#TempWindow('Java_Process_Stacks_' . a:id, content)
+    setlocal ft=java
 
-  call eclim#util#Echo(' ')
+    call eclim#util#Echo(' ')
+  endif
 endfunction " }}}
 
 " ViewMap(id) {{{
 " Open a window containing memory map for the process with the supplied id.
-function s:ViewMap (id)
-  call eclim#util#Echo('Executing...')
+function s:ViewMap(id)
+  if executable('jmap')
+    call eclim#util#Echo('Executing...')
+    let content = split(eclim#util#System('jmap ' . a:id), '\n')
 
-  call eclim#util#TempWindow('Java_Process_Map_' . a:id,
-    \ eclim#java#tools#GetJavaProcessMap(a:id))
+    if v:shell_error
+      call eclim#util#EchoError('Unable to execute jmap.')
+      return
+    endif
 
-  call eclim#util#Echo(' ')
+    call eclim#util#TempWindow('Java_Process_Map_' . a:id, content)
+
+    call eclim#util#Echo(' ')
+  endif
 endfunction " }}}
 
 " vim:ft=vim:fdm=marker

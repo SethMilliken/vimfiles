@@ -1,24 +1,24 @@
 " Author:  Eric Van Dewoestine
-" Version: $Revision$
 "
 " Description: {{{
 "   Caching functionality
 "
 " License:
 "
-" Copyright (c) 2005 - 2008
+" Copyright (C) 2005 - 2009  Eric Van Dewoestine
 "
-" Licensed under the Apache License, Version 2.0 (the "License");
-" you may not use this file except in compliance with the License.
-" You may obtain a copy of the License at
+" This program is free software: you can redistribute it and/or modify
+" it under the terms of the GNU General Public License as published by
+" the Free Software Foundation, either version 3 of the License, or
+" (at your option) any later version.
 "
-"      http://www.apache.org/licenses/LICENSE-2.0
+" This program is distributed in the hope that it will be useful,
+" but WITHOUT ANY WARRANTY; without even the implied warranty of
+" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+" GNU General Public License for more details.
 "
-" Unless required by applicable law or agreed to in writing, software
-" distributed under the License is distributed on an "AS IS" BASIS,
-" WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-" See the License for the specific language governing permissions and
-" limitations under the License.
+" You should have received a copy of the GNU General Public License
+" along with this program.  If not, see <http://www.gnu.org/licenses/>.
 "
 " }}}
 
@@ -31,7 +31,7 @@
 " Set(key, content, metadata) {{{
 " Adds the supplied content (list of lines) along with the supplied metadata
 " (dictionary of key / value pairs) to the cache under the specified key.
-function! eclim#cache#Set (key, content, ...)
+function! eclim#cache#Set(key, content, ...)
   if !s:InitCache()
     return
   endif
@@ -59,14 +59,14 @@ endfunction " }}}
 " returning 1 for valid and 0 for invalid.
 " Returns a dictionary containing keys 'metadata' and 'content' or an empty
 " dictionary if no valid cache value found.
-function! eclim#cache#Get (key, ...)
+function! eclim#cache#Get(key, ...)
   if !s:InitCache()
     return
   endif
 
   let file = s:GetCachedFilename(a:key)
   if filereadable(file . '.gz')
-    call eclim#util#System('gunzip "' . file . '.gz"')
+    call eclim#util#System('gzip -d "' . file . '.gz"')
     let contents = readfile(file)
     call eclim#util#System('gzip "' . file . '"')
   elseif filereadable(file)
@@ -89,7 +89,7 @@ endfunction " }}}
 
 " Delete(key) {{{
 " Delete any cached content under the specified key.
-function! eclim#cache#Delete (key)
+function! eclim#cache#Delete(key)
   if !s:InitCache()
     return
   endif
@@ -105,13 +105,13 @@ function! eclim#cache#Delete (key)
 endfunction " }}}
 
 " s:GetCachedFilename(key) {{{
-function! s:GetCachedFilename (key)
+function! s:GetCachedFilename(key)
   return g:EclimCacheDir . '/' . substitute(a:key, '\W\+', '_', 'g') . '.cache'
 endfunction " }}}
 
 " s:InitCache() {{{
 " Initializes the cache.
-function! s:InitCache ()
+function! s:InitCache()
   if !isdirectory(g:EclimCacheDir)
     call mkdir(g:EclimCacheDir, 'p')
   endif

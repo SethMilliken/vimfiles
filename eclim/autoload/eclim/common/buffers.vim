@@ -1,23 +1,23 @@
 " Author:  Eric Van Dewoestine
-" Version: $Revision$
 "
 " Description: {{{
 "
 " License:
 "
-" Copyright (c) 2005 - 2008
+" Copyright (C) 2005 - 2009  Eric Van Dewoestine
 "
-" Licensed under the Apache License, Version 2.0 (the "License");
-" you may not use this file except in compliance with the License.
-" You may obtain a copy of the License at
+" This program is free software: you can redistribute it and/or modify
+" it under the terms of the GNU General Public License as published by
+" the Free Software Foundation, either version 3 of the License, or
+" (at your option) any later version.
 "
-"      http://www.apache.org/licenses/LICENSE-2.0
+" This program is distributed in the hope that it will be useful,
+" but WITHOUT ANY WARRANTY; without even the implied warranty of
+" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+" GNU General Public License for more details.
 "
-" Unless required by applicable law or agreed to in writing, software
-" distributed under the License is distributed on an "AS IS" BASIS,
-" WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-" See the License for the specific language governing permissions and
-" limitations under the License.
+" You should have received a copy of the GNU General Public License
+" along with this program.  If not, see <http://www.gnu.org/licenses/>.
 "
 " }}}
 
@@ -31,11 +31,15 @@ endif
 if !exists('g:EclimBuffersDefaultAction')
   let g:EclimBuffersDefaultAction = 'split'
 endif
+if !exists('g:EclimOnlyExclude')
+  let g:EclimOnlyExclude =
+    \ '\(ProjectTree_*\|__Tag_List__\|-MiniBufExplorer-\|command-line\)'
+endif
 " }}}
 
 " Buffers() {{{
 " Like, :buffers, but opens a temporary buffer.
-function! eclim#common#buffers#Buffers ()
+function! eclim#common#buffers#Buffers()
   redir => list
   silent exec 'buffers'
   redir END
@@ -94,7 +98,7 @@ function! eclim#common#buffers#Buffers ()
 endfunction " }}}
 
 " BufferCompare(buffer1, buffer2) {{{
-function! eclim#common#buffers#BufferCompare (buffer1, buffer2)
+function! eclim#common#buffers#BufferCompare(buffer1, buffer2)
   exec 'let attr1 = a:buffer1.' . g:EclimBuffersSort
   exec 'let attr2 = a:buffer2.' . g:EclimBuffersSort
   let compare = attr1 == attr2 ? 0 : attr1 > attr2 ? 1 : -1
@@ -104,23 +108,41 @@ function! eclim#common#buffers#BufferCompare (buffer1, buffer2)
   return compare
 endfunction " }}}
 
+" Only() {{{
+function! eclim#common#buffers#Only()
+  let curwin = winnr()
+  let winnum = 1
+  while winnum <= winnr('$')
+    if winnum != curwin &&
+     \ getwinvar(winnum, '&ft') != 'qf' &&
+     \ bufname(winbufnr(winnum)) !~ g:EclimOnlyExclude
+      if winnum < curwin
+        let curwin -= 1
+      endif
+      exec winnum . 'winc w'
+      close
+      exec curwin . 'winc w'
+      continue
+    endif
+    let winnum += 1
+  endwhile
+endfunction " }}}
+
 " s:BufferDelete() {{{
-function! s:BufferDelete ()
+function! s:BufferDelete()
   let line = line('.')
   let index = line - 1
   exec 'bd ' . b:eclim_buffers[index].bufnr
-  let save = @"
   setlocal modifiable
   setlocal noreadonly
-  exec line . ',' . line . 'delete'
+  exec line . ',' . line . 'delete _'
   setlocal nomodifiable
   setlocal readonly
-  let @" = save
   call remove(b:eclim_buffers, index)
 endfunction " }}}
 
 " s:BufferEntryToLine(buffer, filelength) {{{
-function! s:BufferEntryToLine (buffer, filelength)
+function! s:BufferEntryToLine(buffer, filelength)
   let line = ''
   let line .= a:buffer.status =~ '+' ? '+' : ' '
   let line .= a:buffer.status =~ 'a' ? 'active' : 'hidden'
@@ -138,7 +160,7 @@ function! s:BufferEntryToLine (buffer, filelength)
 endfunction " }}}
 
 " s:BufferOpen(cmd) {{{
-function! s:BufferOpen (cmd)
+function! s:BufferOpen(cmd)
   let file = bufname(b:eclim_buffers[line('.') - 1].bufnr)
   let winnr = b:winnr
   close

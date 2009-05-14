@@ -1,24 +1,24 @@
 " Author:  Eric Van Dewoestine
-" Version: $Revision$
 "
 " Description: {{{
 "   see http://eclim.sourceforge.net/vim/python/validate.html
 "
 " License:
 "
-" Copyright (c) 2005 - 2008
+" Copyright (C) 2005 - 2009  Eric Van Dewoestine
 "
-" Licensed under the Apache License, Version 2.0 (the "License");
-" you may not use this file except in compliance with the License.
-" You may obtain a copy of the License at
+" This program is free software: you can redistribute it and/or modify
+" it under the terms of the GNU General Public License as published by
+" the Free Software Foundation, either version 3 of the License, or
+" (at your option) any later version.
 "
-"      http://www.apache.org/licenses/LICENSE-2.0
+" This program is distributed in the hope that it will be useful,
+" but WITHOUT ANY WARRANTY; without even the implied warranty of
+" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+" GNU General Public License for more details.
 "
-" Unless required by applicable law or agreed to in writing, software
-" distributed under the License is distributed on an "AS IS" BASIS,
-" WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-" See the License for the specific language governing permissions and
-" limitations under the License.
+" You should have received a copy of the GNU General Public License
+" along with this program.  If not, see <http://www.gnu.org/licenses/>.
 "
 " }}}
 
@@ -30,7 +30,7 @@
 
 " Validate(on_save) {{{
 " Validates the current file.
-function! eclim#python#validate#Validate (on_save)
+function! eclim#python#validate#Validate(on_save)
   if eclim#util#WillWrittenBufferClose()
     return
   endif
@@ -39,7 +39,7 @@ function! eclim#python#validate#Validate (on_save)
   "  return
   "endif
 
-  let result = ''
+  let results = []
   let syntax_error = eclim#python#validate#ValidateSyntax()
 
   if syntax_error == ''
@@ -50,24 +50,40 @@ function! eclim#python#validate#Validate (on_save)
       endif
     else
       let command = 'pyflakes "' . expand('%:p') . '"'
-      let result = eclim#util#System(command)
-      if v:shell_error
+      let results = split(eclim#util#System(command), '\n')
+      if v:shell_error > 1 " pyflakes returns 1 if there where warnings.
         call eclim#util#EchoError('Error running command: ' . command)
-        return
+        let results = []
       endif
+    endif
+
+    " rope validation
+    " currently too slow for running on every save.
+    if eclim#project#util#IsCurrentFileInProject(0) && !a:on_save
+      let project = eclim#project#util#GetCurrentProjectRoot()
+      let filename = eclim#project#util#GetProjectRelativeFilePath(expand('%:p'))
+      let rope_results = eclim#python#rope#Validate(project, filename)
+      " currently rope gets confused with iterator var on list comprehensions
+      let rope_results = filter(rope_results, "v:val !~ '^Unresolved variable'")
+      let results += rope_results
     endif
   endif
 
-  if result =~ ':' || syntax_error != ''
-    let results = split(result, '\n')
+  if !empty(results) || syntax_error != ''
     call filter(results, "v:val !~ 'unable to detect undefined names'")
 
     let errors = []
     if syntax_error != ''
+      let lnum = substitute(syntax_error, '.*(line \(\d\+\))', '\1', '')
+      let text = substitute(syntax_error, '\(.*\)\s\+(line .*', '\1', '')
+      if lnum == syntax_error
+        let lnum = 1
+        let text .= ' (unknown line)'
+      endif
       call add(errors, {
           \ 'filename': eclim#util#Simplify(expand('%')),
-          \ 'lnum': substitute(syntax_error, '.*(line \(\d\+\))', '\1', ''),
-          \ 'text': substitute(syntax_error, '\(.*\)\s\+(line .*', '\1', ''),
+          \ 'lnum': lnum,
+          \ 'text': text,
           \ 'type': 'e'
         \ })
     endif
@@ -90,28 +106,32 @@ function! eclim#python#validate#Validate (on_save)
 
     call eclim#util#SetLocationList(errors)
   else
-    call eclim#util#SetLocationList([], 'r')
+    call eclim#util#ClearLocationList()
   endif
 endfunction " }}}
 
 " ValidateSyntax() {{{
-function eclim#python#validate#ValidateSyntax ()
+function eclim#python#validate#ValidateSyntax()
   let syntax_error = ''
 
+  if has('python')
+
 python << EOF
-import vim
+import re, vim
 from compiler import parseFile
 try:
   parseFile(vim.eval('expand("%:p")'))
 except SyntaxError, se:
-  vim.command("let syntax_error = '%s'" % str(se))
+  vim.command("let syntax_error = \"%s\"" % re.sub(r'"', r'\"', str(se)))
 EOF
+
+  endif
 
   return syntax_error
 endfunction " }}}
 
 " PyLint() {{{
-function eclim#python#validate#PyLint ()
+function eclim#python#validate#PyLint()
   let file = expand('%:p')
 
   if !executable('pylint')
@@ -123,18 +143,31 @@ function eclim#python#validate#PyLint ()
   if exists('g:EclimPyLintEnv')
     let pylint_env = g:EclimPyLintEnv
   else
-    let django_dir = eclim#python#django#GetProjectPath()
+    let paths = []
+
+    let django_dir = eclim#python#django#util#GetProjectPath()
     if django_dir != ''
-      let path = fnamemodify(django_dir, ':h')
+      call add(paths, fnamemodify(django_dir, ':h'))
       let settings = fnamemodify(django_dir, ':t')
       if has('win32') || has('win64')
         let pylint_env =
-          \ 'set "PYTHONPATH=' . path . '" && ' .
-          \ 'set DJANGO_SETTINGS_MODULE='. settings . '.settings &&'
+          \ 'set DJANGO_SETTINGS_MODULE='. settings . '.settings && '
       else
         let pylint_env =
-          \ 'PYTHONPATH="$PYTHONPATH:' . path . '" ' .
-          \ 'DJANGO_SETTINGS_MODULE="'. settings . '.settings"'
+          \ 'DJANGO_SETTINGS_MODULE="'. settings . '.settings" '
+      endif
+    endif
+
+    if eclim#project#util#IsCurrentFileInProject(0)
+      let project = eclim#project#util#GetCurrentProjectRoot()
+      let paths += eclim#python#rope#GetSourceDirs(project)
+    endif
+
+    if !empty(paths)
+      if has('win32') || has('win64')
+        let pylint_env .= 'set "PYTHONPATH=' . join(paths, ';') . '" && '
+      else
+        let pylint_env .= 'PYTHONPATH="$PYTHONPATH:' . join(paths, ':') . '"'
       endif
     endif
   endif

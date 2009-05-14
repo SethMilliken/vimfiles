@@ -1,24 +1,24 @@
 " Author:  Eric Van Dewoestine
-" Version: $Revision$
 "
 " Description: {{{
 "   Common functions for the various language regex testers.
 "
 " License:
 "
-" Copyright (c) 2005 - 2008
+" Copyright (C) 2005 - 2009  Eric Van Dewoestine
 "
-" Licensed under the Apache License, Version 2.0 (the "License");
-" you may not use this file except in compliance with the License.
-" You may obtain a copy of the License at
+" This program is free software: you can redistribute it and/or modify
+" it under the terms of the GNU General Public License as published by
+" the Free Software Foundation, either version 3 of the License, or
+" (at your option) any later version.
 "
-"      http://www.apache.org/licenses/LICENSE-2.0
+" This program is distributed in the hope that it will be useful,
+" but WITHOUT ANY WARRANTY; without even the implied warranty of
+" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+" GNU General Public License for more details.
 "
-" Unless required by applicable law or agreed to in writing, software
-" distributed under the License is distributed on an "AS IS" BASIS,
-" WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-" See the License for the specific language governing permissions and
-" limitations under the License.
+" You should have received a copy of the GNU General Public License
+" along with this program.  If not, see <http://www.gnu.org/licenses/>.
 "
 " }}}
 
@@ -55,12 +55,13 @@
 
 " OpenTestWindow(lang) {{{
 " Opens a buffer where the user can test regex expressions.
-function! eclim#regex#OpenTestWindow (lang)
+function! eclim#regex#OpenTestWindow(lang)
   let file = substitute(s:regexfile, '<lang>', a:lang, '')
   if bufwinnr(file) == -1
     let filename = expand('%:p')
 
     silent! exec "botright 10split " . file
+    setlocal ft=regex
     setlocal winfixheight
     setlocal bufhidden=delete
     setlocal nobackup
@@ -86,15 +87,14 @@ endfunction " }}}
 
 " Evaluate(lang) {{{
 " Evaluates the test regex file.
-function! s:Evaluate (lang)
+function! s:Evaluate(lang)
   let lines = getline('.', '$')
   if len(lines) == 1 && lines[0] == ''
     call s:AddTestContent()
   endif
 
-  syntax off
-  syntax on
-  write
+  " forces reset of syntax
+  set ft=regex
 
   let file = substitute(s:regexfile, '<lang>', a:lang, '')
   let b:results = []
@@ -136,7 +136,7 @@ endfunction "}}}
 
 " NextMatch() {{{
 " Moves the cursor to the next match.
-function! s:NextMatch ()
+function! s:NextMatch()
   if exists("b:results")
     let curline = line('.')
     let curcolumn = col('.')
@@ -163,7 +163,7 @@ endfunction " }}}
 
 " PrevMatch() {{{
 " Moves the cursor to the previous match.
-function! s:PrevMatch ()
+function! s:PrevMatch()
   if exists("b:results")
     let curline = line('.')
     let curcolumn = col('.')
@@ -193,11 +193,9 @@ endfunction " }}}
 
 " AddTestContent() {{{
 " Add the test content to the current regex test file.
-function! s:AddTestContent ()
+function! s:AddTestContent()
   call append(1, s:test_content)
-  let saved = @"
-  1,1delete
-  let @" = saved
+  1,1delete _
 
   "augroup eclim_regex
   "  autocmd!
@@ -212,7 +210,7 @@ endfunction " }}}
 
 " BuildPatterns(match) {{{
 " Builds the regex patterns for the supplied match.
-function! s:BuildPatterns (match)
+function! s:BuildPatterns(match)
   " vim (as of 7 beta 2) doesn't seem to be handling multiline matches very
   " well (highlighting can get lost while scrolling), so here we break them up.
   let startLine = substitute(a:match, '\([0-9]\+\):.*', '\1', '') + 0

@@ -1,341 +1,387 @@
 " Author:  Eric Van Dewoestine
-" Version: $Revision$
 "
 " Description: {{{
 "   see http://eclim.sourceforge.net/vim/taglist.html
 "
 " License:
 "
-" Copyright (c) 2005 - 2008
+" Copyright (C) 2005 - 2009  Eric Van Dewoestine
 "
-" Licensed under the Apache License, Version 2.0 (the "License");
-" you may not use this file except in compliance with the License.
-" You may obtain a copy of the License at
+" This program is free software: you can redistribute it and/or modify
+" it under the terms of the GNU General Public License as published by
+" the Free Software Foundation, either version 3 of the License, or
+" (at your option) any later version.
 "
-"      http://www.apache.org/licenses/LICENSE-2.0
+" This program is distributed in the hope that it will be useful,
+" but WITHOUT ANY WARRANTY; without even the implied warranty of
+" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+" GNU General Public License for more details.
 "
-" Unless required by applicable law or agreed to in writing, software
-" distributed under the License is distributed on an "AS IS" BASIS,
-" WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-" See the License for the specific language governing permissions and
-" limitations under the License.
+" You should have received a copy of the GNU General Public License
+" along with this program.  If not, see <http://www.gnu.org/licenses/>.
 "
 " }}}
 
 " Global Variables {{{
+let g:TagListToo = 1
 
 " Tag listing sort type - 'name' or 'order'
 if !exists('Tlist_Sort_Type')
   let Tlist_Sort_Type = 'order'
 endif
 
-" Open the vertically split taglist window on the left or on the right
-" side.  This setting is relevant only if Tlist_Use_Horiz_Window is set to
-" zero (i.e.  only for vertically split windows)
-if !exists('Tlist_Use_Right_Window')
-  let Tlist_Use_Right_Window = 0
-endif
-
-" Vertically split taglist window width setting
-if !exists('Tlist_WinWidth')
-  let Tlist_WinWidth = 30
-endif
-
 " }}}
 
 " Script Variables {{{
   let s:taglisttoo_ignore = g:TagList_title . '\|ProjectTree'
+
+  " used to prefer one window over another if a buffer is open in more than
+  " one window.
+  let s:taglisttoo_prevwinnr = 0
 " }}}
 
 " Language Settings {{{
 " assembly language
 let s:tlist_def_asm_settings = {
-    \ 'd': 'define',
-    \ 'l': 'label',
-    \ 'm': 'macro',
-    \ 't': 'type'
+    \ 'lang': 'asm', 'tags': {
+      \ 'd': 'define',
+      \ 'l': 'label',
+      \ 'm': 'macro',
+      \ 't': 'type'
+    \ }
   \ }
 
 " aspperl language
 let s:tlist_def_aspperl_settings = {
-    \ 'f': 'function',
-    \ 's': 'sub',
-    \ 'v': 'variable'
+    \ 'lang': 'asp', 'tags': {
+      \ 'f': 'function',
+      \ 's': 'sub',
+      \ 'v': 'variable'
+    \ }
   \ }
 
 " aspvbs language
 let s:tlist_def_aspvbs_settings = {
-    \ 'f': 'function',
-    \ 's': 'sub',
-    \ 'v': 'variable'
+    \ 'lang': 'asp', 'tags': {
+      \ 'f': 'function',
+      \ 's': 'sub',
+      \ 'v': 'variable'
+    \ }
   \ }
 
 " awk language
-let s:tlist_def_awk_settings = {'f': 'function'}
+let s:tlist_def_awk_settings = {'lang': 'awk', 'tags': {'f': 'function'}}
 
 " beta language
 let s:tlist_def_beta_settings = {
-    \ 'f': 'fragment',
-    \ 's': 'slot',
-    \ 'v': 'pattern'
+    \ 'lang': 'beta', 'tags': {
+      \ 'f': 'fragment',
+      \ 's': 'slot',
+      \ 'v': 'pattern'
+    \ }
   \ }
 
 " c language
 let s:tlist_def_c_settings = {
-    \ 'd': 'macro',
-    \ 'g': 'enum',
-    \ 's': 'struct',
-    \ 'u': 'union',
-    \ 't': 'typedef',
-    \ 'v': 'variable',
-    \ 'f': 'function'
+    \ 'lang': 'c', 'tags': {
+      \ 'd': 'macro',
+      \ 'g': 'enum',
+      \ 's': 'struct',
+      \ 'u': 'union',
+      \ 't': 'typedef',
+      \ 'v': 'variable',
+      \ 'f': 'function'
+    \ }
   \ }
 
 " c++ language
 let s:tlist_def_cpp_settings = {
-    \ 'n': 'namespace',
-    \ 'v': 'variable',
-    \ 'd': 'macro',
-    \ 't': 'typedef',
-    \ 'c': 'class',
-    \ 'g': 'enum',
-    \ 's': 'struct',
-    \ 'u': 'union',
-    \ 'f': 'function'
+    \ 'lang': 'c++', 'tags': {
+      \ 'n': 'namespace',
+      \ 'v': 'variable',
+      \ 'd': 'macro',
+      \ 't': 'typedef',
+      \ 'c': 'class',
+      \ 'g': 'enum',
+      \ 's': 'struct',
+      \ 'u': 'union',
+      \ 'f': 'function'
+    \ }
   \ }
 
 " c# language
 let s:tlist_def_cs_settings = {
-    \ 'd': 'macro',
-    \ 't': 'typedef',
-    \ 'n': 'namespace',
-    \ 'c': 'class',
-    \ 'E': 'event',
-    \ 'g': 'enum',
-    \ 's': 'struct',
-    \ 'i': 'interface',
-    \ 'p': 'properties',
-    \ 'm': 'method'
+    \ 'lang': 'c#', 'tags': {
+      \ 'd': 'macro',
+      \ 't': 'typedef',
+      \ 'n': 'namespace',
+      \ 'c': 'class',
+      \ 'E': 'event',
+      \ 'g': 'enum',
+      \ 's': 'struct',
+      \ 'i': 'interface',
+      \ 'p': 'properties',
+      \ 'm': 'method'
+    \ }
   \ }
 
 " cobol language
 let s:tlist_def_cobol_settings = {
-    \ 'd': 'data',
-    \ 'f': 'file',
-    \ 'g': 'group',
-    \ 'p': 'paragraph',
-    \ 'P': 'program',
-    \ 's': 'section'
+    \ 'lang': 'cobol', 'tags': {
+      \ 'd': 'data',
+      \ 'f': 'file',
+      \ 'g': 'group',
+      \ 'p': 'paragraph',
+      \ 'P': 'program',
+      \ 's': 'section'
+    \ }
   \ }
 
 " eiffel language
 let s:tlist_def_eiffel_settings = {
-    \ 'c': 'class',
-    \ 'f': 'feature'
+    \ 'lang': 'eiffel', 'tags': {
+      \ 'c': 'class',
+      \ 'f': 'feature'
+    \ }
   \ }
 
 " erlang language
 let s:tlist_def_erlang_settings = {
-    \ 'd': 'macro',
-    \ 'r': 'record',
-    \ 'm': 'module',
-    \ 'f': 'function'
+    \ 'lang': 'erlang', 'tags': {
+      \ 'd': 'macro',
+      \ 'r': 'record',
+      \ 'm': 'module',
+      \ 'f': 'function'
+    \ }
   \ }
 
 " expect (same as tcl) language
 let s:tlist_def_expect_settings = {
-    \ 'c': 'class',
-    \ 'f': 'method',
-    \ 'p': 'procedure'
+    \ 'lang': 'tcl', 'tags': {
+      \ 'c': 'class',
+      \ 'f': 'method',
+      \ 'p': 'procedure'
+    \ }
   \ }
 
 " fortran language
 let s:tlist_def_fortran_settings = {
-    \ 'p': 'program',
-    \ 'b': 'block data',
-    \ 'c': 'common',
-    \ 'e': 'entry',
-    \ 'i': 'interface',
-    \ 'k': 'type',
-    \ 'l': 'label',
-    \ 'm': 'module',
-    \ 'n': 'namelist',
-    \ 't': 'derived',
-    \ 'v': 'variable',
-    \ 'f': 'function',
-    \ 's': 'subroutine'
+    \ 'lang': 'fortran', 'tags': {
+      \ 'p': 'program',
+      \ 'b': 'block data',
+      \ 'c': 'common',
+      \ 'e': 'entry',
+      \ 'i': 'interface',
+      \ 'k': 'type',
+      \ 'l': 'label',
+      \ 'm': 'module',
+      \ 'n': 'namelist',
+      \ 't': 'derived',
+      \ 'v': 'variable',
+      \ 'f': 'function',
+      \ 's': 'subroutine'
+    \ }
   \ }
 
 " HTML language
 let s:tlist_def_html_settings = {
-    \ 'a': 'anchor',
-    \ 'f': 'javascript function'
+    \ 'lang': 'html', 'tags': {
+      \ 'a': 'anchor',
+      \ 'f': 'javascript function'
+    \ }
   \ }
 
 " java language
-let s:tlist_format_java = 'eclim#taglist#java#FormatJava'
+let s:tlist_format_java = 'eclim#taglist#lang#java#FormatJava'
 let s:tlist_def_java_settings = {
-    \ 'p': 'package',
-    \ 'c': 'class',
-    \ 'i': 'interface',
-    \ 'f': 'field',
-    \ 'm': 'method'
+    \ 'lang': 'java', 'tags': {
+      \ 'p': 'package',
+      \ 'c': 'class',
+      \ 'i': 'interface',
+      \ 'f': 'field',
+      \ 'm': 'method'
+    \ }
   \ }
 
-let s:tlist_format_javascript = 'eclim#taglist#javascript#FormatJavascript'
+let s:tlist_format_javascript = 'eclim#taglist#lang#javascript#FormatJavascript'
 let s:tlist_def_javascript_settings = {
-    \ 'o': 'object',
-    \ 'm': 'member',
-    \ 'f': 'function',
+    \ 'lang': 'javascript', 'tags': {
+      \ 'o': 'object',
+      \ 'm': 'member',
+      \ 'f': 'function',
+    \ }
   \ }
-
-" javascript language
-let s:tlist_def_javascript_settings = {'f': 'function'}
 
 " lisp language
-let s:tlist_def_lisp_settings = {'f': 'function'}
+let s:tlist_def_lisp_settings = {'lang': 'lisp', 'tags': {'f': 'function'}}
 
 " lua language
-let s:tlist_def_lua_settings = {'f': 'function'}
+let s:tlist_def_lua_settings = {'lang': 'lua', 'tags': {'f': 'function'}}
 
 " makefiles
-let s:tlist_def_make_settings = {'m': 'macro'}
+let s:tlist_def_make_settings = {'lang': 'make', 'tags': {'m': 'macro'}}
 
 " pascal language
 let s:tlist_def_pascal_settings = {
-    \ 'f': 'function',
-    \ 'p': 'procedure'
+    \ 'lang': 'pascal', 'tags': {
+      \ 'f': 'function',
+      \ 'p': 'procedure'
+    \ }
   \ }
 
 " perl language
 let s:tlist_def_perl_settings = {
-    \ 'c': 'constant',
-    \ 'l': 'label',
-    \ 'p': 'package',
-    \ 's': 'subroutine'
+    \ 'lang': 'perl', 'tags': {
+      \ 'c': 'constant',
+      \ 'l': 'label',
+      \ 'p': 'package',
+      \ 's': 'subroutine'
+    \ }
   \ }
 
 " php language
-let s:tlist_format_php = 'eclim#taglist#php#FormatPhp'
+let s:tlist_format_php = 'eclim#taglist#lang#php#FormatPhp'
 let s:tlist_def_php_settings = {
-    \ 'c': 'class',
-    \ 'd': 'constant',
-    \ 'v': 'variable',
-    \ 'f': 'function'
+    \ 'lang': 'php', 'tags': {
+      \ 'c': 'class',
+      \ 'd': 'constant',
+      \ 'v': 'variable',
+      \ 'f': 'function'
+    \ }
   \ }
 
 " python language
-let s:tlist_format_python = 'eclim#taglist#python#FormatPython'
+let s:tlist_format_python = 'eclim#taglist#lang#python#FormatPython'
 let s:tlist_def_python_settings = {
-    \ 'c': 'class',
-    \ 'm': 'member',
-    \ 'f': 'function'
+    \ 'lang': 'python', 'tags': {
+      \ 'c': 'class',
+      \ 'm': 'member',
+      \ 'f': 'function'
+    \ }
   \ }
 
 " rexx language
-let s:tlist_def_rexx_settings = {'s': 'subroutine'}
+let s:tlist_def_rexx_settings = {'lang': 'rexx', 'tags': {'s': 'subroutine'}}
 
 " ruby language
 let s:tlist_def_ruby_settings = {
-    \ 'c': 'class',
-    \ 'f': 'method',
-    \ 'F': 'function',
-    \ 'm': 'singleton method'
+    \ 'lang': 'ruby', 'tags': {
+      \ 'c': 'class',
+      \ 'f': 'method',
+      \ 'F': 'function',
+      \ 'm': 'singleton method'
+    \ }
   \ }
 
 " scheme language
 let s:tlist_def_scheme_settings = {
-    \ 's': 'set',
-    \ 'f': 'function'
+    \ 'lang': 'scheme', 'tags': {
+      \ 's': 'set',
+      \ 'f': 'function'
+    \ }
   \ }
 
 " shell language
-let s:tlist_def_sh_settings = {'f': 'function'}
+let s:tlist_def_sh_settings = {'lang': 'sh', 'tags': {'f': 'function'}}
 
 " C shell language
-let s:tlist_def_csh_settings = {'f': 'function'}
+let s:tlist_def_csh_settings = {'lang': 'sh', 'tags': {'f': 'function'}}
 
 " Z shell language
-let s:tlist_def_zsh_settings = {'f': 'function'}
+let s:tlist_def_zsh_settings = {'lang': 'sh', 'tags': {'f': 'function'}}
 
 " slang language
 let s:tlist_def_slang_settings = {
-    \ 'n': 'namespace',
-    \ 'f': 'function'
+    \ 'lang': 'slang', 'tags': {
+      \ 'n': 'namespace',
+      \ 'f': 'function'
+    \ }
   \ }
 
 " sml language
 let s:tlist_def_sml_settings = {
-    \ 'e': 'exception',
-    \ 'c': 'functor',
-    \ 's': 'signature',
-    \ 'r': 'structure',
-    \ 't': 'type',
-    \ 'v': 'value',
-    \ 'f': 'function'
+    \ 'lang': 'sml', 'tags': {
+      \ 'e': 'exception',
+      \ 'c': 'functor',
+      \ 's': 'signature',
+      \ 'r': 'structure',
+      \ 't': 'type',
+      \ 'v': 'value',
+      \ 'f': 'function'
+    \ }
   \ }
 
 " sql language
 let s:tlist_def_sql_settings = {
-    \ 'c': 'cursor',
-    \ 'F': 'field',
-    \ 'P': 'package',
-    \ 'r': 'record',
-    \ 's': 'subtype',
-    \ 't': 'table',
-    \ 'T': 'trigger',
-    \ 'v': 'variable',
-    \ 'f': 'function',
-    \ 'p': 'procedure'
+    \ 'lang': 'sql', 'tags': {
+      \ 'c': 'cursor',
+      \ 'F': 'field',
+      \ 'P': 'package',
+      \ 'r': 'record',
+      \ 's': 'subtype',
+      \ 't': 'table',
+      \ 'T': 'trigger',
+      \ 'v': 'variable',
+      \ 'f': 'function',
+      \ 'p': 'procedure'
+    \ }
   \ }
 
 " tcl language
 let s:tlist_def_tcl_settings = {
-    \ 'c': 'class',
-    \ 'f': 'method',
-    \ 'm': 'method',
-    \ 'p': 'procedure'
+    \ 'lang': 'tcl', 'tags': {
+      \ 'c': 'class',
+      \ 'f': 'method',
+      \ 'm': 'method',
+      \ 'p': 'procedure'
+    \ }
   \ }
 
 " vera language
 let s:tlist_def_vera_settings = {
-    \ 'c': 'class',
-    \ 'd': 'macro',
-    \ 'e': 'enumerator',
-    \ 'f': 'function',
-    \ 'g': 'enum',
-    \ 'm': 'member',
-    \ 'p': 'program',
-    \ 'P': 'prototype',
-    \ 't': 'task',
-    \ 'T': 'typedef',
-    \ 'v': 'variable',
-    \ 'x': 'externvar'
+    \ 'lang': 'vera', 'tags': {
+      \ 'c': 'class',
+      \ 'd': 'macro',
+      \ 'e': 'enumerator',
+      \ 'f': 'function',
+      \ 'g': 'enum',
+      \ 'm': 'member',
+      \ 'p': 'program',
+      \ 'P': 'prototype',
+      \ 't': 'task',
+      \ 'T': 'typedef',
+      \ 'v': 'variable',
+      \ 'x': 'externvar'
+    \ }
   \ }
 
 "verilog language
 let s:tlist_def_verilog_settings = {
-    \ 'm': 'module',
-    \ 'c': 'constant',
-    \ 'P': 'parameter',
-    \ 'e': 'event',
-    \ 'r': 'register',
-    \ 't': 'task',
-    \ 'w': 'write',
-    \ 'p': 'port',
-    \ 'v': 'variable',
-    \ 'f': 'function'
+    \ 'lang': 'verilog', 'tags': {
+      \ 'm': 'module',
+      \ 'c': 'constant',
+      \ 'P': 'parameter',
+      \ 'e': 'event',
+      \ 'r': 'register',
+      \ 't': 'task',
+      \ 'w': 'write',
+      \ 'p': 'port',
+      \ 'v': 'variable',
+      \ 'f': 'function'
+    \ }
   \ }
 
 " vim language
 let s:tlist_def_vim_settings = {
-    \ 'a': 'autocmds',
-    \ 'v': 'variable',
-    \ 'f': 'function'
+    \ 'lang': 'vim', 'tags': {
+      \ 'a': 'autocmds',
+      \ 'v': 'variable',
+      \ 'f': 'function'
+    \ }
   \ }
 
 " yacc language
-let s:tlist_def_yacc_settings = {'l': 'label'}
+let s:tlist_def_yacc_settings = {'lang': 'yacc', 'tags': {'l': 'label'}}
 " }}}
 
 " AutoOpen() {{{
@@ -359,8 +405,12 @@ function! eclim#taglist#taglisttoo#AutoOpen()
   endif
 endfunction " }}}
 
-" Taglist() {{{
-function! eclim#taglist#taglisttoo#Taglist ()
+" Taglist([action]) {{{
+" action
+"   - not supplied (or -1): toggle
+"   - 1: open
+"   - 0: close
+function! eclim#taglist#taglisttoo#Taglist(...)
   if !exists('g:Tlist_Ctags_Cmd')
     call eclim#util#EchoError('Unable to find a version of ctags installed.')
     return
@@ -371,50 +421,71 @@ function! eclim#taglist#taglisttoo#Taglist ()
     return
   endif
 
-  let winnum = bufwinnr(g:TagList_title)
-  if winnum != -1
-    exe winnum . 'wincmd w'
-    call s:CloseTaglist()
-    return
+  let action = len(a:000) ? a:000[0] : -1
+
+  if action == -1 || action == 0
+    let winnum = bufwinnr(g:TagList_title)
+    if winnum != -1
+      exe winnum . 'wincmd w'
+      call s:CloseTaglist()
+      return
+    endif
   endif
 
-  call s:ProcessTags()
-  call s:StartAutocmds()
+  if action == -1 || action == 1
+    call s:ProcessTags()
+    call s:StartAutocmds()
 
-  augroup taglisttoo
-    autocmd!
-    autocmd BufEnter __Tag_List__ nested call s:ExitOnlyWindow()
-    autocmd BufUnload __Tag_List__ call s:Cleanup()
-    autocmd CursorHold * call s:ShowCurrentTag()
-  augroup END
+    augroup taglisttoo
+      autocmd!
+      autocmd BufUnload __Tag_List__ call s:Cleanup()
+      autocmd CursorHold * call s:ShowCurrentTag()
+    augroup END
+  endif
 endfunction " }}}
 
 " s:StartAutocmds() {{{
-function! s:StartAutocmds ()
+function! s:StartAutocmds()
   augroup taglisttoo_file
     autocmd!
     autocmd BufEnter,BufWritePost *
       \ if bufwinnr(g:TagList_title) != -1 |
       \   call s:ProcessTags() |
       \ endif
+    " bit of a hack to re-process tags if the filetype changes after the tags
+    " have been processed.
+    autocmd FileType *
+      \ if exists('b:ft') |
+      \   if b:ft != &ft |
+      \     if bufwinnr(g:TagList_title) != -1 |
+      \       call s:ProcessTags() |
+      \     endif |
+      \   endif |
+      \ else |
+      \   let b:ft = &ft |
+      \ endif
+    autocmd WinLeave *
+      \ if bufwinnr(g:TagList_title) != -1 |
+      \   let s:taglisttoo_prevwinnr = winnr() |
+      \ endif
   augroup END
 endfunction " }}}
 
 " s:StopAutocmds() {{{
-function! s:StopAutocmds ()
+function! s:StopAutocmds()
   augroup taglisttoo_file
     autocmd!
   augroup END
 endfunction " }}}
 
 " s:CloseTaglist() {{{
-function! s:CloseTaglist ()
+function! s:CloseTaglist()
   close
   call s:Cleanup()
 endfunction " }}}
 
 " s:Cleanup() {{{
-function! s:Cleanup ()
+function! s:Cleanup()
   augroup taglisttoo_file
     autocmd!
   augroup END
@@ -425,7 +496,7 @@ function! s:Cleanup ()
 endfunction " }}}
 
 " s:ProcessTags() {{{
-function! s:ProcessTags ()
+function! s:ProcessTags()
   let file = expand('%')
   if file =~ s:taglisttoo_ignore || file == ''
     return
@@ -435,58 +506,105 @@ function! s:ProcessTags ()
   if s:FileSupported(expand('%:p'), &ft)
     if exists('g:tlist_{&ft}_settings')
       let settings = g:tlist_{&ft}_settings
-      let types = join(keys(g:tlist_{&ft}_settings), '')
+      let types = join(keys(settings.tags), '')
     else
       let settings = s:tlist_def_{&ft}_settings
-      let types = join(keys(s:tlist_def_{&ft}_settings), '')
+      let types = join(keys(settings.tags), '')
     endif
 
     let file = substitute(expand('%:p'), '\', '/', 'g')
     let command = g:Tlist_Ctags_Cmd . ' -f - --format=2 --excmd=pattern ' .
         \ '--fields=nks --sort=no --language-force=<lang> ' .
         \ '--<lang>-types=<types> "<file>"'
-    let command = substitute(command, '<lang>', &ft, 'g')
+    let command = substitute(command, '<lang>', settings.lang, 'g')
     let command = substitute(command, '<types>', types, 'g')
     let command = substitute(command, '<file>', file, '')
 
-    let results = split(eclim#util#System(command), '\n')
-    if v:shell_error
+    if command =~ '^-command'
+      let response = eclim#ExecuteEclim(command)
+    else
+      let response = eclim#util#System(command)
+      if v:shell_error
+        call eclim#util#EchoError('taglist failed with error code: ' . v:shell_error)
+        return
+      endif
+    endif
+
+    let results = split(response, '\n')
+    if len(response) == 1 && response[0] == '0'
       return
     endif
 
-    if g:Tlist_Sort_Type == 'name'
-      call sort(results)
-    endif
+    while len(results) && results[0] =~ 'ctags.*: Warning:'
+      call remove(results, 0)
+    endwhile
 
-    for result in results
-      let pre = substitute(result, '\(.\{-}\)\t\/\^.*', '\1', '')
-      let pattern = substitute(result, '.\{-}\(\/\^.*\$\/;"\).*', '\1', '')
-      let post = substitute(result, '.*\$\/;"\t', '\1', '')
-      let values = split(pre, '\t') + [pattern] + split(post, '\t')
-
-      " filter false positives found in comments.
-      if values[-1] =~ 'line:[0-9]\+'
-        exec 'let lnum = ' . substitute(values[-1], 'line:\([0-9]\+\).*', '\1', '')
-        let line = getline(lnum)
-        let col = len(line) - len(substitute(line, '^\s*', '', '')) + 1
-        if synIDattr(synID(lnum, col, 1), "name") =~ '\([Cc]omment\|[Ss]tring\)'
-          continue
-        endif
+    let truncated = 0
+    if len(results)
+      " for some reason, vim may truncate the output of system, leading to only
+      " a partial taglist.
+      let values = s:ParseOutputLine(results[-1])
+      if len(values) < 5
+        let truncated = 1
       endif
 
-      call add(tags, values)
-    endfor
+      if g:Tlist_Sort_Type == 'name'
+        call sort(results)
+      endif
+
+      for result in results
+        let values = s:ParseOutputLine(result)
+
+        " filter false positives found in comments.
+        if values[-1] =~ 'line:[0-9]\+'
+          exec 'let lnum = ' . substitute(values[-1], 'line:\([0-9]\+\).*', '\1', '')
+          let line = getline(lnum)
+          let col = len(line) - len(substitute(line, '^\s*', '', '')) + 1
+          if synIDattr(synID(lnum, col, 1), "name") =~ '\([Cc]omment\|[Ss]tring\)'
+            continue
+          endif
+        endif
+
+        " exit if we run into apparent bug in vim that truncates the response
+        " from system()
+        if len(values) < 5
+          break
+        endif
+
+        call add(tags, values)
+      endfor
+    endif
 
     if exists('s:tlist_format_{&ft}')
-      exec 'call s:Window(settings, tags, ' . s:tlist_format_{&ft} . '(settings, tags))'
+      exec 'call s:Window(settings.tags, tags, ' .
+        \ s:tlist_format_{&ft} . '(settings.tags, tags))'
     else
-      call s:Window(settings, tags, s:FormatDefault(settings, tags))
+      call s:Window(settings.tags, tags, s:FormatDefault(settings.tags, tags))
+    endif
+
+    " if vim truncated the output, then add a note in the taglist indicating
+    " the the list has been truncated.
+    if truncated
+      setlocal modifiable
+      call append(line('$'), '')
+      call append(line('$'), 'Warning: taglist truncated.')
+      setlocal nomodifiable
     endif
   else
     call s:Window({}, tags, [[],[]])
   endif
 
   winc p
+
+  call s:ShowCurrentTag()
+endfunction " }}}
+
+" s:ParseOutputLine(line) {{{
+function! s:ParseOutputLine(line)
+  let pre = substitute(a:line, '\(.\{-}\)\t\/\^.*', '\1', '')
+  let pattern = substitute(a:line, '.\{-}\(\/\^.*\$\/;"\).*', '\1', '')
+  let post = substitute(a:line, '.*\$\/;"\t', '', '')
+  return split(pre, '\t') + [pattern] + split(post, '\t')
 endfunction " }}}
 
 " s:FormatDefault(types, tags) {{{
@@ -497,7 +615,7 @@ endfunction " }}}
 "             For content lines that do no map to a tag, use -1 as the value.
 " result[1] - A list of lines to be inserted as content into the taglist
 "             window.
-function! s:FormatDefault (types, tags)
+function! s:FormatDefault(types, tags)
   let lines = []
   let content = []
 
@@ -513,7 +631,11 @@ function! s:FormatDefault (types, tags)
 endfunction " }}}
 
 " s:JumpToTag() {{{
-function! s:JumpToTag ()
+function! s:JumpToTag()
+  if line('.') > len(b:taglisttoo_content[0])
+    return
+  endif
+
   let index = b:taglisttoo_content[0][line('.') - 1]
   if index == -1
     return
@@ -522,7 +644,15 @@ function! s:JumpToTag ()
   let tag_info = b:taglisttoo_tags[index]
 
   call s:StopAutocmds()
-  exec bufwinnr(b:taglisttoo_file_bufnr) . 'winc w'
+
+  " handle case of buffer open in multiple windows.
+  if s:taglisttoo_prevwinnr &&
+   \ winbufnr(s:taglisttoo_prevwinnr) == b:taglisttoo_file_bufnr
+    exec s:taglisttoo_prevwinnr . 'winc w'
+  else
+    exec bufwinnr(b:taglisttoo_file_bufnr) . 'winc w'
+  endif
+
   call s:StartAutocmds()
 
   let lnum = s:GetTagLineNumber(tag_info)
@@ -533,8 +663,7 @@ function! s:JumpToTag ()
     call cursor(lnum, 1)
     call s:ShowCurrentTag()
   else
-    let clnum = line('.')
-    let ccnum = col('.')
+    let pos = getpos('.')
 
     call cursor(lnum, 1)
 
@@ -563,7 +692,7 @@ function! s:JumpToTag ()
       let line = 0
     endif
 
-    call cursor(clnum, ccnum)
+    call setpos('.', pos)
     if line
       mark '
       call cursor(line, 1)
@@ -573,7 +702,7 @@ function! s:JumpToTag ()
 endfunction " }}}
 
 " s:Window(types, tags, content) {{{
-function! s:Window (types, tags, content)
+function! s:Window(types, tags, content)
   let filename = expand('%:t')
   let file_bufnr = bufnr('%')
 
@@ -581,25 +710,14 @@ function! s:Window (types, tags, content)
   if winnum != -1
     exe winnum . 'wincmd w'
   else
-    let bufnum = bufnr(g:TagList_title)
-    if bufnum == -1
-      let wcmd = g:TagList_title
-    else
-      let wcmd = '+buffer' . bufnum
-    endif
-
-    "botright vertical new
-    exec 'silent! topleft vertical ' . g:Tlist_WinWidth . 'split ' . wcmd
+    call eclim#display#window#VerticalToolWindowOpen(g:TagList_title, 10)
 
     setlocal filetype=taglist
-
     setlocal buftype=nofile
     setlocal bufhidden=delete
     setlocal noswapfile
     setlocal nobuflisted
-    setlocal nonumber
     setlocal nowrap
-    setlocal winfixwidth
     setlocal tabstop=2
 
     syn match TagListFileName "^.*\%1l.*"
@@ -610,24 +728,20 @@ function! s:Window (types, tags, content)
     nnoremap <silent> <buffer> <cr> :call <SID>JumpToTag()<cr>
   endif
 
-  let saved = @"
-
-  let clnum = line('.')
-  let ccnum = line('.')
+  let pos = getpos('.')
   setlocal modifiable
-  silent 1,$delete
+  silent 1,$delete _
   call append(1, a:content[1])
   silent retab
-  silent 1,1delete
+  silent 1,1delete _
   setlocal nomodifiable
-  call cursor(clnum, ccnum)
-
-  let @" = saved
+  call setpos('.', pos)
 
   silent! syn clear TagListKeyword
   for value in values(a:types)
     exec 'syn keyword TagListKeyword ' . value
   endfor
+  syn match TagListKeyword /^Warning:/
 
   let b:taglisttoo_content = a:content
   let b:taglisttoo_tags = a:tags
@@ -635,7 +749,7 @@ function! s:Window (types, tags, content)
 endfunction " }}}
 
 " s:ShowCurrentTag() {{{
-function! s:ShowCurrentTag ()
+function! s:ShowCurrentTag()
   if s:FileSupported(expand('%:p'), &ft) && bufwinnr(g:TagList_title) != -1
     let tags = getbufvar(g:TagList_title, 'taglisttoo_tags')
     let content = getbufvar(g:TagList_title, 'taglisttoo_content')
@@ -675,30 +789,6 @@ function! s:ShowCurrentTag ()
   endif
 endfunction " }}}
 
-" s:ExitOnlyWindow () {{{
-function! s:ExitOnlyWindow()
-  " Before quitting Vim, delete the taglist buffer so that
-  " the '0 mark is correctly set to the previous buffer.
-  if v:version < 700
-    if winbufnr(2) == -1
-      bdelete
-      quit
-    endif
-  else
-    if winbufnr(2) == -1
-      if tabpagenr('$') == 1
-        " Only one tag page is present
-        bdelete
-        quit
-      else
-        " More than one tab page is present. Close only the current
-        " tab page
-        close
-      endif
-    endif
-  endif
-endfunction " }}}
-
 " s:FileSupported() {{{
 " Check whether tag listing is supported for the specified file
 function! s:FileSupported(filename, ftype)
@@ -730,7 +820,7 @@ function! s:FileSupported(filename, ftype)
 endfunction " }}}
 
 " s:GetTagLineNumber(tag) {{{
-function! s:GetTagLineNumber (tag)
+function! s:GetTagLineNumber(tag)
   if len(a:tag) > 4
     return substitute(a:tag[4], '.*:\(.*\)', '\1', '')
   endif

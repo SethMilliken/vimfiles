@@ -1,24 +1,24 @@
 " Author:  Eric Van Dewoestine
-" Version: $Revision: 1677 $
 "
 " Description: {{{
 "   see http://eclim.sourceforge.net/vim/java/junit.html
 "
 " License:
 "
-" Copyright (c) 2005 - 2008
+" Copyright (C) 2005 - 2009  Eric Van Dewoestine
 "
-" Licensed under the Apache License, Version 2.0 (the "License");
-" you may not use this file except in compliance with the License.
-" You may obtain a copy of the License at
+" This program is free software: you can redistribute it and/or modify
+" it under the terms of the GNU General Public License as published by
+" the Free Software Foundation, either version 3 of the License, or
+" (at your option) any later version.
 "
-"      http://www.apache.org/licenses/LICENSE-2.0
+" This program is distributed in the hope that it will be useful,
+" but WITHOUT ANY WARRANTY; without even the implied warranty of
+" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+" GNU General Public License for more details.
 "
-" Unless required by applicable law or agreed to in writing, software
-" distributed under the License is distributed on an "AS IS" BASIS,
-" WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-" See the License for the specific language governing permissions and
-" limitations under the License.
+" You should have received a copy of the GNU General Public License
+" along with this program.  If not, see <http://www.gnu.org/licenses/>.
 "
 " }}}
 
@@ -31,7 +31,7 @@ let s:command_insert =
 
 " JUnitExecute(test) {{{
 " Execute the supplied test, or if none supplied, the current test.
-function! eclim#java#junit#JUnitExecute (test)
+function! eclim#java#junit#JUnitExecute(test)
   let test = a:test
   if test == ''
     let class = eclim#java#util#GetFullyQualifiedClassname()
@@ -41,7 +41,7 @@ function! eclim#java#junit#JUnitExecute (test)
   endif
 
   let command = eclim#project#util#GetProjectSetting("org.eclim.java.junit.command")
-  if command == '0'
+  if type(command) == 0
     return
   endif
 
@@ -63,7 +63,7 @@ endfunction " }}}
 "   Empty string: Use the current file to determine the test result file.
 "   Class name of a test: Locate the results for class (ex. 'TestMe').
 "   The results dir relative results file name: TEST-org.foo.TestMe.xml
-function! eclim#java#junit#JUnitResult (test)
+function! eclim#java#junit#JUnitResult(test)
   let path = s:GetResultsDir()
   if path == '' || path == '/'
     call eclim#util#EchoWarning(
@@ -111,7 +111,7 @@ endfunction " }}}
 " JUnitImpl() {{{
 " Opens a window that allows the user to choose methods to implement tests
 " for.
-function! eclim#java#junit#JUnitImpl ()
+function! eclim#java#junit#JUnitImpl()
   if !eclim#project#util#IsCurrentFileInProject()
     return
   endif
@@ -139,7 +139,7 @@ function! eclim#java#junit#JUnitImpl ()
 endfunction " }}}
 
 " JUnitImplWindow(command) {{{
-function! eclim#java#junit#JUnitImplWindow (command)
+function! eclim#java#junit#JUnitImplWindow(command)
   let name = eclim#java#util#GetFilename() . "_impl"
   if eclim#util#TempWindowCommand(a:command, name)
     setlocal ft=java
@@ -151,7 +151,7 @@ function! eclim#java#junit#JUnitImplWindow (command)
 endfunction " }}}
 
 " AddTestImpl(visual) {{{
-function! s:AddTestImpl (visual)
+function! s:AddTestImpl(visual)
   let command = s:command_insert
   if b:base != ""
     let command = substitute(command, '<base>', '-b ' . b:base, '')
@@ -164,9 +164,9 @@ function! s:AddTestImpl (visual)
 endfunction " }}}
 
 " GetResultsDir() {{{
-function s:GetResultsDir ()
+function s:GetResultsDir()
   let path = eclim#project#util#GetProjectSetting("org.eclim.java.junit.output_dir")
-  if path == '0'
+  if type(path) == 0
     return
   endif
 
@@ -178,13 +178,13 @@ endfunction " }}}
 
 " CommandCompleteTest(argLead, cmdLine, cursorPos) {{{
 " Custom command completion for junit test cases.
-function eclim#java#junit#CommandCompleteTest (argLead, cmdLine, cursorPos)
+function eclim#java#junit#CommandCompleteTest(argLead, cmdLine, cursorPos)
   return eclim#java#test#CommandCompleteTest('junit', a:argLead, a:cmdLine, a:cursorPos)
 endfunction " }}}
 
 " CommandCompleteResult(argLead, cmdLine, cursorPos) {{{
 " Custom command completion for test case results.
-function! eclim#java#junit#CommandCompleteResult (argLead, cmdLine, cursorPos)
+function! eclim#java#junit#CommandCompleteResult(argLead, cmdLine, cursorPos)
   let cmdTail = strpart(a:cmdLine, a:cursorPos)
   let argLead = substitute(a:argLead, cmdTail . '$', '', '')
 

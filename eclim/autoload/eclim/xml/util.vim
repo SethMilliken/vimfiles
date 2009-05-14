@@ -1,5 +1,4 @@
 " Author:  Eric Van Dewoestine
-" Version: $Revision: 1677 $
 "
 " Description: {{{
 "   Utility functions for xml plugins.
@@ -9,19 +8,20 @@
 "
 " License:
 "
-" Copyright (c) 2005 - 2008
+" Copyright (C) 2005 - 2009  Eric Van Dewoestine
 "
-" Licensed under the Apache License, Version 2.0 (the "License");
-" you may not use this file except in compliance with the License.
-" You may obtain a copy of the License at
+" This program is free software: you can redistribute it and/or modify
+" it under the terms of the GNU General Public License as published by
+" the Free Software Foundation, either version 3 of the License, or
+" (at your option) any later version.
 "
-"      http://www.apache.org/licenses/LICENSE-2.0
+" This program is distributed in the hope that it will be useful,
+" but WITHOUT ANY WARRANTY; without even the implied warranty of
+" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+" GNU General Public License for more details.
 "
-" Unless required by applicable law or agreed to in writing, software
-" distributed under the License is distributed on an "AS IS" BASIS,
-" WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-" See the License for the specific language governing permissions and
-" limitations under the License.
+" You should have received a copy of the GNU General Public License
+" along with this program.  If not, see <http://www.gnu.org/licenses/>.
 "
 " }}}
 
@@ -34,7 +34,7 @@ let s:element = '.\{-}<\([a-zA-Z].\{-}\)\(\s\|>\|$\).*'
 
 " GetDtd() {{{
 " Get the dtd defined in the current file.
-function! eclim#xml#util#GetDtd ()
+function! eclim#xml#util#GetDtd()
   let linenum = search('<!DOCTYPE\s\+\_.\{-}>', 'bcnw')
   if linenum > 0
     let line = ''
@@ -55,7 +55,7 @@ endfunction " }}}
 " GetXsd() {{{
 " Get the schema defined in the current file, for the optionally provided
 " namespace prefix, or the default namespace.
-function! eclim#xml#util#GetXsd (...)
+function! eclim#xml#util#GetXsd(...)
   let namespace = ''
   if len(a:000) > 0
     let namespace = a:000[0]
@@ -90,7 +90,7 @@ endfunction " }}}
 
 " GetElementName() {{{
 " Get name of the element that the cursor is currently on.
-function! eclim#xml#util#GetElementName ()
+function! eclim#xml#util#GetElementName()
   let line = getline('.')
   let cnum = col('.')
   if line[cnum - 1] == '<'
@@ -115,18 +115,17 @@ endfunction " }}}
 " GetParentElementName() {{{
 " Get the parent element name relative to the current cursor position.
 " Depends on 'at' visual selection ability.
-function! eclim#xml#util#GetParentElementName ()
-  let clnum = line('.')
-  let ccnum = col('.')
+function! eclim#xml#util#GetParentElementName()
+  let pos = getpos('.')
 
   " select tags (best solution I can think of).
-  silent! normal v2at
-  normal v
+  silent! normal! v2at
+  normal! v
 
   call cursor(line("'<"), col("'<"))
   let parent = eclim#xml#util#GetElementName()
 
-  call cursor(clnum, ccnum)
+  call setpos('.', pos)
 
   if eclim#xml#util#GetElementName() == parent
     return ''

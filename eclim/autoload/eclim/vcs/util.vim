@@ -1,24 +1,24 @@
 " Author:  Eric Van Dewoestine
-" Version: $Revision$
 "
 " Description: {{{
 "   see http://eclim.sourceforge.net/vim/common/vcs.html
 "
 " License:
 "
-" Copyright (c) 2005 - 2008
+" Copyright (C) 2005 - 2009  Eric Van Dewoestine
 "
-" Licensed under the Apache License, Version 2.0 (the "License");
-" you may not use this file except in compliance with the License.
-" You may obtain a copy of the License at
+" This program is free software: you can redistribute it and/or modify
+" it under the terms of the GNU General Public License as published by
+" the Free Software Foundation, either version 3 of the License, or
+" (at your option) any later version.
 "
-"      http://www.apache.org/licenses/LICENSE-2.0
+" This program is distributed in the hope that it will be useful,
+" but WITHOUT ANY WARRANTY; without even the implied warranty of
+" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+" GNU General Public License for more details.
 "
-" Unless required by applicable law or agreed to in writing, software
-" distributed under the License is distributed on an "AS IS" BASIS,
-" WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-" See the License for the specific language governing permissions and
-" limitations under the License.
+" You should have received a copy of the GNU General Public License
+" along with this program.  If not, see <http://www.gnu.org/licenses/>.
 "
 " }}}
 
@@ -31,7 +31,7 @@ endif
 " GetVcsFunction(func_name) {{{
 " Gets a reference to the proper vcs function.
 " Ex. let GetRevision = eclim#vcs#util#GetVcsFunction('GetRevision')
-function eclim#vcs#util#GetVcsFunction (func_name)
+function eclim#vcs#util#GetVcsFunction(func_name)
   let type = ''
   if isdirectory('CVS')
     runtime autoload/eclim/vcs/impl/cvs.vim
@@ -41,10 +41,19 @@ function eclim#vcs#util#GetVcsFunction (func_name)
     runtime autoload/eclim/vcs/impl/svn.vim
     let type = 'svn'
   else
-    runtime autoload/eclim/vcs/impl/hg.vim
-    let dir = finddir('.hg', '.;')
-    if dir != ''
-      let type = 'hg'
+    let hgdir = finddir('.hg', getcwd() . ';')
+    let gitdir = finddir('.git', getcwd() . ';')
+    if gitdir != ''
+      let gitdir = fnamemodify(gitdir, ':p')
+    endif
+    if hgdir != '' || gitdir != ''
+      if len(hgdir) > len(gitdir)
+        runtime autoload/eclim/vcs/impl/hg.vim
+        let type = 'hg'
+      else
+        runtime autoload/eclim/vcs/impl/git.vim
+        let type = 'git'
+      endif
     endif
   endif
 
@@ -63,7 +72,7 @@ endfunction " }}}
 " Gets the repository root relative path of the specified file, or the current
 " file if the empty string supplied.
 " Ex. /trunk/src/vim/eclim/autoload/eclim/eclipse.vim
-function eclim#vcs#util#GetFilePath (file)
+function eclim#vcs#util#GetFilePath(file)
   let project_root = eclim#project#util#GetCurrentProjectRoot()
   let file = a:file
   let dir = file
@@ -84,7 +93,7 @@ endfunction " }}}
 " Gets the repository root relative path of the specified file in the supplied
 " dir.
 " Ex. /src/vim/eclim/autoload/eclim/eclipse.vim
-function eclim#vcs#util#GetRelativePath (dir, file)
+function eclim#vcs#util#GetRelativePath(dir, file)
   let path = ''
 
   let cwd = getcwd()
@@ -103,7 +112,7 @@ endfunction " }}}
 
 " GetPreviousRevision([file, revision]) {{{
 " Gets the previous revision of the current file.
-function eclim#vcs#util#GetPreviousRevision (...)
+function eclim#vcs#util#GetPreviousRevision(...)
   let cwd = getcwd()
   let dir = len(a:000) > 0 ? fnamemodify(a:000[0], ':p:h') : expand('%:p:h')
   if isdirectory(dir)
@@ -129,7 +138,7 @@ endfunction " }}}
 
 " GetRevision([file]) {{{
 " Gets the current revision of the current or supplied file.
-function eclim#vcs#util#GetRevision (...)
+function eclim#vcs#util#GetRevision(...)
   let path = len(a:000) > 0 ? a:000[0] : expand('%')
   let cwd = getcwd()
   if filereadable(path)
@@ -153,7 +162,7 @@ endfunction " }}}
 
 " GetRevisions() {{{
 " Gets a list of revision numbers for the current file.
-function eclim#vcs#util#GetRevisions ()
+function eclim#vcs#util#GetRevisions()
   let revisions = []
 
   let cwd = getcwd()
@@ -173,7 +182,7 @@ endfunction " }}}
 
 " GetRoot(dir) {{{
 " Gets the absolute path to the repository root on the local file system.
-function eclim#vcs#util#GetRoot (dir)
+function eclim#vcs#util#GetRoot(dir)
   let root = ''
 
   let cwd = getcwd()
@@ -193,7 +202,7 @@ endfunction " }}}
 
 " Vcs(cmd, args) {{{
 " Executes the supplied vcs command with the supplied args.
-function eclim#vcs#util#Vcs (cmd, args)
+function eclim#vcs#util#Vcs(cmd, args)
   if !executable(a:cmd)
     call eclim#util#EchoError(a:cmd . ' executable not found in your path.')
     return
@@ -211,14 +220,14 @@ endfunction " }}}
 
 " IsCacheValid(metadata) {{{
 " Function used to validate cached values on get from the cache.
-function eclim#vcs#util#IsCacheValid (metadata)
+function eclim#vcs#util#IsCacheValid(metadata)
   let revision = eclim#vcs#util#GetRevision(a:metadata.path)
   return revision == a:metadata.revision
 endfunction " }}}
 
 " CommandCompleteRevision(argLead, cmdLine, cursorPos) {{{
 " Custom command completion for revision numbers out of viewvc.
-function! eclim#vcs#util#CommandCompleteRevision (argLead, cmdLine, cursorPos)
+function! eclim#vcs#util#CommandCompleteRevision(argLead, cmdLine, cursorPos)
   let cmdLine = strpart(a:cmdLine, 0, a:cursorPos)
   let args = eclim#util#ParseArgs(cmdLine)
   let argLead = cmdLine =~ '\s$' ? '' : args[len(args) - 1]

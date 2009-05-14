@@ -1,31 +1,31 @@
 " Author:  Eric Van Dewoestine
-" Version: $Revision$
 "
 " Description: {{{
 "   see http://eclim.sourceforge.net/vim/common/maximize.html
 "
 " License:
 "
-" Copyright (c) 2005 - 2008
+" Copyright (C) 2005 - 2009  Eric Van Dewoestine
 "
-" Licensed under the Apache License, Version 2.0 (the "License");
-" you may not use this file except in compliance with the License.
-" You may obtain a copy of the License at
+" This program is free software: you can redistribute it and/or modify
+" it under the terms of the GNU General Public License as published by
+" the Free Software Foundation, either version 3 of the License, or
+" (at your option) any later version.
 "
-"      http://www.apache.org/licenses/LICENSE-2.0
+" This program is distributed in the hope that it will be useful,
+" but WITHOUT ANY WARRANTY; without even the implied warranty of
+" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+" GNU General Public License for more details.
 "
-" Unless required by applicable law or agreed to in writing, software
-" distributed under the License is distributed on an "AS IS" BASIS,
-" WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-" See the License for the specific language governing permissions and
-" limitations under the License.
+" You should have received a copy of the GNU General Public License
+" along with this program.  If not, see <http://www.gnu.org/licenses/>.
 "
 " }}}
 
 " Global Variables {{{
   if !exists('g:MaximizeExcludes')
     let g:MaximizeExcludes =
-      \ '\(ProjectTree_*\|__Tag_List__\|-MiniBufExplorer-\|command-line\)'
+      \ '\(ProjectTree_*\|' . g:TagList_title . '\|-MiniBufExplorer-\|command-line\)'
   endif
   if !exists('g:MaximizeMinWinHeight')
     let g:MaximizeMinWinHeight = 0
@@ -36,19 +36,29 @@
   if !exists('g:MaximizeQuickfixHeight')
     let g:MaximizeQuickfixHeight = 10
   endif
+  if !exists('g:MaximizeUserSpecialtyWindowsRestore')
+    let g:MaximizeUserSpecialtyWindowsRestore = []
+  endif
   if !exists('g:MaximizeSpecialtyWindowsRestore')
-    let g:MaximizeSpecialtyWindowsRestore = [
-        \ ['g:TagList_title', '"vertical <window>resize " . g:Tlist_WinWidth'],
-        \ [
-          \ 'g:EclimProjectTreeTitle',
-          \ '"vertical <window>resize " . g:EclimProjectTreeWidth'
-        \ ],
-      \ ]
+    let g:MaximizeSpecialtyWindowsRestore = []
+    if !exists('g:TagListToo')
+      if exists('g:Tlist_Use_Horiz_Window') && g:Tlist_Use_Horiz_Window
+        let g:MaximizeSpecialtyWindowsRestore = [
+            \ ['g:TagList_title', '"<window>resize " . g:Tlist_WinHeight'],
+          \ ]
+      else
+        let g:MaximizeSpecialtyWindowsRestore = [
+            \ ['g:TagList_title', '"vertical <window>resize " . g:Tlist_WinWidth'],
+          \ ]
+      endif
+    endif
+    let g:MaximizeSpecialtyWindowsRestore =
+      \ g:MaximizeSpecialtyWindowsRestore + g:MaximizeUserSpecialtyWindowsRestore
   endif
 " }}}
 
 " MaximizeWindow() {{{
-function! eclim#display#maximize#MaximizeWindow ()
+function! eclim#display#maximize#MaximizeWindow()
   " disable any minimize settings
   call eclim#display#maximize#ResetMinimized()
 
@@ -65,7 +75,7 @@ function! eclim#display#maximize#MaximizeWindow ()
 endfunction " }}}
 
 " MinimizeWindow() {{{
-function! eclim#display#maximize#MinimizeWindow (...)
+function! eclim#display#maximize#MinimizeWindow(...)
   let curwinnum = winnr()
 
   exec "set winminheight=" . g:MaximizeMinWinHeight
@@ -87,14 +97,21 @@ function! eclim#display#maximize#MinimizeWindow (...)
 
   " first loop through and mark the buffers
   for winnum in args
-    call setwinvar(winnum, "minimized", 1)
+    let val = getwinvar(winnum, 'minimized')
+    let minimized = type(val) == 0 ? !val : 1
+    if !minimized
+      call setwinvar(winnum, '&winfixheight', 0)
+      call setwinvar(winnum, '&winfixwidth', 0)
+    endif
+    call setwinvar(winnum, 'minimized', minimized)
   endfor
 
-  call s:Reminimize()
+  call eclim#util#ExecWithoutAutocmds('call eclim#display#maximize#Reminimize()')
+  call s:EnableMinimizeAutoCommands()
 endfunction " }}}
 
 " MaximizeUpdate() {{{
-function! eclim#display#maximize#MaximizeUpdate ()
+function! eclim#display#maximize#MaximizeUpdate()
   if expand('%') !~ g:MaximizeExcludes && !exists('b:eclim_temp_window') && &ft != 'qf'
     call s:DisableMaximizeAutoCommands()
 
@@ -132,7 +149,7 @@ function! eclim#display#maximize#MaximizeUpdate ()
 endfunction " }}}
 
 " GetMaximizedWindow() {{{
-function! eclim#display#maximize#GetMaximizedWindow ()
+function! eclim#display#maximize#GetMaximizedWindow()
   let winend = winnr('$')
   let winnum = 1
   while winnum <= winend
@@ -147,7 +164,7 @@ function! eclim#display#maximize#GetMaximizedWindow ()
 endfunction " }}}
 
 " ResetMinimized() {{{
-function! eclim#display#maximize#ResetMinimized ()
+function! eclim#display#maximize#ResetMinimized()
   call s:DisableMinimizeAutoCommands()
   let winend = winnr('$')
   let winnum = 1
@@ -160,14 +177,14 @@ function! eclim#display#maximize#ResetMinimized ()
 endfunction " }}}
 
 " DisableMaximizeAutoCommands() {{{
-function! s:DisableMaximizeAutoCommands ()
+function! s:DisableMaximizeAutoCommands()
   augroup maximize
     autocmd!
   augroup END
 endfunction " }}}
 
 " EnableMaximizeAutoCommands() {{{
-function! s:EnableMaximizeAutoCommands ()
+function! s:EnableMaximizeAutoCommands()
   call s:DisableMaximizeAutoCommands()
   call s:DisableMinimizeAutoCommands()
   augroup maximize
@@ -180,25 +197,26 @@ function! s:EnableMaximizeAutoCommands ()
 endfunction " }}}
 
 " DisableMinimizeAutoCommands() {{{
-function! s:DisableMinimizeAutoCommands ()
+function! s:DisableMinimizeAutoCommands()
   augroup minimize
     autocmd!
   augroup END
 endfunction " }}}
 
 " EnableMinimizeAutoCommands() {{{
-function! s:EnableMinimizeAutoCommands ()
+function! s:EnableMinimizeAutoCommands()
   call s:DisableMaximizeAutoCommands()
   augroup minimize
     autocmd!
     autocmd BufReadPost quickfix
       \ call eclim#display#maximize#AdjustFixedWindow(g:MaximizeQuickfixHeight, 0)
-    autocmd BufWinEnter,WinEnter * nested call s:Reminimize()
+    autocmd BufWinEnter,WinEnter * nested
+      \ call eclim#util#ExecWithoutAutocmds('call eclim#display#maximize#Reminimize()')
   augroup END
 endfunction " }}}
 
 " AdjustFixedWindow(height, maximize) {{{
-function! eclim#display#maximize#AdjustFixedWindow (height, maximize)
+function! eclim#display#maximize#AdjustFixedWindow(height, maximize)
   exec "resize " . a:height
   set winfixheight
 
@@ -212,7 +230,7 @@ function! eclim#display#maximize#AdjustFixedWindow (height, maximize)
 endfunction " }}}
 
 " CloseFixedWindow() {{{
-function! s:CloseFixedWindow ()
+function! s:CloseFixedWindow()
   if expand('<afile>') == "" || exists('b:eclim_temp_window')
     let maximized = eclim#display#maximize#GetMaximizedWindow()
     if maximized
@@ -224,8 +242,7 @@ endfunction " }}}
 " Reminimize() {{{
 " Invoked when changing windows to ensure that any minimized windows are
 " returned to their minimized state.
-function s:Reminimize ()
-  call s:DisableMinimizeAutoCommands()
+function eclim#display#maximize#Reminimize()
   let curwinnum = winnr()
   let winend = winnr('$')
   let winnum = 1
@@ -292,11 +309,10 @@ function s:Reminimize ()
   winc =
 
   call s:RestoreFixedWindows()
-  call s:EnableMinimizeAutoCommands()
 endfunction " }}}
 
 " RestoreWindows(maximized) {{{
-function! eclim#display#maximize#RestoreWindows (maximized)
+function! eclim#display#maximize#RestoreWindows(maximized)
   " reset the maximized var.
   if a:maximized
     call setwinvar(a:maximized, "maximized", 0)
@@ -318,7 +334,8 @@ function! eclim#display#maximize#RestoreWindows (maximized)
 endfunction " }}}
 
 " RestoreFixedWindows() {{{
-function! s:RestoreFixedWindows ()
+function! s:RestoreFixedWindows()
+  call eclim#display#window#VerticalToolWindowRestore()
   for settings in g:MaximizeSpecialtyWindowsRestore
     if exists(settings[0]) || settings[0] =~ '^".*"$'
       exec 'let name = ' . settings[0]
@@ -328,11 +345,20 @@ function! s:RestoreFixedWindows ()
       endif
     endif
   endfor
+
+  let last = winnr('$')
+  let index = 1
+  while index <= last
+    if getbufvar(winbufnr(index), 'eclim_temp_window') != ''
+      exec index . 'resize 10'
+    endif
+    let index += 1
+  endwhile
 endfunction " }}}
 
 " IsVerticalSplit(window) {{{
 " Determines if the current window is vertically split.
-"function! s:IsVerticalSplit (window)
+"function! s:IsVerticalSplit(window)
 "  let origwinnr = winnr()
 "
 "  exec a:window . 'winc w'
@@ -358,7 +384,7 @@ endfunction " }}}
 
 " IsInRow(window) {{{
 " Determines if the supplied window is in a row of equally sized windows.
-function! s:IsInRow (window)
+function! s:IsInRow(window)
   let origwinnr = winnr()
   exec a:window . 'winc w'
 
@@ -395,7 +421,7 @@ endfunction " }}}
 
 " IsInColumn(window) {{{
 " Determines is the supplied window is in a column of equally sized windows.
-function! s:IsInColumn (window)
+function! s:IsInColumn(window)
   let origwinnr = winnr()
   exec a:window . 'winc w'
 
@@ -433,7 +459,7 @@ endfunction " }}}
 
 " RowMinimized(window) {{{
 " Determines all windows on a row are minimized.
-function! s:RowMinimized (window)
+function! s:RowMinimized(window)
   let origwinnr = winnr()
   exec a:window . 'winc w'
 
@@ -483,7 +509,7 @@ endfunction " }}}
 
 " ColumnMinimized(window) {{{
 " Determines all windows in column are minimized.
-function! s:ColumnMinimized (window)
+function! s:ColumnMinimized(window)
   let origwinnr = winnr()
   exec a:window . 'winc w'
 
@@ -533,17 +559,18 @@ endfunction " }}}
 
 " NavigateWindows(cmd) {{{
 " Used navigate windows by skipping minimized windows.
-function! eclim#display#maximize#NavigateWindows (wincmd)
+function! eclim#display#maximize#NavigateWindows(wincmd)
   let start = winnr()
   let lastwindow = start
 
   exec a:wincmd
   while exists('w:minimized') && w:minimized && winnr() != lastwindow
     let lastwindow = winnr()
+    let lastfile = expand('%')
     exec a:wincmd
   endwhile
 
-  if exists('w:minimized') && w:minimized
+  if exists('w:minimized') && w:minimized && winnr() != start
     exec start . 'wincmd w'
   endif
 endfunction " }}}

@@ -1,48 +1,39 @@
 " Author:  Eric Van Dewoestine
-" Version: $Revision$
 "
 " Description: {{{
 "
 " License:
 "
-" Copyright (c) 2005 - 2008
+" Copyright (C) 2005 - 2009  Eric Van Dewoestine
 "
-" Licensed under the Apache License, Version 2.0 (the "License");
-" you may not use this file except in compliance with the License.
-" You may obtain a copy of the License at
+" This program is free software: you can redistribute it and/or modify
+" it under the terms of the GNU General Public License as published by
+" the Free Software Foundation, either version 3 of the License, or
+" (at your option) any later version.
 "
-"      http://www.apache.org/licenses/LICENSE-2.0
+" This program is distributed in the hope that it will be useful,
+" but WITHOUT ANY WARRANTY; without even the implied warranty of
+" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+" GNU General Public License for more details.
 "
-" Unless required by applicable law or agreed to in writing, software
-" distributed under the License is distributed on an "AS IS" BASIS,
-" WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-" See the License for the specific language governing permissions and
-" limitations under the License.
+" You should have received a copy of the GNU General Public License
+" along with this program.  If not, see <http://www.gnu.org/licenses/>.
 "
-" }}}
-
-" Global Variables {{{
-if !exists("g:Author")
-  let g:Author = ''
-endif
 " }}}
 
 " Script Variables {{{
-  let s:year = exists('*strftime') ? strftime('%Y') : '2008'
+  let s:year = exists('*strftime') ? strftime('%Y') : '2009'
 " }}}
 
-" GetLicense () {{{
+" GetLicense() {{{
 " Retrieves the file containing the license text.
-function! eclim#common#license#GetLicense ()
+function! eclim#common#license#GetLicense()
   let file = eclim#project#util#GetProjectSetting('org.eclim.project.copyright')
-  if file == '0'
+  if type(file) == 0
     return
-  endif
-  if file == ''
+  elseif file == ''
     call eclim#util#EchoWarning(
       \ "Project setting 'org.eclim.project.copyright' has not been supplied.")
-    return
-  elseif type(file) == 0 && file == 0
     return
   endif
 
@@ -53,12 +44,12 @@ function! eclim#common#license#GetLicense ()
   return file
 endfunction " }}}
 
-" License (name, pre, post, mid) {{{
-" Retrieves the license given the supplied name and applies the specified
-" prefix and postfix as the lines before and after the license and uses 'mid'
-" as the prefix for every line.
+" License(pre, post, mid) {{{
+" Retrieves the license configured license and applies the specified prefix
+" and postfix as the lines before and after the license and uses 'mid' as the
+" prefix for every line.
 " Returns the license as a list of strings.
-function! eclim#common#license#License (pre, post, mid)
+function! eclim#common#license#License(pre, post, mid)
   let file = eclim#common#license#GetLicense()
   if type(file) == 0 && file == 0
     return ''
@@ -78,7 +69,16 @@ function! eclim#common#license#License (pre, post, mid)
   endif
 
   call map(contents, "substitute(v:val, '${year}', s:year, 'g')")
-  call map(contents, "substitute(v:val, '${author}', g:Author, 'g')")
+
+  let author = eclim#project#util#GetProjectSetting('org.eclim.user.name')
+  if type(author) != 0 && author != ''
+    call map(contents, "substitute(v:val, '${author}', author, 'g')")
+  endif
+
+  let email = eclim#project#util#GetProjectSetting('org.eclim.user.email')
+  if type(email) != 0 && email != ''
+    call map(contents, "substitute(v:val, '${email}', email, 'g')")
+  endif
   call map(contents, "substitute(v:val, '\\s\\+$', '', '')")
 
   return contents

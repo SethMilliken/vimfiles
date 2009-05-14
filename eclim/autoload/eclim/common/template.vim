@@ -1,23 +1,23 @@
 " Author:  Eric Van Dewoestine
-" Version: $Revision$
 "
 " Description: {{{
 "
 " License:
 "
-" Copyright (c) 2005 - 2008
+" Copyright (C) 2005 - 2009  Eric Van Dewoestine
 "
-" Licensed under the Apache License, Version 2.0 (the "License");
-" you may not use this file except in compliance with the License.
-" You may obtain a copy of the License at
+" This program is free software: you can redistribute it and/or modify
+" it under the terms of the GNU General Public License as published by
+" the Free Software Foundation, either version 3 of the License, or
+" (at your option) any later version.
 "
-"      http://www.apache.org/licenses/LICENSE-2.0
+" This program is distributed in the hope that it will be useful,
+" but WITHOUT ANY WARRANTY; without even the implied warranty of
+" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+" GNU General Public License for more details.
 "
-" Unless required by applicable law or agreed to in writing, software
-" distributed under the License is distributed on an "AS IS" BASIS,
-" WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-" See the License for the specific language governing permissions and
-" limitations under the License.
+" You should have received a copy of the GNU General Public License
+" along with this program.  If not, see <http://www.gnu.org/licenses/>.
 "
 " }}}
 
@@ -36,13 +36,18 @@ endif
 " Script Variables {{{
 let s:quote = "['\"]"
 let s:tag_regex =
-  \ '<vim:[a-zA-Z]\+\s\+[a-zA-Z]\+\s*=\s*' . s:quote . '.*' . s:quote . '\s*/>'
-let s:tagname_regex = '.*<vim:\([a-zA-Z]\+\)\s\+.*'
+  \ '<vim:[a-zA-Z]\+\(\s\+[a-zA-Z]\+\s*=\s*' . s:quote . '.*' . s:quote . '\)\?\s*/>'
+let s:tagname_regex = '.\{-}<vim:\([a-zA-Z]\+\).*'
 " }}}
 
 " Template() {{{
 " Main method for finding and executing the template.
-function! eclim#common#template#Template ()
+function! eclim#common#template#Template()
+  " allow some plugins to disable templates temporarily
+  if exists('g:EclimTemplateTempIgnore') && g:EclimTemplateTempIgnore
+    return
+  endif
+
   " ignore certain file patterns
   for ignore in g:EclimTemplateIgnore
     if expand('%') =~ ignore
@@ -54,9 +59,7 @@ function! eclim#common#template#Template ()
   if template != ''
     silent exec "read " . template
     call cursor(1, 1)
-    let saved = @"
-    delete
-    let @" = saved
+    delete _
 
     call s:ExecuteTemplate()
   endif
@@ -64,7 +67,7 @@ endfunction " }}}
 
 " s:FindTemplate() {{{
 " Finds the template file and returns the location.
-function! s:FindTemplate ()
+function! s:FindTemplate()
   let templatesDir = expand(g:EclimTemplateDir)
   if !isdirectory(templatesDir)
     call eclim#util#EchoError("No such directory: " . templatesDir)
@@ -109,34 +112,40 @@ function! s:FindTemplate ()
     endwhile
   endif
 
+  " template equal to file type
+  if filereadable(templatesDir . '/' . &ft . g:EclimTemplateExtension)
+    return templatesDir . '/' . &ft . g:EclimTemplateExtension
+  endif
+
   return ''
 endfunction " }}}
 
 " s:ExecuteTemplate() {{{
 " Executes any logic in the template.
-function! s:ExecuteTemplate ()
+function! s:ExecuteTemplate()
   let line = 1
   while line <= line('$')
     let currentLine = getline(line)
-    if currentLine =~ s:tag_regex
+    while currentLine =~ s:tag_regex
       let tag = substitute(currentLine, s:tagname_regex, '\1', '')
       let line = s:Process_{tag}(line)
-    endif
+      let currentLine = getline(line)
+    endwhile
     let line = line + 1
   endwhile
 endfunction " }}}
 
 " s:EvaluateExpression(expression) {{{
 " Evaluates the supplied expression.
-function! s:EvaluateExpression (expression)
+function! s:EvaluateExpression(expression)
   exec "return " . a:expression
 endfunction " }}}
 
 " s:GetAttribute(line, tag, attribute, fail) {{{
 " Gets the an attribute value.
-function! s:GetAttribute (line, tag, attribute, fail)
+function! s:GetAttribute(line, tag, attribute, fail)
   let attribute = substitute(a:line,
-    \ '.*<vim:' . a:tag . '.*\s\+' . a:attribute .
+    \ '.\{-}<vim:' . a:tag . '.\{-}\s\+' . a:attribute .
       \ '\s*=\s*\(' . s:quote . '\)\(.\{-}\)\1.*/>.*',
     \ '\2', '')
 
@@ -150,15 +159,15 @@ function! s:GetAttribute (line, tag, attribute, fail)
   return attribute
 endfunction " }}}
 
-" s:TemplateError (line, message) {{{
+" s:TemplateError(line, message) {{{
 " Echos an error message to the user.
-function! s:TemplateError (line, message)
+function! s:TemplateError(line, message)
   call eclim#util#EchoError("Template error, line " . a:line . ": " . a:message)
 endfunction " }}}
 
 " s:Process_var(line) {{{
 " Process <vim:var/> tags.
-function! s:Process_var (line)
+function! s:Process_var(line)
   let currentLine = getline(a:line)
 
   let name = expand(s:GetAttribute(currentLine, 'var', 'name', 1))
@@ -166,16 +175,14 @@ function! s:Process_var (line)
 
   exec "let " . name . " = \"" .  s:EvaluateExpression(value) . "\""
 
-  let saved = @"
-  silent exec a:line . "delete"
-  let @" = saved
+  silent exec a:line . "delete _"
 
   return a:line - 1
 endfunction " }}}
 
 " s:Process_import(line) {{{
 " Process <vim:import/> tags.
-function! s:Process_import (line)
+function! s:Process_import(line)
   let currentLine = getline(a:line)
 
   let resource = expand(s:GetAttribute(currentLine, 'import', 'resource', 1))
@@ -188,37 +195,23 @@ function! s:Process_import (line)
   endif
 
   exec "source " . resource
-  let saved = @"
-  silent exec a:line . "delete"
-  let @" = saved
+  silent exec a:line . "delete _"
 
   return a:line - 1
 endfunction " }}}
 
 " s:Process_out(line) {{{
 " Process <vim:out/> tags.
-function! s:Process_out (line)
+function! s:Process_out(line)
   let currentLine = getline(a:line)
   let value = s:GetAttribute(currentLine, 'out', 'value', 1)
   let result = s:EvaluateExpression(value)
-  let results = type(result) == 3 ? result : [result]
-
-  if results[0] == '' && currentLine =~ '^\s*<vim:out\s\+.\{-}\s*\/>\s*$'
-    let saved = @"
-    exec a:line . 'delete'
-    let @" = saved
-    return a:line - 1
-  endif
-
-  exec a:line . 'substitute/<vim:out\s\+.\{-}\s*\/>/' . escape(results[0], '/') . '/'
-  call append(a:line, results[1:])
-
-  return a:line
+  return s:Out(a:line, '<vim:out\s\+.\{-}\s*\/>', result)
 endfunction " }}}
 
 " s:Process_include(line) {{{
 " Process <vim:include/> tags.
-function! s:Process_include (line)
+function! s:Process_include(line)
   let currentLine = getline(a:line)
   let template = expand(
     \ g:EclimTemplateDir . '/' . s:GetAttribute(currentLine, 'include', 'template', 1))
@@ -229,9 +222,33 @@ function! s:Process_include (line)
 
   exec "read " . template
   call cursor(a:line, 1)
-  let saved = @"
-  silent exec a:line . "delete"
-  let @" = saved
+  silent exec a:line . "delete _"
+
+  return a:line
+endfunction " }}}
+
+" s:Process_username(line) {{{
+" Process <vim:username/> tags.
+function! s:Process_username(line)
+  let username = eclim#project#util#GetProjectSetting('org.eclim.user.name')
+  if type(username) == 0
+    let username = ''
+  endif
+  return s:Out(a:line, '<vim:username\s*\/>', username)
+endfunction " }}}
+
+" s:Out(line, pattern, value) {{{
+function! s:Out(line, pattern, value)
+  let currentLine = getline(a:line)
+
+  let results = type(a:value) == 3 ? a:value : [a:value]
+  if results[0] == '' && currentLine =~ '^\s*' . a:pattern . '\s*$'
+    exec a:line . 'delete _'
+    return a:line - 1
+  endif
+
+  exec a:line . 'substitute/' . a:pattern . '/' . escape(results[0], '/') . '/'
+  call append(a:line, results[1:])
 
   return a:line
 endfunction " }}}

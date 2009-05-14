@@ -1,24 +1,24 @@
 " Author:  Eric Van Dewoestine
-" Version: $Revision: 1677 $
 "
 " Description: {{{
 "   see http://eclim.sourceforge.net/vim/common/web.html
 "
 " License:
 "
-" Copyright (c) 2005 - 2008
+" Copyright (C) 2005 - 2009  Eric Van Dewoestine
 "
-" Licensed under the Apache License, Version 2.0 (the "License");
-" you may not use this file except in compliance with the License.
-" You may obtain a copy of the License at
+" This program is free software: you can redistribute it and/or modify
+" it under the terms of the GNU General Public License as published by
+" the Free Software Foundation, either version 3 of the License, or
+" (at your option) any later version.
 "
-"      http://www.apache.org/licenses/LICENSE-2.0
+" This program is distributed in the hope that it will be useful,
+" but WITHOUT ANY WARRANTY; without even the implied warranty of
+" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+" GNU General Public License for more details.
 "
-" Unless required by applicable law or agreed to in writing, software
-" distributed under the License is distributed on an "AS IS" BASIS,
-" WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-" See the License for the specific language governing permissions and
-" limitations under the License.
+" You should have received a copy of the GNU General Public License
+" along with this program.  If not, see <http://www.gnu.org/licenses/>.
 "
 " }}}
 
@@ -50,9 +50,9 @@ endif
     \ ]
 " }}}
 
-" OpenUrl(url) {{{
+" OpenUrl(url, [no_vim, line1, line2]) {{{
 " Opens the supplied url in a web browser or opens the url under the cursor.
-function! eclim#web#OpenUrl (url)
+function! eclim#web#OpenUrl(url, ...)
   if !exists('s:browser') || s:browser == ''
     let s:browser = s:DetermineBrowser()
 
@@ -68,7 +68,17 @@ function! eclim#web#OpenUrl (url)
 
   let url = a:url
   if url == ''
-    let url = eclim#util#GrabUri()
+    if len(a:000) > 2
+      let start = a:000[1]
+      let end = a:000[2]
+      while start <= end
+        call eclim#web#OpenUrl(eclim#util#GrabUri(start, col('.')), a:000[0])
+        let start += 1
+      endwhile
+      return
+    else
+      let url = eclim#util#GrabUri()
+    endif
   endif
 
   if url == ''
@@ -89,12 +99,14 @@ function! eclim#web#OpenUrl (url)
     endif
   endif
 
-  for pattern in g:EclimOpenUrlInVimPatterns
-    if url =~ pattern
-      exec g:EclimOpenUrlInVimAction . ' ' . url
-      return
-    endif
-  endfor
+  if len(a:000) == 0 || a:000[0] == ''
+    for pattern in g:EclimOpenUrlInVimPatterns
+      if url =~ pattern
+        exec g:EclimOpenUrlInVimAction . ' ' . url
+        return
+      endif
+    endfor
+  endif
 
   let url = substitute(url, '\', '/', 'g')
   let url = escape(url, '&%')
@@ -111,37 +123,37 @@ function! eclim#web#OpenUrl (url)
 endfunction " }}}
 
 " Google(args, quote, visual) {{{
-function! eclim#web#Google (args, quote, visual)
+function! eclim#web#Google(args, quote, visual)
   call eclim#web#SearchEngine(s:google, a:args, a:quote, a:visual)
 endfunction " }}}
 
 " Clusty(args, quote, visual) {{{
-function! eclim#web#Clusty (args, quote, visual)
+function! eclim#web#Clusty(args, quote, visual)
   call eclim#web#SearchEngine(s:clusty, a:args, a:quote, a:visual)
 endfunction " }}}
 
 " Wikipedia(args, quote, visual) {{{
-function! eclim#web#Wikipedia (args, quote, visual)
+function! eclim#web#Wikipedia(args, quote, visual)
   call eclim#web#SearchEngine(s:wikipedia, a:args, a:quote, a:visual)
 endfunction " }}}
 
 " Dictionary(word) {{{
-function! eclim#web#Dictionary (word)
+function! eclim#web#Dictionary(word)
   call eclim#web#WordLookup(s:dictionary, a:word)
 endfunction " }}}
 
 " Thesaurus(word) {{{
-function! eclim#web#Thesaurus (word)
+function! eclim#web#Thesaurus(word)
   call eclim#web#WordLookup(s:thesaurus, a:word)
 endfunction " }}}
 
 " SearchEngine(url, args, quote, visual) {{{
-function! eclim#web#SearchEngine (url, args, quote, visual)
+function! eclim#web#SearchEngine(url, args, quote, visual)
   let search_string = a:args
   if search_string == ''
     if a:visual
       let saved = @"
-      normal gvy
+      normal! gvy
       let search_string = substitute(@", '\n', '', '')
       let @" = saved
     else
@@ -159,8 +171,8 @@ function! eclim#web#SearchEngine (url, args, quote, visual)
   call eclim#web#OpenUrl(url)
 endfunction " }}}
 
-" WordLookup (url, word) {{{
-function! eclim#web#WordLookup (url, word)
+" WordLookup(url, word) {{{
+function! eclim#web#WordLookup(url, word)
   let word = a:word
   if word == ''
     let word = expand('<cword>')
@@ -172,7 +184,7 @@ function! eclim#web#WordLookup (url, word)
 endfunction " }}}
 
 " DetermineBrowser() {{{
-function! s:DetermineBrowser ()
+function! s:DetermineBrowser()
   let browser = ''
 
   " user specified a browser, we just need to fill in any gaps if necessary.

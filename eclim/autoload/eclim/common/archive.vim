@@ -1,24 +1,24 @@
 " Author:  Eric Van Dewoestine
-" Version: $Revision$
 "
 " Description: {{{
 "   Plugin for archive related functionality.
 "
 " License:
 "
-" Copyright (c) 2005 - 2008
+" Copyright (C) 2005 - 2009  Eric Van Dewoestine
 "
-" Licensed under the Apache License, Version 2.0 (the "License");
-" you may not use this file except in compliance with the License.
-" You may obtain a copy of the License at
+" This program is free software: you can redistribute it and/or modify
+" it under the terms of the GNU General Public License as published by
+" the Free Software Foundation, either version 3 of the License, or
+" (at your option) any later version.
 "
-"      http://www.apache.org/licenses/LICENSE-2.0
+" This program is distributed in the hope that it will be useful,
+" but WITHOUT ANY WARRANTY; without even the implied warranty of
+" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+" GNU General Public License for more details.
 "
-" Unless required by applicable law or agreed to in writing, software
-" distributed under the License is distributed on an "AS IS" BASIS,
-" WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-" See the License for the specific language governing permissions and
-" limitations under the License.
+" You should have received a copy of the GNU General Public License
+" along with this program.  If not, see <http://www.gnu.org/licenses/>.
 "
 " }}}
 
@@ -43,7 +43,7 @@ let s:file_regex =
 
 " List() {{{
 " Lists the contents of the archive.
-function! eclim#common#archive#List ()
+function! eclim#common#archive#List()
   let b:file_info = {}
   let file = substitute(expand('%:p'), '\', '/', 'g')
   let root = fnamemodify(file, ':t') . '/'
@@ -52,9 +52,7 @@ function! eclim#common#archive#List ()
   if exists('g:EclimArchiveLayout') && g:EclimArchiveLayout == 'list'
     call eclim#common#archive#ListAll()
     let g:EclimArchiveLayout = 'list'
-    let saved = @"
-    1,1delete
-    let @" = saved
+    1,1delete _
   else
     call setline(1, root)
     call eclim#common#archive#ExpandDir()
@@ -75,7 +73,7 @@ endfunction " }}}
 
 " ReadFile() {{{
 " Reads the contents of an archived file.
-function! eclim#common#archive#ReadFile ()
+function! eclim#common#archive#ReadFile()
   let file = substitute(expand('%'), '\', '/', 'g')
   echom 'file = ' . file
   if file =~ '.class$'
@@ -111,9 +109,7 @@ function! eclim#common#archive#ReadFile ()
     "setlocal noreadonly
     "setlocal modifiable
     "silent! exec "read " . file
-    "let saved = @"
-    "1,1delete
-    "let @" = saved
+    "1,1delete _
 
     silent exec "doautocmd BufReadPre " . file
     silent exec "doautocmd BufReadPost " . file
@@ -127,7 +123,7 @@ function! eclim#common#archive#ReadFile ()
 endfunction " }}}
 
 " Execute(alt) {{{
-function eclim#common#archive#Execute (alt)
+function eclim#common#archive#Execute(alt)
   let path = eclim#tree#GetPath()
 
   " execute action on dir
@@ -153,7 +149,7 @@ function eclim#common#archive#Execute (alt)
 endfunction " }}}
 
 " ExpandDir() {{{
-function eclim#common#archive#ExpandDir ()
+function eclim#common#archive#ExpandDir()
   let path = substitute(expand('%:p'), '\', '/', 'g')
   let dir = b:file_info[getline('.')].url
   if dir !~ path . '$' && s:IsArchive(dir)
@@ -196,7 +192,7 @@ endfunction " }}}
 
 " ListAll() {{{
 " Function for listing all the archive files (for 'list' layout).
-function eclim#common#archive#ListAll ()
+function eclim#common#archive#ListAll()
   let path = substitute(expand('%:p'), '\', '/', 'g')
   let command = s:command_list_all
   let command = substitute(command, '<file>', path, '')
@@ -210,7 +206,7 @@ function eclim#common#archive#ListAll ()
 endfunction " }}}
 
 " s:ParseEntry(entry) {{{
-function! s:ParseEntry (entry)
+function! s:ParseEntry(entry)
   let info = split(a:entry, '|')
   let parsed = {}
   let parsed.path = info[0]
@@ -223,14 +219,14 @@ function! s:ParseEntry (entry)
 endfunction " }}}
 
 " s:FileUrl(file) {{{
-function! s:FileUrl (file)
+function! s:FileUrl(file)
   let url = a:file
   if url =~ '^[a-zA-Z]:'
     let url = '/' . url
   endif
   for key in keys(s:urls)
     for ext in s:urls[key]
-      if url =~ ext . '$'
+      if url =~ escape(ext, '.') . '$'
         let url = key . url
         break
       endif
@@ -240,11 +236,11 @@ function! s:FileUrl (file)
 endfunction " }}}
 
 " s:IsArchive(file) {{{
-function! s:IsArchive (file)
+function! s:IsArchive(file)
   let url = a:file
   for key in keys(s:urls)
     for ext in s:urls[key]
-      if url =~ ext . '$'
+      if url =~ escape(ext, '.') . '$'
         return 1
       endif
     endfor
@@ -253,7 +249,7 @@ function! s:IsArchive (file)
 endfunction " }}}
 
 " s:ChangeLayout(layout) {{{
-function! s:ChangeLayout (layout)
+function! s:ChangeLayout(layout)
   if g:EclimArchiveLayout != a:layout
     let g:EclimArchiveLayout = a:layout
     set modifiable
@@ -262,7 +258,7 @@ function! s:ChangeLayout (layout)
 endfunction " }}}
 
 " s:FileInfo() {{{
-function! s:FileInfo ()
+function! s:FileInfo()
   let info = b:file_info[substitute(getline('.'), '^\(\s*\)-\(.*/$\)', '\1+\2', '')]
   if has_key(info, 'type') && info.type == 'file'
     call eclim#util#Echo(printf('%-15s', info.size) . info.date)
@@ -270,7 +266,7 @@ function! s:FileInfo ()
 endfunction " }}}
 
 " s:Mappings() {{{
-function s:Mappings ()
+function s:Mappings()
   nmap <buffer> <silent> <cr> :call eclim#common#archive#Execute(0)<cr>
 
   if g:EclimArchiveLayout == 'tree'
@@ -284,7 +280,7 @@ function s:Mappings ()
     nmap <buffer> <silent> I    :call <SID>FileInfo()<cr>
 
     silent! delcommand AsTree
-    command -nargs=0 AsList :call <SID>ChangeLayout('list')
+    command! -nargs=0 AsList :call <SID>ChangeLayout('list')
   else
     if exists('b:tree_mappings_active')
       unlet b:tree_mappings_active

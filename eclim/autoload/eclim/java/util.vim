@@ -1,24 +1,24 @@
 " Author:  Eric Van Dewoestine
-" Version: $Revision: 1677 $
 "
 " Description: {{{
 "   Utility functions for java eclim ftplugins.
 "
 " License:
 "
-" Copyright (c) 2005 - 2008
+" Copyright (C) 2005 - 2009  Eric Van Dewoestine
 "
-" Licensed under the Apache License, Version 2.0 (the "License");
-" you may not use this file except in compliance with the License.
-" You may obtain a copy of the License at
+" This program is free software: you can redistribute it and/or modify
+" it under the terms of the GNU General Public License as published by
+" the Free Software Foundation, either version 3 of the License, or
+" (at your option) any later version.
 "
-"      http://www.apache.org/licenses/LICENSE-2.0
+" This program is distributed in the hope that it will be useful,
+" but WITHOUT ANY WARRANTY; without even the implied warranty of
+" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+" GNU General Public License for more details.
 "
-" Unless required by applicable law or agreed to in writing, software
-" distributed under the License is distributed on an "AS IS" BASIS,
-" WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-" See the License for the specific language governing permissions and
-" limitations under the License.
+" You should have received a copy of the GNU General Public License
+" along with this program.  If not, see <http://www.gnu.org/licenses/>.
 "
 " }}}
 
@@ -35,7 +35,7 @@
 
 " FileExists(name) {{{
 " Determines if the src dir relative file exists.
-function! eclim#java#util#FileExists (name)
+function! eclim#java#util#FileExists(name)
   let command = substitute(s:command_src_exists, '<file>', a:name, '')
   let result = eclim#ExecuteEclim(command)
   return result =~ '^true$'
@@ -44,7 +44,7 @@ endfunction " }}}
 " GetClassname(...) {{{
 " Gets the classname of the current file.
 " Optional file argument may be supplied.
-function! eclim#java#util#GetClassname (...)
+function! eclim#java#util#GetClassname(...)
   if a:0 > 0
     return fnamemodify(a:1, ":t:r")
   endif
@@ -53,15 +53,14 @@ endfunction " }}}
 
 " GetClassDeclarationPosition(movecursor) {{{
 " Gets the line number of the current file's class declaration.
-function! eclim#java#util#GetClassDeclarationPosition (movecursor)
-  let line = line('.')
-  let col = col('.')
+function! eclim#java#util#GetClassDeclarationPosition(movecursor)
+  let pos = getpos('.')
   call cursor(1,1)
 
   let position = search(s:class_declaration)
 
   if !a:movecursor || !position
-    call cursor(line, col)
+    call setpos('.', pos)
   endif
 
   return position
@@ -79,7 +78,7 @@ endfunction " }}}
 
 " GetFilename() {{{
 " Gets the src dir relative file name.
-function! eclim#java#util#GetFilename ()
+function! eclim#java#util#GetFilename()
   "let filename = substitute(eclim#java#util#GetPackage(), '\.', '/', 'g')
   "return filename . '/' . expand('%:t')
   return eclim#project#util#GetProjectRelativeFilePath(expand('%:p'))
@@ -88,14 +87,13 @@ endfunction " }}}
 " GetPackage(...) {{{
 " Gets the package of the current src file, or of the optionally supplied file
 " argument.
-function! eclim#java#util#GetPackage (...)
+function! eclim#java#util#GetPackage(...)
   if a:0 > 0
     let winreset = winrestcmd()
     silent exec "sview " . a:1
   endif
 
-  let line = line('.')
-  let col = col('.')
+  let pos = getpos('.')
 
   call cursor(1,1)
 
@@ -113,7 +111,7 @@ function! eclim#java#util#GetPackage (...)
     " not necessary and may screw up display (see autoload/project.vim)
     "redraw
   else
-    call cursor(line, col)
+    call setpos('.', pos)
   endif
 
   return package
@@ -122,7 +120,7 @@ endfunction " }}}
 " GetPackageFromImport(class) {{{
 " Attempt to determine a class' package from the current file's import
 " statements.
-function! eclim#java#util#GetPackageFromImport (class)
+function! eclim#java#util#GetPackageFromImport(class)
   let pattern = '^\s*import\s\+\([0-9A-Za-z._]*\)\.' . a:class . '\s*;'
   let found = search(pattern, 'wn')
   if found
@@ -133,7 +131,7 @@ endfunction " }}}
 
 " GetSelectedFields(first, last) {{{
 " Gets list of selected fields.
-function! eclim#java#util#GetSelectedFields (first, last) range
+function! eclim#java#util#GetSelectedFields(first, last) range
   " normalize each field statement into a single line.
   let selection = ''
   let index = a:first
@@ -185,14 +183,14 @@ endfunction " }}}
 
 " IsKeyword(word) {{{
 " Determines if the supplied word is a java keyword.
-function! eclim#java#util#IsKeyword (word)
+function! eclim#java#util#IsKeyword(word)
   return (a:word =~ '^' . s:keywords . '$\C')
 endfunction " }}}
 
 " IsImported(classname) {{{
 " Determines if the supplied fully qualified classname is imported by the
 " current java source file.
-function! eclim#java#util#IsImported (classname)
+function! eclim#java#util#IsImported(classname)
   " search for fully qualified import
   let import_search = s:import_pattern
   let import_search = substitute(import_search, '<import>', a:classname, '')
@@ -221,7 +219,7 @@ endfunction " }}}
 
 " IsValidIdentifier(word) {{{
 " Determines if the supplied word is a valid java identifier.
-function! eclim#java#util#IsValidIdentifier (word)
+function! eclim#java#util#IsValidIdentifier(word)
   if a:word == '' || a:word =~ '\W' || eclim#java#util#IsKeyword(a:word)
     return 0
   endif
@@ -230,19 +228,25 @@ endfunction " }}}
 
 " SilentUpdate() {{{
 " Silently updates the current source file w/out validation.
-function! eclim#java#util#SilentUpdate ()
+function! eclim#java#util#SilentUpdate()
+  " i couldn't reproduce the issue, but at least one person experienced the
+  " cursor moving on update and breaking code completion:
+  " http://sourceforge.net/tracker/index.php?func=detail&aid=1995319&group_id=145869&atid=763323
+  let pos = getpos('.')
+
   let saved = g:EclimJavaSrcValidate
   try
     let g:EclimJavaSrcValidate = 0
     silent update
   finally
+    call setpos('.', pos)
     let g:EclimJavaSrcValidate = saved
   endtry
 endfunction " }}}
 
 " UpdateSrcFile(validate) {{{
 " Updates the src file on the server w/ the changes made to the current file.
-function! eclim#java#util#UpdateSrcFile (validate)
+function! eclim#java#util#UpdateSrcFile(validate)
   let project = eclim#project#util#GetCurrentProjectName()
   if project != ""
     let file = eclim#java#util#GetFilename()
@@ -257,9 +261,27 @@ function! eclim#java#util#UpdateSrcFile (validate)
     if (g:EclimJavaSrcValidate || a:validate) && !eclim#util#WillWrittenBufferClose()
       if result =~ '|'
         let errors = eclim#util#ParseLocationEntries(split(result, '\n'))
-        call eclim#util#SetLocationList(errors)
+        call eclim#display#signs#SetPlaceholder()
+        call eclim#util#ClearLocationList('global')
+        call eclim#util#SetLocationList(errors, 'a')
+        call eclim#display#signs#RemovePlaceholder()
       else
-        call eclim#util#SetLocationList([], 'r')
+        " prevent closing of sign column between validation methods
+        call eclim#display#signs#SetPlaceholder()
+
+        call eclim#util#ClearLocationList('global')
+
+        " prevent closing of sign column between validation methods
+        call eclim#display#signs#SetPlaceholder()
+
+        " FIXME: if we start adding anything more here, may want to consider
+        " some sort of register process for plugins to listen for events
+        " during various stages of the save process.
+        if g:EclimJavaCheckstyleOnSave
+          call eclim#java#checkstyle#Checkstyle()
+        endif
+
+        call eclim#display#signs#RemovePlaceholder()
       endif
     endif
   endif
@@ -267,7 +289,7 @@ endfunction " }}}
 
 " CommandCompleteProject(argLead, cmdLine, cursorPos) {{{
 " Custom command completion for project names.
-function! eclim#java#util#CommandCompleteProject (argLead, cmdLine, cursorPos)
+function! eclim#java#util#CommandCompleteProject(argLead, cmdLine, cursorPos)
   return eclim#project#util#CommandCompleteProjectByNature(
     \ a:argLead, a:cmdLine, a:cursorPos, 'java')
 endfunction " }}}

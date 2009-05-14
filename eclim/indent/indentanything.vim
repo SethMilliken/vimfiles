@@ -5,7 +5,7 @@
 " use this file except in compliance with the License. You may obtain a copy of
 " the License at
 "
-" 	http://www.apache.org/licenses/LICENSE-2.0
+"   http://www.apache.org/licenses/LICENSE-2.0
 "
 " Unless required by applicable law or agreed to in writing, software distributed
 " under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
@@ -390,18 +390,24 @@ endfunction
 " EV ADDED
 " Function which determines if there are equal number of opening and closing
 " patterns on the supplied line.
-function! s:EqualPairs(Line, Head, Tail)
-    let pattern = a:Head . '\(.\(' . a:Head . '\)\@!\)\{-}' . a:Tail
-    if a:Line =~ pattern
-        let line = substitute(a:Line, pattern, '', '')
-        return s:EqualPairs(line, a:Head, a:Tail)
-    elseif a:Line =~ a:Head
+function! s:EqualPairs(Line, LNum, Head, Tail)
+    let lnum = line('.')
+    let cnum = col('.')
+    call cursor(a:LNum, 1)
+    try
+        let head_matches = search('\(' . a:Head . '\)', 'ncp', a:LNum)
+        let tail_matches = search('\(' . a:Tail . '\)', 'ncp', a:LNum)
+        if head_matches == tail_matches
+          call cursor(a:LNum, col('$'))
+          let last_head = searchpos('\(' . a:Head . '\)', 'bcn', a:LNum)
+          call cursor(a:LNum, col('$'))
+          let last_tail = searchpos('\(' . a:Tail . '\)', 'bcn', a:LNum)
+          return last_tail[1] > last_head[1]
+        endif
         return 0
-    elseif a:Line =~ a:Tail
-        return 0
-    endif
-
-    return 1
+    finally
+        call cursor(lnum, cnum)
+    endtry
 endfunction
 
 "
@@ -427,7 +433,7 @@ function! s:GetPairIndent(CurrLine, LastLine, LastLNum, Head, Mid, Tail)
     if a:LastLine =~ a:Head
         while 1
             " EV ADDED
-            if s:EqualPairs(a:LastLine, a:Head, a:Tail)
+            if s:EqualPairs(a:LastLine, a:LastLNum, a:Head, a:Tail)
                 break
             endif
             " END EV ADDED

@@ -1,60 +1,76 @@
 " Author:  Eric Van Dewoestine
-" Version: $Revision: 1753 $
 "
 " Description: {{{
 "
 " License:
 "
-" Copyright (c) 2005 - 2008
+" Copyright (C) 2005 - 2009  Eric Van Dewoestine
 "
-" Licensed under the Apache License, Version 2.0 (the "License");
-" you may not use this file except in compliance with the License.
-" You may obtain a copy of the License at
+" This program is free software: you can redistribute it and/or modify
+" it under the terms of the GNU General Public License as published by
+" the Free Software Foundation, either version 3 of the License, or
+" (at your option) any later version.
 "
-"      http://www.apache.org/licenses/LICENSE-2.0
+" This program is distributed in the hope that it will be useful,
+" but WITHOUT ANY WARRANTY; without even the implied warranty of
+" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+" GNU General Public License for more details.
 "
-" Unless required by applicable law or agreed to in writing, software
-" distributed under the License is distributed on an "AS IS" BASIS,
-" WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-" See the License for the specific language governing permissions and
-" limitations under the License.
+" You should have received a copy of the GNU General Public License
+" along with this program.  If not, see <http://www.gnu.org/licenses/>.
 "
 " }}}
 
+" Global Variables {{{
+if !exists('g:EclimTodoSearchPattern')
+  let g:EclimTodoSearchPattern = '\(\<fixme\>\|\<todo\>\)\c'
+endif
+
+if !exists('g:EclimTodoSearchExtensions')
+  let g:EclimTodoSearchExtensions = ['java', 'py', 'php', 'jsp', 'xml', 'html']
+endif
+" }}}
+
 " Script Variables {{{
-  let s:command_create = '-command project_create -f "<folder>"'
-  let s:command_create_name = ' -p "<name>"'
-  let s:command_create_natures = ' -n <natures>'
-  let s:command_create_depends = ' -d <depends>'
-  let s:command_delete = '-command project_delete -p "<project>"'
-  let s:command_refresh = '-command project_refresh -p "<project>"'
-  let s:command_projects = '-command project_list'
-  let s:command_project_info = '-command project_info -p "<project>"'
-  let s:command_project_settings = '-command project_settings -p "<project>"'
-  let s:command_project_setting = s:command_project_settings . ' -s <setting>'
-  let s:command_update = '-command project_update -p "<project>" -s "<settings>"'
-  let s:command_open = '-command project_open -p "<project>"'
-  let s:command_close = '-command project_close -p "<project>"'
-  let s:command_nature_aliases = '-command project_nature_aliases'
-  let s:command_natures = '-command project_natures'
-  let s:command_nature_add =
-    \ '-command project_nature_add -p "<project>" -n "<natures>"'
-  let s:command_nature_remove =
-    \ '-command project_nature_remove -p "<project>" -n "<natures>"'
+let s:command_create = '-command project_create -f "<folder>"'
+let s:command_create_name = ' -p "<name>"'
+let s:command_create_natures = ' -n <natures>'
+let s:command_create_depends = ' -d <depends>'
+let s:command_delete = '-command project_delete -p "<project>"'
+let s:command_refresh = '-command project_refresh -p "<project>"'
+let s:command_refresh_file =
+  \ '-command project_refresh_file -p "<project>" -f "<file>"'
+let s:command_projects = '-command project_list'
+let s:command_project_info = '-command project_info -p "<project>"'
+let s:command_project_settings = '-command project_settings -p "<project>"'
+let s:command_project_setting = s:command_project_settings . ' -s <setting>'
+let s:command_project_update = '-command project_update -p "<project>"'
+let s:command_update = '-command project_update -p "<project>" -s "<settings>"'
+let s:command_open = '-command project_open -p "<project>"'
+let s:command_close = '-command project_close -p "<project>"'
+let s:command_nature_aliases = '-command project_nature_aliases'
+let s:command_natures = '-command project_natures'
+let s:command_nature_add =
+  \ '-command project_nature_add -p "<project>" -n "<natures>"'
+let s:command_nature_remove =
+  \ '-command project_nature_remove -p "<project>" -n "<natures>"'
 " }}}
 
 " ClearProjectsCache() {{{
 " Flush the cached list of projects.
-function! eclim#project#util#ClearProjectsCache ()
-  call eclim#cache#Delete('eclim_projects')
+function! eclim#project#util#ClearProjectsCache()
   if exists('s:projects')
     unlet s:projects
+  endif
+
+  if exists('g:EclimWorkspace')
+    unlet g:EclimWorkspace
   endif
 endfunction " }}}
 
 " ProjectCD(scope) {{{
 " Change the current working directory to the current project root.
-function! eclim#project#util#ProjectCD (scope)
+function! eclim#project#util#ProjectCD(scope)
   let dir = eclim#project#util#GetCurrentProjectRoot()
   if a:scope == 0
     exec 'cd ' . dir
@@ -65,7 +81,7 @@ endfunction " }}}
 
 " ProjectCreate(args) {{{
 " Creates a project at the supplied folder
-function! eclim#project#util#ProjectCreate (args)
+function! eclim#project#util#ProjectCreate(args)
   let args = eclim#util#ParseArgs(a:args)
 
   let folder = fnamemodify(expand(args[0]), ':p')
@@ -98,7 +114,7 @@ endfunction " }}}
 
 " ProjectDelete(name) {{{
 " Deletes a project with the supplied name.
-function! eclim#project#util#ProjectDelete (name)
+function! eclim#project#util#ProjectDelete(name)
   let command = substitute(s:command_delete, '<project>', a:name, '')
   let result = eclim#ExecuteEclim(command)
   if result != '0'
@@ -109,7 +125,7 @@ endfunction " }}}
 
 " ProjectRefreshAll() {{{
 " Refresh all projects.
-function! eclim#project#util#ProjectRefreshAll ()
+function! eclim#project#util#ProjectRefreshAll()
   call eclim#project#util#ClearProjectsCache()
   let projects = eclim#project#util#GetProjectNames()
   for project in projects
@@ -120,7 +136,7 @@ endfunction " }}}
 
 " ProjectRefresh(args) {{{
 " Refresh the requested projects.
-function! eclim#project#util#ProjectRefresh (args)
+function! eclim#project#util#ProjectRefresh(args)
   call eclim#project#util#ClearProjectsCache()
   if a:args != ''
     let projects = eclim#util#ParseArgs(a:args)
@@ -144,7 +160,7 @@ endfunction " }}}
 
 " ProjectInfo(project) {{{
 " Echos info for the current or supplied project.
-function! eclim#project#util#ProjectInfo (project)
+function! eclim#project#util#ProjectInfo(project)
   let project = a:project
   if project == ''
     let project = eclim#project#util#GetCurrentProjectName()
@@ -165,8 +181,16 @@ endfunction " }}}
 
 " ProjectOpen(name) {{{
 " Open the requested project.
-function! eclim#project#util#ProjectOpen (name)
-  let command = substitute(s:command_open, '<project>', a:name, '')
+function! eclim#project#util#ProjectOpen(name)
+  let name = a:name
+  if name == ''
+    if !eclim#project#util#IsCurrentFileInProject()
+      return
+    endif
+    let name = eclim#project#util#GetCurrentProjectName()
+  endif
+
+  let command = substitute(s:command_open, '<project>', name, '')
   let result = eclim#ExecuteEclim(command)
   if result != '0'
     call eclim#util#Echo(result)
@@ -175,8 +199,16 @@ endfunction " }}}
 
 " ProjectClose(name) {{{
 " Close the requested project.
-function! eclim#project#util#ProjectClose (name)
-  let command = substitute(s:command_close, '<project>', a:name, '')
+function! eclim#project#util#ProjectClose(name)
+  let name = a:name
+  if name == ''
+    if !eclim#project#util#IsCurrentFileInProject()
+      return
+    endif
+    let name = eclim#project#util#GetCurrentProjectName()
+  endif
+
+  let command = substitute(s:command_close, '<project>', name, '')
   let result = eclim#ExecuteEclim(command)
   if result != '0'
     call eclim#util#Echo(result)
@@ -185,7 +217,7 @@ endfunction " }}}
 
 " ProjectList() {{{
 " Lists all the projects currently available in eclim.
-function! eclim#project#util#ProjectList ()
+function! eclim#project#util#ProjectList()
   let projects = split(eclim#ExecuteEclim(s:command_projects), '\n')
   if len(projects) == 0
     call eclim#util#Echo("No projects.")
@@ -198,7 +230,7 @@ endfunction " }}}
 
 " ProjectNatures(project) {{{
 " Prints nature info one or all projects.
-function! eclim#project#util#ProjectNatures (project)
+function! eclim#project#util#ProjectNatures(project)
   let command = s:command_natures
   if a:project != ''
     let command .= ' -p "' . a:project . '"'
@@ -216,7 +248,7 @@ endfunction " }}}
 
 " ProjectNatureModify(project) {{{
 " Modifies one or more natures for the specified project.
-function! eclim#project#util#ProjectNatureModify (command, args)
+function! eclim#project#util#ProjectNatureModify(command, args)
   let args = eclim#util#ParseArgs(a:args)
 
   let project = args[0]
@@ -234,7 +266,7 @@ endfunction " }}}
 
 " ProjectSettings(project) {{{
 " Opens a window that can be used to edit a project's settings.
-function! eclim#project#util#ProjectSettings (project)
+function! eclim#project#util#ProjectSettings(project)
   let project = a:project
   if project == ''
     let project = eclim#project#util#GetCurrentProjectName()
@@ -265,10 +297,27 @@ function! eclim#project#util#ProjectSettings (project)
   endif
 endfunction " }}}
 
+" ProjectUpdate() {{{
+" Executes a project update which may also validate nature specific resource
+" file.
+function! eclim#project#util#ProjectUpdate()
+  let name = eclim#project#util#GetCurrentProjectName()
+  let command = substitute(s:command_project_update, '<project>', name, '')
+
+  let result = eclim#ExecuteEclim(command)
+  if result =~ '|'
+    let errors = eclim#util#ParseLocationEntries(split(result, '\n'))
+    call eclim#util#SetLocationList(errors)
+  else
+    call eclim#util#ClearLocationList()
+    call eclim#util#Echo(result)
+  endif
+endfunction " }}}
+
 " ProjectGrep(command, args) {{{
 " Executes the supplied vim grep command with the specified pattern against
 " one or more file patterns.
-function! eclim#project#util#ProjectGrep (command, args)
+function! eclim#project#util#ProjectGrep(command, args)
   if !eclim#project#util#IsCurrentFileInProject()
     return
   endif
@@ -302,8 +351,48 @@ function! eclim#project#util#ProjectGrep (command, args)
   endif
 endfunction " }}}
 
+" Todo() {{{
+" Show the todo tags of the curent file in the location list.
+function! eclim#project#util#Todo()
+  if !eclim#project#util#IsCurrentFileInProject()
+    return
+  endif
+
+  let path = expand('%:p')
+  silent! exec 'lvimgrep /' . g:EclimTodoSearchPattern . '/gj ' . path
+  if !empty(getloclist(0))
+    lopen
+  else
+    call eclim#util#Echo('No Results found')
+  endif
+endfunction " }}}
+
+" ProjectTodo() {{{
+" Show the todo tags of the whole project in the location list.
+function! eclim#project#util#ProjectTodo()
+  if !eclim#project#util#IsCurrentFileInProject()
+    return
+  endif
+
+  let path = eclim#project#util#GetCurrentProjectRoot()
+  if len(g:EclimTodoSearchExtensions) > 0
+    let paths = map(copy(g:EclimTodoSearchExtensions), 'path . "/**/*." . v:val')
+
+    silent! exec 'lvimgrep /' . g:EclimTodoSearchPattern . '/gj ' . paths[0]
+    for path in paths[1:]
+      silent! exec 'lvimgrepadd /' . g:EclimTodoSearchPattern . '/gj ' . path
+    endfor
+
+    if !empty(getloclist(0))
+      lopen
+    else
+      call eclim#util#Echo('No Results found')
+    endif
+  endif
+endfunction " }}}
+
 " SaveSettings() {{{
-function! s:SaveSettings ()
+function! s:SaveSettings()
   " don't check modified since undo seems to not set the modified flag
   "if &modified
     let tempfile = substitute(tempname(), '\', '/', 'g')
@@ -319,7 +408,7 @@ function! s:SaveSettings ()
       call eclim#util#SetLocationList
         \ (eclim#util#ParseLocationEntries(split(result, '\n')))
     else
-      call eclim#util#SetLocationList([], 'r')
+      call eclim#util#ClearLocationList()
       call eclim#util#Echo(result)
     endif
 
@@ -329,85 +418,94 @@ endfunction " }}}
 
 " GetCurrentProjectName() {{{
 " Gets the project name that the current file is in.
-function! eclim#project#util#GetCurrentProjectName ()
-  let dir = substitute(expand('%:p:h'), '\', '/', 'g')
-  let projects = filter(copy(eclim#project#util#GetProjects()),
-    \ 'dir =~ "^" . v:val ')
+function! eclim#project#util#GetCurrentProjectName()
+  let projects = eclim#project#util#GetProjects(expand('%'))
   return len(projects) > 0 ? keys(projects)[0] : ''
 endfunction " }}}
 
 " GetCurrentProjectRoot() {{{
 " Gets the project root dir for the project that the current file is in.
-function! eclim#project#util#GetCurrentProjectRoot ()
-  let dir = substitute(expand('%:p:h'), '\', '/', 'g')
-  let projects = filter(copy(eclim#project#util#GetProjects()),
-    \ 'dir =~ "^" . v:val ')
+function! eclim#project#util#GetCurrentProjectRoot()
+  let projects = eclim#project#util#GetProjects(expand('%'))
   return len(projects) > 0 ? values(projects)[0] : ''
 endfunction " }}}
 
-" GetProjectRelativeFilePath (file) {{{
+" GetProjectRelativeFilePath(file) {{{
 " Gets the project relative path for the given file.
-function! eclim#project#util#GetProjectRelativeFilePath (file)
+function! eclim#project#util#GetProjectRelativeFilePath(file)
   let file = substitute(a:file, '\', '/', 'g')
-  let result = substitute(file, eclim#project#util#GetCurrentProjectRoot(), '', '')
+  let pattern = eclim#project#util#GetCurrentProjectRoot()
+  if has('win32') || has('win64')
+    let pattern .= '\c'
+  endif
+  let result = substitute(file, pattern, '', '')
   if result =~ '^/'
     let result = result[1:]
   endif
   return result
 endfunction " }}}
 
-" GetProjects() {{{
+" GetProjects([curfile]) {{{
 " Gets a map of project names to project locations.
-function! eclim#project#util#GetProjects ()
+" If a file path is supplied, the result will be a map containing just the
+" project the supplied file is located in, or an empty map if no project found.
+function! eclim#project#util#GetProjects(...)
   if !exists('s:projects')
-    let cached = eclim#cache#Get('eclim_projects')
-    if has_key(cached, 'content') && len(cached.content) > 0
-      let projects = eval(cached.content[0])
-    else
-      let projects = {}
+    let projects = {}
 
-      " using eclipse files (running eclim not necessary)
-      let projectsdir = eclim#eclipse#GetWorkspaceDir() .
-        \ '.metadata/.plugins/org.eclipse.core.resources/.projects/'
-      if isdirectory(projectsdir)
-        let dirs = split(glob(projectsdir . '*'), '\n')
-        for dir in dirs
-          if filereadable(dir . '/.location')
-            let lines = readfile(dir . '/.location', 'b')
-            call filter(lines, 'v:val =~ "file:"')
-            if len(lines) > 0
-              let name = fnamemodify(dir, ':t')
-              let dir = substitute(lines[0], '.*file:\(.\{-}\)[[:cntrl:]].*', '\1', '')
-              if isdirectory(dir)
-                let projects[name] = substitute(dir, '\', '/', 'g')
-              endif
-            endif
-          else
+    " using eclipse files (running eclim not necessary)
+    let projectsdir = eclim#eclipse#GetWorkspaceDir() .
+      \ '.metadata/.plugins/org.eclipse.core.resources/.projects/'
+    if isdirectory(projectsdir)
+      let dirs = split(glob(projectsdir . '*'), '\n')
+      for dir in dirs
+        if filereadable(dir . '/.location')
+          let lines = readfile(dir . '/.location', 'b')
+          call filter(lines, 'v:val =~ "file:"')
+          if len(lines) > 0
             let name = fnamemodify(dir, ':t')
-            let dir = eclim#eclipse#GetWorkspaceDir() . name
-            if isdirectory(dir)
-              let projects[name] = dir
+            let dir = substitute(lines[0], '.*file:\(.\{-}\)[[:cntrl:]].*', '\1', '')
+            if dir =~ '^/[A-Z]:'
+              let dir = dir[1:]
             endif
+            if isdirectory(dir)
+              let projects[name] = substitute(dir, '\', '/', 'g')
+            endif
+            continue
           endif
-        endfor
-
-      " using running eclim
-      else
-        let result = split(eclim#ExecuteEclim(s:command_projects), '\n')
-        if len(result) == 1 && result[0] == '0'
-          return []
         endif
 
-        for line in result
-          let name = substitute(line, '\(.\{-}\)\s\+-\s\+.*', '\1', '')
-          let dir = substitute(line, '.\{-}\s\+-\s.\{-}\s\+-\s\(.*\)', '\1', '')
-          let projects[name] = substitute(dir, '\', '/', 'g')
-        endfor
+        let name = fnamemodify(dir, ':t')
+        let dir = eclim#eclipse#GetWorkspaceDir() . name
+        if isdirectory(dir)
+          let projects[name] = dir
+        endif
+      endfor
+
+    " using running eclim
+    else
+      let result = split(eclim#ExecuteEclim(s:command_projects), '\n')
+      if len(result) == 1 && result[0] == '0'
+        return []
       endif
 
-      call eclim#cache#Set('eclim_projects', [string(projects)])
+      for line in result
+        let name = substitute(line, '\(.\{-}\)\s\+-\s\+.*', '\1', '')
+        let dir = substitute(line, '.\{-}\s\+-\s.\{-}\s\+-\s\(.*\)', '\1', '')
+        let projects[name] = substitute(dir, '\', '/', 'g')
+      endfor
     endif
+
     let s:projects = projects
+  endif
+
+  if len(a:000) == 1
+    let dir = substitute(fnamemodify(a:000[0], ':p:h'), '\', '/', 'g')
+    let pattern = '\(/\|$\)'
+    if has('win32') || has('win64')
+      let pattern .= '\c'
+    endif
+    return filter(copy(s:projects), 'dir =~ "^" . v:val . pattern')
   endif
 
   return s:projects
@@ -415,14 +513,14 @@ endfunction " }}}
 
 " GetProjectDirs() {{{
 " Gets list of all project root directories.
-function! eclim#project#util#GetProjectDirs ()
+function! eclim#project#util#GetProjectDirs()
   return values(eclim#project#util#GetProjects())
 endfunction " }}}
 
 " GetProjectNames(...) {{{
 " Gets list of all project names, with optional filter by the supplied nature
 " alias.
-function! eclim#project#util#GetProjectNames (...)
+function! eclim#project#util#GetProjectNames(...)
   " filter by nature
   if a:0 > 0 && a:1 != ''
     let command = s:command_projects
@@ -436,13 +534,15 @@ function! eclim#project#util#GetProjectNames (...)
 
     return projects
   endif
-  return keys(eclim#project#util#GetProjects())
+  let names = keys(eclim#project#util#GetProjects())
+  call sort(names)
+  return names
 endfunction " }}}
 
 " GetProjectNatureAliases(...) {{{
 " Gets list of all project nature aliases or a list of aliases associated with
 " a project if the project name is supplied.
-function! eclim#project#util#GetProjectNatureAliases (...)
+function! eclim#project#util#GetProjectNatureAliases(...)
   if a:0 > 0 && a:1 != ''
     let command = s:command_natures . ' -p "' . a:1 . '"'
     let result = eclim#ExecuteEclim(command)
@@ -463,43 +563,44 @@ endfunction " }}}
 
 " GetProjectRoot(project) {{{
 " Gets the project root dir for the supplied project name.
-function! eclim#project#util#GetProjectRoot (project)
+function! eclim#project#util#GetProjectRoot(project)
   return eclim#project#util#GetProjects()[a:project]
 endfunction " }}}
 
 " GetProjectSetting(setting) {{{
-" Gets a project setting from eclim.  Returns '' if not in a project.  Returns
-" '0' if an error occurs communicating with the server.
-function! eclim#project#util#GetProjectSetting (setting)
-  let project = eclim#project#util#GetCurrentProjectName()
-  if project != ""
-    let command = s:command_project_setting
-    let command = substitute(command, '<project>', project, '')
-    let command = substitute(command, '<setting>', a:setting, '')
-
-    let result = split(eclim#ExecuteEclim(command), '\n')
-    if len(result) == 1 && result[0] == '0'
-      return result[0]
-    endif
-
-    call filter(result, 'v:val !~ "^\\s*#"')
-
-    if len(result) == 0
-      call eclim#util#EchoWarning("Setting '" . a:setting . "' does not exist.")
-      return ""
-    endif
-
-    return substitute(result[0], '.\{-}=\(.*\)', '\1', '')
+" Gets a project setting from eclim.  Returns '' the setting does not exist,
+" 0 if not in a project or an error occurs communicating with the server.
+function! eclim#project#util#GetProjectSetting(setting)
+  if !eclim#project#util#IsCurrentFileInProject()
+    return
   endif
-  return ""
+
+  let project = eclim#project#util#GetCurrentProjectName()
+  let command = s:command_project_setting
+  let command = substitute(command, '<project>', project, '')
+  let command = substitute(command, '<setting>', a:setting, '')
+
+  let result = split(eclim#ExecuteEclim(command), '\n')
+  if len(result) == 1 && result[0] == '0'
+    return result[0]
+  endif
+
+  call filter(result, 'v:val !~ "^\\s*#"')
+
+  if len(result) == 0
+    call eclim#util#EchoWarning("Setting '" . a:setting . "' does not exist.")
+    return ''
+  endif
+
+  return substitute(result[0], '.\{-}=\(.*\)', '\1', '')
 endfunction " }}}
 
 " IsCurrentFileInProject(...) {{{
 " Determines if the current file is in a project directory.
 " Accepts an optional arg that determines if a message is displayed to the
-" user if the file is not in a project (defaults to 1, to display the
+" user if the file is not in a project(defaults to 1, to display the
 " message).
-function! eclim#project#util#IsCurrentFileInProject (...)
+function! eclim#project#util#IsCurrentFileInProject(...)
   if eclim#project#util#GetCurrentProjectName() == ''
     if a:0 == 0 || a:1
       call eclim#util#EchoError('Unable to determine project. ' .
@@ -510,16 +611,59 @@ function! eclim#project#util#IsCurrentFileInProject (...)
   return 1
 endfunction " }}}
 
+" RefreshFileBootstrap() {{{
+" Boostraps a post write autocommand for updating files, which forces a
+" refresh by the eclim project. The command should only be called as part of
+" the a BufWritePre autocmd.
+function! eclim#project#util#RefreshFileBootstrap()
+  if eclim#project#util#GetCurrentProjectName() != '' && &modified
+    augroup eclim_refresh_files_bootstrap
+      autocmd!
+      autocmd BufWritePost <buffer> call eclim#project#util#RefreshFile()
+    augroup END
+  endif
+endfunction " }}}
+
+" RefreshFile() {{{
+" Refreshes the current files in eclipse.
+function! eclim#project#util#RefreshFile()
+  augroup eclim_refresh_files_bootstrap
+    autocmd! BufWritePost <buffer>
+  augroup END
+  let project = eclim#project#util#GetCurrentProjectName()
+  let file = eclim#project#util#GetProjectRelativeFilePath(expand('%:p'))
+  let command = s:command_refresh_file
+  let command = substitute(command, '<project>', project, '')
+  let command = substitute(command, '<file>', file, '')
+  call eclim#ExecuteEclim(command)
+endfunction " }}}
+
 " CommandCompleteProject(argLead, cmdLine, cursorPos) {{{
 " Custom command completion for project names.
-function! eclim#project#util#CommandCompleteProject (argLead, cmdLine, cursorPos)
+function! eclim#project#util#CommandCompleteProject(argLead, cmdLine, cursorPos)
   return eclim#project#util#CommandCompleteProjectByNature(
     \ a:argLead, a:cmdLine, a:cursorPos, '')
 endfunction " }}}
 
+" CommandCompleteProjectContainsThis(argLead, cmdLine, cursorPos) {{{
+" Custom command completion for project names, filtering by those that contain
+" a file with the same path as the current file, excluding the current
+" project.
+function! eclim#project#util#CommandCompleteProjectContainsThis(
+  \ argLead, cmdLine, cursorPos)
+  let names = eclim#project#util#CommandCompleteProject(
+    \ a:argLead, a:cmdLine, a:cursorPos)
+
+  let path = eclim#project#util#GetProjectRelativeFilePath(expand('%:p'))
+  let project = eclim#project#util#GetCurrentProjectName()
+  let projects = eclim#project#util#GetProjects()
+  call filter(names, 'v:val != project && filereadable(projects[v:val]. "/" . path)')
+  return names
+endfunction " }}}
+
 " CommandCompleteProjectByNature(argLead, cmdLine, cursorPos, nature) {{{
 " Custom command completion for project names.
-function! eclim#project#util#CommandCompleteProjectByNature (
+function! eclim#project#util#CommandCompleteProjectByNature(
     \ argLead, cmdLine, cursorPos, nature)
   let cmdLine = strpart(a:cmdLine, 0, a:cursorPos)
   let cmdTail = strpart(a:cmdLine, a:cursorPos)
@@ -535,7 +679,7 @@ endfunction " }}}
 
 " CommandCompleteProjectCreate(argLead, cmdLine, cursorPos) {{{
 " Custom command completion for ProjectCreate
-function! eclim#project#util#CommandCompleteProjectCreate (argLead, cmdLine, cursorPos)
+function! eclim#project#util#CommandCompleteProjectCreate(argLead, cmdLine, cursorPos)
   let cmdLine = strpart(a:cmdLine, 0, a:cursorPos)
   let args = eclim#util#ParseArgs(cmdLine)
   let argLead = cmdLine =~ '\s$' ? '' : args[len(args) - 1]
@@ -580,7 +724,7 @@ endfunction " }}}
 
 " CommandCompleteProjectCreateOptions(argLead, cmdLine, cursorPos) {{{
 " Custom command completion for ProjectCreate options.
-function! s:CommandCompleteProjectCreateOptions (argLead, cmdLine, cursorPos)
+function! s:CommandCompleteProjectCreateOptions(argLead, cmdLine, cursorPos)
   let options = ['-n', '-d', '-p']
   if a:cmdLine =~ '\s-n\>'
     call remove(options, index(options, '-n'))
@@ -596,7 +740,7 @@ endfunction " }}}
 
 " CommandCompleteProjectRelative(argLead, cmdLine, cursorPos) {{{
 " Custom command completion for project relative files and directories.
-function! eclim#project#util#CommandCompleteProjectRelative (
+function! eclim#project#util#CommandCompleteProjectRelative(
     \ argLead, cmdLine, cursorPos)
   let dir = eclim#project#util#GetCurrentProjectRoot()
 
@@ -616,12 +760,12 @@ endfunction " }}}
 
 " CommandCompleteProjectNatureAdd(argLead, cmdLine, cursorPos) {{{
 " Custom command completion for project names and natures.
-function! eclim#project#util#CommandCompleteProjectNatureAdd (
+function! eclim#project#util#CommandCompleteProjectNatureAdd(
     \ argLead, cmdLine, cursorPos)
   return s:CommandCompleteProjectNatureModify(
     \ a:argLead, a:cmdLine, a:cursorPos, function("s:AddAliases"))
 endfunction
-function s:AddAliases (allAliases, projectAliases)
+function s:AddAliases(allAliases, projectAliases)
   let aliases = a:allAliases
   call filter(aliases, 'index(a:projectAliases, v:val) == -1')
   return aliases
@@ -629,18 +773,18 @@ endfunction " }}}
 
 " CommandCompleteProjectNatureRemove(argLead, cmdLine, cursorPos) {{{
 " Custom command completion for project names and natures.
-function! eclim#project#util#CommandCompleteProjectNatureRemove (
+function! eclim#project#util#CommandCompleteProjectNatureRemove(
     \ argLead, cmdLine, cursorPos)
   return s:CommandCompleteProjectNatureModify(
     \ a:argLead, a:cmdLine, a:cursorPos, function("s:RemoveAliases"))
 endfunction
-function s:RemoveAliases (allAliases, projectAliases)
+function s:RemoveAliases(allAliases, projectAliases)
   return a:projectAliases
 endfunction " }}}
 
 " CommandCompleteProjectNatureModify(argLead, cmdLine, cursorPos) {{{
 " Custom command completion for project names and natures.
-function! s:CommandCompleteProjectNatureModify (
+function! s:CommandCompleteProjectNatureModify(
     \ argLead, cmdLine, cursorPos, aliasesFunc)
   let cmdLine = strpart(a:cmdLine, 0, a:cursorPos)
   let args = eclim#util#ParseArgs(cmdLine)

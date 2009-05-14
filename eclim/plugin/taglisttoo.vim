@@ -1,29 +1,29 @@
 " Author:  Eric Van Dewoestine
-" Version: $Revision$
 "
 " Description: {{{
 "   see http://eclim.sourceforge.net/vim/taglist.html
 "
 " License:
 "
-" Copyright (c) 2005 - 2008
+" Copyright (C) 2005 - 2009  Eric Van Dewoestine
 "
-" Licensed under the Apache License, Version 2.0 (the "License");
-" you may not use this file except in compliance with the License.
-" You may obtain a copy of the License at
+" This program is free software: you can redistribute it and/or modify
+" it under the terms of the GNU General Public License as published by
+" the Free Software Foundation, either version 3 of the License, or
+" (at your option) any later version.
 "
-"      http://www.apache.org/licenses/LICENSE-2.0
+" This program is distributed in the hope that it will be useful,
+" but WITHOUT ANY WARRANTY; without even the implied warranty of
+" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+" GNU General Public License for more details.
 "
-" Unless required by applicable law or agreed to in writing, software
-" distributed under the License is distributed on an "AS IS" BASIS,
-" WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-" See the License for the specific language governing permissions and
-" limitations under the License.
+" You should have received a copy of the GNU General Public License
+" along with this program.  If not, see <http://www.gnu.org/licenses/>.
 "
 " }}}
 
 " TaglistToo {{{
-if exists('g:taglisttoo_loaded') || exists(":Tlist") ||
+if exists('g:taglisttoo_loaded') ||
    \ (exists('g:taglisttoo_disabled') && g:taglisttoo_disabled)
   finish
 endif
@@ -48,9 +48,11 @@ if !exists('g:Tlist_Ctags_Cmd')
   endif
 endif
 
-let TagList_title = "__Tag_List__"
+if !exists('g:TagList_title')
+  let g:TagList_title = "__Tag_List__"
+endif
 
-if g:Tlist_Auto_Open
+if g:Tlist_Auto_Open && !exists('g:Tlist_Temp_Disable')
   autocmd VimEnter * nested call eclim#taglist#taglisttoo#AutoOpen()
   " Auto open on new tabs as well.
   if v:version >= 700
@@ -64,7 +66,7 @@ endif
 " }}}
 
 " Command Declarations {{{
-if !exists(":TlistToo")
+if !exists(":Tlist") && !exists(":TlistToo")
   command TlistToo :call eclim#taglist#taglisttoo#Taglist()
 endif
 " }}}
@@ -85,8 +87,8 @@ if !exists("g:Tlist_Ctags_Cmd") || !g:EclimTaglistEnabled || !eclim#PingEclim(0)
 endif
 
 " set command for taglist.vim
-let g:Tlist_Ctags_Cmd =
-  \ eclim#GetEclimCommand() . ' -command taglist -c "' . g:Tlist_Ctags_Cmd . '"'
+let g:Tlist_Ctags_Cmd_Orig = g:Tlist_Ctags_Cmd
+let g:Tlist_Ctags_Cmd = '-command taglist -c "' . g:Tlist_Ctags_Cmd . '"'
 " for windows, need to add a trailing quote to complete the command.
 if g:Tlist_Ctags_Cmd =~ '^"[a-zA-Z]:'
   let g:Tlist_Ctags_Cmd = g:Tlist_Ctags_Cmd . '"'
@@ -109,6 +111,10 @@ if !exists(':TlistToo')
     let g:tlist_dtd_settings = 'dtd;e:element'
   endif
 
+  if !exists("g:tlist_eclimhelp_settings")
+    let g:tlist_eclimhelp_settings = 'eclimhelp;s:section;a:anchor'
+  endif
+
   if !exists("g:tlist_forrestdocument_settings")
     let g:tlist_forrestdocument_settings = 'forrestdocument;s:section'
   endif
@@ -116,6 +122,10 @@ if !exists(':TlistToo')
   if !exists("g:tlist_forreststatus_settings")
     let g:tlist_forreststatus_settings = 'forreststatus;t:todo;r:release'
   endif
+
+  "if !exists("g:tlist_help_settings")
+  "  let g:tlist_help_settings = 'help;a:anchor'
+  "endif
 
   if !exists("g:tlist_hibernate_settings")
     let g:tlist_hibernate_settings = 'hibernate;t:typedef;f:filter-def;i:import;q:query;s:sql-query;c:class;j:joined-subclass'
@@ -126,7 +136,11 @@ if !exists(':TlistToo')
   endif
 
   if !exists("g:tlist_htmldjango_settings")
-    let g:tlist_htmldjango_settings = 'htmldjango;a:anchor;i:id;f:function'
+    let g:tlist_htmldjango_settings = 'htmldjango;a:anchor;i:id;f:function;b:block'
+  endif
+
+  if !exists("g:tlist_htmljinja_settings")
+    let g:tlist_htmljinja_settings = 'htmljinja;a:anchor;i:id;f:function;m:macro;b:block'
   endif
 
   if !exists("g:tlist_javascript_settings")
@@ -147,6 +161,10 @@ if !exists(':TlistToo')
 
   if !exists("g:tlist_php_settings")
     let g:tlist_php_settings = 'php;i:interface;c:class;f:function'
+  endif
+
+  if !exists("g:tlist_rst_settings")
+    let g:tlist_rst_settings = 'rst;s:section;a:anchor'
   endif
 
   if !exists("g:tlist_spring_settings")
@@ -177,126 +195,189 @@ if !exists(':TlistToo')
 else
   if !exists("g:tlist_ant_settings")
     let g:tlist_ant_settings = {
-        \ 'p': 'project',
-        \ 'i': 'import',
-        \ 'r': 'property',
-        \ 't': 'target'
+        \ 'lang': 'ant', 'tags': {
+          \ 'p': 'project',
+          \ 'i': 'import',
+          \ 'r': 'property',
+          \ 't': 'target'
+        \ }
       \ }
   endif
 
   if !exists("g:tlist_commonsvalidator_settings")
-    let g:tlist_commonsvalidator_settings = {'c': 'constant', 'f': 'form'}
+    let g:tlist_commonsvalidator_settings = {
+        \ 'lang': 'commonsvalidator', 'tags': {'c': 'constant', 'f': 'form'}
+      \ }
   endif
 
   if !exists("g:tlist_dtd_settings")
-    let g:tlist_dtd_settings = {'e': 'element'}
+    let g:tlist_dtd_settings = {'lang': 'dtd', 'tags': {'e': 'element'}}
+  endif
+
+  if !exists("g:tlist_eclimhelp_settings")
+    let g:tlist_eclimhelp_settings = {
+        \ 'lang': 'eclimhelp', 'tags': {'s': 'section', 'a': 'anchor'}
+      \ }
   endif
 
   if !exists("g:tlist_forrestdocument_settings")
-    let g:tlist_forrestdocument_settings = {'s': 'section'}
+    let g:tlist_forrestdocument_settings = {
+        \ 'lang': 'forrestdocument', 'tags': {'s': 'section'}
+      \ }
   endif
 
   if !exists("g:tlist_forreststatus_settings")
-    let g:tlist_forreststatus_settings = {'t': 'todo', 'r': 'release'}
+    let g:tlist_forreststatus_settings = {
+        \ 'lang': 'forreststatus', 'tags': {'t': 'todo', 'r': 'release'}
+      \ }
   endif
+
+  "if !exists("g:tlist_help_settings")
+  "  let g:tlist_help_settings = {'lang': 'help', 'tags': {'a': 'anchor'}}
+  "endif
 
   if !exists("g:tlist_hibernate_settings")
     let g:tlist_hibernate_settings = {
-        \ 't': 'typedef',
-        \ 'f': 'filter-def',
-        \ 'i': 'import',
-        \ 'q': 'query',
-        \ 's': 'sql-query',
-        \ 'c': 'class',
-        \ 'j': 'joined-subclass'
+        \ 'lang': 'hibernate', 'tags': {
+          \ 't': 'typedef',
+          \ 'f': 'filter-def',
+          \ 'i': 'import',
+          \ 'q': 'query',
+          \ 's': 'sql-query',
+          \ 'c': 'class',
+          \ 'j': 'joined-subclass'
+        \ }
       \ }
   endif
 
   if !exists("g:tlist_html_settings")
-    let g:tlist_html_settings = {'a': 'anchor', 'i': 'id', 'f': 'function'}
+    let g:tlist_html_settings = {
+        \ 'lang': 'html', 'tags': {'a': 'anchor', 'i': 'id', 'f': 'function'}
+      \ }
   endif
 
   if !exists("g:tlist_htmldjango_settings")
-    let g:tlist_htmldjango_settings = {'a': 'anchor', 'i': 'id', 'f': 'function'}
+    let g:tlist_htmldjango_settings = {
+        \ 'lang': 'htmldjango',
+        \ 'tags': {'a': 'anchor', 'i': 'id', 'f': 'function', 'b': 'block'}
+      \ }
+  endif
+
+  if !exists("g:tlist_htmljinja_settings")
+    let g:tlist_htmljinja_settings = {
+        \ 'lang': 'htmljinja', 'tags': {
+          \ 'a': 'anchor',
+          \ 'i': 'id',
+          \ 'f': 'function',
+          \ 'm': 'macro',
+          \ 'b': 'block'
+        \ }
+      \ }
   endif
 
   if !exists("g:tlist_javascript_settings")
-    let g:tlist_javascript_settings = {'o': 'object', 'f': 'function'}
+    let g:tlist_javascript_settings = {
+        \ 'lang': 'javascript', 'tags': {'o': 'object', 'f': 'function'}
+      \ }
   endif
 
   if !exists("g:tlist_junitresult_settings")
-    let g:tlist_junitresult_settings = {'t': 'testcase', 'o': 'output'}
+    let g:tlist_junitresult_settings = {
+        \ 'lang': 'junitresult', 'tags': {'t': 'testcase', 'o': 'output'}
+      \ }
   endif
 
   if !exists("g:tlist_jproperties_settings")
-    let g:tlist_jproperties_settings = {'p': 'property'}
+    let g:tlist_jproperties_settings = {
+        \ 'lang': 'jproperties', 'tags': {'p': 'property'}
+      \ }
   endif
 
   if !exists("g:tlist_log4j_settings")
     let g:tlist_log4j_settings = {
-        \ 'a': 'appender',
-        \ 'c': 'category',
-        \ 'l': 'logger',
-        \ 'r': 'root',
+        \ 'lang': 'log4j', 'tags': {
+          \ 'a': 'appender',
+          \ 'c': 'category',
+          \ 'l': 'logger',
+          \ 'r': 'root',
+        \ }
       \ }
   endif
 
   if !exists("g:tlist_php_settings")
     let g:tlist_php_settings = {
-        \ 'i': 'interface',
-        \ 'c': 'class',
-        \ 'f': 'function',
+        \ 'lang': 'php', 'tags': {
+          \ 'i': 'interface',
+          \ 'c': 'class',
+          \ 'f': 'function',
+        \ }
+      \ }
+  endif
+
+  if !exists("g:tlist_rst_settings")
+    let g:tlist_rst_settings = {
+        \ 'lang': 'rst', 'tags': {'s': 'section', 'a': 'anchor'}
       \ }
   endif
 
   if !exists("g:tlist_spring_settings")
-    let g:tlist_spring_settings = {'i': 'import', 'a': 'alias', 'b': 'bean'}
+    let g:tlist_spring_settings = {
+        \ 'lang': 'spring', 'tags': {'i': 'import', 'a': 'alias', 'b': 'bean'}
+      \ }
   endif
 
   if !exists("g:tlist_sql_settings")
     let g:tlist_sql_settings = {
-        \ 'g': 'group / role',
-        \ 'r': 'role',
-        \ 'u': 'user',
-        \ 'm': 'user',
-        \ 'p': 'tablespace',
-        \ 'z': 'tablespace',
-        \ 's': 'schema',
-        \ 't': 'table',
-        \ 'v': 'view',
-        \ 'q': 'sequence',
-        \ 'x': 'trigger',
-        \ 'f': 'function',
-        \ 'c': 'procedure'
+        \ 'lang': 'sql', 'tags': {
+          \ 'g': 'group / role',
+          \ 'r': 'role',
+          \ 'u': 'user',
+          \ 'm': 'user',
+          \ 'p': 'tablespace',
+          \ 'z': 'tablespace',
+          \ 's': 'schema',
+          \ 't': 'table',
+          \ 'v': 'view',
+          \ 'q': 'sequence',
+          \ 'x': 'trigger',
+          \ 'f': 'function',
+          \ 'c': 'procedure'
+        \ }
       \ }
   endif
 
   if !exists("g:tlist_tld_settings")
-    let g:tlist_tld_settings = {'t': 'tag'}
+    let g:tlist_tld_settings = {'lang': 'tld', 'tags': {'t': 'tag'}}
   endif
 
   if !exists("g:tlist_webxml_settings")
     let g:tlist_webxml_settings = {
-        \ 'p': 'context-param',
-        \ 'f': 'filter',
-        \ 'i': 'filter-mapping',
-        \ 'l': 'listener',
-        \ 's': 'servlet',
-        \ 'v': 'servlet-mapping'
+        \ 'lang': 'webxml', 'tags': {
+          \ 'p': 'context-param',
+          \ 'f': 'filter',
+          \ 'i': 'filter-mapping',
+          \ 'l': 'listener',
+          \ 's': 'servlet',
+          \ 'v': 'servlet-mapping'
+        \ }
       \ }
   endif
 
   if !exists("g:tlist_wsdl_settings")
     let g:tlist_wsdl_settings = {
-        \ 't': 'types',
-        \ 'm': 'messages',
-        \ 'p': 'ports',
-        \ 'b': 'bindings'
+        \ 'lang': 'wsdl', 'tags': {
+          \ 't': 'types',
+          \ 'm': 'messages',
+          \ 'p': 'ports',
+          \ 'b': 'bindings'
+        \ }
       \ }
   endif
 
   if !exists("g:tlist_xsd_settings")
-    let g:tlist_xsd_settings = {'e': 'elements', 't': 'types'}
+    let g:tlist_xsd_settings = {
+        \ 'lang': 'xsd', 'tags': {'e': 'elements', 't': 'types'}
+      \ }
   endif
 endif
 " }}}

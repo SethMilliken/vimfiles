@@ -1,53 +1,78 @@
 " Author:  Eric Van Dewoestine
-" Version: $Revision: 1677 $
 "
 " Description: {{{
 "
 " License:
 "
-" Copyright (c) 2005 - 2008
+" Copyright (C) 2005 - 2009  Eric Van Dewoestine
 "
-" Licensed under the Apache License, Version 2.0 (the "License");
-" you may not use this file except in compliance with the License.
-" You may obtain a copy of the License at
+" This program is free software: you can redistribute it and/or modify
+" it under the terms of the GNU General Public License as published by
+" the Free Software Foundation, either version 3 of the License, or
+" (at your option) any later version.
 "
-"      http://www.apache.org/licenses/LICENSE-2.0
+" This program is distributed in the hope that it will be useful,
+" but WITHOUT ANY WARRANTY; without even the implied warranty of
+" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+" GNU General Public License for more details.
 "
-" Unless required by applicable law or agreed to in writing, software
-" distributed under the License is distributed on an "AS IS" BASIS,
-" WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-" See the License for the specific language governing permissions and
-" limitations under the License.
+" You should have received a copy of the GNU General Public License
+" along with this program.  If not, see <http://www.gnu.org/licenses/>.
 "
 " }}}
 
 " Global Variables {{{
-  let g:EclimProjectTreeTitle = 'ProjectTree_'
+if !exists("g:EclimProjectRefreshFiles")
+  let g:EclimProjectRefreshFiles = 1
+endif
 
-  if !exists('g:EclimProjectTreeAutoOpen')
-    let g:EclimProjectTreeAutoOpen = 0
-  endif
+if !exists("g:EclimProjectKeepLocalHistory")
+  let g:EclimProjectKeepLocalHistory = 1
+endif
 
-  if g:EclimProjectTreeAutoOpen && !exists('g:EclimProjectTreeAutoOpenProjects')
-    let g:EclimProjectTreeAutoOpenProjects = ['CURRENT']
-  endif
+let g:EclimProjectTreeTitle = 'ProjectTree_'
+
+if !exists('g:EclimProjectTreeAutoOpen')
+  let g:EclimProjectTreeAutoOpen = 0
+endif
+
+if g:EclimProjectTreeAutoOpen && !exists('g:EclimProjectTreeAutoOpenProjects')
+  let g:EclimProjectTreeAutoOpenProjects = ['CURRENT']
+endif
 " }}}
 
 " Auto Commands {{{
-  if g:EclimProjectTreeAutoOpen
-    autocmd VimEnter *
-      \ if eclim#project#util#GetCurrentProjectRoot() != '' |
-      \   call eclim#project#tree#ProjectTree(copy(g:EclimProjectTreeAutoOpenProjects)) |
-      \   exec g:EclimProjectTreeContentWincmd |
-      \ endif
-    autocmd BufWinEnter *
-      \ if tabpagenr() > 1 &&
-      \     !exists('t:project_tree_auto_opened') &&
-      \     eclim#project#util#GetCurrentProjectRoot() != '' |
-      \   call eclim#project#tree#ProjectTree(copy(g:EclimProjectTreeAutoOpenProjects)) |
-      \   let t:project_tree_auto_opened = 1 |
-      \ endif
-  endif
+
+" w/ external vim refresh is optional, w/ embedded gvim it is mandatory
+" disabling at all though is discouraged.
+if g:EclimProjectRefreshFiles || has('netbeans_intg')
+  augroup eclim_refresh_files
+    autocmd!
+    autocmd BufWritePre * call eclim#project#util#RefreshFileBootstrap()
+  augroup END
+endif
+
+if g:EclimProjectKeepLocalHistory
+  augroup eclim_history_add
+    autocmd!
+    autocmd BufWritePre * call eclim#common#history#AddHistory()
+  augroup END
+endif
+
+if g:EclimProjectTreeAutoOpen
+  autocmd VimEnter *
+    \ if eclim#project#util#GetCurrentProjectRoot() != '' |
+    \   call eclim#project#tree#ProjectTree(copy(g:EclimProjectTreeAutoOpenProjects)) |
+    \   exec g:EclimProjectTreeContentWincmd |
+    \ endif
+  autocmd BufWinEnter *
+    \ if tabpagenr() > 1 &&
+    \     !exists('t:project_tree_auto_opened') &&
+    \     eclim#project#util#GetCurrentProjectRoot() != '' |
+    \   call eclim#util#DelayedCommand('call eclim#project#tree#ProjectTree(copy(g:EclimProjectTreeAutoOpenProjects)) | winc w') |
+    \   let t:project_tree_auto_opened = 1 |
+    \ endif
+endif
 " }}}
 
 " Command Declarations {{{
@@ -78,11 +103,11 @@ if !exists(":ProjectInfo")
     \ ProjectInfo :call eclim#project#util#ProjectInfo('<args>')
 endif
 if !exists(":ProjectOpen")
-  command -nargs=1 -complete=customlist,eclim#project#util#CommandCompleteProject
+  command -nargs=? -complete=customlist,eclim#project#util#CommandCompleteProject
     \ ProjectOpen :call eclim#project#util#ProjectOpen('<args>')
 endif
 if !exists(":ProjectClose")
-  command -nargs=1 -complete=customlist,eclim#project#util#CommandCompleteProject
+  command -nargs=? -complete=customlist,eclim#project#util#CommandCompleteProject
     \ ProjectClose :call eclim#project#util#ProjectClose('<args>')
 endif
 if !exists(":ProjectNatures")
@@ -130,6 +155,17 @@ endif
 if !exists(":ProjectGrepAdd")
   command -nargs=+ -complete=customlist,eclim#project#util#CommandCompleteProjectRelative
     \ ProjectLGrepAdd :call eclim#project#util#ProjectGrep('lvimgrepadd', <q-args>)
+endif
+
+if !exists(":Todo")
+  command -nargs=0 Todo :call eclim#project#util#Todo()
+endif
+if !exists(":ProjectTodo")
+  command -nargs=0 ProjectTodo :call eclim#project#util#ProjectTodo()
+endif
+
+if !exists(":TrackerTicket")
+  command -nargs=1 TrackerTicket :call eclim#project#tracker#Ticket('<args>')
 endif
 " }}}
 

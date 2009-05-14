@@ -1,33 +1,39 @@
 " Author:  Eric Van Dewoestine
-" Version: $Revision$
 "
 " Description: {{{
 "   see http://eclim.sourceforge.net/vim/python/regex.html
 "
 " License:
 "
-" Copyright (c) 2005 - 2008
+" Copyright (C) 2005 - 2009  Eric Van Dewoestine
 "
-" Licensed under the Apache License, Version 2.0 (the "License");
-" you may not use this file except in compliance with the License.
-" You may obtain a copy of the License at
+" This program is free software: you can redistribute it and/or modify
+" it under the terms of the GNU General Public License as published by
+" the Free Software Foundation, either version 3 of the License, or
+" (at your option) any later version.
 "
-"      http://www.apache.org/licenses/LICENSE-2.0
+" This program is distributed in the hope that it will be useful,
+" but WITHOUT ANY WARRANTY; without even the implied warranty of
+" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+" GNU General Public License for more details.
 "
-" Unless required by applicable law or agreed to in writing, software
-" distributed under the License is distributed on an "AS IS" BASIS,
-" WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-" See the License for the specific language governing permissions and
-" limitations under the License.
+" You should have received a copy of the GNU General Public License
+" along with this program.  If not, see <http://www.gnu.org/licenses/>.
 "
 " }}}
 
 " Evaluate(file) {{{
-function eclim#python#regex#Evaluate (file)
+function eclim#python#regex#Evaluate(file)
+  if !has('python')
+    call eclim#util#EchoError(
+      \ "This functionality requires 'python' support compiled into vim.")
+    return
+  endif
+
 python << EOF
 import StringIO, re, vim
 
-def run (regex, text, lnum):
+def run(regex, text, lnum):
   """
   Run the regular expression against the supplied text and return list of
   matches and corresponding groups.
@@ -56,7 +62,7 @@ def run (regex, text, lnum):
   return results
 
 
-def compileOffsets (text):
+def compileOffsets(text):
   """
   Compile a list of ending offsets for each line.
   """
@@ -68,7 +74,7 @@ def compileOffsets (text):
   return offsets
 
 
-def linecol (lnum, offset):
+def linecol(lnum, offset):
   """
   Translate the supplied offset to a line column string.
   """
@@ -89,17 +95,21 @@ def linecol (lnum, offset):
 type = vim.eval('exists("b:eclim_regex_type") ? b:eclim_regex_type : "file"')
 file = open(vim.eval('a:file'))
 try:
-  regex, text = file.read().split('\n', 1)
-  if not type or type == 'file':
-    offsets = compileOffsets(text)
-    vim.command("let results = '%s'" % '\n'.join(run(regex, text, 0)))
+  regex_text = file.read().split('\n', 1)
+  if len(regex_text) == 2:
+    regex, text = regex_text
+    if not type or type == 'file':
+      offsets = compileOffsets(text)
+      vim.command("let results = '%s'" % '\n'.join(run(regex, text, 0)))
+    else:
+      results = []
+      lnum = 1
+      for line in text.split('\n'):
+        lnum += 1
+        results += run(regex, line, lnum)
+      vim.command("let results = '%s'" % '\n'.join(results))
   else:
-    results = []
-    lnum = 1
-    for line in text.split('\n'):
-      lnum += 1
-      results += run(regex, line, lnum)
-    vim.command("let results = '%s'" % '\n'.join(results))
+    vim.command("let results = ''")
 finally:
   file.close()
 EOF

@@ -1,24 +1,24 @@
 " Author:  Eric Van Dewoestine
-" Version: $Revision$
 "
 " Description: {{{
 "   Xml indent file using IndentAnything.
 "
 " License:
 "
-" Copyright (c) 2005 - 2008
+" Copyright (C) 2005 - 2009  Eric Van Dewoestine
 "
-" Licensed under the Apache License, Version 2.0 (the "License");
-" you may not use this file except in compliance with the License.
-" You may obtain a copy of the License at
+" This program is free software: you can redistribute it and/or modify
+" it under the terms of the GNU General Public License as published by
+" the Free Software Foundation, either version 3 of the License, or
+" (at your option) any later version.
 "
-"      http://www.apache.org/licenses/LICENSE-2.0
+" This program is distributed in the hope that it will be useful,
+" but WITHOUT ANY WARRANTY; without even the implied warranty of
+" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+" GNU General Public License for more details.
 "
-" Unless required by applicable law or agreed to in writing, software
-" distributed under the License is distributed on an "AS IS" BASIS,
-" WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-" See the License for the specific language governing permissions and
-" limitations under the License.
+" You should have received a copy of the GNU General Public License
+" along with this program.  If not, see <http://www.gnu.org/licenses/>.
 "
 " }}}
 
@@ -35,7 +35,7 @@ setlocal indentexpr=EclimGetXmlIndent(v:lnum)
 setlocal indentkeys=o,O,*<Return>,<>>,<<>,/,{,}
 
 " EclimGetXmlIndent(lnum) {{{
-function! EclimGetXmlIndent (lnum)
+function! EclimGetXmlIndent(lnum)
   let line = line('.')
   let col = line('.')
 
@@ -107,7 +107,7 @@ function! EclimGetXmlIndent (lnum)
 endfunction " }}}
 
 " XmlIndentAnythingSettings() {{{
-function! XmlIndentAnythingSettings ()
+function! XmlIndentAnythingSettings()
   " Syntax name REs for comments and strings.
   let b:blockCommentRE = 'xmlComment'
   let b:commentRE      = b:blockCommentRE
@@ -124,14 +124,14 @@ function! XmlIndentAnythingSettings ()
 
   " Indent another level for each non-closed element tag.
   let b:indentTrios = [
-      \ [ '<\w', '', '\(/>\|</\)' ],
+      \ [ '<\w', '', '\%(/>\|</\)' ],
     \ ]
 endfunction " }}}
 
 " XmlIndentAttributeWrap(lnum) {{{
 " Function which indents line continued attributes an extra level for
 " readability.
-function! <SID>XmlIndentAttributeWrap (lnum)
+function! <SID>XmlIndentAttributeWrap(lnum)
   let line = line('.')
   let col = col('.')
   let adj = 0
@@ -154,7 +154,7 @@ function! <SID>XmlIndentAttributeWrap (lnum)
         endif
 
         " line after last continuation line
-        if close != 0 && a:lnum == close + 1
+        if close == prevnonblank(a:lnum - 1)
           " inner content
           return -1
         endif

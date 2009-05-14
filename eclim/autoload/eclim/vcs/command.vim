@@ -1,24 +1,24 @@
 " Author:  Eric Van Dewoestine
-" Version: $Revision$
 "
 " Description: {{{
 "   Functions for working with version control systems.
 "
 " License:
 "
-" Copyright (c) 2005 - 2008
+" Copyright (C) 2005 - 2009  Eric Van Dewoestine
 "
-" Licensed under the Apache License, Version 2.0 (the "License");
-" you may not use this file except in compliance with the License.
-" You may obtain a copy of the License at
+" This program is free software: you can redistribute it and/or modify
+" it under the terms of the GNU General Public License as published by
+" the Free Software Foundation, either version 3 of the License, or
+" (at your option) any later version.
 "
-"      http://www.apache.org/licenses/LICENSE-2.0
+" This program is distributed in the hope that it will be useful,
+" but WITHOUT ANY WARRANTY; without even the implied warranty of
+" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+" GNU General Public License for more details.
 "
-" Unless required by applicable law or agreed to in writing, software
-" distributed under the License is distributed on an "AS IS" BASIS,
-" WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-" See the License for the specific language governing permissions and
-" limitations under the License.
+" You should have received a copy of the GNU General Public License
+" along with this program.  If not, see <http://www.gnu.org/licenses/>.
 "
 " }}}
 
@@ -28,12 +28,33 @@ runtime autoload/eclim/vcs/util.vim
   if !exists('g:EclimVcsLogMaxEntries')
     let g:EclimVcsLogMaxEntries = 50
   endif
+
+  if !exists('g:EclimVcsDiffOrientation')
+    let g:EclimVcsDiffOrientation = 'vertical'
+  endif
+
+  if !exists('g:EclimVcsTrackerIdPatterns')
+    let g:EclimVcsTrackerIdPatterns = ['#\(\d\+\)']
+  endif
+" }}}
+
+" Script Variables {{{
+  let eclim#vcs#command#EclimVcsTrackerIdPatterns = g:EclimVcsTrackerIdPatterns
+  let s:trackerIdPattern = join(eclim#vcs#command#EclimVcsTrackerIdPatterns, '\|')
 " }}}
 
 " Annotate([revision]) {{{
-function! eclim#vcs#command#Annotate (...)
+function! eclim#vcs#command#Annotate(...)
+  if exists('b:vcs_annotations')
+    call s:AnnotateOff()
+    return
+  endif
+
   let path = exists('b:vcs_props') ? b:vcs_props.path : expand('%:p')
   let revision = len(a:000) > 0 ? a:000[0] : ''
+  if revision == ''
+    let revision = eclim#vcs#util#GetRevision()
+  endif
   let key = 'annotate_' . path . '_' . revision
   let cached = eclim#cache#Get(key)
   if has_key(cached, 'content')
@@ -47,7 +68,8 @@ function! eclim#vcs#command#Annotate (...)
     try
       let Annotate = eclim#vcs#util#GetVcsFunction('GetAnnotations')
       if type(Annotate) != 2
-        call eclim#util#EchoError('Current file is not under cvs or svn version control.')
+        call eclim#util#EchoError(
+          \ 'Current file is not under cvs, svn, hg, or git version control.')
         return
       endif
       let annotations = Annotate(revision)
@@ -61,31 +83,9 @@ function! eclim#vcs#command#Annotate (...)
   call s:ApplyAnnotations(annotations)
 endfunction " }}}
 
-" AnnotateOff() {{{
-function! eclim#vcs#command#AnnotateOff ()
-  if exists('b:vcs_annotations')
-    let defined = eclim#display#signs#GetDefined()
-    for annotation in b:vcs_annotations
-      let user = substitute(annotation, '^.*)\s\+\(.*\)', '\1', '')
-      if index(defined, user) != -1
-        let signs = eclim#display#signs#GetExisting(user)
-        for sign in signs
-          call eclim#display#signs#Unplace(sign.id)
-        endfor
-        call eclim#display#signs#Undefine(user)
-        call remove(defined, index(defined, user))
-      endif
-    endfor
-    unlet b:vcs_annotations
-  endif
-  augroup vcs_annotate
-    autocmd!
-  augroup END
-endfunction " }}}
-
 " ChangeSet(path, revision) {{{
 " Opens a buffer with change set info for the supplied revision.
-function! eclim#vcs#command#ChangeSet (path, revision)
+function! eclim#vcs#command#ChangeSet(path, revision)
   if a:path == ''
     call eclim#util#EchoError('File is not under version control.')
     return
@@ -99,6 +99,8 @@ function! eclim#vcs#command#ChangeSet (path, revision)
       call eclim#util#Echo('Unable to determine file revision.')
       return
     endif
+  elseif revision == 'prev'
+    let revision = eclim#vcs#util#GetPreviousRevision(path)
   endif
 
   let key = 'changeset_' . path . '_' . revision
@@ -140,7 +142,7 @@ endfunction " }}}
 
 " Diff(path, revision) {{{
 " Diffs the current file against the current or supplied revision.
-function! eclim#vcs#command#Diff (path, revision)
+function! eclim#vcs#command#Diff(path, revision)
   if a:path == ''
     call eclim#util#EchoError('File is not under version control.')
     return
@@ -154,28 +156,35 @@ function! eclim#vcs#command#Diff (path, revision)
       call eclim#util#Echo('Unable to determine file revision.')
       return
     endif
+  elseif revision == 'prev'
+    let revision = eclim#vcs#util#GetPreviousRevision(path)
   endif
 
   let filename = expand('%:p')
   let buf1 = bufnr('%')
 
-  call eclim#vcs#command#ViewFileRevision(path, revision, 'bel vertical split')
+  let orien = g:EclimVcsDiffOrientation == 'horizontal' ? '' : 'vertical'
+  call eclim#vcs#command#ViewFileRevision(path, revision, 'bel ' . orien . ' split')
   diffthis
 
   let b:filename = filename
+  let b:vcs_diff_temp = 1
   augroup vcs_diff
     autocmd! BufUnload <buffer>
     call eclim#util#GoToBufferWindowRegister(b:filename)
-    autocmd BufUnload <buffer> diffoff
+    autocmd BufUnload <buffer> diffoff |
+      \ call eclim#util#DelayedCommand('call eclim#display#maximize#RestoreWindows(0)')
   augroup END
 
   exec bufwinnr(buf1) . 'winc w'
   diffthis
+
+  call eclim#display#maximize#RestoreWindows(0)
 endfunction " }}}
 
 " Info() {{{
 " Retrieves and echos info on the current file.
-function eclim#vcs#command#Info ()
+function eclim#vcs#command#Info()
   let cwd = getcwd()
   let dir = expand('%:p:h')
   exec 'lcd ' . dir
@@ -191,7 +200,7 @@ endfunction " }}}
 
 " ListDir(path) {{{
 " Opens a buffer with a directory listing of versioned files.
-function! eclim#vcs#command#ListDir (path)
+function! eclim#vcs#command#ListDir(path)
   let cwd = getcwd()
   let path = substitute(a:path, '\', '/', 'g')
   if isdirectory(path)
@@ -221,7 +230,7 @@ endfunction " }}}
 
 " Log(path) {{{
 " Opens a buffer with the contents of the log for the supplied url.
-function! eclim#vcs#command#Log (path)
+function! eclim#vcs#command#Log(path)
   if a:path == ''
     call eclim#util#EchoError('File is not under version control.')
     return
@@ -262,9 +271,21 @@ function! eclim#vcs#command#Log (path)
       \ })
   endif
 
+  " if annotations are on, jump to the revision for the current line
+  let jumpto = ''
+  if exists('b:vcs_annotations') && len(b:vcs_annotations) >= line('.')
+    let jumpto = split(b:vcs_annotations[line('.') - 1])[0]
+  endif
+
   call s:TempWindow(info.log)
   call s:LogSyntax()
   call s:LogMappings()
+
+  " continuation of annotation support
+  if jumpto != ''
+    call search('^Revision: |' . jumpto)
+    normal! z
+  endif
 
   let b:vcs_props = info.props
   exec 'lcd ' . escape(info.props.root_dir, ' ')
@@ -274,7 +295,7 @@ endfunction " }}}
 
 " ViewFileRevision(path, revision, open_cmd) {{{
 " Open a read only view for the revision of the supplied version file.
-function! eclim#vcs#command#ViewFileRevision (path, revision, open_cmd)
+function! eclim#vcs#command#ViewFileRevision(path, revision, open_cmd)
   if a:path == ''
     call eclim#util#EchoError('File is not under version control.')
     return
@@ -288,6 +309,8 @@ function! eclim#vcs#command#ViewFileRevision (path, revision, open_cmd)
       call eclim#util#Echo('Unable to determine file revision.')
       return
     endif
+  elseif revision == 'prev'
+    let revision = eclim#vcs#util#GetPreviousRevision(path)
   endif
 
   let props = exists('b:vcs_props') ? b:vcs_props : {}
@@ -297,23 +320,20 @@ function! eclim#vcs#command#ViewFileRevision (path, revision, open_cmd)
   endif
   let vcs_file = 'vcs_' . revision . '_' . fnamemodify(path, ':t')
 
-  "let saved = &eventignore
-  "let &eventignore = 'BufNewFile' " doing this causes issues for php files
-  "try
+  let g:EclimTemplateTempIgnore = 1
+  try
     let open_cmd = a:open_cmd != '' ? a:open_cmd : 'split'
     if has('win32') || has('win64')
       let vcs_file = substitute(vcs_file, ':', '_', 'g')
     endif
     call eclim#util#GoToBufferWindowOrOpen(vcs_file, open_cmd)
-  "finally
-  "  let &eventignore = saved
-  "endtry
+  finally
+    unlet g:EclimTemplateTempIgnore
+  endtry
 
   setlocal noreadonly
   setlocal modifiable
-  let saved = @"
-  silent 1,$delete
-  let @" = saved
+  silent 1,$delete _
 
   let b:vcs_props = copy(props)
   let b:vcs_props.view = 'cat'
@@ -331,6 +351,7 @@ function! eclim#vcs#command#ViewFileRevision (path, revision, open_cmd)
     endif
     if isdirectory(dir)
       exec 'lcd ' . dir
+      let path = fnamemodify(path, ':t')
     endif
     try
       let ViewFileRevision = eclim#vcs#util#GetVcsFunction('ViewFileRevision')
@@ -359,7 +380,7 @@ function! eclim#vcs#command#ViewFileRevision (path, revision, open_cmd)
 endfunction " }}}
 
 " s:ApplyAnnotations(annotations) {{{
-function! s:ApplyAnnotations (annotations)
+function! s:ApplyAnnotations(annotations)
   let defined = eclim#display#signs#GetDefined()
   let index = 1
   for annotation in a:annotations
@@ -381,14 +402,36 @@ function! s:ApplyAnnotations (annotations)
 endfunction " }}}
 
 " s:AnnotateInfo() {{{
-function! s:AnnotateInfo ()
+function! s:AnnotateInfo()
   if exists('b:vcs_annotations') && len(b:vcs_annotations) >= line('.')
     call eclim#util#WideMessage('echo', b:vcs_annotations[line('.') - 1])
   endif
 endfunction " }}}
 
-" s:FollowLink () {{{
-function! s:FollowLink ()
+" s:AnnotateOff() {{{
+function! s:AnnotateOff()
+  if exists('b:vcs_annotations')
+    let defined = eclim#display#signs#GetDefined()
+    for annotation in b:vcs_annotations
+      let user = substitute(annotation, '^.*)\s\+\(.\{-}\)\s*$', '\1', '')
+      if index(defined, user) != -1
+        let signs = eclim#display#signs#GetExisting(user)
+        for sign in signs
+          call eclim#display#signs#Unplace(sign.id)
+        endfor
+        call eclim#display#signs#Undefine(user)
+        call remove(defined, index(defined, user))
+      endif
+    endfor
+    unlet b:vcs_annotations
+  endif
+  augroup vcs_annotate
+    autocmd!
+  augroup END
+endfunction " }}}
+
+" s:FollowLink() {{{
+function! s:FollowLink()
   let line = getline('.')
   let link = substitute(
     \ getline('.'), '.*|\(.\{-}\%' . col('.') . 'c.\{-}\)|.*', '\1', '')
@@ -441,16 +484,18 @@ function! s:FollowLink ()
       call eclim#vcs#command#ViewFileRevision(file, revision, '')
       let buf1 = bufnr('%')
 
-      call eclim#vcs#command#ViewFileRevision(file, r2, 'bel vertical split')
+      let orien = g:EclimVcsDiffOrientation == 'horizontal' ? '' : 'vertical'
+      call eclim#vcs#command#ViewFileRevision(file, r2, 'bel ' . orien . ' split')
       diffthis
       exec bufwinnr(buf1) . 'winc w'
       diffthis
-    else
+      call eclim#display#maximize#RestoreWindows(0)
+    elseif link !~ '^\s*$'
       call eclim#vcs#command#Log(link)
     endif
 
   " link to view a change set
-  elseif link =~ '^[0-9][0-9a-f.:]\+$'
+  elseif link =~ '^[0-9a-f.:]\+$'
     let file = s:GetBreadcrumbPath()
     call eclim#vcs#command#ChangeSet(b:vcs_props.path, link)
 
@@ -474,62 +519,71 @@ function! s:FollowLink ()
 
     call eclim#vcs#command#ViewFileRevision(file, r1, '')
     let buf1 = bufnr('%')
-    call eclim#vcs#command#ViewFileRevision(file, r2, 'bel vertical split')
+    let orien = g:EclimVcsDiffOrientation == 'horizontal' ? '' : 'vertical'
+    call eclim#vcs#command#ViewFileRevision(file, r2, 'bel ' . orien . ' split')
     diffthis
     exec bufwinnr(buf1) . 'winc w'
     diffthis
+    call eclim#display#maximize#RestoreWindows(0)
 
   " link to diff against working copy
   elseif link == 'working copy'
     let file = s:GetBreadcrumbPath()
     let revision = substitute(
-      \ getline(line('.') - 2), 'Revision: |\?\([0-9.]\+\)|\?.*', '\1', '')
+      \ getline(line('.') - 2), 'Revision: |\?\([0-9a-z.]\+\)|\?.*', '\1', '')
 
     let filename = b:filename
-    call eclim#vcs#command#ViewFileRevision(file, revision, 'bel vertical split')
+    let orien = g:EclimVcsDiffOrientation == 'horizontal' ? '' : 'vertical'
+    call eclim#vcs#command#ViewFileRevision(file, revision, 'bel ' . orien . ' split')
     diffthis
 
     let b:filename = filename
     augroup vcs_diff
       autocmd! BufUnload <buffer>
       call eclim#util#GoToBufferWindowRegister(b:filename)
-      autocmd BufUnload <buffer> diffoff
+      autocmd BufUnload <buffer> diffoff |
+        \ call eclim#util#DelayedCommand('call eclim#display#maximize#RestoreWindows(0)')
     augroup END
 
     call eclim#util#GoToBufferWindow(filename)
     diffthis
+    call eclim#display#maximize#RestoreWindows(0)
 
   " link to bug / feature report
-  elseif link =~ '^#\d\+$'
+  elseif link =~ '^' . s:trackerIdPattern . '$'
     let cwd = getcwd()
     let dir = fnamemodify(b:filename, ':h')
     exec 'lcd ' . dir
     try
-      let url = eclim#project#util#GetProjectSetting('org.eclim.project.vcs.tracker')
+      let url = eclim#project#util#GetProjectSetting('org.eclim.project.tracker')
     finally
       exec 'lcd ' . cwd
     endtry
 
-    if url == '0'
+    if type(url) == 0
       return
     endif
 
     if url == ''
       call eclim#util#EchoWarning(
         \ "Link to bug report / feature request requires project setting " .
-        \ "'org.eclim.project.vcs.tracker'.")
-      return
-    elseif type(url) == 0 && url == 0
+        \ "'org.eclim.project.tracker'.")
       return
     endif
 
-    let url = substitute(url, '<id>', link[1:], 'g')
+    for pattern in g:EclimVcsTrackerIdPatterns
+      if link =~ pattern
+        let id = substitute(link, pattern, '\1', '')
+        break
+      endif
+    endfor
+    let url = substitute(url, '<id>', id, 'g')
     call eclim#web#OpenUrl(url)
   endif
 endfunction " }}}
 
 " s:GetBreadcrumbPath() {{{
-function! s:GetBreadcrumbPath ()
+function! s:GetBreadcrumbPath()
   let path = substitute(getline(1), ' / ', '/', 'g')
   let path = substitute(path, '.\{-}/\(.*\)', '\1', '')
   let path = substitute(path, '^|', '', 'g')
@@ -538,7 +592,7 @@ function! s:GetBreadcrumbPath ()
 endfunction " }}}
 
 " s:HistoryPop() {{{
-function! s:HistoryPop ()
+function! s:HistoryPop()
   if exists('w:vcs_history') && len(w:vcs_history) > 1
     call remove(w:vcs_history, -1) " remove current page entry
     exec w:vcs_history[-1]
@@ -547,7 +601,7 @@ function! s:HistoryPop ()
 endfunction " }}}
 
 " s:HistoryPush(command) {{{
-function! s:HistoryPush (name, args)
+function! s:HistoryPush(name, args)
   if !exists('w:vcs_history')
     let w:vcs_history = []
   endif
@@ -566,13 +620,13 @@ function! s:HistoryPush (name, args)
 endfunction " }}}
 
 " s:LogMappings() {{{
-function! s:LogMappings ()
+function! s:LogMappings()
   nnoremap <silent> <buffer> <cr> :call <SID>FollowLink()<cr>
   nnoremap <silent> <buffer> <c-o> :call <SID>HistoryPop()<cr>
 endfunction " }}}
 
 " s:LogSyntax() {{{
-function! s:LogSyntax ()
+function! s:LogSyntax()
   set ft=vcs_log
   hi link VcsDivider Constant
   hi link VcsHeader Identifier
@@ -582,8 +636,8 @@ function! s:LogSyntax ()
   syntax match VcsHeader /^\(Revision\|Modified\|Diff\|Changed paths\):/
 endfunction " }}}
 
-" s:TempWindow (lines) {{{
-function! s:TempWindow (lines)
+" s:TempWindow(lines) {{{
+function! s:TempWindow(lines)
   let filename = expand('%:p')
   if expand('%') == '[vcs_log]' && exists('b:filename')
     let filename = b:filename

@@ -1,54 +1,56 @@
 " Author:  Eric Van Dewoestine
-" Version: $Revision: 1677 $
 "
 " Description: {{{
 "   Utility functions for eclipse.
 "
 " License:
 "
-" Copyright (c) 2005 - 2008
+" Copyright (C) 2005 - 2009  Eric Van Dewoestine
 "
-" Licensed under the Apache License, Version 2.0 (the "License");
-" you may not use this file except in compliance with the License.
-" You may obtain a copy of the License at
+" This program is free software: you can redistribute it and/or modify
+" it under the terms of the GNU General Public License as published by
+" the Free Software Foundation, either version 3 of the License, or
+" (at your option) any later version.
 "
-"      http://www.apache.org/licenses/LICENSE-2.0
+" This program is distributed in the hope that it will be useful,
+" but WITHOUT ANY WARRANTY; without even the implied warranty of
+" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+" GNU General Public License for more details.
 "
-" Unless required by applicable law or agreed to in writing, software
-" distributed under the License is distributed on an "AS IS" BASIS,
-" WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-" See the License for the specific language governing permissions and
-" limitations under the License.
+" You should have received a copy of the GNU General Public License
+" along with this program.  If not, see <http://www.gnu.org/licenses/>.
 "
 " }}}
 
 " Script Variables {{{
   let s:command_workspace_dir = '-command workspace_dir'
   let s:ide_prefs =
-    \ g:EclimHome . '/../../configuration/.settings/org.eclipse.ui.ide.prefs'
+    \ eclim#GetEclimHome() . '/../../configuration/.settings/org.eclipse.ui.ide.prefs'
 " }}}
 
 " GetWorkspaceDir() {{{
 " Gets the path to the workspace.  Ensures the path uses cross platform '/'
 " separators and includes a trailing '/'.  If the workspace could not be
 " determined, the empty string is returned.
-function! eclim#eclipse#GetWorkspaceDir ()
+function! eclim#eclipse#GetWorkspaceDir()
   if !exists('g:EclimWorkspace')
     let result = ''
 
-    if filereadable(s:ide_prefs)
+    if result == ''
+      let result = eclim#ExecuteEclim(s:command_workspace_dir)
+      if result == '0'
+        let result = ''
+      endif
+    endif
+
+    " fall back to file based discovery
+    if result == '' && filereadable(s:ide_prefs)
       let lines = readfile(s:ide_prefs)
       call filter(lines, 'v:val =~ "^\s*RECENT_WORKSPACES\s*="')
       if len(lines) == 1
         let result = substitute(lines[0], '.\{-}=\s*\(.\{-}\)\(\s*,\|$\)', '\1', '')
-      endif
-    endif
-
-    " fall back to asking eclipse
-    if result == ''
-      let result = eclim#ExecuteEclim(s:command_workspace_dir)
-      if result == '0'
-        return ''
+        " unescape the escaped dir name in windows
+        exec 'let result = "' . result . '"'
       endif
     endif
 

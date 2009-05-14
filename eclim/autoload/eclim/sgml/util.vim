@@ -1,31 +1,31 @@
 " Author:  Eric Van Dewoestine
-" Version: $Revision$
 "
 " Description: {{{
 "   Various sgml relatd functions.
 "
 " License:
 "
-" Copyright (c) 2005 - 2008
+" Copyright (C) 2005 - 2009  Eric Van Dewoestine
 "
-" Licensed under the Apache License, Version 2.0 (the "License");
-" you may not use this file except in compliance with the License.
-" You may obtain a copy of the License at
+" This program is free software: you can redistribute it and/or modify
+" it under the terms of the GNU General Public License as published by
+" the Free Software Foundation, either version 3 of the License, or
+" (at your option) any later version.
 "
-"      http://www.apache.org/licenses/LICENSE-2.0
+" This program is distributed in the hope that it will be useful,
+" but WITHOUT ANY WARRANTY; without even the implied warranty of
+" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+" GNU General Public License for more details.
 "
-" Unless required by applicable law or agreed to in writing, software
-" distributed under the License is distributed on an "AS IS" BASIS,
-" WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-" See the License for the specific language governing permissions and
-" limitations under the License.
+" You should have received a copy of the GNU General Public License
+" along with this program.  If not, see <http://www.gnu.org/licenses/>.
 "
 " }}}
 
 " CompleteEndTag() {{{
 " Function to complete an sgml end tag name.
 " Ex. imap <silent> / <c-r>=eclim#sgml#util#CompleteEndTag()<cr>
-function eclim#sgml#util#CompleteEndTag ()
+function eclim#sgml#util#CompleteEndTag()
   let line = getline('.')
   if line[col('.') - 2] == '<' && line[col('.') - 1] !~ '\w'
     let tag = s:GetStartTag(line('.'))
@@ -37,25 +37,23 @@ function eclim#sgml#util#CompleteEndTag ()
 endfunction " }}}
 
 " s:GetStartTag(line) {{{
-function s:GetStartTag (line)
-  let pos = searchpairpos('<\w', '', '</\w', 'bnW')
-  if pos[0]
+function s:GetStartTag(line)
+  let pairpos = searchpairpos('<\w', '', '</\w', 'bnW')
+  if pairpos[0]
     " test if tag found is self closing
-    if search('\%' . pos[0] . 'l\%' . pos[1] . 'c\_[^>]*/>', 'bcnW')
-      let lnum = line('.')
-      let cnum = col('.')
-      call cursor(pos[0], pos[1])
+    if search('\%' . pairpos[0] . 'l\%' . pairpos[1] . 'c\_[^>]*/>', 'bcnW')
+      let pos = getpos('.')
+      call cursor(pairpos[0], pairpos[1])
       try
         return s:GetStartTag(a:line)
       finally
-        call cursor(lnum, cnum)
+        call setpos('.', pos)
       endtry
     endif
 
-    let line = getline(pos[0])
-    let lnum = line('.')
-    let cnum = col('.')
-    call cursor(pos[0], pos[1])
+    let line = getline(pairpos[0])
+    let pos = getpos('.')
+    call cursor(pairpos[0], pairpos[1])
     try
       let tags = s:ExtractTags(line)
       " place the cursor at the end of the line
@@ -65,15 +63,15 @@ function s:GetStartTag (line)
         call search('<' . tag . '\>\([^>]\{-}[^/]\)\?>', 'b', line('.'))
 
         " see if the tag has a matching close tag
-        let pos = searchpairpos('<' . tag . '\>', '', '</' . tag . '\>', 'nW')
-        if !pos[0] || pos[0] > a:line
+        let pairpos = searchpairpos('<' . tag . '\>', '', '</' . tag . '\>', 'nW')
+        if !pairpos[0] || pairpos[0] > a:line
           return tag
         endif
       endfor
       call cursor(line('.'), 1)
       return s:GetStartTag(a:line)
     finally
-      call cursor(lnum, cnum)
+      call setpos('.', pos)
     endtry
   endif
   return ''
@@ -81,7 +79,7 @@ endfunction " }}}
 
 " s:ExtractTags() {{{
 " Extracts a list of open tag names from the current line.
-function s:ExtractTags (line)
+function s:ExtractTags(line)
   let line = a:line
   let tags = []
   while line =~ '<\w\+'
@@ -96,7 +94,7 @@ endfunction " }}}
 
 " s:IgnoreTag(tag) {{{
 " Determines if a tag should be ignored.
-function s:IgnoreTag (tag)
+function s:IgnoreTag(tag)
   if exists('b:EclimSgmlCompleteEndTagIgnore')
     for ignore in b:EclimSgmlCompleteEndTagIgnore
       if a:tag == ignore
