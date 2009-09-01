@@ -244,6 +244,7 @@ if has("gui_running") || &t_Co == 88 || &t_Co == 256
 
     " highlight groups
     call <SID>X("Cursor", "708090", "f0e68c", "")
+    " call <SID>X("CursorLine", "", "011111", "")
     call <SID>X("CursorLine", "", "022222", "")
     call <SID>X("CursorColumn", "", "010111", "")
     "CursorIM
@@ -270,6 +271,11 @@ if has("gui_running") || &t_Co == 88 || &t_Co == 256
     call <SID>X("Visual", "6b8e23", "f0e68c", "reverse")
     "VisualNOS
     call <SID>X("WarningMsg", "fa8072", "", "")
+	"Popup Menu
+    call <SID>X("Pmenu", "544444", "f0e68c", "reverse")
+    call <SID>X("PmenuSel", "544444", "f0e68c", "")
+    call <SID>X("PmenuThumb", "", "f0e68c", "")
+    call <SID>X("PmenuSbar", "", "333333", "")
     "WildMenu
     "Menu
     "Scrollbar
