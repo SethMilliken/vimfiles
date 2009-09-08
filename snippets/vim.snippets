@@ -30,3 +30,24 @@ snippet ife
 	else
 		${3}
 	endif
+
+snippet class An vimscript OOP prototype-based object
+	" ${1:classname} prototype " {{{
+	let s:$1 = {}
+	" constructor
+	function! s:$1.New() " {{{
+		let new$1 = copy(self)
+		let new$1.${2:fieldname} = []  
+		return new$1
+	endfunction " }}}
+	" functions 
+	function! s:$1.${3:functionName}(${4:argument}) " {{{
+		call add(self.$2, a:$4)
+		${5:your code here}
+	endfunction " }}}
+	" $1 }}}
+
+snippet method A vimscript OOP prototype-based object method
+	function! s:${1}.${2:functionName}(${3:argument}) " {{{
+		${4:your code here}
+	endfunction " }}}
