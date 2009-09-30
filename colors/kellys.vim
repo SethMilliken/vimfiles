@@ -44,7 +44,11 @@ if has("gui_running")
 	hi Comment		guifg=#67686b	guibg=#000000	gui=none
 	hi Cursor 		guifg=#708090   guibg=#f0e68c   gui=none
 	hi Constant 	guifg=#d1c79e	guibg=#000000	gui=none
-	hi CursorLine		          	guibg=#303132	gui=none
+	if has("gui_macvim")
+	hi CursorLine		          	guibg=#022222	gui=none
+	else
+	hi CursorLine		          	guibg=#303132   gui=none
+	endif
 	hi DiffAdd		guifg=#000000	guibg=#9ab2c8	gui=none
 	hi DiffChange	guifg=#000000	guibg=#d1c79e	gui=none
 	hi DiffDelete	guifg=#67686b	guibg=#000000	gui=none
