@@ -28,7 +28,7 @@ endif
 
 let colors_name = "kellys"
 
-" black			2a2b2f	235
+" black			000000
 " blue			62acce	81
 " blue slight	9ab2c8	74
 " brown slight	d1c79e	144
@@ -41,33 +41,33 @@ let colors_name = "kellys"
 " tabline
 
 if has("gui_running")
-	hi Comment		guifg=#67686b	guibg=#2a2b2f	gui=none
-	hi Cursor 		guifg=#2a2b2f	guibg=#e1e0e5	gui=none
-	hi Constant 	guifg=#d1c79e	guibg=#2a2b2f	gui=none
+	hi Comment		guifg=#67686b	guibg=#000000	gui=none
+	hi Cursor 		guifg=#000000	guibg=#e1e0e5	gui=none
+	hi Constant 	guifg=#d1c79e	guibg=#000000	gui=none
 	hi CursorLine		          	guibg=#303132	gui=none
-	hi DiffAdd		guifg=#2a2b2f	guibg=#9ab2c8	gui=none
-	hi DiffChange	guifg=#2a2b2f	guibg=#d1c79e	gui=none
-	hi DiffDelete	guifg=#67686b	guibg=#2a2b2f	gui=none
+	hi DiffAdd		guifg=#000000	guibg=#9ab2c8	gui=none
+	hi DiffChange	guifg=#000000	guibg=#d1c79e	gui=none
+	hi DiffDelete	guifg=#67686b	guibg=#000000	gui=none
 	hi DiffText		guifg=#9d0e15	guibg=#d1c79e	gui=none
-	hi Folded 		guifg=#2a2b2f	guibg=#67686b	gui=none
-	hi MatchParen	guifg=#d1d435	guibg=#2a2b2f	gui=bold,underline
-	hi ModeMsg		guifg=#e1e0e5	guibg=#2a2b2f	gui=bold
-	hi Normal 		guifg=#e1e0e5	guibg=#2a2b2f	gui=none
-	hi Pmenu		guifg=#2a2b2f	guibg=#9ab2c8	gui=none
-	hi PmenuSel		guifg=#2a2b2f	guibg=#62acce	gui=bold
-	hi PmenuSbar	guifg=#2a2b2f	guibg=#2a2b2f	gui=none
-	hi PmenuThumb	guifg=#2a2b2f	guibg=#62acce	gui=none
-	hi PreProc		guifg=#d1d435	guibg=#2a2b2f	gui=none 
-	hi Search		guifg=#2a2b2f	guibg=#e1e0e5	gui=none
-	hi Special		guifg=#9ab2c8	guibg=#2a2b2f	gui=none
-	hi Statement	guifg=#62acce	guibg=#2a2b2f	gui=bold
-	hi StatusLine 	guifg=#2a2b2f	guibg=#62acce	gui=bold
-	hi StatusLineNC guifg=#2a2b2f	guibg=#e1e0e5	gui=none
+	hi Folded 		guifg=#ffd700	guibg=#4d4d4d   gui=none
+	hi MatchParen	guifg=#d1d435	guibg=#000000	gui=bold,underline
+	hi ModeMsg		guifg=#e1e0e5	guibg=#000000	gui=bold
+	hi Normal 		guifg=#e1e0e5	guibg=#000000	gui=none
+	hi Pmenu		guifg=#000000	guibg=#9ab2c8	gui=none
+	hi PmenuSel		guifg=#000000	guibg=#62acce	gui=bold
+	hi PmenuSbar	guifg=#000000	guibg=#000000	gui=none
+	hi PmenuThumb	guifg=#000000	guibg=#62acce	gui=none
+	hi PreProc		guifg=#d1d435	guibg=#000000	gui=none 
+	hi Search		guifg=#000000	guibg=#e1e0e5	gui=none
+	hi Special		guifg=#9ab2c8	guibg=#000000	gui=none
+	hi Statement	guifg=#62acce	guibg=#000000	gui=bold
+	hi StatusLine 	guifg=#000000	guibg=#62acce	gui=bold
+	hi StatusLineNC guifg=#000000	guibg=#e1e0e5	gui=none
 	hi Todo 		guifg=#e1e0e5	guibg=#9d0e15	gui=bold
-	hi Type 		guifg=#e6ac32	guibg=#2a2b2f	gui=none
-	hi Underlined	guifg=#e1e0e5	guibg=#2a2b2f	gui=underline
-	hi Visual		guifg=#2a2b2f	guibg=#e1e0e5	gui=none
-	hi Wildmenu		guifg=#62acce	guibg=#2a2b2f	gui=bold
+	hi Type 		guifg=#e6ac32	guibg=#000000	gui=none
+	hi Underlined	guifg=#e1e0e5	guibg=#000000	gui=underline
+	hi Visual		guifg=#000000	guibg=#e1e0e5	gui=none
+	hi Wildmenu		guifg=#62acce	guibg=#000000	gui=bold
 else
 	if &t_Co == 256
 		hi Comment		ctermfg=239	ctermbg=235	cterm=none
