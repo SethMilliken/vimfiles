@@ -42,14 +42,14 @@ let colors_name = "kellys"
 
 if has("gui_running")
 	hi Comment		guifg=#67686b	guibg=#000000	gui=none
-	hi Cursor 		guifg=#000000	guibg=#e1e0e5	gui=none
+	hi Cursor 		guifg=#708090   guibg=#f0e68c   gui=none
 	hi Constant 	guifg=#d1c79e	guibg=#000000	gui=none
 	hi CursorLine		          	guibg=#303132	gui=none
 	hi DiffAdd		guifg=#000000	guibg=#9ab2c8	gui=none
 	hi DiffChange	guifg=#000000	guibg=#d1c79e	gui=none
 	hi DiffDelete	guifg=#67686b	guibg=#000000	gui=none
 	hi DiffText		guifg=#9d0e15	guibg=#d1c79e	gui=none
-	hi Folded 		guifg=#ffd700	guibg=#4d4d4d   gui=none
+	hi Folded 		guifg=#ffd700	guibg=#222222   gui=none
 	hi MatchParen	guifg=#d1d435	guibg=#000000	gui=bold,underline
 	hi ModeMsg		guifg=#e1e0e5	guibg=#000000	gui=bold
 	hi Normal 		guifg=#e1e0e5	guibg=#000000	gui=none
