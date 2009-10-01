@@ -62,16 +62,42 @@ if has("gui_running")
 	hi PmenuSbar	guifg=#000000	guibg=#000000	gui=none
 	hi PmenuThumb	guifg=#000000	guibg=#62acce	gui=none
 	hi PreProc		guifg=#d1d435	guibg=#000000	gui=none 
-	hi Search		guifg=#000000	guibg=#e1e0e5	gui=none
+	"" hi Search		guifg=#000000	guibg=#e1e0e5	gui=none
 	hi Special		guifg=#9ab2c8	guibg=#000000	gui=none
 	hi Statement	guifg=#62acce	guibg=#000000	gui=bold
 	hi StatusLine 	guifg=#000000	guibg=#62acce	gui=bold
 	hi StatusLineNC guifg=#000000	guibg=#e1e0e5	gui=none
-	hi Todo 		guifg=#e1e0e5	guibg=#9d0e15	gui=bold
+	"" hi Todo 		guifg=#e1e0e5	guibg=#9d0e15	gui=bold
 	hi Type 		guifg=#e6ac32	guibg=#000000	gui=none
-	hi Underlined	guifg=#e1e0e5	guibg=#000000	gui=underline
-	hi Visual		guifg=#000000	guibg=#e1e0e5	gui=none
+	"" hi Underlined	guifg=#e1e0e5	guibg=#000000	gui=underline
+	hi Underlined	guifg=#80a0ff   gui=underline term=underline cterm=underline ctermfg=81 
+	"" hi Visual		guifg=#000000	guibg=#e1e0e5	gui=none
 	hi Wildmenu		guifg=#62acce	guibg=#000000	gui=bold
+
+	hi Todo        term=standout ctermfg=196 ctermbg=226 guifg=#ff4500 guibg=#eeee00
+	hi Error       term=reverse ctermfg=15 ctermbg=9 guifg=White guibg=Red
+
+
+	hi WarningMsg term=standout ctermfg=209 guifg=#fa8072
+	hi Visual term=reverse cterm=reverse ctermfg=64 ctermbg=222 gui=reverse guifg=#6b8e23 guibg=#f0e68c
+	"hi Pmenu			cterm=reverse ctermfg=52 ctermbg=222 gui=reverse guifg=#544444 guibg=#f0e68c
+	"hi PmenuSel		ctermfg=52 ctermbg=222 guifg=#544444 guibg=#f0e68c
+	"hi PmenuSbar	ctermbg=235 guibg=#333333
+	"hi PmenuThumb	cterm=reverse ctermbg=222 gui=reverse guibg=#f0e68c
+	hi Ignore       guifg=#323232	guibg=#000000	gui=none
+	hi NonText      guifg=#555555	guibg=#000000	gui=none
+	hi SpecialKey	term=bold ctermfg=112 guifg=#9acd32
+	hi Search		term=reverse ctermfg=223 ctermbg=172 guifg=#f5deb3 guibg=#cd853f
+	hi IncSearch	term=reverse ctermfg=223 ctermbg=172 guibg=#00000 guifg=#cd85f5
+	hi MoreMsg		term=bold ctermfg=29 gui=bold guifg=#2e8b57
+	hi Question 	term=bold ctermfg=29 gui=bold guifg=#0c6a35
+	" hi Question		term=standout ctermfg=48 gui=bold guifg=#00ff7f
+	hi SpellBad     term=reverse ctermbg=9 gui=undercurl guisp=Red
+	hi SpellCap     term=reverse ctermbg=12 gui=undercurl guisp=Blue
+	hi SpellRare    term=reverse ctermbg=13 gui=undercurl guisp=Magenta
+	hi SpellLocal   term=underline ctermbg=14 gui=undercurl guisp=Cyan
+	hi LineNr       term=underline ctermfg=11 guifg=Yellow
+
 else
 	if &t_Co == 256
 		hi Comment		ctermfg=239	ctermbg=235	cterm=none
@@ -112,35 +138,35 @@ hi! link Debug			Special
 hi! link Define			PreProc
 hi! link Delimiter		Special
 hi! link Directory		Type
-hi! link Error			Todo
+"" hi! link Error			Todo
 hi! link ErrorMsg		Error
 hi! link Exception		Statement
 hi! link Float			Constant
 hi! link FoldColumn		Folded
 hi! link Function		Normal
 hi! link Identifier		Special
-hi! link Ignore			Comment
-hi! link IncSearch		Search
+"" hi! link Ignore			Comment
+"" hi! link IncSearch		Search
 hi! link Include		PreProc
 hi! link Keyword		Statement
 hi! link Label			Statement
-hi! link LineNr			Comment
+"" hi! link LineNr			Comment
 hi! link Macro			PreProc
-hi! link MoreMsg		ModeMsg
-hi! link NonText		Comment
+"" hi! link MoreMsg		ModeMsg
+"" hi! link NonText		Comment
 hi! link Number			Constant
 hi! link Operator		Special
 hi! link PreCondit		PreProc
-hi! link Question		MoreMsg
+"" hi! link Question		MoreMsg
 hi! link Repeat			Statement
 hi! link SignColumn		FoldColumn
 hi! link SpecialChar	Special
 hi! link SpecialComment	Special
-hi! link SpecialKey		Special
-hi! link SpellBad		Error
-hi! link SpellCap		Error
-hi! link SpellLocal		Error
-hi! link SpellRare		Error
+"" hi! link SpecialKey		Special
+"" hi! link SpellBad		Error
+"" hi! link SpellCap		Error
+"" hi! link SpellLocal		Error
+"" hi! link SpellRare		Error
 hi! link StorageClass	Type
 hi! link String			Constant
 hi! link Structure		Type
@@ -148,7 +174,7 @@ hi! link Tag			Special
 hi! link Title			ModeMsg
 hi! link Typedef		Type
 hi! link VertSplit		StatusLineNC
-hi! link WarningMsg		Error
+"" hi! link WarningMsg		Error
 
 " ada
 hi! link adaBegin			Type

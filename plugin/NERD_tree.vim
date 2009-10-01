@@ -27,7 +27,7 @@ let loaded_nerd_tree = 1
 let s:old_cpo = &cpo
 set cpo&vim
 
-"Function: s:initVariable() function {{{2
+" Function: s:initVariable() function {{{2
 "This function is used to initialise a given variable to a given value. The
 "variable is only initialised if it does not exist prior
 "
@@ -171,7 +171,7 @@ if g:NERDTreeHijackNetrw
     augroup END
 endif
 
-"SECTION: Classes {{{1
+" SECTION: Classes {{{1
 "============================================================
 "CLASS: Bookmark {{{2
 "============================================================
@@ -392,7 +392,7 @@ function! s:Bookmark.ToRoot(name)
 endfunction
 
 
-"FUNCTION: Bookmark.validate() {{{3
+" FUNCTION: Bookmark.validate() {{{3
 function! s:Bookmark.validate()
     if self.path.exists()
         return 1
@@ -426,7 +426,7 @@ endfunction
 "classes.
 "============================================================
 let s:TreeFileNode = {}
-"FUNCTION: TreeFileNode.bookmark(name) {{{3
+" FUNCTION: TreeFileNode.bookmark(name) {{{3
 "bookmark this node with a:name
 function! s:TreeFileNode.bookmark(name)
     try
@@ -439,7 +439,7 @@ function! s:TreeFileNode.bookmark(name)
     call self.path.cacheDisplayString()
     call s:Bookmark.Write()
 endfunction
-"FUNCTION: TreeFileNode.cacheParent() {{{3
+" FUNCTION: TreeFileNode.cacheParent() {{{3
 "initializes self.parent if it isnt already
 function! s:TreeFileNode.cacheParent()
     if empty(self.parent)
@@ -450,7 +450,7 @@ function! s:TreeFileNode.cacheParent()
         let self.parent = s:TreeFileNode.New(parentPath)
     endif
 endfunction
-"FUNCTION: TreeFileNode.compareNodes {{{3
+" FUNCTION: TreeFileNode.compareNodes {{{3
 "This is supposed to be a class level method but i cant figure out how to
 "get func refs to work from a dict..
 "
@@ -462,7 +462,7 @@ function! s:compareNodes(n1, n2)
     return a:n1.path.compareTo(a:n2.path)
 endfunction
 
-"FUNCTION: TreeFileNode.clearBoomarks() {{{3
+" FUNCTION: TreeFileNode.clearBoomarks() {{{3
 function! s:TreeFileNode.clearBoomarks()
     for i in s:Bookmark.Bookmarks()
         if i.path.equals(self.path)
@@ -471,7 +471,7 @@ function! s:TreeFileNode.clearBoomarks()
     endfor
     call self.path.cacheDisplayString()
 endfunction
-"FUNCTION: TreeFileNode.copy(dest) {{{3
+" FUNCTION: TreeFileNode.copy(dest) {{{3
 function! s:TreeFileNode.copy(dest)
     call self.path.copy(a:dest)
     let newPath = s:Path.New(a:dest)
@@ -482,14 +482,14 @@ function! s:TreeFileNode.copy(dest)
     return parent.findNode(newPath)
 endfunction
 
-"FUNCTION: TreeFileNode.delete {{{3
+" FUNCTION: TreeFileNode.delete {{{3
 "Removes this node from the tree and calls the Delete method for its path obj
 function! s:TreeFileNode.delete()
     call self.path.delete()
     call self.parent.removeChild(self)
 endfunction
 
-"FUNCTION: TreeFileNode.renderToString {{{3
+" FUNCTION: TreeFileNode.renderToString {{{3
 "returns a string representation for this tree to be rendered in the view
 function! s:TreeFileNode.renderToString()
     return self._renderToString(0, 0, [], self.getChildCount() ==# 1)
@@ -566,7 +566,7 @@ function! s:TreeFileNode._renderToString(depth, drawText, vertMap, isLastChild)
 
     return output
 endfunction
-"FUNCTION: TreeFileNode.equals(treenode) {{{3
+" FUNCTION: TreeFileNode.equals(treenode) {{{3
 "
 "Compares this treenode to the input treenode and returns 1 if they are the
 "same node.
@@ -580,7 +580,7 @@ function! s:TreeFileNode.equals(treenode)
     return self.path.str(1) ==# a:treenode.path.str(1)
 endfunction
 
-"FUNCTION: TreeFileNode.findNode(path) {{{3
+" FUNCTION: TreeFileNode.findNode(path) {{{3
 "Returns self if this node.path.Equals the given path.
 "Returns {} if not equal.
 "
@@ -592,9 +592,9 @@ function! s:TreeFileNode.findNode(path)
     endif
     return {}
 endfunction
-"FUNCTION: TreeFileNode.findOpenDirSiblingWithVisibleChildren(direction) {{{3
+" FUNCTION: TreeFileNode.findOpenDirSiblingWithVisibleChildren(direction) {{{3
 "
-"Finds the next sibling for this node in the indicated direction. This sibling
+" Finds the next sibling for this node in the indicated direction. This sibling
 "must be a directory and may/may not have children as specified.
 "
 "Args:
@@ -617,9 +617,9 @@ function! s:TreeFileNode.findOpenDirSiblingWithVisibleChildren(direction)
 
     return {}
 endfunction
-"FUNCTION: TreeFileNode.findSibling(direction) {{{3
+" FUNCTION: TreeFileNode.findSibling(direction) {{{3
 "
-"Finds the next sibling for this node in the indicated direction
+" Finds the next sibling for this node in the indicated direction
 "
 "Args:
 "direction: 0 if you want to find the previous sibling, 1 for the next sibling
@@ -656,7 +656,7 @@ function! s:TreeFileNode.findSibling(direction)
     return {}
 endfunction
 
-"FUNCTION: TreeFileNode.getLineNum(){{{3
+" FUNCTION: TreeFileNode.getLineNum(){{{3
 "returns the line number this node is rendered on, or -1 if it isnt rendered
 function! s:TreeFileNode.getLineNum()
     "if the node is the root then return the root line no.
@@ -705,7 +705,7 @@ function! s:TreeFileNode.getLineNum()
     return -1
 endfunction
 
-"FUNCTION: TreeFileNode.GetRootLineNum(){{{3
+" FUNCTION: TreeFileNode.GetRootLineNum(){{{3
 "gets the line number of the root node
 function! s:TreeFileNode.GetRootLineNum()
     let rootLine = 1
@@ -715,7 +715,7 @@ function! s:TreeFileNode.GetRootLineNum()
     return rootLine
 endfunction
 
-"FUNCTION: TreeFileNode.GetSelected() {{{3
+" FUNCTION: TreeFileNode.GetSelected() {{{3
 "gets the treenode that the cursor is currently over
 function! s:TreeFileNode.GetSelected()
     try
@@ -728,13 +728,13 @@ function! s:TreeFileNode.GetSelected()
         return {}
     endtry
 endfunction
-"FUNCTION: TreeFileNode.isVisible() {{{3
+" FUNCTION: TreeFileNode.isVisible() {{{3
 "returns 1 if this node should be visible according to the tree filters and
 "hidden file filters (and their on/off status)
 function! s:TreeFileNode.isVisible()
     return !self.path.ignore()
 endfunction
-"FUNCTION: TreeFileNode.isRoot() {{{3
+" FUNCTION: TreeFileNode.isRoot() {{{3
 "returns 1 if this node is b:NERDTreeRoot
 function! s:TreeFileNode.isRoot()
     if !s:treeExistsForBuf()
@@ -744,7 +744,7 @@ function! s:TreeFileNode.isRoot()
     return self.equals(b:NERDTreeRoot)
 endfunction
 
-"FUNCTION: TreeFileNode.makeRoot() {{{3
+" FUNCTION: TreeFileNode.makeRoot() {{{3
 "Make this node the root of the tree
 function! s:TreeFileNode.makeRoot()
     if self.path.isDirectory
@@ -761,7 +761,7 @@ function! s:TreeFileNode.makeRoot()
         exec "cd " . b:NERDTreeRoot.path.strForEditCmd()
     endif
 endfunction
-"FUNCTION: TreeFileNode.New(path) {{{3
+" FUNCTION: TreeFileNode.New(path) {{{3
 "Returns a new TreeNode object with the given path and parent
 "
 "Args:
@@ -778,7 +778,7 @@ function! s:TreeFileNode.New(path)
     endif
 endfunction
 
-"FUNCTION: TreeFileNode.open() {{{3
+" FUNCTION: TreeFileNode.open() {{{3
 "Open the file represented by the given node in the current window, splitting
 "the window if needed
 "
@@ -815,7 +815,7 @@ function! s:TreeFileNode.open()
         endif
     endif
 endfunction
-"FUNCTION: TreeFileNode.openSplit() {{{3
+" FUNCTION: TreeFileNode.openSplit() {{{3
 "Open this node in a new window
 function! s:TreeFileNode.openSplit()
 
@@ -881,7 +881,7 @@ function! s:TreeFileNode.openSplit()
     let &splitbelow=savesplitbelow
     let &splitright=savesplitright
 endfunction
-"FUNCTION: TreeFileNode.openVSplit() {{{3
+" FUNCTION: TreeFileNode.openVSplit() {{{3
 "Open this node in a new vertical window
 function! s:TreeFileNode.openVSplit()
     if b:NERDTreeType ==# "secondary"
@@ -902,7 +902,7 @@ function! s:TreeFileNode.openVSplit()
     exec("silent vertical resize ". winwidth)
     call s:exec('wincmd p')
 endfunction
-"FUNCTION: TreeFileNode.putCursorHere(isJump, recurseUpward){{{3
+" FUNCTION: TreeFileNode.putCursorHere(isJump, recurseUpward){{{3
 "Places the cursor on the line number this node is rendered on
 "
 "Args:
@@ -929,11 +929,11 @@ function! s:TreeFileNode.putCursorHere(isJump, recurseUpward)
     endif
 endfunction
 
-"FUNCTION: TreeFileNode.refresh() {{{3
+" FUNCTION: TreeFileNode.refresh() {{{3
 function! s:TreeFileNode.refresh()
     call self.path.refresh()
 endfunction
-"FUNCTION: TreeFileNode.rename() {{{3
+" FUNCTION: TreeFileNode.rename() {{{3
 "Calls the rename method for this nodes path obj
 function! s:TreeFileNode.rename(newName)
     let newName = substitute(a:newName, '\(\\\|\/\)$', '', '')
@@ -948,7 +948,7 @@ function! s:TreeFileNode.rename(newName)
         call newParent.refresh()
     endif
 endfunction
-"FUNCTION: TreeFileNode.strDisplay() {{{3
+" FUNCTION: TreeFileNode.strDisplay() {{{3
 "
 "Returns a string that specifies how the node should be represented as a
 "string
@@ -965,7 +965,7 @@ endfunction
 "classes.
 "============================================================
 let s:TreeDirNode = copy(s:TreeFileNode)
-"FUNCTION: TreeDirNode.AbsoluteTreeRoot(){{{3
+" FUNCTION: TreeDirNode.AbsoluteTreeRoot(){{{3
 "class method that returns the highest cached ancestor of the current root
 function! s:TreeDirNode.AbsoluteTreeRoot()
     let currentNode = b:NERDTreeRoot
@@ -974,7 +974,7 @@ function! s:TreeDirNode.AbsoluteTreeRoot()
     endwhile
     return currentNode
 endfunction
-"FUNCTION: TreeDirNode.addChild(treenode, inOrder) {{{3
+" FUNCTION: TreeDirNode.addChild(treenode, inOrder) {{{3
 "Adds the given treenode to the list of children for this node
 "
 "Args:
@@ -989,13 +989,13 @@ function! s:TreeDirNode.addChild(treenode, inOrder)
     endif
 endfunction
 
-"FUNCTION: TreeDirNode.close() {{{3
+" FUNCTION: TreeDirNode.close() {{{3
 "Closes this directory
 function! s:TreeDirNode.close()
     let self.isOpen = 0
 endfunction
 
-"FUNCTION: TreeDirNode.closeChildren() {{{3
+" FUNCTION: TreeDirNode.closeChildren() {{{3
 "Closes all the child dir nodes of this node
 function! s:TreeDirNode.closeChildren()
     for i in self.children
@@ -1006,7 +1006,7 @@ function! s:TreeDirNode.closeChildren()
     endfor
 endfunction
 
-"FUNCTION: TreeDirNode.createChild(path, inOrder) {{{3
+" FUNCTION: TreeDirNode.createChild(path, inOrder) {{{3
 "Instantiates a new child node for this node with the given path. The new
 "nodes parent is set to this node.
 "
@@ -1022,7 +1022,7 @@ function! s:TreeDirNode.createChild(path, inOrder)
     return newTreeNode
 endfunction
 
-"FUNCTION: TreeDirNode.findNode(path) {{{3
+" FUNCTION: TreeDirNode.findNode(path) {{{3
 "Will find one of the children (recursively) that has the given path
 "
 "Args:
@@ -1046,13 +1046,13 @@ function! s:TreeDirNode.findNode(path)
     endif
     return {}
 endfunction
-"FUNCTION: TreeDirNode.getChildCount() {{{3
+" FUNCTION: TreeDirNode.getChildCount() {{{3
 "Returns the number of children this node has
 function! s:TreeDirNode.getChildCount()
     return len(self.children)
 endfunction
 
-"FUNCTION: TreeDirNode.getChild(path) {{{3
+" FUNCTION: TreeDirNode.getChild(path) {{{3
 "Returns child node of this node that has the given path or {} if no such node
 "exists.
 "
@@ -1074,7 +1074,7 @@ function! s:TreeDirNode.getChild(path)
 
 endfunction
 
-"FUNCTION: TreeDirNode.getChildByIndex(indx, visible) {{{3
+" FUNCTION: TreeDirNode.getChildByIndex(indx, visible) {{{3
 "returns the child at the given index
 "Args:
 "indx: the index to get the child from
@@ -1088,7 +1088,7 @@ function! s:TreeDirNode.getChildByIndex(indx, visible)
     return array_to_search[a:indx]
 endfunction
 
-"FUNCTION: TreeDirNode.getChildIndex(path) {{{3
+" FUNCTION: TreeDirNode.getChildIndex(path) {{{3
 "Returns the index of the child node of this node that has the given path or
 "-1 if no such node exists.
 "
@@ -1119,7 +1119,7 @@ function! s:TreeDirNode.getChildIndex(path)
     return -1
 endfunction
 
-"FUNCTION: TreeDirNode.GetSelected() {{{3
+" FUNCTION: TreeDirNode.GetSelected() {{{3
 "Returns the current node if it is a dir node, or else returns the current
 "nodes parent
 unlet s:TreeDirNode.GetSelected
@@ -1132,13 +1132,13 @@ function! s:TreeDirNode.GetSelected()
     endif
     return currentDir
 endfunction
-"FUNCTION: TreeDirNode.getVisibleChildCount() {{{3
+" FUNCTION: TreeDirNode.getVisibleChildCount() {{{3
 "Returns the number of visible children this node has
 function! s:TreeDirNode.getVisibleChildCount()
     return len(self.getVisibleChildren())
 endfunction
 
-"FUNCTION: TreeDirNode.getVisibleChildren() {{{3
+" FUNCTION: TreeDirNode.getVisibleChildren() {{{3
 "Returns a list of children to display for this node, in the correct order
 "
 "Return:
@@ -1153,13 +1153,13 @@ function! s:TreeDirNode.getVisibleChildren()
     return toReturn
 endfunction
 
-"FUNCTION: TreeDirNode.hasVisibleChildren() {{{3
+" FUNCTION: TreeDirNode.hasVisibleChildren() {{{3
 "returns 1 if this node has any childre, 0 otherwise..
 function! s:TreeDirNode.hasVisibleChildren()
     return self.getVisibleChildCount() != 0
 endfunction
 
-"FUNCTION: TreeDirNode._initChildren() {{{3
+" FUNCTION: TreeDirNode._initChildren() {{{3
 "Removes all childen from this node and re-reads them
 "
 "Args:
@@ -1209,7 +1209,7 @@ function! s:TreeDirNode._initChildren(silent)
     endif
     return self.getChildCount()
 endfunction
-"FUNCTION: TreeDirNode.New(path) {{{3
+" FUNCTION: TreeDirNode.New(path) {{{3
 "Returns a new TreeNode object with the given path and parent
 "
 "Args:
@@ -1230,7 +1230,7 @@ function! s:TreeDirNode.New(path)
 
     return newTreeNode
 endfunction
-"FUNCTION: TreeDirNode.open() {{{3
+" FUNCTION: TreeDirNode.open() {{{3
 "Reads in all this nodes children
 "
 "Return: the number of child nodes read
@@ -1257,7 +1257,7 @@ function! s:TreeDirNode.openExplorer()
         exec ("silent edit " . self.path.strForEditCmd())
     endif
 endfunction
-"FUNCTION: TreeDirNode.openRecursively() {{{3
+" FUNCTION: TreeDirNode.openRecursively() {{{3
 "Opens this treenode and all of its children whose paths arent 'ignored'
 "because of the file filters.
 "
@@ -1267,7 +1267,7 @@ function! s:TreeDirNode.openRecursively()
     call self._openRecursively2(1)
 endfunction
 
-"FUNCTION: TreeDirNode._openRecursively2() {{{3
+" FUNCTION: TreeDirNode._openRecursively2() {{{3
 "Opens this all children of this treenode recursively if either:
 "   *they arent filtered by file filters
 "   *a:forceOpen is 1
@@ -1289,7 +1289,7 @@ function! s:TreeDirNode._openRecursively2(forceOpen)
     endif
 endfunction
 
-"FUNCTION: TreeDirNode.refresh() {{{3
+" FUNCTION: TreeDirNode.refresh() {{{3
 unlet s:TreeDirNode.refresh
 function! s:TreeDirNode.refresh()
     call self.path.refresh()
@@ -1337,7 +1337,7 @@ function! s:TreeDirNode.refresh()
     endif
 endfunction
 
-"FUNCTION: TreeDirNode.removeChild(treenode) {{{3
+" FUNCTION: TreeDirNode.removeChild(treenode) {{{3
 "
 "Removes the given treenode from this nodes set of children
 "
@@ -1356,7 +1356,7 @@ function! s:TreeDirNode.removeChild(treenode)
     throw "NERDTree.ChildNotFoundError: child node was not found"
 endfunction
 
-"FUNCTION: TreeDirNode.sortChildren() {{{3
+" FUNCTION: TreeDirNode.sortChildren() {{{3
 "
 "Sorts the children of this node according to alphabetical order and the
 "directory priority.
@@ -1366,7 +1366,7 @@ function! s:TreeDirNode.sortChildren()
     call sort(self.children, CompareFunc)
 endfunction
 
-"FUNCTION: TreeDirNode.toggleOpen() {{{3
+" FUNCTION: TreeDirNode.toggleOpen() {{{3
 "Opens this directory if it is closed and vice versa
 function! s:TreeDirNode.toggleOpen()
     if self.isOpen ==# 1
@@ -1376,7 +1376,7 @@ function! s:TreeDirNode.toggleOpen()
     endif
 endfunction
 
-"FUNCTION: TreeDirNode.transplantChild(newNode) {{{3
+" FUNCTION: TreeDirNode.transplantChild(newNode) {{{3
 "Replaces the child of this with the given node (where the child node's full
 "path matches a:newNode's fullpath). The search for the matching node is
 "non-recursive
@@ -1396,7 +1396,7 @@ endfunction
 "CLASS: Path {{{2
 "============================================================
 let s:Path = {}
-"FUNCTION: Path.AbsolutePathFor(str) {{{3
+" FUNCTION: Path.AbsolutePathFor(str) {{{3
 function! s:Path.AbsolutePathFor(str)
     let prependCWD = 0
     if s:running_windows
@@ -1412,14 +1412,14 @@ function! s:Path.AbsolutePathFor(str)
 
     return toReturn
 endfunction
-"FUNCTION: Path.bookmarkNames() {{{3
+" FUNCTION: Path.bookmarkNames() {{{3
 function! s:Path.bookmarkNames()
     if !exists("self._bookmarkNames")
         call self.cacheDisplayString()
     endif
     return self._bookmarkNames
 endfunction
-"FUNCTION: Path.cacheDisplayString() {{{3
+" FUNCTION: Path.cacheDisplayString() {{{3
 function! s:Path.cacheDisplayString()
     let self.cachedDisplayString = self.getLastPathComponent(1)
 
@@ -1445,7 +1445,7 @@ function! s:Path.cacheDisplayString()
         let self.cachedDisplayString .=  ' [RO]'
     endif
 endfunction
-"FUNCTION: Path.changeToDir() {{{3
+" FUNCTION: Path.changeToDir() {{{3
 function! s:Path.changeToDir()
     let dir = self.strForCd()
     if self.isDirectory ==# 0
@@ -1460,7 +1460,7 @@ function! s:Path.changeToDir()
     endtry
 endfunction
 
-"FUNCTION: Path.compareTo() {{{3
+" FUNCTION: Path.compareTo() {{{3
 "
 "Compares this Path to the given path and returns 0 if they are equal, -1 if
 "this Path is "less than" the given path, or 1 if it is "greater".
@@ -1500,9 +1500,9 @@ function! s:Path.compareTo(path)
     endif
 endfunction
 
-"FUNCTION: Path.Create(fullpath) {{{3
+" FUNCTION: Path.Create(fullpath) {{{3
 "
-"Factory method.
+" Factory method.
 "
 "Creates a path object with the given path. The path is also created on the
 "filesystem. If the path already exists, a NERDTree.Path.Exists exception is
@@ -1536,7 +1536,7 @@ function! s:Path.Create(fullpath)
     return s:Path.New(a:fullpath)
 endfunction
 
-"FUNCTION: Path.copy(dest) {{{3
+" FUNCTION: Path.copy(dest) {{{3
 "
 "Copies the file/dir represented by this Path to the given location
 "
@@ -1556,7 +1556,7 @@ function! s:Path.copy(dest)
     endif
 endfunction
 
-"FUNCTION: Path.CopyingSupported() {{{3
+" FUNCTION: Path.CopyingSupported() {{{3
 "
 "returns 1 if copying is supported for this OS
 function! s:Path.CopyingSupported()
@@ -1564,7 +1564,7 @@ function! s:Path.CopyingSupported()
 endfunction
 
 
-"FUNCTION: Path.copyingWillOverwrite(dest) {{{3
+" FUNCTION: Path.copyingWillOverwrite(dest) {{{3
 "
 "returns 1 if copy this path to the given location will cause files to
 "overwritten
@@ -1584,7 +1584,7 @@ function! s:Path.copyingWillOverwrite(dest)
     endif
 endfunction
 
-"FUNCTION: Path.delete() {{{3
+" FUNCTION: Path.delete() {{{3
 "
 "Deletes the file represented by this path.
 "Deletion of directories is not supported
@@ -1619,7 +1619,7 @@ function! s:Path.delete()
     endfor
 endfunction
 
-"FUNCTION: Path.extractDriveLetter(fullpath) {{{3
+" FUNCTION: Path.extractDriveLetter(fullpath) {{{3
 "
 "If running windows, cache the drive letter for this path
 function! s:Path.extractDriveLetter(fullpath)
@@ -1630,12 +1630,12 @@ function! s:Path.extractDriveLetter(fullpath)
     endif
 
 endfunction
-"FUNCTION: Path.exists() {{{3
+" FUNCTION: Path.exists() {{{3
 "return 1 if this path points to a location that is readable or is a directory
 function! s:Path.exists()
     return filereadable(self.strForOS(0)) || isdirectory(self.strForOS(0))
 endfunction
-"FUNCTION: Path.getDir() {{{3
+" FUNCTION: Path.getDir() {{{3
 "
 "Returns this path if it is a directory, else this paths parent.
 "
@@ -1648,7 +1648,7 @@ function! s:Path.getDir()
         return self.getParent()
     endif
 endfunction
-"FUNCTION: Path.getParent() {{{3
+" FUNCTION: Path.getParent() {{{3
 "
 "Returns a new path object for this paths parent
 "
@@ -1658,7 +1658,7 @@ function! s:Path.getParent()
     let path = '/'. join(self.pathSegments[0:-2], '/')
     return s:Path.New(path)
 endfunction
-"FUNCTION: Path.getLastPathComponent(dirSlash) {{{3
+" FUNCTION: Path.getLastPathComponent(dirSlash) {{{3
 "
 "Gets the last part of this path.
 "
@@ -1676,13 +1676,13 @@ function! s:Path.getLastPathComponent(dirSlash)
     return toReturn
 endfunction
 
-"FUNCTION: Path.getPathTrunk() {{{3
+" FUNCTION: Path.getPathTrunk() {{{3
 "Gets the path without the last segment on the end.
 function! s:Path.getPathTrunk()
     return s:Path.New(self.strTrunk())
 endfunction
 
-"FUNCTION: Path.getSortOrderIndex() {{{3
+" FUNCTION: Path.getSortOrderIndex() {{{3
 "returns the index of the pattern in g:NERDTreeSortOrder that this path matches
 function! s:Path.getSortOrderIndex()
     let i = 0
@@ -1695,7 +1695,7 @@ function! s:Path.getSortOrderIndex()
     return s:NERDTreeSortStarIndex
 endfunction
 
-"FUNCTION: Path.ignore() {{{3
+" FUNCTION: Path.ignore() {{{3
 "returns true if this path should be ignored
 function! s:Path.ignore()
     let lastPathComponent = self.getLastPathComponent(0)
@@ -1721,7 +1721,7 @@ function! s:Path.ignore()
     return 0
 endfunction
 
-"FUNCTION: Path.JoinPathStrings(...) {{{3
+" FUNCTION: Path.JoinPathStrings(...) {{{3
 function! s:Path.JoinPathStrings(...)
     let components = []
     for i in a:000
@@ -1730,7 +1730,7 @@ function! s:Path.JoinPathStrings(...)
     return '/' . join(components, '/')
 endfunction
 
-"FUNCTION: Path.equals() {{{3
+" FUNCTION: Path.equals() {{{3
 "
 "Determines whether 2 path objects are "equal".
 "They are equal if the paths they represent are the same
@@ -1741,7 +1741,7 @@ function! s:Path.equals(path)
     return self.str(0) ==# a:path.str(0)
 endfunction
 
-"FUNCTION: Path.New() {{{3
+" FUNCTION: Path.New() {{{3
 "The Constructor for the Path object
 function! s:Path.New(path)
     let newPath = copy(self)
@@ -1753,7 +1753,7 @@ function! s:Path.New(path)
     return newPath
 endfunction
 
-"FUNCTION: Path.readInfoFromDisk(fullpath) {{{3
+" FUNCTION: Path.readInfoFromDisk(fullpath) {{{3
 "
 "
 "Throws NERDTree.Path.InvalidArguments exception.
@@ -1807,13 +1807,13 @@ function! s:Path.readInfoFromDisk(fullpath)
     endif
 endfunction
 
-"FUNCTION: Path.refresh() {{{3
+" FUNCTION: Path.refresh() {{{3
 function! s:Path.refresh()
     call self.readInfoFromDisk(self.strForOS(0))
     call self.cacheDisplayString()
 endfunction
 
-"FUNCTION: Path.rename() {{{3
+" FUNCTION: Path.rename() {{{3
 "
 "Renames this node on the filesystem
 function! s:Path.rename(newPath)
@@ -1834,7 +1834,7 @@ function! s:Path.rename(newPath)
     call s:Bookmark.Write()
 endfunction
 
-"FUNCTION: Path.str(esc) {{{3
+" FUNCTION: Path.str(esc) {{{3
 "
 "Gets the actual string path that this obj represents.
 "
@@ -1852,7 +1852,7 @@ function! s:Path.str(esc)
     return toReturn
 endfunction
 
-"FUNCTION: Path.strAbs() {{{3
+" FUNCTION: Path.strAbs() {{{3
 "
 "Returns a string representing this path with all the symlinks resolved
 "
@@ -1862,7 +1862,7 @@ function! s:Path.strAbs()
     return resolve(self.str(1))
 endfunction
 
-"FUNCTION: Path.strForCd() {{{3
+" FUNCTION: Path.strForCd() {{{3
 "
 " returns a string that can be used with :cd
 "
@@ -1875,7 +1875,7 @@ function! s:Path.strForCd()
         return self.strForOS(1)
     endif
 endfunction
-"FUNCTION: Path.strDisplay() {{{3
+" FUNCTION: Path.strDisplay() {{{3
 "
 "Returns a string that specifies how the path should be represented as a
 "string
@@ -1890,7 +1890,7 @@ function! s:Path.strDisplay()
     return self.cachedDisplayString
 endfunction
 
-"FUNCTION: Path.strForEditCmd() {{{3
+" FUNCTION: Path.strForEditCmd() {{{3
 "
 "Return: the string for this path that is suitable to be used with the :edit
 "command
@@ -1917,7 +1917,7 @@ function! s:Path.strForEditCmd()
     return p
 
 endfunction
-"FUNCTION: Path.strForGlob() {{{3
+" FUNCTION: Path.strForGlob() {{{3
 function! s:Path.strForGlob()
     let lead = s:os_slash
 
@@ -1933,7 +1933,7 @@ function! s:Path.strForGlob()
     endif
     return toReturn
 endfunction
-"FUNCTION: Path.strForOS(esc) {{{3
+" FUNCTION: Path.strForOS(esc) {{{3
 "
 "Gets the string path for this path object that is appropriate for the OS.
 "EG, in windows c:\foo\bar
@@ -1962,13 +1962,13 @@ function! s:Path.strForOS(esc)
     return toReturn
 endfunction
 
-"FUNCTION: Path.strTrunk() {{{3
+" FUNCTION: Path.strTrunk() {{{3
 "Gets the path without the last segment on the end.
 function! s:Path.strTrunk()
     return self.drive . '/' . join(self.pathSegments[0:-2], '/')
 endfunction
 
-"FUNCTION: Path.WinToUnixPath(pathstr){{{3
+" FUNCTION: Path.WinToUnixPath(pathstr){{{3
 "Takes in a windows path and returns the unix equiv
 "
 "A class level method
@@ -1993,7 +1993,7 @@ endfunction
 
 " SECTION: General Functions {{{1
 "============================================================
-"FUNCTION: s:bufInWindows(bnum){{{2
+" FUNCTION: s:bufInWindows(bnum){{{2
 "[[STOLEN FROM VTREEEXPLORER.VIM]]
 "Determine the number of windows open to this buffer number.
 "Care of Yegappan Lakshman.  Thanks!
@@ -2016,14 +2016,14 @@ function! s:bufInWindows(bnum)
 
     return cnt
 endfunction " >>>
-"FUNCTION: s:checkForBrowse(dir) {{{2
+" FUNCTION: s:checkForBrowse(dir) {{{2
 "inits a secondary nerd tree in the current buffer if appropriate
 function! s:checkForBrowse(dir)
     if a:dir != '' && isdirectory(a:dir)
         call s:initNerdTreeInPlace(a:dir)
     endif
 endfunction
-"FUNCTION: s:compareBookmarks(first, second) {{{2
+" FUNCTION: s:compareBookmarks(first, second) {{{2
 "Compares two bookmarks
 function! s:compareBookmarks(first, second)
     return a:first.compareTo(a:second)
@@ -2042,7 +2042,7 @@ function! s:exec(cmd)
     exec a:cmd
     let &ei = old_ei
 endfunction
-"FUNCTION: s:initNerdTree(name) {{{2
+" FUNCTION: s:initNerdTree(name) {{{2
 "Initialise the nerd tree for this tab. The tree will start in either the
 "given directory, or the directory associated with the given bookmark
 "
@@ -2102,7 +2102,7 @@ function! s:initNerdTree(name)
     call b:NERDTreeRoot.putCursorHere(0, 0)
 endfunction
 
-"FUNCTION: s:initNerdTreeInPlace(dir) {{{2
+" FUNCTION: s:initNerdTreeInPlace(dir) {{{2
 function! s:initNerdTreeInPlace(dir)
     try
         let path = s:Path.New(a:dir)
@@ -2305,7 +2305,7 @@ endfunction
 
 " SECTION: View Functions {{{1
 "============================================================
-"FUNCTION: s:centerView() {{{2
+" FUNCTION: s:centerView() {{{2
 "centers the nerd tree window around the cursor (provided the nerd tree
 "options permit)
 function! s:centerView()
@@ -2318,7 +2318,7 @@ function! s:centerView()
         endif
     endif
 endfunction
-"FUNCTION: s:closeTree() {{{2
+" FUNCTION: s:closeTree() {{{2
 "Closes the NERD tree window
 function! s:closeTree()
     if !s:isTreeOpen()
@@ -2334,21 +2334,21 @@ function! s:closeTree()
     endif
 endfunction
 
-"FUNCTION: s:closeTreeIfOpen() {{{2
+" FUNCTION: s:closeTreeIfOpen() {{{2
 "Closes the NERD tree window if it is open
 function! s:closeTreeIfOpen()
    if s:isTreeOpen()
       call s:closeTree()
    endif
 endfunction
-"FUNCTION: s:closeTreeIfQuitOnOpen() {{{2
+" FUNCTION: s:closeTreeIfQuitOnOpen() {{{2
 "Closes the NERD tree window if the close on open option is set
 function! s:closeTreeIfQuitOnOpen()
     if g:NERDTreeQuitOnOpen
         call s:closeTree()
     endif
 endfunction
-"FUNCTION: s:createTreeWin() {{{2
+" FUNCTION: s:createTreeWin() {{{2
 "Inits the NERD tree window. ie. opens it, sizes it, sets all the local
 "options etc
 function! s:createTreeWin()
@@ -2396,7 +2396,7 @@ function! s:createTreeWin()
     endif
 endfunction
 
-"FUNCTION: s:dumpHelp  {{{2
+" FUNCTION: s:dumpHelp  {{{2
 "prints out the quick help
 function! s:dumpHelp()
     let old_h = @h
@@ -2491,7 +2491,7 @@ function! s:dumpHelp()
 
     let @h = old_h
 endfunction
-"FUNCTION: s:echo  {{{2
+" FUNCTION: s:echo  {{{2
 "A wrapper for :echo. Appends 'NERDTree:' on the front of all messages
 "
 "Args:
@@ -2500,7 +2500,7 @@ function! s:echo(msg)
     redraw
     echomsg "NERDTree: " . a:msg
 endfunction
-"FUNCTION: s:echoWarning {{{2
+" FUNCTION: s:echoWarning {{{2
 "Wrapper for s:echo, sets the message type to warningmsg for this message
 "Args:
 "msg: the message to echo
@@ -2509,7 +2509,7 @@ function! s:echoWarning(msg)
     call s:echo(a:msg)
     echohl normal
 endfunction
-"FUNCTION: s:echoError {{{2
+" FUNCTION: s:echoError {{{2
 "Wrapper for s:echo, sets the message type to errormsg for this message
 "Args:
 "msg: the message to echo
@@ -2518,7 +2518,7 @@ function! s:echoError(msg)
     call s:echo(a:msg)
     echohl normal
 endfunction
-"FUNCTION: s:firstUsableWindow(){{{2
+" FUNCTION: s:firstUsableWindow(){{{2
 "find the window number of the first normal window
 function! s:firstUsableWindow()
     let i = 1
@@ -2534,7 +2534,7 @@ function! s:firstUsableWindow()
     endwhile
     return -1
 endfunction
-"FUNCTION: s:getPath(ln) {{{2
+" FUNCTION: s:getPath(ln) {{{2
 "Gets the full path to the node that is rendered on the given line number
 "
 "Args:
@@ -2600,7 +2600,7 @@ function! s:getPath(ln)
     return toReturn
 endfunction
 
-"FUNCTION: s:getSelectedBookmark() {{{2
+" FUNCTION: s:getSelectedBookmark() {{{2
 "returns the bookmark the cursor is over in the bookmarks table or {}
 function! s:getSelectedBookmark()
     let line = getline(".")
@@ -2615,7 +2615,7 @@ function! s:getSelectedBookmark()
     return {}
 endfunction
 
-"FUNCTION: s:getTreeWinNum() {{{2
+" FUNCTION: s:getTreeWinNum() {{{2
 "gets the nerd tree window number for this tab
 function! s:getTreeWinNum()
     if exists("t:NERDTreeBufName")
@@ -2624,15 +2624,15 @@ function! s:getTreeWinNum()
         return -1
     endif
 endfunction
-"FUNCTION: s:indentLevelFor(line) {{{2
+" FUNCTION: s:indentLevelFor(line) {{{2
 function! s:indentLevelFor(line)
     return match(a:line, '[^ \-+~`|]') / s:tree_wid
 endfunction
-"FUNCTION: s:isTreeOpen() {{{2
+" FUNCTION: s:isTreeOpen() {{{2
 function! s:isTreeOpen()
     return s:getTreeWinNum() != -1
 endfunction
-"FUNCTION: s:isWindowUsable(winnumber) {{{2
+" FUNCTION: s:isWindowUsable(winnumber) {{{2
 "Returns 0 if opening a file from the tree in the given window requires it to
 "be split, 1 otherwise
 "
@@ -2694,7 +2694,7 @@ function! s:jumpToChild(direction)
 endfunction
 
 
-"FUNCTION: s:promptToDelBuffer(bufnum, msg){{{2
+" FUNCTION: s:promptToDelBuffer(bufnum, msg){{{2
 "prints out the given msg and, if the user responds by pushing 'y' then the
 "buffer with the given bufnum is deleted
 "
@@ -2709,7 +2709,7 @@ function! s:promptToDelBuffer(bufnum, msg)
     endif
 endfunction
 
-"FUNCTION: s:putCursorOnBookmarkTable(){{{2
+" FUNCTION: s:putCursorOnBookmarkTable(){{{2
 "Places the cursor at the top of the bookmarks table
 function! s:putCursorOnBookmarkTable()
     if !b:NERDTreeShowBookmarks
@@ -2728,7 +2728,7 @@ function! s:putCursorOnBookmarkTable()
     call cursor(line, 0)
 endfunction
 
-"FUNCTION: s:putCursorInTreeWin(){{{2
+" FUNCTION: s:putCursorInTreeWin(){{{2
 "Places the cursor in the nerd tree window
 function! s:putCursorInTreeWin()
     if !s:isTreeOpen()
@@ -2738,7 +2738,7 @@ function! s:putCursorInTreeWin()
     call s:exec(s:getTreeWinNum() . "wincmd w")
 endfunction
 
-"FUNCTION: s:renderBookmarks {{{2
+" FUNCTION: s:renderBookmarks {{{2
 function! s:renderBookmarks()
 
     call setline(line(".")+1, ">----------Bookmarks----------")
@@ -2752,7 +2752,7 @@ function! s:renderBookmarks()
     call setline(line(".")+1, '')
     call cursor(line(".")+1, col("."))
 endfunction
-"FUNCTION: s:renderView {{{2
+" FUNCTION: s:renderView {{{2
 "The entry function for rendering the tree
 function! s:renderView()
     setlocal modifiable
@@ -2804,7 +2804,7 @@ function! s:renderView()
     setlocal nomodifiable
 endfunction
 
-"FUNCTION: s:renderViewSavingPosition {{{2
+" FUNCTION: s:renderViewSavingPosition {{{2
 "Renders the tree and ensures the cursor stays on the current node or the
 "current nodes parent if it is no longer available upon re-rendering
 function! s:renderViewSavingPosition()
@@ -2822,7 +2822,7 @@ function! s:renderViewSavingPosition()
         call currentNode.putCursorHere(0, 0)
     endif
 endfunction
-"FUNCTION: s:restoreScreenState() {{{2
+" FUNCTION: s:restoreScreenState() {{{2
 "
 "Sets the screen state back to what it was when s:saveScreenState was last
 "called.
@@ -2842,7 +2842,7 @@ function! s:restoreScreenState()
     let &scrolloff=old_scrolloff
 endfunction
 
-"FUNCTION: s:saveScreenState() {{{2
+" FUNCTION: s:saveScreenState() {{{2
 "Saves the current cursor position in the current buffer and the window
 "scroll position
 function! s:saveScreenState()
@@ -2857,13 +2857,13 @@ function! s:saveScreenState()
     endtry
 endfunction
 
-"FUNCTION: s:setupStatusline() {{{2
+" FUNCTION: s:setupStatusline() {{{2
 function! s:setupStatusline()
     if g:NERDTreeStatusline != -1
         let &l:statusline = g:NERDTreeStatusline
     endif
 endfunction
-"FUNCTION: s:setupSyntaxHighlighting() {{{2
+" FUNCTION: s:setupSyntaxHighlighting() {{{2
 function! s:setupSyntaxHighlighting()
     "treeFlags are syntax items that should be invisible, but give clues as to
     "how things should be highlighted
@@ -2954,7 +2954,7 @@ function! s:setupSyntaxHighlighting()
     hi def link NERDTreeCurrentNode Search
 endfunction
 
-"FUNCTION: s:stripMarkupFromLine(line, removeLeadingSpaces){{{2
+" FUNCTION: s:stripMarkupFromLine(line, removeLeadingSpaces){{{2
 "returns the given line with all the tree parts stripped off
 "
 "Args:
@@ -2991,7 +2991,7 @@ function! s:stripMarkupFromLine(line, removeLeadingSpaces)
     return line
 endfunction
 
-"FUNCTION: s:toggle(dir) {{{2
+" FUNCTION: s:toggle(dir) {{{2
 "Toggles the NERD tree. I.e the NERD tree is open, it is closed, if it is
 "closed it is restored or initialized (if it doesnt exist)
 "
@@ -3013,9 +3013,9 @@ function! s:toggle(dir)
         call s:initNerdTree(a:dir)
     endif
 endfunction
-"SECTION: Interface bindings {{{1
+" SECTION: Interface bindings {{{1
 "============================================================
-"FUNCTION: s:activateNode(forceKeepWindowOpen) {{{2
+" FUNCTION: s:activateNode(forceKeepWindowOpen) {{{2
 "If the current node is a file, open it in the previous window (or a new one
 "if the previous is modified). If it is a directory then it is opened.
 "
@@ -3053,7 +3053,7 @@ function! s:activateNode(forceKeepWindowOpen)
     endif
 endfunction
 
-"FUNCTION: s:bindMappings() {{{2
+" FUNCTION: s:bindMappings() {{{2
 function! s:bindMappings()
     " set up mappings and commands for this buffer
     nnoremap <silent> <buffer> <middlerelease> :call <SID>handleMiddleMouse()<cr>
@@ -3135,7 +3135,7 @@ function! s:bookmarkNode(name)
         call s:echo("select a node first")
     endif
 endfunction
-"FUNCTION: s:checkForActivate() {{{2
+" FUNCTION: s:checkForActivate() {{{2
 "Checks if the click should open the current node, if so then activate() is
 "called (directories are automatically opened if the symbol beside them is
 "clicked)
@@ -3596,7 +3596,7 @@ function! s:openNodeRecursively()
 
 endfunction
 
-"FUNCTION: s:previewNode() {{{2
+" FUNCTION: s:previewNode() {{{2
 "Args:
 "   openNewWin: if 0, use the previous window, if 1 open in new split, if 2
 "               open in a vsplit
@@ -3758,7 +3758,7 @@ function! s:toggleShowHidden()
     call s:centerView()
 endfunction
 
-"FUNCTION: s:upDir(keepState) {{{2
+" FUNCTION: s:upDir(keepState) {{{2
 "moves the tree up a level
 "
 "Args:

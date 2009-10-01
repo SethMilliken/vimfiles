@@ -244,12 +244,13 @@ if has("gui_running") || &t_Co == 88 || &t_Co == 256
 
     " highlight groups
     call <SID>X("Cursor", "708090", "f0e68c", "")
-	if has(gui_macvim)
+	if has("gui_macvim")
     call <SID>X("CursorLine", "", "011111", "")
+    call <SID>X("CursorColumn", "", "010111", "")
 	else
     call <SID>X("CursorLine", "", "022222", "")
+    call <SID>X("CursorColumn", "", "020222", "")
 	endif
-    call <SID>X("CursorColumn", "", "010111", "")
     "CursorIM
     "Directory
     "DiffAdd
