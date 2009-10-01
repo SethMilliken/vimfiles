@@ -27,7 +27,7 @@ syntax region modeline start="vim:" end="$"
 " }}} }}}
 " highlights {{{
 highlight default link modeline Ignore
-highlight default link foldtitle Directory
+highlight default link foldtitle Special
 highlight default link foldmarkbegin Ignore
 highlight default link foldmarkend Ignore
 highlight default link bug SpecialKey

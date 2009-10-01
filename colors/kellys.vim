@@ -88,7 +88,7 @@ if has("gui_running")
 	hi NonText      guifg=#555555	guibg=#000000	gui=none
 	hi SpecialKey	term=bold ctermfg=112 guifg=#9acd32
 	hi Search		term=reverse ctermfg=223 ctermbg=172 guifg=#f5deb3 guibg=#cd853f
-	hi IncSearch	term=reverse ctermfg=223 ctermbg=172 guibg=#00000 guifg=#cd85f5
+	hi IncSearch	term=reverse ctermfg=223 ctermbg=172 guibg=#000000 guifg=#cd85f5
 	hi MoreMsg		term=bold ctermfg=29 gui=bold guifg=#2e8b57
 	hi Question 	term=bold ctermfg=29 gui=bold guifg=#0c6a35
 	" hi Question		term=standout ctermfg=48 gui=bold guifg=#00ff7f
