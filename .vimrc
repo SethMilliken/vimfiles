@@ -311,6 +311,7 @@ augroup END
 "}}}
 " PLUGINS {{{
 let g:snips_author = 'Seth Milliken'
+map <silent> <Leader>s <Esc>:call ResetSnippets() \| call GetSnippets(g:snippets_dir, &ft)<CR><Esc>:echo "Snippets for format \"" . &ft . "\" updated."<CR>
 " }}}
 " TESTING {{{
 " set ff=unix
