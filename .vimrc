@@ -310,8 +310,15 @@ augroup END
 
 "}}}
 " PLUGINS {{{
+" snipMate
 let g:snips_author = 'Seth Milliken'
 map <silent> <Leader>s <Esc>:call ResetSnippets() \| call GetSnippets(g:snippets_dir, &ft)<CR><Esc>:echo "Snippets for format \"" . &ft . "\" updated."<CR>
+" vimwiki
+map <silent> <Leader>w2 <Esc>:w<CR>:VimwikiAll2HTML<CR><Esc>:echo "Saved wiki to HTML."<CR>
+let g:vimwiki_hl_headers = 1 " hilight header colors
+let g:vimwiki_hl_cb_checked = 1 " hilight todo item colors
+let g:vimwiki_list_ignore_newline = 0 " convert newlines to <br /> in list
+let g:vimwiki_list = [{'path': '~/sandbox/personal/vimwiki/', 'index': 'PersonalWiki'}, {'path': '~/sandbox/public/wiki', 'index': 'SethMilliken'}]
 " }}}
 " TESTING {{{
 " set ff=unix
