@@ -85,7 +85,7 @@ set spellcapcheck=off				" ignore case in spellcheck
 set iskeyword+=-					" usually want - to not divide words
 set nolist							" don't show invisibles
 set listchars=tab:>-,trail:-		" ...but make them look nice when they do show 
-set nowritebackup					" allow crontab editing
+set nowritebackup					" allow crontab editing. TODO: should be an au?
 set noautoindent					" don't like autoindent
 set number							" always show line numbers
 set nobackup						" don't like ~ files littered about
@@ -95,12 +95,10 @@ set autowrite						" auto write changes when switching buffers
 set shiftwidth=4					" smaller tab stops
 set tabstop=4						" reasonable tab stop width
 set softtabstop=0					" use only tabs	
-set nohidden						" close buffers when tabs are closed
 set directory=$HOME/.vim/swap//,~/vimfiles/swap		" centralize swap files (with unique names, //)
 set lbr								" wrap lines at word breaks 
 set cms=							" generally don't want commentstring for folds
 set fdm=marker						" make the default foldmethod markers
-"set ft=txt							" default format is text
 " default ssops: blank,buffers,curdir,folds,help,options,tabpages,winsize
 set ssop=folds,help,options,tabpages,winsize
 set ssop+=globals,sesdir,resize,winpos,unix
@@ -109,7 +107,7 @@ set tags+=$HOME/sandbox/personal/tags " universal tags file
 set statusline=%<\(%n\)\ %m%y%r\ %f\ %=%-14.(%l,%c%V%)\ %P
 set laststatus=2					" always show the status line
 set splitright						" open new windows vertically
-set switchbuf=useopen,usetab,newtab
+set switchbuf=useopen,usetab,newtab " TODO: describe
 set history=10000					" keep craploads of command history
 set shortmess+=I 					" don't show intro on start
 set shortmess+=A 					" don't show message on existing swapfile
@@ -337,7 +335,7 @@ au BufNewFile,BufRead  svn-commit.* setf svn	" handle svn commits
 " snipMate
 let g:snips_author = 'Seth Milliken'
 map <silent> <Leader>s <Esc>:call ResetSnippets() \| call GetSnippets(g:snippets_dir, &ft)<CR><Esc>:echo "Snippets for format \"" . &ft . "\" updated."<CR>
-" vimwiki
+" settings for vimwiki
 map <silent> <Leader>w2 <Esc>:w<CR>:VimwikiAll2HTML<CR><Esc>:echo "Saved wiki to HTML."<CR>
 let g:vimwiki_hl_headers = 1 " hilight header colors
 let g:vimwiki_hl_cb_checked = 1 " hilight todo item colors
@@ -349,4 +347,4 @@ let g:vimwiki_list = [{'path': '~/sandbox/personal/vimwiki/', 'index': 'Personal
 " let string="!echo 'bar' | ls"
 " let mapleader=","
 " }}}
-" vim: fdm=marker:nospell:cms=\"%s:ft=vim
+" vim: set ft=vim fdm=marker cms=\"%s :
