@@ -115,6 +115,7 @@ set shortmess+=I 					" don't show intro on start
 set shortmess+=A 					" don't show message on existing swapfile
 set foldlevelstart=0				" don't use a default fold level
 set foldcolumn=4                    " trying out fold indicator column
+set completeopt+=menuone 			" show completion menu even with only a single option
 
 "}}}
 " MAPPINGS {{{
@@ -147,6 +148,8 @@ nnoremap <silent> <Leader>= <Esc>:silent g/^@[^A-Z]* {{/normal zv<CR><C-l>
 nnoremap <silent> <Leader>c <Esc>:call ScratchBuffer("scratch")<CR>
 " grab and format sql statement from
 nnoremap <silent> <Leader>q <Esc>:call FormatSqlStatement()<CR>
+" show completion preview, without actually completing
+imap <C-l> <C-n><C-p>
 
 " cmdline-window ftw!
 " cmap : <Esc>
@@ -161,14 +164,14 @@ nnoremap <Up> 		<Esc>:echo "You should have typed k instead"<CR>
 nnoremap <Down> 	<Esc>:echo "You should have typed j instead"<CR>
 
 " Timestamp {{{
-nmap <silent> ts <Esc>:call Timestamp("short")<CR>
-nmap <silent> tl <Esc>:call Timestamp("long")<CR>
-nmap <silent> td <Esc>:call Timestamp("date")<CR>
-nnoremap <silent> tf <Esc>:call FoldWrap()<CR>
-nnoremap <silent> tt <Esc>:call FoldInsert()<CR>
-nmap <silent> tg tstf
-nmap <silent> th dstf
-nmap <silent> tj tdtf
+nmap <silent> <Leader>ts <Esc>:call Timestamp("short")<CR>
+nmap <silent> <Leader>tl <Esc>:call Timestamp("long")<CR>
+nmap <silent> <Leader>td <Esc>:call Timestamp("date")<CR>
+nnoremap <silent> <Leader>tf <Esc>:call FoldWrap()<CR>
+nnoremap <silent> <Leader>tt <Esc>:call FoldInsert()<CR>
+nmap <silent> <Leader>tg tstf
+nmap <silent> <Leader>th dstf
+nmap <silent> <Leader>tj tdtf
 " }}}
 " Cmd-# to switch tabs {{{
 imap <silent> <D-1> <Esc>:tabn 1<CR> 
@@ -322,7 +325,7 @@ function! FixSession() " {{{
 endfunction
 " }}}
 "}}}
-" SYNTAX "{{{
+" SYNTAX {{{
 augroup java
 	au BufReadPre * setlocal foldmethod=syntax
 	au BufReadPre * setlocal foldlevelstart=-1
