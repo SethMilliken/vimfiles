@@ -96,7 +96,7 @@ set shiftwidth=4					" smaller tab stops
 set tabstop=4						" reasonable tab stop width
 set softtabstop=0					" use only tabs	
 set nohidden						" close buffers when tabs are closed
-set directory=$HOME/.vim/swap//		" centralize swap files (with unique names, //)
+set directory=$HOME/.vim/swap//,~/vimfiles/swap		" centralize swap files (with unique names, //)
 set lbr								" wrap lines at word breaks 
 set cms=							" generally don't want commentstring for folds
 set fdm=marker						" make the default foldmethod markers
@@ -114,6 +114,7 @@ set history=10000					" keep craploads of command history
 set shortmess+=I 					" don't show intro on start
 set shortmess+=A 					" don't show message on existing swapfile
 set foldlevelstart=0				" don't use a default fold level
+set foldcolumn=4                    " trying out fold indicator column
 
 "}}}
 " MAPPINGS {{{
@@ -143,7 +144,9 @@ nnoremap <silent> <Leader>] :NERDTreeToggle<CR>
 nnoremap <silent> <Leader>- <Esc>:silent g/^done {{/call FoldUnfolded()<CR><C-l>
 nnoremap <silent> <Leader>= <Esc>:silent g/^@[^A-Z]* {{/normal zv<CR><C-l>
 " scratch buffer; close with ZZ
-nnoremap <silent> <Leader>s <Esc>:tabe<CR><Esc>:setlocal bufhidden=hide<CR><Esc>:setlocal buftype=nofile<CR>
+nnoremap <silent> <Leader>c <Esc>:call ScratchBuffer("scratch")<CR>
+" grab and format sql statement from
+nnoremap <silent> <Leader>q <Esc>:call FormatSqlStatement()<CR>
 
 " cmdline-window ftw!
 " cmap : <Esc>
@@ -290,6 +293,27 @@ function! HandleURI() " {{{
   endif
 endfunction
 " }}}
+function! ScratchBuffer(title) " {{{
+      exec "tabe " . a:title . " | setlocal buftype=nofile | setlocal bufhidden=hide | setlocal noswapfile"
+endfunction
+" }}}
+function! FormatSqlStatement() " {{{
+  3match Todo /select .*/
+  let s:uri = matchstr(getline("."), 'select .*')
+  if s:uri != ""
+      let @a = s:uri
+      call ScratchBuffer("sql statement")
+      setlocal bufhidden=delete
+      normal "ap
+      set ft=sql
+      for keyword in ["from", "and", "inner", "where", "left", "right"]
+          exec "silent! s/" . keyword . "/\r&/g"
+      endfor
+  else
+	  echo "No SQL statement found."
+  endif
+endfunction
+" }}}
 function! FixSession() " {{{
   silent exe "split " . v:this_session
   silent exe "%s/^edit /buffer /g"
@@ -304,9 +328,6 @@ augroup java
 	au BufReadPre * setlocal foldlevelstart=-1
 augroup END
 au BufNewFile,BufRead  svn-commit.* setf svn	" handle svn commits
-augroup none
-	au BufReadPre * setlocal filetype=txt
-augroup END
 
 "}}}
 " PLUGINS {{{
@@ -318,11 +339,11 @@ map <silent> <Leader>w2 <Esc>:w<CR>:VimwikiAll2HTML<CR><Esc>:echo "Saved wiki to
 let g:vimwiki_hl_headers = 1 " hilight header colors
 let g:vimwiki_hl_cb_checked = 1 " hilight todo item colors
 let g:vimwiki_list_ignore_newline = 0 " convert newlines to <br /> in list
-let g:vimwiki_list = [{'path': '~/sandbox/personal/vimwiki/', 'index': 'PersonalWiki'}, {'path': '~/sandbox/public/wiki', 'index': 'SethMilliken'}]
+let g:vimwiki_list = [{'path': '~/sandbox/personal/vimwiki/', 'index': 'PersonalWiki'}, {'path': '~/sandbox/public/wiki', 'index': 'SethMilliken'}, {'path': '~/sandbox/work/wiki/', 'index': 'SethMilliken', 'html_header': '~/sandbox/work/wiki/header.tpl'}]
 " }}}
 " TESTING {{{
 " set ff=unix
 " let string="!echo 'bar' | ls"
 " let mapleader=","
 " }}}
-" vim:fdm=marker:nospell:cms=\"%s:ft=vim
+" vim: fdm=marker:nospell:cms=\"%s:ft=vim

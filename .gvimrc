@@ -32,6 +32,7 @@ if version >= 700
 		" Presentation mode
 		"set gfn=Bitstream_Vera_Sans_Mono:h11
 	end
+    set clipboard=unnamed               " yank to system clipboard
 end
 " MAPPINGS "{{{
 " Mac vs Windows mappings?
