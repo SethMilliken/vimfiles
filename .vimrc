@@ -114,6 +114,7 @@ set shortmess+=A 					" don't show message on existing swapfile
 set foldlevelstart=0				" don't use a default fold level
 set foldcolumn=4                    " trying out fold indicator column
 set completeopt+=menuone 			" show completion menu even with only a single option
+set winminheight=0 					" minimized horizontal splits show only statusline
 
 "}}}
 " MAPPINGS {{{
@@ -124,7 +125,9 @@ map! <Nul> :
 " Wrap current or immediately preceding word in in <em> tag
 map! <Leader>_ <Esc>Bi<em><Esc>ea</em>
 " Clear last search as well as redraw with ^L
-nnoremap	<silent>	<C-L>	:nohls<CR><C-L>
+nnoremap <silent> <C-L> :nohls<CR>:pc<CR><C-L>
+imap <silent> <C-L> normal <C-L>a
+
 " Get word count of current file
 nmap <silent> <Leader>w <Esc>:!wc -w %<CR>
 " Copy buffer to clipbard
@@ -147,19 +150,25 @@ nnoremap <silent> <Leader>c <Esc>:call ScratchBuffer("scratch")<CR>
 " grab and format sql statement from
 nnoremap <silent> <Leader>q <Esc>:call FormatSqlStatement()<CR>
 " show completion preview, without actually completing
-imap <C-l> <C-n><C-p>
+imap <C-p> <C-n><C-p>
 
 " cmdline-window ftw!
 " cmap : <Esc>
 " nnoremap :	<Esc>q:i
+
 " help help help
 nnoremap <Leader>pp	 	<Esc>:help<CR><Esc>:winc _<CR><Esc>:winc \|<CR><Esc>:help<Space>
 nnoremap <Leader>p+ 	<Esc>:tab help<Space>
+"
 " Learn your hjkl!
 nnoremap <Left> 	<Esc>:echo "You should have typed h instead"<CR>
 nnoremap <Right> 	<Esc>:echo "You should have typed l instead"<CR>
 nnoremap <Up> 		<Esc>:echo "You should have typed k instead"<CR>
 nnoremap <Down> 	<Esc>:echo "You should have typed j instead"<CR>
+
+" accordion style horizontal split navigation
+map <C-j> <C-w><C-j><C-w>_<C-l>
+map <C-k> <C-w><C-k><C-w>_<C-l>
 
 " Timestamp {{{
 nmap <silent> <Leader>ts <Esc>:call Timestamp("short")<CR>
@@ -332,19 +341,30 @@ au BufNewFile,BufRead  svn-commit.* setf svn	" handle svn commits
 
 "}}}
 " PLUGINS {{{
+
+" pydiction
+let g:pydiction_location = '~/.vim/complete-dict'
+
+" rope
+" let $PYTHONPATH .= ":/Library/Python/2.5/site-packages/ropemode:/Library/Python/2.5/site-packages:/Users/seth/sandbox/code/python/"
+source ~/sandbox/code/python/ropevim/ropevim.vim
+
 " snipMate
 let g:snips_author = 'Seth Milliken'
 map <silent> <Leader>s <Esc>:call ResetSnippets() \| call GetSnippets(g:snippets_dir, &ft)<CR><Esc>:echo "Snippets for format \"" . &ft . "\" updated."<CR>
+
 " settings for vimwiki
 map <silent> <Leader>w2 <Esc>:w<CR>:VimwikiAll2HTML<CR><Esc>:echo "Saved wiki to HTML."<CR>
-let g:vimwiki_hl_headers = 1 " hilight header colors
-let g:vimwiki_hl_cb_checked = 1 " hilight todo item colors
-let g:vimwiki_list_ignore_newline = 0 " convert newlines to <br /> in list
+let g:vimwiki_hl_headers = 1 				" hilight header colors
+let g:vimwiki_hl_cb_checked = 1 			" hilight todo item colors
+let g:vimwiki_list_ignore_newline = 0 		" convert newlines to <br /> in list
 let g:vimwiki_list = [{'path': '~/sandbox/personal/vimwiki/', 'index': 'PersonalWiki'}, {'path': '~/sandbox/public/wiki', 'index': 'SethMilliken'}, {'path': '~/sandbox/work/wiki/', 'index': 'SethMilliken', 'html_header': '~/sandbox/work/wiki/header.tpl'}]
+
 " }}}
 " TESTING {{{
 " set ff=unix
 " let string="!echo 'bar' | ls"
 " let mapleader=","
+"
 " }}}
 " vim: set ft=vim fdm=marker cms=\"%s :
