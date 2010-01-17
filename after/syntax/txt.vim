@@ -43,7 +43,7 @@ highlight default link date SpecialKey
 function! MyFoldText() "{{{
 	let indentation = 35
 	let fullline = getline(v:foldstart)
-	let line = substitute(fullline, '{{'. '{.*', '', 'g')
+	let line = substitute(fullline, '{{' . '{.*', '', 'g')
 	let linecount = v:foldend - v:foldstart - 2
 	let linewidth = indentation - v:foldlevel - strlen(line)
 	let folddash = '+-----------'

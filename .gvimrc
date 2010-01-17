@@ -1,4 +1,3 @@
-" so ${HOME}/.vimrc
 " GUI Setup "{{{
 if version >= 700
 	if has("gui_running")
@@ -38,15 +37,13 @@ if version >= 700
 	" yank to system clipboard
     set clipboard=unnamed
 end
+" }}}
 " MAPPINGS "{{{
 " Mac vs Windows mappings?
 "" Map Cmd-t to new tab
 nmap <silent> <D-t>	<Esc>:101tabnew<CR>
 "" Map Cmd-w to close buffer
 nmap <silent> <D-w>	<Esc>:bd<CR>
-"" Stop F1 from invoking Help
-map <F1> <Esc>
-imap <F1> <Esc>
 
 """ Figure out correct map directive to prevent commands from having other side effects (like moving the cursor).
 
@@ -60,7 +57,7 @@ nnoremap <C-Up> :silent! :call AdjustFont(1)<CR>
 " Ctrl-Down Decrease font size
 nnoremap <C-Down> :silent! :call AdjustFont(-1)<CR>
 
-function! AdjustFont(increment)
+function! AdjustFont(increment) "{{{
 	let replacement = 'submatch(0) + ' . a:increment
 	let &guifont = substitute( &guifont, ':h\zs\d\+', '\=eval(' .  replacement . ')', '')
 	set columns=999
@@ -70,4 +67,4 @@ endfunction
 "}}}
 
 "}}}
-"vim:fdm=marker:nospell:cms=\"%s
+" vim:ft=vim:fdm=marker:nospell:cms=\ \"%s
