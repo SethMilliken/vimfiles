@@ -21,18 +21,22 @@ if version >= 700
 	end
 	if has("gui_macvim")
 		color kellys
-		set fuopt=maxhorz,maxvert		" max vertical and horizontal columns on resize to full screen
+		" max vertical and horizontal columns on resize to full screen
+		set fuopt=maxhorz,maxvert
 		set transparency=5
 		set antialias
 		set gfn=Inconsolata:h15
-		winsize 345 500 " set a reasonable window size
+		" set a reasonable window size
+		winsize 345 500
 	else
-		winsize 150 200					" set a reasonable window size
+		" set a reasonable window size
+		winsize 150 200
 		set gfn=Terminal:h6
 		" Presentation mode
 		"set gfn=Bitstream_Vera_Sans_Mono:h11
 	end
-    set clipboard=unnamed               " yank to system clipboard
+	" yank to system clipboard
+    set clipboard=unnamed
 end
 " MAPPINGS "{{{
 " Mac vs Windows mappings?
@@ -45,14 +49,24 @@ map <F1> <Esc>
 imap <F1> <Esc>
 
 """ Figure out correct map directive to prevent commands from having other side effects (like moving the cursor).
+
 " Ctrl-Left to previous tab
 nnoremap <silent> <C-Left>	<Esc>gT<CR>
 " Ctrl-Right to next tab
 nnoremap <silent> <C-Right>	<Esc>gt<CR>
+
 " Ctrl-Up Increase font size
-nnoremap <C-Up> :silent! let &guifont = substitute( &guifont, ':h\zs\d\+', '\=eval(submatch(0)+1)', '')<CR>
+nnoremap <C-Up> :silent! :call AdjustFont(1)<CR>
 " Ctrl-Down Decrease font size
-nnoremap <C-Down> :silent! let &guifont = substitute( &guifont, ':h\zs\d\+', '\=eval(submatch(0)-1)', '')<CR>
+nnoremap <C-Down> :silent! :call AdjustFont(-1)<CR>
+
+function! AdjustFont(increment)
+	let replacement = 'submatch(0) + ' . a:increment
+	let &guifont = substitute( &guifont, ':h\zs\d\+', '\=eval(' .  replacement . ')', '')
+	set columns=999
+	set lines=999
+endfunction
+
 "}}}
 
 "}}}

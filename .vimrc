@@ -1,16 +1,16 @@
+" INFO {{{
+
+" Seth Milliken
+" seth@araxia.net
+" Araxia on #vim
+
+" Tabs: #vim conventional wisdom recommends not using real tabs at all, ever
+" ts=8:sw=4:sts=4
+" i disagree. i find real tabs very useful.
+
+
+"}}}
 " DEFAULT example .vimrc {{{
-
-" An example for a vimrc file.
-"
-" Maintainer:	Bram Moolenaar <Bram@vim.org>
-" Last change:	2002 Sep 19
-"
-" To use it, copy it to
-"     for Unix and OS/2:  ~/.vimrc
-"	      for Amiga:  s:.vimrc
-"  for MS-DOS and Win32:  $VIM\_vimrc
-"	    for OpenVMS:  sys$login:.vimrc
-
 " When started as "evim", evim.vim will already have done these settings.
 if v:progname =~? "evim"
 	finish
@@ -80,53 +80,63 @@ endif " has("autocmd")
 "}}}
 " Seth Milliken additions
 " SETTINGS {{{
+set shortmess+=I 					" don't show intro on start
+set shortmess+=A 					" don't show message on existing swapfile
 set nospell							" spelling off by default
 set spellcapcheck=off				" ignore case in spellcheck
-set iskeyword+=-					" usually want - to not divide words
 set nolist							" don't show invisibles
 set listchars=tab:>-,trail:-		" ...but make them look nice when they do show 
-set nowritebackup					" allow crontab editing. TODO: should be an au?
+set iskeyword+=-					" usually want - to not divide words
+set lbr								" wrap lines at word breaks 
 set noautoindent					" don't like autoindent
 set number							" always show line numbers
-set nobackup						" don't like ~ files littered about
 set autowrite						" auto write changes when switching buffers
-" #vim recommends not using real tabs at all. ts=8:sw=4:sts=4
-" i disagree. i find real tabs very useful.
 set shiftwidth=4					" smaller tab stops
 set tabstop=4						" reasonable tab stop width
 set softtabstop=0					" use only tabs	
-set directory=$HOME/.vim/swap//,~/vimfiles/swap		" centralize swap files (with unique names, //)
-set lbr								" wrap lines at word breaks 
-set cms=							" generally don't want commentstring for folds
-set fdm=marker						" make the default foldmethod markers
-" default ssops: blank,buffers,curdir,folds,help,options,tabpages,winsize
+set tags+=$HOME/sandbox/personal/tags
+									" universal tags file
+set directory=$HOME/.vim/swap//,~/vimfiles/swap
+									" centralize swap files (with unique names, //)
+set nowritebackup					" allow crontab editing.
+									" TODO: should this be in an au?
+set nobackup						" don't like ~ files littered about
+									" TODO: can these be stored centrally a la swap?
+" Sessionopts: defaults are blank,buffers,curdir,folds,help,options,tabpages,winsize
 set ssop=folds,help,options,tabpages,winsize
 set ssop+=globals,sesdir,resize,winpos,unix
-set tags+=$HOME/sandbox/personal/tags " universal tags file
 " TODO: annotate this status line description
 set statusline=%<\(%n\)\ %m%y%r\ %f\ %=%-14.(%l,%c%V%)\ %P
 set laststatus=2					" always show the status line
-set splitright						" open new windows vertically
+set splitright						" open vertical splits to the right
+set splitbelow						" open horizonal splits below
+set winminheight=0 					" minimized horizontal splits show only statusline
 set switchbuf=useopen,usetab,newtab " TODO: describe
 set history=10000					" keep craploads of command history
-set shortmess+=I 					" don't show intro on start
-set shortmess+=A 					" don't show message on existing swapfile
 set foldlevelstart=0				" don't use a default fold level
+set cms="%s "							" generally don't want commentstring for folds
+set fdm=marker						" make the default foldmethod markers
 set foldcolumn=4                    " trying out fold indicator column
-set completeopt+=menuone 			" show completion menu even with only a single option
-set winminheight=0 					" minimized horizontal splits show only statusline
 
 "}}}
 " MAPPINGS {{{
-"" Map C-space for Zaurus ( Ctrl-k Ctrl-space ) in both insert mode and command mode
+"" Map <C-Space> for Zaurus ( <C-k><C-Space> ) in both insert mode and command mode
 map <Nul> :
 map! <Nul> :
 
 " Wrap current or immediately preceding word in in <em> tag
 map! <Leader>_ <Esc>Bi<em><Esc>ea</em>
 " Clear last search as well as redraw with ^L
-nnoremap <silent> <C-L> :nohls<CR>:pc<CR><C-L>
-imap <silent> <C-L> normal <C-L>a
+nnoremap <silent> <C-L> :call Reset()<CR>
+imap <silent> <C-L> <Esc>:call Reset()<CR>a
+function! Reset() " {{{
+	silent pclose
+	set nohls
+    set completeopt-=menuone
+	redraw
+	echo "Reset"
+endfunction
+" }}}
 
 " Get word count of current file
 nmap <silent> <Leader>w <Esc>:!wc -w %<CR>
@@ -150,7 +160,7 @@ nnoremap <silent> <Leader>c <Esc>:call ScratchBuffer("scratch")<CR>
 " grab and format sql statement from
 nnoremap <silent> <Leader>q <Esc>:call FormatSqlStatement()<CR>
 " show completion preview, without actually completing
-imap <C-p> <C-n><C-p>
+inoremap <C-p> <Esc>:set completeopt+=menuone<CR>a<C-n><C-p>
 
 " cmdline-window ftw!
 " cmap : <Esc>
@@ -166,9 +176,13 @@ nnoremap <Right> 	<Esc>:echo "You should have typed l instead"<CR>
 nnoremap <Up> 		<Esc>:echo "You should have typed k instead"<CR>
 nnoremap <Down> 	<Esc>:echo "You should have typed j instead"<CR>
 
-" accordion style horizontal split navigation
-map <C-j> <C-w><C-j><C-w>_<C-l>
-map <C-k> <C-w><C-k><C-w>_<C-l>
+" enter accordion style horizontal split navigation mode
+map <silent> <C-j> <C-w>j:set winheight=9999 \| set winminheight=0<CR><C-l>
+map <silent> <C-k> <C-w>k:set winheight=9999 \| set winminheight=0<CR><C-l>
+map <silent> <C-y> <C-w>h:set winheight=9999 \| set winminheight=0<CR><C-l>
+map <silent> <C-h> <C-w>l:set winheight=9999 \| set winminheight=0<CR><C-l>
+" leave accordion mode
+nnoremap <C-w>= :set winheight=10 \| set winminheight=10 \| wincmd =<CR>
 
 " Timestamp {{{
 nmap <silent> <Leader>ts <Esc>:call Timestamp("short")<CR>
@@ -342,6 +356,24 @@ au BufNewFile,BufRead  svn-commit.* setf svn	" handle svn commits
 "}}}
 " PLUGINS {{{
 
+" python syntax
+let python_highlight_all = 1
+
+autocmd CmdwinEnter * map <buffer> <F5> <CR>q:
+
+" minbufexplorer
+let g:miniBufExplVSplit=30
+" let g:miniBufExplMaxSize = <max width: default 0> 
+let g:miniBufExplMapCTabSwitchBufs = 1
+
+" bufexplorer
+map <silent> <C-Tab> :BufExplorer<CR>j
+map <silent> <C-S-Tab> :BufExplorer<CR>k
+" TODO: if bufname is BufExplorer cycle through buffers
+" TODO: add <C-S-Tab> to reverse
+" let g:bufExplorerDefaultHelp=0       " Do not show default help.
+let g:bufExplorerDetailedHelp=1      " Show detailed help.
+
 " pydiction
 let g:pydiction_location = '~/.vim/complete-dict'
 
@@ -351,7 +383,8 @@ source ~/sandbox/code/python/ropevim/ropevim.vim
 
 " snipMate
 let g:snips_author = 'Seth Milliken'
-map <silent> <Leader>s <Esc>:call ResetSnippets() \| call GetSnippets(g:snippets_dir, &ft)<CR><Esc>:echo "Snippets for format \"" . &ft . "\" updated."<CR>
+map <silent> <Leader>snip <Esc>:call ResetSnippets() \| call GetSnippets(g:snippets_dir, &ft)<CR><Esc>:echo "Snippets for format \"" . &ft . "\" updated."<CR>
+
 
 " settings for vimwiki
 map <silent> <Leader>w2 <Esc>:w<CR>:VimwikiAll2HTML<CR><Esc>:echo "Saved wiki to HTML."<CR>
@@ -362,9 +395,10 @@ let g:vimwiki_list = [{'path': '~/sandbox/personal/vimwiki/', 'index': 'Personal
 
 " }}}
 " TESTING {{{
+
 " set ff=unix
 " let string="!echo 'bar' | ls"
 " let mapleader=","
-"
+
 " }}}
-" vim: set ft=vim fdm=marker cms=\"%s :
+" vim: set ft=vim fdm=marker cms=\ "\ %s  :
