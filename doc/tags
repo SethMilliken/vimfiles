@@ -250,6 +250,12 @@ multi_snip	snipMate.txt	/*multi_snip*
 o_[%	matchit.txt	/*o_[%*
 o_]%	matchit.txt	/*o_]%*
 o_g%	matchit.txt	/*o_g%*
+paster-about	paster.txt	/*paster-about*
+paster-configuration	paster.txt	/*paster-configuration*
+paster-features	paster.txt	/*paster-features*
+paster-requirements	paster.txt	/*paster-requirements*
+paster-usage	paster.txt	/*paster-usage*
+paster.vim	paster.txt	/*paster.vim*
 showmarks	showmarks.txt	/*showmarks*
 showmarks-changelog	showmarks.txt	/*showmarks-changelog*
 showmarks-commands	showmarks.txt	/*showmarks-commands*

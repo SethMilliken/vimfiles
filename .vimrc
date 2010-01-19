@@ -119,6 +119,7 @@ set splitbelow						" open horizonal splits below
 set winminheight=0 					" minimized horizontal splits show only statusline
 set switchbuf=useopen,usetab 		" when switching to a buffer, go to where it's already open
 set history=10000					" keep craploads of command history
+set undolevels=100					" keep lots of undo history
 set foldlevelstart=0				" don't use a default fold level
 set cms=\ %s						" generally don't want commentstring for folds
 set fdm=marker						" make the default foldmethod markers
@@ -133,6 +134,8 @@ nnoremap <Nul> :
 "Annoyances: Stop F1 from invoking Help
 map <F1> <Esc>
 imap <F1> <Esc>
+nmap <Space> <C-f>
+nmap <S-Space> <C-b>
 
 " Reset: restore some default settings and redraw
 nnoremap <silent> <C-L> :call Reset() \| nohls<CR>
@@ -144,7 +147,8 @@ nnoremap <silent> <Leader>w <Esc>:!wc -w %<CR>
 " Copy buffer to clipbard
 "" map <something>	<Esc>:%y*<CR>
 
-" Refresh buffer from disk FIXME: find a non-conflicting binding
+" Tail: reload buffer from disk and go to end
+" FIXME: find a non-conflicting binding
 nnoremap <silent> <S-k> <Esc>:e<CR><Esc>:$<CR>
 
 " Save Session: (verify cwd to not stomp on existing sessions)
@@ -157,6 +161,7 @@ nnoremap <silent> <Leader>] :NERDTreeToggle<CR>
 " Folds:
 nnoremap <silent> <Leader>- <Esc>:silent g/^done {{/call FoldUnfolded()<CR><C-l>
 nnoremap <silent> <Leader>= <Esc>:silent g/^@[^A-Z]* {{/normal zv<CR><C-l>
+nnoremap <silent> <Leader>0 <Esc>:silent normal zv<CR>z<CR><C-l>
 
 " Scratch Buffer: close with ZZ
 nnoremap <silent> <Leader>c <Esc>:call ScratchBuffer("scratch")<CR>
@@ -183,9 +188,9 @@ nnoremap :: q:
 
 " Cmdline Window:
 augroup cmdline-window
+	au! CmdwinEnter *
 	au CmdwinEnter * map <buffer> <C-y> <C-c><CR>q:
 	au CmdwinEnter * map <buffer> ZZ <C-c><C-c>
-	au CmdwinEnter * set winheight=1
 augroup END
 
 " Learn your hjkl!
@@ -199,11 +204,11 @@ nnoremap <silent> <C-j> <C-w>j:call AccordionMode()<CR><C-l>
 nnoremap <silent> <C-k> <C-w>k:call AccordionMode()<CR><C-l>
 nnoremap <silent> <C-y> <C-w>h:call AccordionMode()<CR><C-l>
 nnoremap <silent> <C-h> <C-w>l:call AccordionMode()<CR><C-l>
+nnoremap <silent> <C--> :call AccordionMode()<CR><C-l>
 function! AccordionMode()
-	set winheight=9999 winminheight=0
+	set winminheight=0 winheight=9999
+	set winheight=10 winminheight=10
 endfunction
-" exit accordion mode
-nnoremap <C-w>= :set winheight=10 winminheight=10 \| wincmd =<CR>
 
 " Timestamp: {{{
 nnoremap <silent> <Leader>sd <Esc>:call Timestamp("date")<CR>
@@ -224,6 +229,7 @@ endfor
 " }}}
 "}}}
 " FUNCTIONS: {{{
+
 function! Timestamp(style) "{{{
 	let s:originalline = getline(".")
 	let s:iswindows = has("win16") || has("win32") || has("win64")
@@ -257,25 +263,44 @@ endfunction
 "}}}
 function! FoldWrap() "{{{
 	" spliting markers here to prevent false markers
-	let s:exp = len(&commentstring) > 0 ? &commentstring : " %s"
-	let s:openmarker = substitute(s:exp, '%s', "{{" ."{", 'g')
-	let s:rawclosemarker = substitute(s:exp, '%s', "}}" ."}", 'g')
-	let s:closemarker = substitute(s:rawclosemarker, '^\s', '', '') " strip pre-space
+	let s:openmarker = FoldOpenMarker()
+	let s:closemarker = FoldCloseMarker()
 	call append(line("."), [s:openmarker, "", s:closemarker])
 	exe "normal Jj"
 	startinsert
 endfunction
+
+"}}}
+function! FoldCommentString() "{{{
+	return len(&commentstring) > 0 ? &commentstring : " %s"
+endfunction
+
+"}}}
+function! FoldOpenMarker() "{{{
+	let fcms = FoldCommentString()
+	return substitute(fcms, '%s', "{{" ."{", 'g')
+endfunction
+
+"}}}
+function! FoldCloseMarker() "{{{
+	let fcms = FoldCommentString()
+	let rawclosemarker = substitute(fcms, '%s', "}}" ."}", 'g')
+	return substitute(rawclosemarker, '^\s', '', '') " strip pre-space
+endfunction
+
 "}}}
 function! FoldInsert() "{{{
 	normal O
 	call FoldWrap()
 endfunction
+
 "}}}
 function! FoldUnfolded() " {{{
 	if foldclosed(".") < 0 " not already closed
 		normal zc
 	endif
 endfunction
+
 " }}}
 function! HandleTS() " {{{
   let s:ticket = matchstr(getline("."), 'TS#[0-9]\+')
@@ -288,6 +313,7 @@ function! HandleTS() " {{{
 	  echo "No TS ticket found in line."
   endif
 endfunction
+
 " }}}
 function! HandleURI() " {{{
   let s:uri = matchstr(getline("."), '[a-z]*:\/\/[^ >,;]*')
@@ -302,10 +328,12 @@ function! HandleURI() " {{{
 	  echo "No URI found in line."
   endif
 endfunction
+
 " }}}
 function! ScratchBuffer(title) " {{{
 	  exec "tabe " . a:title . " | setlocal buftype=nofile | setlocal bufhidden=hide | setlocal noswapfile"
 endfunction
+
 " }}}
 function! FormatSqlStatement() " {{{
   3match Todo /select .*/
@@ -323,6 +351,7 @@ function! FormatSqlStatement() " {{{
 	  echo "No SQL statement found."
   endif
 endfunction
+
 " }}}
 function! FixSession() " {{{
   silent exe "split " . v:this_session
@@ -330,6 +359,7 @@ function! FixSession() " {{{
   silent exe "w"
   silent exe "close"
 endfunction
+
 " }}}
 function! Reset() " {{{
 	silent pclose
@@ -338,6 +368,7 @@ function! Reset() " {{{
 	redraw
 	echo "Reset"
 endfunction
+
 " }}}
 
 "}}}
@@ -357,21 +388,43 @@ au BufNewFile *.txt set fdm=marker
 "}}}
 " PLUGINS: {{{
 
+" Taskstack:
+augroup TaskStack
+	au! BufRead *.tst.* set indentkeys-=o indentkeys-=0 showbreak=\ \  filetype=_.tst.txt
+	au BufRead *.tst.* nnoremap <buffer> XX ddgg}:call Timestamp("short")<CR>o<Esc>kpki[<Esc>$r]J2diw^ix <Esc>gg
+	au BufRead *.tst.* imap <buffer> XX <Esc>XX
+	au BufRead *.tst.* nnoremap <buffer> QQ ddgg}:call Timestamp("short")<CR>o<Esc>kpki[<Esc>$r]J2diw^io <Esc>gg
+	au BufRead *.tst.* imap <buffer> QQ <Esc>QQ
+	au BufRead *.tst.* nnoremap <buffer> NN ggzoo-<Esc>a 
+	au BufRead *.tst.* imap <buffer> NN <Esc>NN
+	au BufRead *.tst.* nnoremap <buffer> ZZ :maca hide:<CR>
+	au BufRead *.tst.* imap <buffer> ZZ <Esc>ZZ
+	au BufRead *.tst.* nnoremap <buffer> DD gg}o<Esc>:call Timestamp("date") \| call FoldWrap()<CR><Esc>zMkzogg
+	au BufRead *.tst.* nnoremap <buffer> LL Gzkzo{o
+	au! FocusLost *.tst.* write
+augroup END
+
 " python syntax
 let python_highlight_all = 1
 
 " minbufexplorer
 let g:miniBufExplVSplit=30
-" let g:miniBufExplMaxSize = <max width: default 0> 
+let g:miniBufExplMaxSize = 50
 let g:miniBufExplMapCTabSwitchBufs = 1
 
 " BufExplorer:
 map <silent> <C-Tab> :BufExplorer<CR>j
 map <silent> <C-S-Tab> :BufExplorer<CR>k
 au! BufWinEnter \[BufExplorer\] map <buffer> <Tab> <CR>
+au BufWinEnter \[BufExplorer\] set updatetime=500
+au! CursorHold \[BufExplorer\] normal y
+" au BufWinEnter \[BufExplorer\]
 
 " Pydiction:
 let g:pydiction_location = '~/.vim/complete-dict'
+
+" Paster:
+let g:PASTER_BROWSER_COMMAND = 'open'
 
 " Rope:
 " let $PYTHONPATH .= ":/Library/Python/2.5/site-packages/ropemode:/Library/Python/2.5/site-packages:/Users/seth/sandbox/code/python/"
