@@ -121,7 +121,8 @@ set switchbuf=useopen,usetab 		" when switching to a buffer, go to where it's al
 set history=10000					" keep craploads of command history
 set undolevels=100					" keep lots of undo history
 set foldlevelstart=0				" don't use a default fold level
-set cms=\ %s						" generally don't want commentstring for folds
+" TODO: only set if missing
+" set cms=\ %s						" generally don't want commentstring for folds
 set fdm=marker						" make the default foldmethod markers
 set foldcolumn=4					" trying out fold indicator column
 
@@ -230,8 +231,69 @@ endfor
 "}}}
 " FUNCTIONS: {{{
 
+
+function! FindNode(label) "{{{
+	let s:openmarker = FoldOpenMarker()
+	let s:expression = a:label . "\\s*" . s:openmarker
+	let s:matchline = search(s:expression, 'csw')	
+    echo printf("line: %2s had expression: %s", s:matchline, s:expression)
+	return s:matchline
+endfunction
+
+" }}}
+function! OpenNode(label) "{{{
+	let s:nodefound = FindNode(a:label)
+	if s:nodefound
+		normal zv
+		return 1
+	endif
+	return 0
+endfunction
+
+"}}}
+function! CloseNode(label) "{{{
+	let s:nodefound = FindNode(a:label)
+	if s:nodefound
+		normal zc
+		return 1
+	endif
+	return 0
+endfunction
+
+"}}}
+function! InsertNode(label) "{{{
+	let s:origpos = getpos(".")
+	call append(line(".") - 1, [""])
+	normal k
+	call AppendText(a:label)
+	call FoldWrap()
+	call OpenNode(a:label)
+	call setpos('.', s:origpos)
+endfunction
+
+"}}}
+function! DateNode() "{{{
+	let s:currentdate = TimestampText('date')
+	if FindNode(s:currentdate) == 0
+		normal gg
+        let s:openmarker = FoldOpenMarker()
+		call FindNode('[0-9]\{,4}-[0-9]\{,2}-[0-9]\{,2}')
+		call append(line(".") - 1, [""])
+		normal k
+		call AppendText(s:currentdate)
+		call FoldWrap()
+        normal zM
+	endif
+	call OpenNode(s:currentdate)
+endfunction
+
+"}}}
 function! Timestamp(style) "{{{
-	let s:originalline = getline(".")
+	call AppendText(TimestampText(a:style) . " ")
+endfunction
+
+" }}}
+function! TimestampText(style) "{{{
 	let s:iswindows = has("win16") || has("win32") || has("win64")
 	if s:iswindows
 		if a:style == "long"
@@ -251,13 +313,41 @@ function! Timestamp(style) "{{{
 	if a:style == "date"
 		let s:dateformat = strftime("%Y-%m-%d")
 	endif
-	let s:dateformat .= " "
-	call append(line("."),[s:dateformat])
+	return s:dateformat
+endfunction
+
+" }}}
+function! AppendText(text) "{{{
+	let s:originalline = getline(".")
+	call append(line("."),[a:text])
 	if substitute(s:originalline, "\\s", "", "g") == ""
 		 normal J$
 	else
-		 normal J$x
+		 normal J$
 	endif
+endfunction
+
+"}}}
+function! InsertItem(text, status) "{{{
+	let s:origpos = getpos(".")
+	call DateNode()
+	normal ]zk
+	let s:itemnostatus = substitute(a:text, '^\s*. ', '', 'g')
+	let s:result = printf("%s [%s] %s", a:status, TimestampText('short'), s:itemnostatus)
+	let s:toappend = [s:result]
+	if LineIsWhiteSpace(getline("."))
+		call append(line(".") - 1, s:toappend)
+	else
+		call insert(s:toappend, "", len(s:toappend))
+		call append(line("."), s:toappend)
+	endif
+	call setpos('.', s:origpos)
+    normal zodd
+endfunction
+
+"}}}
+function! LineIsWhiteSpace(line) "{{{
+	return a:line =~ '^\s*$'
 endfunction
 
 "}}}
@@ -266,8 +356,8 @@ function! FoldWrap() "{{{
 	let s:openmarker = FoldOpenMarker()
 	let s:closemarker = FoldCloseMarker()
 	call append(line("."), [s:openmarker, "", s:closemarker])
-	exe "normal Jj"
-	startinsert
+	normal Jj
+	" startinsert
 endfunction
 
 "}}}
@@ -391,16 +481,15 @@ au BufNewFile *.txt set fdm=marker
 " Taskstack:
 augroup TaskStack
 	au! BufRead *.tst.* set indentkeys-=o indentkeys-=0 showbreak=\ \  filetype=_.tst.txt
-	au BufRead *.tst.* nnoremap <buffer> XX ddgg}:call Timestamp("short")<CR>o<Esc>kpki[<Esc>$r]J2diw^ix <Esc>gg
+	au BufRead *.tst.* nnoremap <buffer> XX :silent! call InsertItem(getline("."), "x")<CR>
 	au BufRead *.tst.* imap <buffer> XX <Esc>XX
-	au BufRead *.tst.* nnoremap <buffer> QQ ddgg}:call Timestamp("short")<CR>o<Esc>kpki[<Esc>$r]J2diw^io <Esc>gg
+	au BufRead *.tst.* nnoremap <buffer> QQ :silent! call InsertItem(getline("."), "o")<CR>
 	au BufRead *.tst.* imap <buffer> QQ <Esc>QQ
 	au BufRead *.tst.* nnoremap <buffer> NN ggzoo-<Esc>a 
 	au BufRead *.tst.* imap <buffer> NN <Esc>NN
 	au BufRead *.tst.* nnoremap <buffer> ZZ :maca hide:<CR>
 	au BufRead *.tst.* imap <buffer> ZZ <Esc>ZZ
-	au BufRead *.tst.* nnoremap <buffer> DD gg}o<Esc>:call Timestamp("date") \| call FoldWrap()<CR><Esc>zMkzogg
-	au BufRead *.tst.* nnoremap <buffer> LL Gzkzo{o
+	au BufRead *.tst.* nnoremap <buffer> LL :silent! call FindNode("scratch")<CR>}o
 	au! FocusLost *.tst.* write
 augroup END
 
@@ -429,6 +518,8 @@ let g:PASTER_BROWSER_COMMAND = 'open'
 " Rope:
 " let $PYTHONPATH .= ":/Library/Python/2.5/site-packages/ropemode:/Library/Python/2.5/site-packages:/Users/seth/sandbox/code/python/"
 " source ~/sandbox/code/python/ropevim/ropevim.vim
+let $PATH .= ';C:\Python24\'
+let $PYTHONPATH = 'C:\Python24\'
 
 " SnipMate:
 let g:snips_author = 'Seth Milliken'
