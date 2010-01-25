@@ -160,9 +160,8 @@ nnoremap <silent> <Leader>] :NERDTreeToggle<CR>
 " nnoremap <silent> <Leader>[ :TMiniBufExplorer<CR>
 
 " Folds:
-nnoremap <silent> <Leader>- <Esc>:silent g/^done {{/call FoldUnfolded()<CR><C-l>
-nnoremap <silent> <Leader>= <Esc>:silent g/^@[^A-Z]* {{/normal zv<CR><C-l>
-nnoremap <silent> <Leader>0 <Esc>:silent normal zv<CR>z<CR><C-l>
+nnoremap <silent> <Leader>= <Esc>:call FoldDefaultNodes()<CR>:normal zv<CR><C-l>
+nnoremap <silent> <Leader>0 <Esc>:silent normal zv<CR>zt<C-l>
 
 " Scratch Buffer: close with ZZ
 nnoremap <silent> <Leader>c <Esc>:call ScratchBuffer("scratch")<CR>
@@ -386,12 +385,52 @@ endfunction
 
 "}}}
 function! FoldUnfolded() " {{{
-	if foldclosed(".") < 0 " not already closed
-		normal zc
-	endif
+		silent! normal zc
 endfunction
 
 " }}}
+function! FoldDefaultNodes() "{{{
+	" Save positions
+	let s:origpos = getpos(".")
+	normal H
+	let s:origscroll = getpos(".")
+	" Do work
+	normal gg
+	normal zR
+	let s:hasnext = 1
+	while (s:hasnext)
+		let s:currentline = line(".")
+		call FoldNodeIfDefault()
+		silent! normal zj
+		let s:hasnext = s:currentline != line(".")
+	endwhile
+	" Restore positions
+	call setpos('.', s:origscroll)
+	normal zt
+	call setpos('.', s:origpos)
+endfunction
+"}}}
+function! FoldNodeIfDefault() "{{{
+	let s:isdone = match(getline("."), '^done.* {{') > -1
+	let s:hasat = match(getline("."), '^@.* {{') > -1
+	let s:allcaps = match(getline("."), '^[A-Z]* {{') > -1
+	let s:isrecurring = match(getline("."), '^(.).* {{') > -1
+	" echo printf("isdone: %s, hasat: %s, allcap: %s", s:isdone, s:hasat, s:allcaps)
+	if (s:hasat)
+		return	
+	endif
+	if (s:isrecurring)
+		return
+	endif
+	if (s:allcaps)
+		return
+	endif
+	if (s:isdone)
+	endif
+	normal zc
+endfunction
+
+"}}}
 function! HandleTS() " {{{
   let s:ticket = matchstr(getline("."), 'TS#[0-9]\+')
   let s:number = matchstr(s:ticket, '[0-9]\+')
@@ -489,7 +528,9 @@ augroup TaskStack
 	au BufRead *.tst.* imap <buffer> NN <Esc>NN
 	au BufRead *.tst.* nnoremap <buffer> ZZ :maca hide:<CR>
 	au BufRead *.tst.* imap <buffer> ZZ <Esc>ZZ
-	au BufRead *.tst.* nnoremap <buffer> LL :silent! call FindNode("scratch")<CR>}o
+	au BufRead *.tst.* nnoremap <buffer> LL :silent! call FindNode("SCRATCH")<CR>zo]zO
+	au BufRead *.tst.* nmap <buffer> <C-j> ddp
+	au BufRead *.tst.* nmap <buffer> <C-k> ddkP
 	au! FocusLost *.tst.* write
 augroup END
 
