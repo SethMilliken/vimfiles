@@ -114,6 +114,7 @@ set ssop+=globals,sesdir,resize,winpos,unix
 " TODO: annotate this status line description
 set statusline=%<\(%n\)\ %m%y%r\ %f\ %=%-14.(%l,%c%V%)\ %P
 set laststatus=2					" always show the status line
+set diffopt+=vertical
 set splitright						" open vertical splits to the right
 set splitbelow						" open horizonal splits below
 set winminheight=0 					" minimized horizontal splits show only statusline
@@ -466,15 +467,15 @@ endfunction
 " }}}
 function! FormatSqlStatement() " {{{
   3match Todo /select .*/
-  let s:uri = matchstr(getline("."), 'select .*')
+  let s:uri = matchstr(getline("."), '\cselect .*')
   if s:uri != ""
 	  let @a = s:uri
 	  call ScratchBuffer("sql statement")
 	  setlocal bufhidden=delete
 	  normal "ap
 	  set ft=sql
-	  for keyword in ["from", "and", "inner", "where", "left", "right"]
-		  exec "silent! s/" . keyword . "/\r&/g"
+	  for keyword in ["select", "from", "and", "inner", "where", "left", "right", "union", "group by", "order by"]
+		  exec "silent! %s/" . keyword . "/\r&/gi"
 	  endfor
   else
 	  echo "No SQL statement found."
@@ -496,6 +497,33 @@ function! Reset() " {{{
 	set nolist
 	redraw
 	echo "Reset"
+endfunction
+
+
+" }}}
+function! AutoTagComplete() " {{{
+	normal aa
+	normal! r>
+	let l:save_position = getpos(".")
+	exe "normal i\<C-g>u"
+	let [l:ignore, l:close_tag_pos] = searchpos("</\\zs\\S\\+", "bnW", line(".")) 
+	let [l:ignore, l:open_tag_pos] = searchpos("<[^/]\\zs[^[:space:]>]\\+", "bcW", line(".")) 
+	if l:open_tag_pos == 0 || l:open_tag_pos < l:close_tag_pos
+		call setpos('.', l:save_position)
+	else
+		normal yiw
+		call setpos('.', l:save_position)
+		normal a</
+		normal p
+		normal aa
+		normal! r>
+		call search("<", "bW", line(".")) 
+	endif
+	if l:save_position[2] == len(getline("."))
+		startinsert!
+	else
+		startinsert
+	endif
 endfunction
 
 " }}}
@@ -533,6 +561,9 @@ augroup TaskStack
 	au BufRead *.tst.* nmap <buffer> <C-k> ddkP
 	au! FocusLost *.tst.* write
 augroup END
+
+" autocomplete tags in html
+au! FileType xhtml imap <buffer> > <Esc>:call AutoTagComplete()<CR>
 
 " python syntax
 let python_highlight_all = 1
@@ -572,6 +603,12 @@ let g:vimwiki_hl_headers = 1 				" hilight header colors
 let g:vimwiki_hl_cb_checked = 1 			" hilight todo item colors
 let g:vimwiki_list_ignore_newline = 0 		" convert newlines to <br /> in list
 let g:vimwiki_list = [{'path': '~/sandbox/personal/vimwiki/', 'index': 'PersonalWiki'}, {'path': '~/sandbox/public/wiki', 'index': 'SethMilliken'}, {'path': '~/sandbox/work/wiki/', 'index': 'SethMilliken', 'html_header': '~/sandbox/work/wiki/header.tpl'}]
+
+" 2html.vim
+let html_dynamic_folds = 1
+let html_use_css = 1
+let html_number_lines = 1
+let use_xhtml = 1
 
 " }}}
 " TESTING: {{{
