@@ -1,10 +1,9 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =8
+let g:netrw_dirhist_cnt =7
 let g:netrw_dirhist_1='/Users/seth/tex'
 let g:netrw_dirhist_2='/Users/seth'
 let g:netrw_dirhist_3='/Users/seth/Desktop'
 let g:netrw_dirhist_4='/Users/seth'
 let g:netrw_dirhist_5='/Users/seth/araxia'
 let g:netrw_dirhist_6='/Volumes/MMEX/MMEX.app'
-let g:netrw_dirhist_7='C:/Perforce/codebase/releases/branches/hd/platform'
-let g:netrw_dirhist_8='C:/hg/hd/sample_data/AggregateReporting/configurations'
+let g:netrw_dirhist_7='/Users/seth/sandbox/code/work/hd/src_core'

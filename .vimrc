@@ -102,7 +102,7 @@ set autoindent 						" keep indent at same level
 set hlsearch 						" highlight searches
 set tags+=$HOME/sandbox/personal/tags
 									" universal tags file
-set directory=$HOME/.vim/swap//,~/vimfiles/swap
+set directory=$HOME/.vim/swap//,~/vimfiles/swap//
 									" centralize swap files (with unique names, //)
 set nowritebackup					" allow crontab editing.
 									" TODO: should this be in an au?
@@ -154,15 +154,15 @@ nnoremap <silent> <Leader>w <Esc>:!wc -w %<CR>
 nnoremap <silent> <S-k> <Esc>:e<CR><Esc>:$<CR>
 
 " Save Session: (verify cwd to not stomp on existing sessions)
-nnoremap SS <Esc>:w<CR><Esc>:mks! \| call FixSession()<CR><Esc>:echo "Saved fixed session: " . v:this_session<CR>
+nnoremap SS <Esc>:w<CR><Esc>:SessionSave<CR><Esc>:call FixSession()<CR><Esc>:echo "Saved fixed session: " . v:this_session<CR>
 
 " Misc:
 nnoremap <silent> <Leader>] :NERDTreeToggle<CR>
 " nnoremap <silent> <Leader>[ :TMiniBufExplorer<CR>
 
 " Folds:
-nnoremap <silent> <Leader>= <Esc>:call FoldDefaultNodes()<CR>:normal zv<CR><C-l>
-nnoremap <silent> <Leader>0 <Esc>:silent normal zv<CR>zt<C-l>
+nmap <silent> <Leader>= <Esc>:call FoldDefaultNodes()<CR>:normal zvzkzjzt<CR><C-l>
+nmap <silent> <Leader>0 <Esc>:silent normal zvzt<CR><C-l>
 
 " Scratch Buffer: close with ZZ
 nnoremap <silent> <Leader>c <Esc>:call ScratchBuffer("scratch")<CR>
@@ -201,11 +201,11 @@ nnoremap <Up> 		<Esc>:echo "You should have typed k instead"<CR>
 nnoremap <Down> 	<Esc>:echo "You should have typed j instead"<CR>
 
 " Accordion Mode: accordion style horizontal split navigation mode
-nnoremap <silent> <C-j> <C-w>j:call AccordionMode()<CR><C-l>
-nnoremap <silent> <C-k> <C-w>k:call AccordionMode()<CR><C-l>
-nnoremap <silent> <C-y> <C-w>h:call AccordionMode()<CR><C-l>
-nnoremap <silent> <C-h> <C-w>l:call AccordionMode()<CR><C-l>
-nnoremap <silent> <C--> :call AccordionMode()<CR><C-l>
+nmap <silent> <C-j> <C-w>j:call AccordionMode()<CR><C-l>
+nmap <silent> <C-k> <C-w>k:call AccordionMode()<CR><C-l>
+nmap <silent> <C-y> <C-w>h:call AccordionMode()<CR><C-l>
+nmap <silent> <C-h> <C-w>l:call AccordionMode()<CR><C-l>
+nmap <silent> <C--> :call AccordionMode()<CR><C-l>
 function! AccordionMode()
 	set winminheight=0 winheight=9999
 	set winheight=10 winminheight=10
@@ -573,6 +573,8 @@ let g:miniBufExplVSplit=30
 let g:miniBufExplMaxSize = 50
 let g:miniBufExplMapCTabSwitchBufs = 1
 
+" sessionmanager:
+"
 " BufExplorer:
 map <silent> <C-Tab> :BufExplorer<CR>j
 map <silent> <C-S-Tab> :BufExplorer<CR>k
