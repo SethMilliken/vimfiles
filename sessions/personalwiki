@@ -2,6 +2,17 @@ let SessionLoad = 1
 if &cp | set nocp | endif
 let s:cpo_save=&cpo
 set cpo&vim
+imap <Nul> :
+imap <silent> <D-1> :tabn 1 
+imap <silent> <D-2> :tabn 2 
+imap <silent> <D-3> :tabn 3
+imap <silent> <D-4> :tabn 4
+imap <silent> <D-5> :tabn 5
+imap <silent> <D-6> :tabn 6
+imap <silent> <D-7> :tabn 7
+imap <silent> <D-8> :tabn 8
+imap <silent> <D-9> :tabn 9
+imap <silent> <D-0> :tabn 10
 imap <D-BS> 
 imap <M-BS> 
 imap <M-Down> }
@@ -15,7 +26,7 @@ noremap! <D-Left> <Home>
 inoremap <silent> <S-Tab> =BackwardsSnippet()
 inoremap <C-Tab> 	
 imap <F1> 
-imap <Nul> :
+cmap <Nul> :
 map! <D-v> *
 nmap <silent>  l:call AccordionMode()
 snoremap <silent> 	 i<Right>=TriggerSnippet()
@@ -28,12 +39,37 @@ nmap   
 snoremap % b<BS>%
 snoremap ' b<BS>'
 nnoremap :: q:
+imap <silent> ± :tabn 1 
+imap <silent> ² :tabn 2 
+imap <silent> ³ :tabn 3
+imap <silent> ´ :tabn 4
+imap <silent> µ :tabn 5
+imap <silent> ¶ :tabn 6
+imap <silent> · :tabn 7
+imap <silent> ¸ :tabn 8
+imap <silent> ¹ :tabn 9
+imap <silent> ° :tabn 10
 nnoremap <silent> K :e:$
+nnoremap O :call vimwiki_lst#insertOo('O')a
 map Q gq
+nnoremap SS :w:SessionSave:call FixSession():echo "Saved fixed session: " . v:this_session
 xmap S <Plug>VSurround
-nnoremap SS :w:SessionSave:call FixSession():SessionOpenLast:echo "Saved fixed session: " . v:this_session
+vmap SS :w:mks! | call FixSession():echo "Saved fixed session: " . v:this_session
+omap SS :w:mks! | call FixSession():echo "Saved fixed session: " . v:this_session
 snoremap U b<BS>U
 vmap [% [%m'gv``
+nnoremap <silent> \t :call HandleTS()
+nnoremap <silent> \\ :call HandleURI()
+nnoremap <silent> \- :silent g/^done {{/call FoldUnfolded()
+map <silent> \s :call ResetSnippets() | call GetSnippets(g:snippets_dir, &ft):echo "Snippets for format \"" . &ft . "\" updated."
+nmap <silent> \ts :call Timestamp("short")
+nmap <silent> \tl :call Timestamp("long")
+nmap <silent> \td :call Timestamp("date")
+nnoremap <silent> \tf :call FoldWrap()
+nnoremap <silent> \tt :call FoldInsert()
+nmap <silent> \tg tstf
+nmap <silent> \th dstf
+nmap <silent> \tj tdtf
 snoremap \ b<BS>\
 map <silent> \ws <Plug>VimwikiUISelect
 map <silent> \wt <Plug>VimwikiTabGoHome
@@ -70,8 +106,10 @@ nnoremap \p+ :tab help
 nnoremap \pp :help:winc _:winc |:help 
 nnoremap \_ Bi<em>ea</em>
 nnoremap <silent> \q :call FormatSqlStatement()
-nnoremap <silent> \t :call HandleTS()
-nnoremap <silent> \\ :call HandleURI()
+vmap <silent> \t :call HandleTS()
+omap <silent> \t :call HandleTS()
+vmap <silent> \\ :call HandleURI()
+omap <silent> \\ :call HandleURI()
 nnoremap <silent> \c :call ScratchBuffer("scratch")
 nmap <silent> \0 :silent normal zvzt
 nmap <silent> \= :call FoldDefaultNodes():normal zvzkzjzt
@@ -84,14 +122,26 @@ vmap a% [%v]%
 nmap cs <Plug>Csurround
 nmap ds <Plug>Dsurround
 nmap gx <Plug>NetrwBrowseX
+nnoremap o :call vimwiki_lst#insertOo('o')a
 xmap s <Plug>Vsurround
 nmap ySS <Plug>YSsurround
 nmap ySs <Plug>YSsurround
 nmap yss <Plug>Yssurround
 nmap yS <Plug>YSurround
 nmap ys <Plug>Ysurround
-nnoremap <C-Down> :silent! :call AdjustFont(-1)
-nnoremap <C-Up> :silent! :call AdjustFont(1)
+nnoremap <Nul> :
+nmap <silent> <D-1> 1gt
+nmap <silent> <D-2> 2gt
+nmap <silent> <D-3> 3gt 
+nmap <silent> <D-4> 4gt 
+nmap <silent> <D-5> 5gt 
+nmap <silent> <D-6> 6gt 
+nmap <silent> <D-7> 7gt 
+nmap <silent> <D-8> 8gt 
+nmap <silent> <D-9> 9gt 
+nmap <silent> <D-0> 10gt 
+nnoremap <C-Down> :silent! let &guifont = substitute( &guifont, ':h\zs\d\+', '\=eval(submatch(0)-1)', '')
+nnoremap <C-Up> :silent! let &guifont = substitute( &guifont, ':h\zs\d\+', '\=eval(submatch(0)+1)', '')
 nnoremap <silent> <C-Right> gt
 nnoremap <silent> <C-Left> gT
 nmap <silent> <D-w> :bd
@@ -148,7 +198,8 @@ nnoremap <Right> :echo "You should have typed l instead"
 nnoremap <Left> :echo "You should have typed h instead"
 nmap <S-Space> 
 map <F1> 
-nnoremap <Nul> :
+vmap <Nul> :
+omap <Nul> :
 xmap <BS> "-d
 vmap <D-x> "*d
 vmap <D-c> "*y
@@ -158,30 +209,43 @@ imap S <Plug>ISurround
 imap s <Plug>Isurround
 inoremap <silent> 	 =TriggerSnippet()
 imap <silent>  :call Reset() | nohlsa
+inoremap <expr>  vimwiki_lst#insertCR()
 inoremap  :set completeopt+=menuonea
 inoremap <silent> 	 =ShowAvailableSnips()
 imap  <Plug>Isurround
 imap  =CtrlXPP()
+nmap <silent> ± 1gt
+nmap <silent> ² 2gt
+nmap <silent> ³ 3gt 
+nmap <silent> ´ 4gt 
+nmap <silent> µ 5gt 
+nmap <silent> ¶ 6gt 
+nmap <silent> · 7gt 
+nmap <silent> ¸ 8gt 
+nmap <silent> ¹ 9gt 
+nmap <silent> ° 10gt 
+map! \_ Bi<em>ea</em>
 let &cpo=s:cpo_save
 unlet s:cpo_save
 set autoindent
 set autowrite
+set autowriteall
 set background=dark
 set backspace=indent,eol,start
 set clipboard=unnamed
+set commentstring=
 set diffopt=filler,vertical
 set directory=~/.vim/swap//,~/vimfiles/swap//
 set fileencodings=ucs-bom,utf-8,default,latin1
 set foldlevelstart=0
 set fuoptions=maxhorz,maxvert
-set guifont=Inconsolata:h11
+set guifont=Inconsolata:h15
 set guioptions=egmrLt
 set guitablabel=%m\ %N\ %t\ %r
 set helplang=en
 set history=10000
 set hlsearch
 set incsearch
-set indentkeys=0{,0},:,0#,!^F,O,e
 set iskeyword=@,48-57,_,192-255,-
 set langmenu=none
 set laststatus=2
@@ -192,7 +256,6 @@ set ruler
 set sessionoptions=folds,help,options,tabpages,winsize,globals,sesdir,resize,winpos,unix
 set shiftwidth=4
 set shortmess=filnxtToOIA
-set showbreak=\ \ 
 set showcmd
 set spellcapcheck=off
 set splitbelow
@@ -205,9 +268,10 @@ set tabstop=4
 set tags=./tags,tags,~/sandbox/personal/tags
 set termencoding=utf-8
 set undolevels=100
+set updatetime=500
+set window=51
 set winheight=10
 set winminheight=0
-set winwidth=500
 set nowritebackup
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
@@ -218,32 +282,31 @@ let TailMinusF_Loaded =  1
 let SuperTabLongestHighlight =  0 
 let NERDTreeMapCloseDir = "x"
 let SuperTabMappingTabLiteral = "<c-tab>"
-let NERDTreeMapRefresh = "r"
+let NERDTreeShowLineNumbers = "0"
 let DirDiffSort =  1 
 let NERDTreeBookmarksFile = "/Users/seth/.NERDTreeBookmarks"
 let SuperTabDefaultCompletionType = "<c-p>"
 let NERDTreeMapToggleHidden = "I"
 let NERDTreeWinSize = "31"
-let NERDTreeMapJumpParent = "p"
 let DirDiffInteractive =  0 
 let NERDTreeMapPreview = "go"
 let NERDTreeMapActivateNode = "o"
 let NERDTreeWinPos = "left"
+let SuperTabContextDefaultCompletionType = "<c-p>"
 let DirDiffAddArgs = ""
 let NERDTreeStatusline = "%{b:NERDTreeRoot.path.strForOS(0)}"
 let NERDTreeMapOpenInTabSilent = "T"
 let NERDTreeMapHelp = "?"
+let NERDTreeMapJumpParent = "p"
 let NERDTreeMapToggleFilters = "f"
 let SuperTabMappingForward = "<tab>"
-let NERDTreeAutoCenter = "1"
-let SuperTabContextDefaultCompletionType = "<c-p>"
+let NERDTreeMapJumpLastChild = "J"
 let SuperTabRetainCompletionType =  1 
 let NERDTreeMapJumpPrevSibling = "<C-k>"
 let NERDTreeShowBookmarks = "0"
-let NERDTreeMapOpenExpl = "e"
 let NERDTreeRemoveDirCmd = "rm -rf "
 let CSV_string_delimiter = "\""
-let NERDTreeMapOpenInTab = "t"
+let NERDTreeMouseMode = "1"
 let NERDTreeChDirMode = "0"
 let NERDTreeAutoCenterThreshold = "3"
 let NERDTreeShowFiles = "1"
@@ -252,11 +315,11 @@ let DirDiffTextFiles = "Files "
 let NERDTreeCaseSensitiveSort = "0"
 let NERDTreeHijackNetrw = "1"
 let NERDTreeMapFilesystemMenu = "m"
-let NERDTreeShowLineNumbers = "0"
+let NERDTreeMapRefresh = "r"
 let TailMinusF_Height =  10 
 let NERDTreeHighlightCursorline = "1"
 let CSV_field_list = ""
-let NERDTreeMouseMode = "1"
+let NERDTreeMapOpenInTab = "t"
 let CSV_separator = ","
 let DirDiffExcludes = ""
 let DirDiffDynamicDiffText =  0 
@@ -270,15 +333,13 @@ let NERDTreeMapChdir = "cd"
 let DirDiffWindowSize =  14 
 let NERDTreeMapExecute = "!"
 let NERDTreeMapRefreshRoot = "R"
-let DirDiffIgnore = ""
-let NERDTreeMapJumpLastChild = "J"
+let NERDTreeAutoCenter = "1"
 let DirDiffTextOnlyIn = "Only in "
 let TailMinusF_Center_Win =  0 
 let DirDiffTextAnd = " and "
 let NERDTreeMapOpenVSplit = "s"
 let NERDTreeMapDeleteBookmark = "D"
 let AutoHiVersion = "0.2"
-let NERDTreeMapUpdirKeepOpen = "U"
 let NERDTreeMapJumpNextSibling = "<C-j>"
 let DirDiffIgnoreCase =  0 
 let NERDTreeMapJumpRoot = "P"
@@ -287,12 +348,15 @@ let NERDTreeMapQuit = "q"
 let NERDTreeMapChangeRoot = "C"
 let NERDTreeSortDirs = "1"
 let NERDTreeMapToggleFiles = "F"
+let DirDiffIgnore = ""
 let SuperTabMidWordCompletion =  1 
+let NERDTreeMapOpenExpl = "e"
 let NERDTreeMapJumpFirstChild = "K"
 let NERDTreeMapOpenRecursively = "O"
 let NERDTreeMapToggleBookmarks = "B"
 let SuperTabMappingBackward = "<s-tab>"
 let NERDTreeMapUpdir = "u"
+let NERDTreeMapUpdirKeepOpen = "U"
 let NERDTreeQuitOnOpen = "0"
 silent only
 exe "cd " . escape(expand("<sfile>:p:h"), ' ')
@@ -300,26 +364,21 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +54 ~/sandbox/personal/todo/research.tst.txt
-badd +1 ~/.vimperatorrc
-badd +1 ~/.firefox/userChrome.css
+badd +1 ~/sandbox/personal/vimwiki/BadMovies.wiki
+badd +0 ~/sandbox/personal/vimwiki/PersonalWiki.wiki
 silent! argdel *
-set lines=70 columns=115
+set lines=52 columns=175
 winpos 0 0
-buffer ~/sandbox/personal/todo/research.tst.txt
+buffer ~/sandbox/personal/vimwiki/PersonalWiki.wiki
 set splitbelow splitright
 wincmd _ | wincmd |
-split
-wincmd _ | wincmd |
-split
-2wincmd k
-wincmd w
+vsplit
+1wincmd h
 wincmd w
 wincmd t
 set winheight=1 winwidth=1
-exe '1resize ' . ((&lines * 66 + 35) / 70)
-exe '2resize ' . ((&lines * 0 + 35) / 70)
-exe '3resize ' . ((&lines * 0 + 35) / 70)
+exe 'vert 1resize ' . ((&columns * 88 + 87) / 175)
+exe 'vert 2resize ' . ((&columns * 86 + 87) / 175)
 argglobal
 let s:cpo_save=&cpo
 set cpo&vim
@@ -333,8 +392,10 @@ imap <buffer> <silent> <D-3> :tabn 3
 imap <buffer> <silent> <D-2> :tabn 2
 imap <buffer> <silent> <D-1> :tabn 1
 imap <buffer> <silent> <D-0> :tabn 10
-nmap <buffer> <NL> ddp
-nmap <buffer>  ddkP
+nmap <buffer> <silent> 	 <Plug>VimwikiNextWord
+nmap <buffer> <silent>  <Plug>VimwikiFollowWord
+nmap <buffer> <silent> - :call vimwiki#RemoveHeaderLevel()
+nmap <buffer> <silent> = :call vimwiki#AddHeaderLevel()
 imap <buffer> <silent> ¹ :tabn 9
 imap <buffer> <silent> ¸ :tabn 8
 imap <buffer> <silent> · :tabn 7
@@ -345,11 +406,12 @@ imap <buffer> <silent> ³ :tabn 3
 imap <buffer> <silent> ² :tabn 2
 imap <buffer> <silent> ± :tabn 1
 imap <buffer> <silent> ° :tabn 10
-nnoremap <buffer> LL :silent! call FindNode("SCRATCH")zo]zO
-nnoremap <buffer> NN ggzoo-a 
-nnoremap <buffer> QQ :silent! call InsertItem(getline("."), "o")
-nnoremap <buffer> XX :silent! call InsertItem(getline("."), "x")
-nnoremap <buffer> ZZ :maca hide:
+nmap <buffer> <silent> \wr <Plug>VimwikiRenameWord
+nmap <buffer> <silent> \wd <Plug>VimwikiDeleteWord
+vmap <buffer> <silent> ah :call vimwiki#TO_header(0, 1)
+omap <buffer> <silent> ah :call vimwiki#TO_header(0, 0)
+vmap <buffer> <silent> ih :call vimwiki#TO_header(1, 1)
+omap <buffer> <silent> ih :call vimwiki#TO_header(1, 0)
 nmap <buffer> <silent> <D-9> 9gt
 nmap <buffer> <silent> <D-8> 8gt
 nmap <buffer> <silent> <D-7> 7gt
@@ -360,6 +422,13 @@ nmap <buffer> <silent> <D-3> 3gt
 nmap <buffer> <silent> <D-2> 2gt
 nmap <buffer> <silent> <D-1> 1gt
 nmap <buffer> <silent> <D-0> 10gt
+nmap <buffer> <silent> <Nul> <Plug>VimwikiToggleListItem
+vmap <buffer> <silent> <C-Space> <Plug>VimwikiToggleListItem
+nmap <buffer> <silent> <C-Space> <Plug>VimwikiToggleListItem
+nmap <buffer> <silent> <S-Tab> <Plug>VimwikiPrevWord
+nmap <buffer> <silent> <BS> <Plug>VimwikiGoBackWord
+nmap <buffer> <silent> <C-CR> <Plug>VimwikiVSplitWord
+nmap <buffer> <silent> <S-CR> <Plug>VimwikiSplitWord
 nmap <buffer> <silent> ¹ 9gt
 nmap <buffer> <silent> ¸ 8gt
 nmap <buffer> <silent> · 7gt
@@ -370,10 +439,6 @@ nmap <buffer> <silent> ³ 3gt
 nmap <buffer> <silent> ² 2gt
 nmap <buffer> <silent> ± 1gt
 nmap <buffer> <silent> ° 10gt
-imap <buffer> NN NN
-imap <buffer> QQ QQ
-imap <buffer> XX XX
-imap <buffer> ZZ ZZ
 let &cpo=s:cpo_save
 unlet s:cpo_save
 setlocal keymap=
@@ -387,8 +452,8 @@ setlocal nocindent
 setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
 setlocal cinoptions=
 setlocal cinwords=if,else,while,do,for,switch
-setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
-setlocal commentstring=
+setlocal comments=b:*,b:#,b:-
+setlocal commentstring=<!--%s-->
 setlocal complete=.,w,b,u,t,i
 setlocal completefunc=
 setlocal nocopyindent
@@ -401,8 +466,8 @@ setlocal nodiff
 setlocal equalprg=
 setlocal errorformat=
 setlocal noexpandtab
-if &filetype != 'tst.txt'
-setlocal filetype=tst.txt
+if &filetype != 'vimwiki'
+setlocal filetype=vimwiki
 endif
 set foldcolumn=4
 setlocal foldcolumn=4
@@ -419,14 +484,14 @@ set foldtext=MyFoldText()
 setlocal foldtext=MyFoldText()
 setlocal formatexpr=
 setlocal formatoptions=tcq
-setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
+setlocal formatlistpat=^\\s*[*#-]\\s*
 setlocal grepprg=
 setlocal iminsert=2
 setlocal imsearch=2
 setlocal include=
 setlocal includeexpr=
 setlocal indentexpr=
-setlocal indentkeys=0{,0},:,0#,!^F,O,e
+setlocal indentkeys=0{,0},:,0#,!^F,o,O,e
 setlocal noinfercase
 setlocal iskeyword=@,48-57,_,192-255,-
 setlocal keywordprg=
@@ -461,11 +526,11 @@ setlocal spellcapcheck=off
 setlocal spellfile=
 setlocal spelllang=en
 setlocal statusline=
-setlocal suffixesadd=
+setlocal suffixesadd=.wiki
 setlocal swapfile
 setlocal synmaxcol=3000
-if &syntax != 'tst.txt'
-setlocal syntax=tst.txt
+if &syntax != 'vimwiki'
+setlocal syntax=vimwiki
 endif
 setlocal tabstop=4
 setlocal tags=
@@ -475,150 +540,39 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-1
-normal zo
-6
-normal zo
-17
-normal zo
-30
-normal zo
-44
-normal zo
-30
-normal zo
-let s:l = 23 - ((22 * winheight(0) + 33) / 66)
+let s:l = 10 - ((9 * winheight(0) + 25) / 50)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-23
-normal! 013l
-wincmd w
-argglobal
-buffer ~/.firefox/userChrome.css
-setlocal keymap=
-setlocal noarabic
-setlocal autoindent
-setlocal nobinary
-setlocal bufhidden=
-setlocal buflisted
-setlocal buftype=
-setlocal nocindent
-setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
-setlocal cinoptions=
-setlocal cinwords=if,else,while,do,for,switch
-setlocal comments=s1:/*,mb:*,ex:*/
-setlocal commentstring=/*%s*/
-setlocal complete=.,w,b,u,t,i
-setlocal completefunc=
-setlocal nocopyindent
-setlocal nocursorcolumn
-set cursorline
-setlocal cursorline
-setlocal define=
-setlocal dictionary=
-setlocal nodiff
-setlocal equalprg=
-setlocal errorformat=
-setlocal noexpandtab
-if &filetype != 'css'
-setlocal filetype=css
-endif
-set foldcolumn=4
-setlocal foldcolumn=4
-setlocal foldenable
-setlocal foldexpr=0
-setlocal foldignore=#
-setlocal foldlevel=0
-setlocal foldmarker={{{,}}}
-set foldmethod=marker
-setlocal foldmethod=syntax
-setlocal foldminlines=1
-setlocal foldnestmax=20
-set foldtext=MyFoldText()
-setlocal foldtext=MyFoldText()
-setlocal formatexpr=
-setlocal formatoptions=croql
-setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
-setlocal grepprg=
-setlocal iminsert=2
-setlocal imsearch=2
-setlocal include=^\\s*@import\\s\\+\\%(url(\\)\\=
-setlocal includeexpr=
-setlocal indentexpr=GetCSSIndent()
-setlocal indentkeys=0{,0},!^F,o,O
-setlocal noinfercase
-setlocal iskeyword=@,48-57,_,192-255,-
-setlocal keywordprg=
-set linebreak
-setlocal linebreak
-setlocal nolisp
-setlocal nolist
-setlocal nomacmeta
-setlocal makeprg=
-setlocal matchpairs=(:),{:},[:]
-setlocal modeline
-setlocal modifiable
-setlocal nrformats=octal,hex
-set number
-setlocal number
-setlocal numberwidth=4
-setlocal omnifunc=csscomplete#CompleteCSS
-setlocal path=
-setlocal nopreserveindent
-setlocal nopreviewwindow
-setlocal quoteescape=\\
-setlocal noreadonly
-setlocal norightleft
-setlocal rightleftcmd=search
-setlocal noscrollbind
-setlocal shiftwidth=4
-setlocal noshortname
-setlocal nosmartindent
-setlocal softtabstop=0
-setlocal nospell
-setlocal spellcapcheck=off
-setlocal spellfile=
-setlocal spelllang=en
-setlocal statusline=
-setlocal suffixesadd=
-setlocal swapfile
-setlocal synmaxcol=3000
-if &syntax != 'css'
-setlocal syntax=css
-endif
-setlocal tabstop=4
-setlocal tags=
-setlocal textwidth=0
-setlocal thesaurus=
-setlocal nowinfixheight
-setlocal nowinfixwidth
-setlocal wrap
-setlocal wrapmargin=0
-let s:l = 1 - ((0 * winheight(0) + 0) / 0)
-if s:l < 1 | let s:l = 1 | endif
-exe s:l
-normal! zt
-1
+10
 normal! 0
 wincmd w
 argglobal
-buffer ~/.vimperatorrc
-nnoremap <buffer> <silent> [[ m':call search('^\s*fu\%[nction]\>', "bW")
-vnoremap <buffer> <silent> [[ m':exe "normal! gv"|call search('^\s*fu\%[nction]\>', "bW")
-nnoremap <buffer> <silent> [] m':call search('^\s*endf*\%[unction]\>', "bW")
-vnoremap <buffer> <silent> [] m':exe "normal! gv"|call search('^\s*endf*\%[unction]\>', "bW")
-nnoremap <buffer> <silent> [" :call search('\%(^\s*".*\n\)\%(^\s*"\)\@!', "bW")
-vnoremap <buffer> <silent> [" :exe "normal! gv"|call search('\%(^\s*".*\n\)\%(^\s*"\)\@!', "bW")
-nnoremap <buffer> <silent> ]] m':call search('^\s*fu\%[nction]\>', "W")
-vnoremap <buffer> <silent> ]] m':exe "normal! gv"|call search('^\s*fu\%[nction]\>', "W")
-nnoremap <buffer> <silent> ][ m':call search('^\s*endf*\%[unction]\>', "W")
-vnoremap <buffer> <silent> ][ m':exe "normal! gv"|call search('^\s*endf*\%[unction]\>', "W")
-nnoremap <buffer> <silent> ]" :call search('^\(\s*".*\n\)\@<!\(\s*"\)', "W")
-vnoremap <buffer> <silent> ]" :exe "normal! gv"|call search('^\(\s*".*\n\)\@<!\(\s*"\)', "W")
+buffer ~/sandbox/personal/vimwiki/BadMovies.wiki
+let s:cpo_save=&cpo
+set cpo&vim
+nmap <buffer> <silent> 	 <Plug>VimwikiNextWord
+nmap <buffer> <silent>  <Plug>VimwikiFollowWord
+nmap <buffer> <silent> - :call vimwiki#RemoveHeaderLevel()
+nmap <buffer> <silent> = :call vimwiki#AddHeaderLevel()
+nmap <buffer> <silent> \wr <Plug>VimwikiRenameWord
+nmap <buffer> <silent> \wd <Plug>VimwikiDeleteWord
+vmap <buffer> <silent> ah :call vimwiki#TO_header(0)
+omap <buffer> <silent> ah :call vimwiki#TO_header(0)
+vmap <buffer> <silent> ih :call vimwiki#TO_header(1)
+omap <buffer> <silent> ih :call vimwiki#TO_header(1)
+nmap <buffer> <silent> <Nul> <Plug>VimwikiToggleListItem
+vmap <buffer> <silent> <C-Space> <Plug>VimwikiToggleListItem
+nmap <buffer> <silent> <C-Space> <Plug>VimwikiToggleListItem
+nmap <buffer> <silent> <S-Tab> <Plug>VimwikiPrevWord
+nmap <buffer> <silent> <BS> <Plug>VimwikiGoBackWord
+nmap <buffer> <silent> <C-CR> <Plug>VimwikiVSplitWord
+nmap <buffer> <silent> <S-CR> <Plug>VimwikiSplitWord
+let &cpo=s:cpo_save
+unlet s:cpo_save
 setlocal keymap=
 setlocal noarabic
-setlocal autoindent
+setlocal noautoindent
 setlocal nobinary
 setlocal bufhidden=
 setlocal buflisted
@@ -627,8 +581,8 @@ setlocal nocindent
 setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
 setlocal cinoptions=
 setlocal cinwords=if,else,while,do,for,switch
-setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
-setlocal commentstring=/*%s*/
+setlocal comments=b:\ *\ [\ ],b:\ *[\ ],b:\ *\ [],b:\ *[],b:\ *\ [x],b:\ *[x],b:\ #\ [\ ],b:\ #[\ ],b:\ #\ [],b:\ #[],b:\ #\ [x],b:\ #[x],b:\ *,b:\ #
+setlocal commentstring=<!--%s-->
 setlocal complete=.,w,b,u,t,i
 setlocal completefunc=
 setlocal nocopyindent
@@ -641,32 +595,32 @@ setlocal nodiff
 setlocal equalprg=
 setlocal errorformat=
 setlocal noexpandtab
-if &filetype != 'vimperator'
-setlocal filetype=vimperator
+if &filetype != 'vimwiki'
+setlocal filetype=vimwiki
 endif
 set foldcolumn=4
-setlocal foldcolumn=4
+setlocal foldcolumn=0
 setlocal foldenable
-setlocal foldexpr=0
+setlocal foldexpr=VimwikiFoldLevel(v:lnum)
 setlocal foldignore=#
 setlocal foldlevel=0
 setlocal foldmarker={{{,}}}
 set foldmethod=marker
-setlocal foldmethod=marker
+setlocal foldmethod=expr
 setlocal foldminlines=1
 setlocal foldnestmax=20
 set foldtext=MyFoldText()
-setlocal foldtext=MyFoldText()
+setlocal foldtext=VimwikiFoldText()
 setlocal formatexpr=
-setlocal formatoptions=tcq
-setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
+setlocal formatoptions=tnro
+setlocal formatlistpat=^\\s\\+[*#]\\s*
 setlocal grepprg=
 setlocal iminsert=2
 setlocal imsearch=2
 setlocal include=
 setlocal includeexpr=
-setlocal indentexpr=GetVimIndent()
-setlocal indentkeys=0{,0},:,0#,!^F,O,e,=end,=else,=cat,=fina,=END,0\\
+setlocal indentexpr=
+setlocal indentkeys=0{,0},:,0#,!^F,o,O,e
 setlocal noinfercase
 setlocal iskeyword=@,48-57,_,192-255,-
 setlocal keywordprg=
@@ -701,11 +655,11 @@ setlocal spellcapcheck=off
 setlocal spellfile=
 setlocal spelllang=en
 setlocal statusline=
-setlocal suffixesadd=
+setlocal suffixesadd=.wiki
 setlocal swapfile
 setlocal synmaxcol=3000
-if &syntax != 'vimperator'
-setlocal syntax=vimperator
+if &syntax != 'vimwiki'
+setlocal syntax=vimwiki
 endif
 setlocal tabstop=4
 setlocal tags=
@@ -715,22 +669,21 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 18 - ((13 * winheight(0) + 0) / 0)
+let s:l = 22 - ((21 * winheight(0) + 25) / 50)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-18
-normal! 019l
+22
+normal! 010l
 wincmd w
-exe '1resize ' . ((&lines * 66 + 35) / 70)
-exe '2resize ' . ((&lines * 0 + 35) / 70)
-exe '3resize ' . ((&lines * 0 + 35) / 70)
+exe 'vert 1resize ' . ((&columns * 88 + 87) / 175)
+exe 'vert 2resize ' . ((&columns * 86 + 87) / 175)
 tabnext 1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf
 endif
 unlet! s:wipebuf
-set winheight=10 winwidth=500 shortmess=filnxtToOIA
+set winheight=10 winwidth=20 shortmess=filnxtToOIA
 let s:sx = expand("<sfile>:p:r")."x.vim"
 if file_readable(s:sx)
   exe "source " . fnameescape(s:sx)

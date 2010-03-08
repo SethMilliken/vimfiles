@@ -299,7 +299,6 @@ set commentstring=
 set directory=~/.vim/swap//,~/vimfiles/swap//
 set noequalalways
 set fileencodings=ucs-bom,utf-8,default,latin1
-set foldlevelstart=0
 set fuoptions=maxhorz,maxvert
 set guifont=Inconsolata:h11
 set guioptions=egmrLt

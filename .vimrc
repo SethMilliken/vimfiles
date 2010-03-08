@@ -154,7 +154,7 @@ nnoremap <silent> <Leader>w <Esc>:!wc -w %<CR>
 nnoremap <silent> <S-k> <Esc>:e<CR><Esc>:$<CR>
 
 " Save Session: (verify cwd to not stomp on existing sessions)
-nnoremap SS <Esc>:w<CR><Esc>:SessionSave<CR><Esc>:call FixSession()<CR><Esc>:echo "Saved fixed session: " . v:this_session<CR>
+nnoremap SS <Esc>:w<CR><Esc>:SessionSave<CR><Esc>:call FixSession()<CR><Esc>:SessionOpenLast<CR><Esc>:echo "Saved fixed session: " . v:this_session<CR>
 
 " Misc:
 nnoremap <silent> <Leader>] :NERDTreeToggle<CR>
@@ -435,7 +435,7 @@ endfunction
 function! HandleTS() " {{{
   let s:ticket = matchstr(getline("."), 'TS#[0-9]\+')
   let s:number = matchstr(s:ticket, '[0-9]\+')
-  if s:ticket != ""
+  if s:ticket != "<Esc>:"
 	let s:tsuri = 'https://trackstudio.nimblefish.com/task/' . s:number . '?thisframe=true'
 	exec "silent !start rundll32.exe url.dll,FileProtocolHandler " . s:tsuri
 	echo "Opened Ticket: " . s:number
