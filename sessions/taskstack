@@ -32,14 +32,14 @@ nnoremap <silent> K :e:$
 nnoremap O :call vimwiki_lst#insertOo('O')a
 map Q gq
 xmap S <Plug>VSurround
-nnoremap SS :w:SessionSave:call FixSession():echo "Saved fixed session: " . v:this_session
+nnoremap SS :w:SessionSave:call FixSession():SessionOpenLast:echo "Saved fixed session: " . v:this_session
 snoremap U b<BS>U
 vmap [% [%m'gv``
+map <silent> \ww <Plug>VimwikiGoHome
+map <silent> \wt <Plug>VimwikiTabGoHome
+map <silent> \ws <Plug>VimwikiUISelect
 nnoremap <silent> \- :silent g/^done {{/call FoldUnfolded()
 snoremap \ b<BS>\
-map <silent> \ws <Plug>VimwikiUISelect
-map <silent> \wt <Plug>VimwikiTabGoHome
-map <silent> \ww <Plug>VimwikiGoHome
 nmap \cv <Plug>VCSVimDiff
 nmap \cu <Plug>VCSUpdate
 nmap \cU <Plug>VCSUnlock
@@ -78,6 +78,7 @@ nnoremap <silent> \c :call ScratchBuffer("scratch")
 nmap <silent> \0 :silent normal zvzt
 nmap <silent> \= :call FoldDefaultNodes():normal zvzkzjzt
 nnoremap <silent> \] :NERDTreeToggle
+nnoremap \j :call JournalEntry()
 nnoremap <silent> \w :!wc -w %
 vmap ]% ]%m'gv``
 snoremap ^ b<BS>^
@@ -174,6 +175,7 @@ set autowriteall
 set background=dark
 set backspace=indent,eol,start
 set clipboard=unnamed
+set diffopt=filler,vertical
 set directory=~/.vim/swap//,~/vimfiles/swap//
 set fileencodings=ucs-bom,utf-8,default,latin1
 set fuoptions=maxhorz,maxvert
@@ -207,8 +209,10 @@ set tabpagemax=100
 set tabstop=4
 set tags=./tags,tags,~/sandbox/personal/tags
 set termencoding=utf-8
+set transparency=5
 set undolevels=100
 set updatetime=500
+set window=68
 set winheight=10
 set winminheight=0
 set nowritebackup
@@ -231,7 +235,6 @@ let DirDiffInteractive =  0
 let NERDTreeMapPreview = "go"
 let NERDTreeMapActivateNode = "o"
 let NERDTreeWinPos = "left"
-let SuperTabContextDefaultCompletionType = "<c-p>"
 let DirDiffAddArgs = ""
 let NERDTreeStatusline = "%{b:NERDTreeRoot.path.strForOS(0)}"
 let NERDTreeMapOpenInTabSilent = "T"
@@ -240,13 +243,13 @@ let NERDTreeMapJumpParent = "p"
 let NERDTreeMapToggleFilters = "f"
 let SuperTabMappingForward = "<tab>"
 let NERDTreeMapJumpLastChild = "J"
+let SuperTabContextDefaultCompletionType = "<c-p>"
 let SuperTabRetainCompletionType =  1 
 let NERDTreeMapJumpPrevSibling = "<C-k>"
 let NERDTreeShowBookmarks = "0"
-let NERDTreeMapOpenExpl = "e"
 let NERDTreeRemoveDirCmd = "rm -rf "
 let CSV_string_delimiter = "\""
-let NERDTreeMapOpenInTab = "t"
+let NERDTreeMouseMode = "1"
 let NERDTreeChDirMode = "0"
 let NERDTreeAutoCenterThreshold = "3"
 let NERDTreeShowFiles = "1"
@@ -259,7 +262,7 @@ let NERDTreeMapRefresh = "r"
 let TailMinusF_Height =  10 
 let NERDTreeHighlightCursorline = "1"
 let CSV_field_list = ""
-let NERDTreeMouseMode = "1"
+let NERDTreeMapOpenInTab = "t"
 let CSV_separator = ","
 let DirDiffExcludes = ""
 let DirDiffDynamicDiffText =  0 
@@ -290,6 +293,7 @@ let NERDTreeSortDirs = "1"
 let NERDTreeMapToggleFiles = "F"
 let DirDiffIgnore = ""
 let SuperTabMidWordCompletion =  1 
+let NERDTreeMapOpenExpl = "e"
 let NERDTreeMapJumpFirstChild = "K"
 let NERDTreeMapOpenRecursively = "O"
 let NERDTreeMapToggleBookmarks = "B"
@@ -303,13 +307,13 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +15 ~/sandbox/personal/todo/personal.tst.txt
-badd +33 ~/sandbox/personal/todo/todo.txt
+badd +428 ~/sandbox/personal/todo/personal.tst.txt
+badd +30 ~/sandbox/personal/todo/todo.txt
 badd +1 ~/sandbox/personal/todo/techtodo.txt
 silent! argdel *
-set lines=70 columns=115
+set lines=69 columns=115
 winpos 0 0
-buffer ~/sandbox/personal/todo/personal.tst.txt
+edit ~/sandbox/personal/todo/personal.tst.txt
 set splitbelow splitright
 wincmd _ | wincmd |
 split
@@ -324,62 +328,22 @@ vsplit
 wincmd w
 wincmd t
 set winheight=1 winwidth=1
-exe '1resize ' . ((&lines * 22 + 35) / 70)
-exe '2resize ' . ((&lines * 22 + 35) / 70)
-exe '3resize ' . ((&lines * 22 + 35) / 70)
-exe 'vert 3resize ' . ((&columns * 55 + 57) / 115)
-exe '4resize ' . ((&lines * 22 + 35) / 70)
-exe 'vert 4resize ' . ((&columns * 59 + 57) / 115)
+exe '1resize ' . ((&lines * 21 + 34) / 69)
+exe '2resize ' . ((&lines * 23 + 34) / 69)
+exe '3resize ' . ((&lines * 21 + 34) / 69)
+exe 'vert 3resize ' . ((&columns * 57 + 57) / 115)
+exe '4resize ' . ((&lines * 21 + 34) / 69)
+exe 'vert 4resize ' . ((&columns * 57 + 57) / 115)
 argglobal
 let s:cpo_save=&cpo
 set cpo&vim
-imap <buffer> <silent> <D-0> :tabn 10
-imap <buffer> <silent> <D-1> :tabn 1
-imap <buffer> <silent> <D-2> :tabn 2
-imap <buffer> <silent> <D-3> :tabn 3
-imap <buffer> <silent> <D-4> :tabn 4
-imap <buffer> <silent> <D-5> :tabn 5
-imap <buffer> <silent> <D-6> :tabn 6
-imap <buffer> <silent> <D-7> :tabn 7
-imap <buffer> <silent> <D-8> :tabn 8
-imap <buffer> <silent> <D-9> :tabn 9
 nmap <buffer> <NL> ddp
 nmap <buffer>  ddkP
-imap <buffer> <silent> ° :tabn 10
-imap <buffer> <silent> ± :tabn 1
-imap <buffer> <silent> ² :tabn 2
-imap <buffer> <silent> ³ :tabn 3
-imap <buffer> <silent> ´ :tabn 4
-imap <buffer> <silent> µ :tabn 5
-imap <buffer> <silent> ¶ :tabn 6
-imap <buffer> <silent> · :tabn 7
-imap <buffer> <silent> ¸ :tabn 8
-imap <buffer> <silent> ¹ :tabn 9
 nnoremap <buffer> LL :silent! call FindNode("SCRATCH")zo]zO
 nnoremap <buffer> NN ggzoo-a 
 nnoremap <buffer> QQ :silent! call InsertItem(getline("."), "o")
 nnoremap <buffer> XX :silent! call InsertItem(getline("."), "x")
 nnoremap <buffer> ZZ :maca hide:
-nmap <buffer> <silent> <D-0> 10gt
-nmap <buffer> <silent> <D-1> 1gt
-nmap <buffer> <silent> <D-2> 2gt
-nmap <buffer> <silent> <D-3> 3gt
-nmap <buffer> <silent> <D-4> 4gt
-nmap <buffer> <silent> <D-5> 5gt
-nmap <buffer> <silent> <D-6> 6gt
-nmap <buffer> <silent> <D-7> 7gt
-nmap <buffer> <silent> <D-8> 8gt
-nmap <buffer> <silent> <D-9> 9gt
-nmap <buffer> <silent> ° 10gt
-nmap <buffer> <silent> ± 1gt
-nmap <buffer> <silent> ² 2gt
-nmap <buffer> <silent> ³ 3gt
-nmap <buffer> <silent> ´ 4gt
-nmap <buffer> <silent> µ 5gt
-nmap <buffer> <silent> ¶ 6gt
-nmap <buffer> <silent> · 7gt
-nmap <buffer> <silent> ¸ 8gt
-nmap <buffer> <silent> ¹ 9gt
 imap <buffer> NN NN
 imap <buffer> QQ QQ
 imap <buffer> XX XX
@@ -388,176 +352,7 @@ let &cpo=s:cpo_save
 unlet s:cpo_save
 setlocal keymap=
 setlocal noarabic
-setlocal autoindent
-setlocal nobinary
-setlocal bufhidden=
-setlocal buflisted
-setlocal buftype=
-setlocal nocindent
-setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
-setlocal cinoptions=
-setlocal cinwords=if,else,while,do,for,switch
-setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
-setlocal commentstring=
-setlocal complete=.,w,b,u,t,i
-setlocal completefunc=
-setlocal nocopyindent
-setlocal nocursorcolumn
-set cursorline
-setlocal cursorline
-setlocal define=
-setlocal dictionary=
-setlocal nodiff
-setlocal equalprg=
-setlocal errorformat=
-setlocal noexpandtab
-if &filetype != 'tst.txt'
-setlocal filetype=tst.txt
-endif
-set foldcolumn=4
-setlocal foldcolumn=4
-setlocal foldenable
-setlocal foldexpr=0
-setlocal foldignore=#
-setlocal foldlevel=0
-setlocal foldmarker={{{,}}}
-set foldmethod=marker
-setlocal foldmethod=marker
-setlocal foldminlines=1
-setlocal foldnestmax=20
-set foldtext=MyFoldText()
-setlocal foldtext=MyFoldText()
-setlocal formatexpr=
-setlocal formatoptions=tcq
-setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
-setlocal grepprg=
-setlocal iminsert=2
-setlocal imsearch=2
-setlocal include=
-setlocal includeexpr=
-setlocal indentexpr=GetJsIndent()
-setlocal indentkeys=0{,0},0),:,!^F,O,e,*<Return>,=*/
-setlocal noinfercase
-setlocal iskeyword=@,48-57,_,192-255,-
-setlocal keywordprg=
-set linebreak
-setlocal linebreak
-setlocal nolisp
-setlocal nolist
-setlocal nomacmeta
-setlocal makeprg=
-setlocal matchpairs=(:),{:},[:]
-setlocal modeline
-setlocal modifiable
-setlocal nrformats=octal,hex
-set number
-setlocal number
-setlocal numberwidth=4
-setlocal omnifunc=
-setlocal path=
-setlocal nopreserveindent
-setlocal nopreviewwindow
-setlocal quoteescape=\\
-setlocal noreadonly
-setlocal norightleft
-setlocal rightleftcmd=search
-setlocal noscrollbind
-setlocal shiftwidth=4
-setlocal noshortname
-setlocal nosmartindent
-setlocal softtabstop=0
-setlocal nospell
-setlocal spellcapcheck=off
-setlocal spellfile=
-setlocal spelllang=en
-setlocal statusline=
-setlocal suffixesadd=
-setlocal swapfile
-setlocal synmaxcol=3000
-if &syntax != 'tst.txt'
-setlocal syntax=tst.txt
-endif
-setlocal tabstop=4
-setlocal tags=
-setlocal textwidth=0
-setlocal thesaurus=
-setlocal nowinfixheight
-setlocal nowinfixwidth
-setlocal wrap
-setlocal wrapmargin=0
-1
-normal zo
-7
-normal zo
-7
-normal zo
-let s:l = 8 - ((7 * winheight(0) + 11) / 22)
-if s:l < 1 | let s:l = 1 | endif
-exe s:l
-normal! zt
-8
-normal! 019l
-wincmd w
-argglobal
-buffer ~/sandbox/personal/todo/personal.tst.txt
-let s:cpo_save=&cpo
-set cpo&vim
-imap <buffer> <silent> <D-0> :tabn 10
-imap <buffer> <silent> <D-1> :tabn 1
-imap <buffer> <silent> <D-2> :tabn 2
-imap <buffer> <silent> <D-3> :tabn 3
-imap <buffer> <silent> <D-4> :tabn 4
-imap <buffer> <silent> <D-5> :tabn 5
-imap <buffer> <silent> <D-6> :tabn 6
-imap <buffer> <silent> <D-7> :tabn 7
-imap <buffer> <silent> <D-8> :tabn 8
-imap <buffer> <silent> <D-9> :tabn 9
-nmap <buffer> <NL> ddp
-nmap <buffer>  ddkP
-imap <buffer> <silent> ° :tabn 10
-imap <buffer> <silent> ± :tabn 1
-imap <buffer> <silent> ² :tabn 2
-imap <buffer> <silent> ³ :tabn 3
-imap <buffer> <silent> ´ :tabn 4
-imap <buffer> <silent> µ :tabn 5
-imap <buffer> <silent> ¶ :tabn 6
-imap <buffer> <silent> · :tabn 7
-imap <buffer> <silent> ¸ :tabn 8
-imap <buffer> <silent> ¹ :tabn 9
-nnoremap <buffer> LL :silent! call FindNode("SCRATCH")zo]zO
-nnoremap <buffer> NN ggzoo-a 
-nnoremap <buffer> QQ :silent! call InsertItem(getline("."), "o")
-nnoremap <buffer> XX :silent! call InsertItem(getline("."), "x")
-nnoremap <buffer> ZZ :maca hide:
-nmap <buffer> <silent> <D-0> 10gt
-nmap <buffer> <silent> <D-1> 1gt
-nmap <buffer> <silent> <D-2> 2gt
-nmap <buffer> <silent> <D-3> 3gt
-nmap <buffer> <silent> <D-4> 4gt
-nmap <buffer> <silent> <D-5> 5gt
-nmap <buffer> <silent> <D-6> 6gt
-nmap <buffer> <silent> <D-7> 7gt
-nmap <buffer> <silent> <D-8> 8gt
-nmap <buffer> <silent> <D-9> 9gt
-nmap <buffer> <silent> ° 10gt
-nmap <buffer> <silent> ± 1gt
-nmap <buffer> <silent> ² 2gt
-nmap <buffer> <silent> ³ 3gt
-nmap <buffer> <silent> ´ 4gt
-nmap <buffer> <silent> µ 5gt
-nmap <buffer> <silent> ¶ 6gt
-nmap <buffer> <silent> · 7gt
-nmap <buffer> <silent> ¸ 8gt
-nmap <buffer> <silent> ¹ 9gt
-imap <buffer> NN NN
-imap <buffer> QQ QQ
-imap <buffer> XX XX
-imap <buffer> ZZ ZZ
-let &cpo=s:cpo_save
-unlet s:cpo_save
-setlocal keymap=
-setlocal noarabic
-setlocal autoindent
+setlocal noautoindent
 setlocal nobinary
 setlocal bufhidden=
 setlocal buflisted
@@ -604,7 +399,7 @@ setlocal iminsert=2
 setlocal imsearch=2
 setlocal include=
 setlocal includeexpr=
-setlocal indentexpr=GetJsIndent()
+setlocal indentexpr=
 setlocal indentkeys=0{,0},0),:,!^F,O,e,*<Return>,=*/
 setlocal noinfercase
 setlocal iskeyword=@,48-57,_,192-255,-
@@ -646,7 +441,7 @@ setlocal synmaxcol=3000
 if &syntax != 'tst.txt'
 setlocal syntax=tst.txt
 endif
-setlocal tabstop=4
+setlocal tabstop=2
 setlocal tags=
 setlocal textwidth=0
 setlocal thesaurus=
@@ -654,240 +449,33 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-1
-normal zo
-7
-normal zo
-13
-normal zo
-23
-normal zo
-30
-normal zo
-34
-normal zo
-39
-normal zo
-45
-normal zo
-54
-normal zo
-60
-normal zo
-64
-normal zo
-71
-normal zo
-76
-normal zo
-82
-normal zo
-93
-normal zo
-103
-normal zo
-109
-normal zo
-115
-normal zo
-142
-normal zo
-148
-normal zo
-155
-normal zo
-163
-normal zo
-176
-normal zo
-180
-normal zo
-187
-normal zo
-204
-normal zo
-226
-normal zo
-240
-normal zo
-246
-normal zo
-254
-normal zo
-263
-normal zo
-300
-normal zo
-304
-normal zo
-300
-normal zo
-321
-normal zo
-334
-normal zo
-335
-normal zo
-343
-normal zo
-367
-normal zo
-385
-normal zo
-408
-normal zo
-420
-normal zo
-423
-normal zo
-436
-normal zo
-334
-normal zo
-7
-normal zo
-13
-normal zo
-23
-normal zo
-30
-normal zo
-34
-normal zo
-39
-normal zo
-45
-normal zo
-54
-normal zo
-60
-normal zo
-64
-normal zo
-71
-normal zo
-76
-normal zo
-82
-normal zo
-93
-normal zo
-103
-normal zo
-109
-normal zo
-115
-normal zo
-142
-normal zo
-148
-normal zo
-155
-normal zo
-163
-normal zo
-176
-normal zo
-180
-normal zo
-187
-normal zo
-204
-normal zo
-226
-normal zo
-240
-normal zo
-246
-normal zo
-254
-normal zo
-263
-normal zo
-300
-normal zo
-304
-normal zo
-300
-normal zo
-321
-normal zo
-334
-normal zo
-335
-normal zo
-343
-normal zo
-367
-normal zo
-385
-normal zo
-408
-normal zo
-420
-normal zo
-423
-normal zo
-436
-normal zo
-334
-normal zo
-let s:l = 335 - ((1 * winheight(0) + 11) / 22)
+let s:l = 11 - ((10 * winheight(0) + 10) / 21)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-335
-normal! 0
+11
+normal! 022l
 wincmd w
 argglobal
-buffer ~/sandbox/personal/todo/todo.txt
+edit ~/sandbox/personal/todo/personal.tst.txt
 let s:cpo_save=&cpo
 set cpo&vim
-imap <buffer> <silent> <D-0> :tabn 10
-imap <buffer> <silent> <D-1> :tabn 1
-imap <buffer> <silent> <D-2> :tabn 2
-imap <buffer> <silent> <D-3> :tabn 3
-imap <buffer> <silent> <D-4> :tabn 4
-imap <buffer> <silent> <D-5> :tabn 5
-imap <buffer> <silent> <D-6> :tabn 6
-imap <buffer> <silent> <D-7> :tabn 7
-imap <buffer> <silent> <D-8> :tabn 8
-imap <buffer> <silent> <D-9> :tabn 9
-imap <buffer> <silent> ° :tabn 10
-imap <buffer> <silent> ± :tabn 1
-imap <buffer> <silent> ² :tabn 2
-imap <buffer> <silent> ³ :tabn 3
-imap <buffer> <silent> ´ :tabn 4
-imap <buffer> <silent> µ :tabn 5
-imap <buffer> <silent> ¶ :tabn 6
-imap <buffer> <silent> · :tabn 7
-imap <buffer> <silent> ¸ :tabn 8
-imap <buffer> <silent> ¹ :tabn 9
-nmap <buffer> <silent> <D-0> 10gt
-nmap <buffer> <silent> <D-1> 1gt
-nmap <buffer> <silent> <D-2> 2gt
-nmap <buffer> <silent> <D-3> 3gt
-nmap <buffer> <silent> <D-4> 4gt
-nmap <buffer> <silent> <D-5> 5gt
-nmap <buffer> <silent> <D-6> 6gt
-nmap <buffer> <silent> <D-7> 7gt
-nmap <buffer> <silent> <D-8> 8gt
-nmap <buffer> <silent> <D-9> 9gt
-nmap <buffer> <silent> ° 10gt
-nmap <buffer> <silent> ± 1gt
-nmap <buffer> <silent> ² 2gt
-nmap <buffer> <silent> ³ 3gt
-nmap <buffer> <silent> ´ 4gt
-nmap <buffer> <silent> µ 5gt
-nmap <buffer> <silent> ¶ 6gt
-nmap <buffer> <silent> · 7gt
-nmap <buffer> <silent> ¸ 8gt
-nmap <buffer> <silent> ¹ 9gt
+nmap <buffer> <NL> ddp
+nmap <buffer>  ddkP
+nnoremap <buffer> LL :silent! call FindNode("SCRATCH")zo]zO
+nnoremap <buffer> NN ggzoo-a 
+nnoremap <buffer> QQ :silent! call InsertItem(getline("."), "o")
+nnoremap <buffer> XX :silent! call InsertItem(getline("."), "x")
+nnoremap <buffer> ZZ :maca hide:
+imap <buffer> NN NN
+imap <buffer> QQ QQ
+imap <buffer> XX XX
+imap <buffer> ZZ ZZ
 let &cpo=s:cpo_save
 unlet s:cpo_save
 setlocal keymap=
 setlocal noarabic
-setlocal autoindent
+setlocal noautoindent
 setlocal nobinary
 setlocal bufhidden=
 setlocal buflisted
@@ -910,15 +498,15 @@ setlocal nodiff
 setlocal equalprg=
 setlocal errorformat=
 setlocal noexpandtab
-if &filetype != 'txt'
-setlocal filetype=txt
+if &filetype != 'tst.txt'
+setlocal filetype=tst.txt
 endif
 set foldcolumn=4
-setlocal foldcolumn=0
+setlocal foldcolumn=4
 setlocal foldenable
 setlocal foldexpr=0
 setlocal foldignore=#
-setlocal foldlevel=4
+setlocal foldlevel=2
 setlocal foldmarker={{{,}}}
 set foldmethod=marker
 setlocal foldmethod=marker
@@ -957,7 +545,7 @@ setlocal path=
 setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
-setlocal readonly
+setlocal noreadonly
 setlocal norightleft
 setlocal rightleftcmd=search
 setlocal noscrollbind
@@ -973,8 +561,8 @@ setlocal statusline=
 setlocal suffixesadd=
 setlocal swapfile
 setlocal synmaxcol=3000
-if &syntax != 'txt'
-setlocal syntax=txt
+if &syntax != 'tst.txt'
+setlocal syntax=tst.txt
 endif
 setlocal tabstop=2
 setlocal tags=
@@ -986,67 +574,85 @@ setlocal wrap
 setlocal wrapmargin=0
 1
 normal zo
-1
+7
 normal zc
-27
+21
 normal zc
-30
+26
+normal zc
+34
+normal zc
+44
+normal zc
+51
+normal zc
+55
+normal zc
+60
+normal zc
+66
+normal zc
+75
+normal zc
+81
+normal zc
+85
+normal zc
+92
+normal zc
+97
+normal zc
+103
+normal zc
+114
+normal zc
+124
+normal zc
+130
+normal zc
+136
+normal zc
+163
+normal zc
+169
+normal zc
+176
+normal zc
+184
+normal zc
+197
+normal zc
+201
+normal zc
+208
+normal zc
+225
+normal zc
+247
+normal zc
+261
+normal zc
+267
+normal zc
+275
+normal zc
+284
+normal zc
+342
 normal zo
-30
+355
 normal zo
-let s:l = 30 - ((0 * winheight(0) + 11) / 22)
+355
+normal zo
+let s:l = 460 - ((0 * winheight(0) + 11) / 23)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-30
-normal! 0
+460
+normal! 02l
 wincmd w
 argglobal
-buffer ~/sandbox/personal/todo/techtodo.txt
-let s:cpo_save=&cpo
-set cpo&vim
-imap <buffer> <silent> <D-0> :tabn 10
-imap <buffer> <silent> <D-1> :tabn 1
-imap <buffer> <silent> <D-2> :tabn 2
-imap <buffer> <silent> <D-3> :tabn 3
-imap <buffer> <silent> <D-4> :tabn 4
-imap <buffer> <silent> <D-5> :tabn 5
-imap <buffer> <silent> <D-6> :tabn 6
-imap <buffer> <silent> <D-7> :tabn 7
-imap <buffer> <silent> <D-8> :tabn 8
-imap <buffer> <silent> <D-9> :tabn 9
-imap <buffer> <silent> ° :tabn 10
-imap <buffer> <silent> ± :tabn 1
-imap <buffer> <silent> ² :tabn 2
-imap <buffer> <silent> ³ :tabn 3
-imap <buffer> <silent> ´ :tabn 4
-imap <buffer> <silent> µ :tabn 5
-imap <buffer> <silent> ¶ :tabn 6
-imap <buffer> <silent> · :tabn 7
-imap <buffer> <silent> ¸ :tabn 8
-imap <buffer> <silent> ¹ :tabn 9
-nmap <buffer> <silent> <D-0> 10gt
-nmap <buffer> <silent> <D-1> 1gt
-nmap <buffer> <silent> <D-2> 2gt
-nmap <buffer> <silent> <D-3> 3gt
-nmap <buffer> <silent> <D-4> 4gt
-nmap <buffer> <silent> <D-5> 5gt
-nmap <buffer> <silent> <D-6> 6gt
-nmap <buffer> <silent> <D-7> 7gt
-nmap <buffer> <silent> <D-8> 8gt
-nmap <buffer> <silent> <D-9> 9gt
-nmap <buffer> <silent> ° 10gt
-nmap <buffer> <silent> ± 1gt
-nmap <buffer> <silent> ² 2gt
-nmap <buffer> <silent> ³ 3gt
-nmap <buffer> <silent> ´ 4gt
-nmap <buffer> <silent> µ 5gt
-nmap <buffer> <silent> ¶ 6gt
-nmap <buffer> <silent> · 7gt
-nmap <buffer> <silent> ¸ 8gt
-nmap <buffer> <silent> ¹ 9gt
-let &cpo=s:cpo_save
-unlet s:cpo_save
+edit ~/sandbox/personal/todo/techtodo.txt
 setlocal keymap=
 setlocal noarabic
 setlocal autoindent
@@ -1288,19 +894,266 @@ normal zc
 normal zo
 618
 normal zc
-let s:l = 173 - ((0 * winheight(0) + 11) / 22)
+let s:l = 204 - ((0 * winheight(0) + 10) / 21)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-173
+204
+normal! 02l
+wincmd w
+argglobal
+edit ~/sandbox/personal/todo/todo.txt
+setlocal keymap=
+setlocal noarabic
+setlocal autoindent
+setlocal nobinary
+setlocal bufhidden=
+setlocal buflisted
+setlocal buftype=
+setlocal nocindent
+setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
+setlocal cinoptions=
+setlocal cinwords=if,else,while,do,for,switch
+setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
+setlocal commentstring=
+setlocal complete=.,w,b,u,t,i
+setlocal completefunc=
+setlocal nocopyindent
+setlocal nocursorcolumn
+set cursorline
+setlocal cursorline
+setlocal define=
+setlocal dictionary=
+setlocal nodiff
+setlocal equalprg=
+setlocal errorformat=
+setlocal noexpandtab
+if &filetype != 'txt'
+setlocal filetype=txt
+endif
+set foldcolumn=4
+setlocal foldcolumn=0
+setlocal foldenable
+setlocal foldexpr=0
+setlocal foldignore=#
+setlocal foldlevel=4
+setlocal foldmarker={{{,}}}
+set foldmethod=marker
+setlocal foldmethod=marker
+setlocal foldminlines=1
+setlocal foldnestmax=20
+set foldtext=MyFoldText()
+setlocal foldtext=MyFoldText()
+setlocal formatexpr=
+setlocal formatoptions=tcq
+setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
+setlocal grepprg=
+setlocal iminsert=2
+setlocal imsearch=2
+setlocal include=
+setlocal includeexpr=
+setlocal indentexpr=
+setlocal indentkeys=0{,0},0),:,!^F,O,e,*<Return>,=*/
+setlocal noinfercase
+setlocal iskeyword=@,48-57,_,192-255,-
+setlocal keywordprg=
+set linebreak
+setlocal linebreak
+setlocal nolisp
+setlocal nolist
+setlocal nomacmeta
+setlocal makeprg=
+setlocal matchpairs=(:),{:},[:]
+setlocal modeline
+setlocal modifiable
+setlocal nrformats=octal,hex
+set number
+setlocal number
+setlocal numberwidth=4
+setlocal omnifunc=
+setlocal path=
+setlocal nopreserveindent
+setlocal nopreviewwindow
+setlocal quoteescape=\\
+setlocal readonly
+setlocal norightleft
+setlocal rightleftcmd=search
+setlocal noscrollbind
+setlocal shiftwidth=4
+setlocal noshortname
+setlocal nosmartindent
+setlocal softtabstop=0
+setlocal nospell
+setlocal spellcapcheck=off
+setlocal spellfile=
+setlocal spelllang=en
+setlocal statusline=
+setlocal suffixesadd=
+setlocal swapfile
+setlocal synmaxcol=3000
+if &syntax != 'txt'
+setlocal syntax=txt
+endif
+setlocal tabstop=2
+setlocal tags=
+setlocal textwidth=0
+setlocal thesaurus=
+setlocal nowinfixheight
+setlocal nowinfixwidth
+setlocal wrap
+setlocal wrapmargin=0
+1
+normal zo
+2
+normal zc
+1
+normal zo
+30
+normal zo
+71
+normal zc
+129
+normal zo
+130
+normal zo
+130
+normal zc
+129
+normal zo
+165
+normal zo
+179
+normal zc
+165
+normal zo
+190
+normal zo
+210
+normal zo
+211
+normal zc
+210
+normal zo
+225
+normal zo
+231
+normal zc
+244
+normal zc
+225
+normal zo
+190
+normal zo
+254
+normal zo
+254
+normal zc
+275
+normal zo
+276
+normal zc
+284
+normal zo
+284
+normal zc
+275
+normal zo
+312
+normal zo
+315
+normal zc
+312
+normal zo
+326
+normal zc
+30
+normal zo
+371
+normal zo
+372
+normal zo
+388
+normal zc
+372
+normal zo
+371
+normal zo
+472
+normal zo
+473
+normal zc
+485
+normal zc
+505
+normal zc
+510
+normal zc
+537
+normal zc
+472
+normal zo
+543
+normal zo
+557
+normal zc
+543
+normal zo
+569
+normal zo
+570
+normal zc
+605
+normal zc
+569
+normal zo
+666
+normal zo
+678
+normal zc
+666
+normal zo
+708
+normal zo
+709
+normal zc
+712
+normal zo
+712
+normal zc
+719
+normal zc
+723
+normal zc
+726
+normal zo
+726
+normal zc
+734
+normal zo
+734
+normal zc
+751
+normal zc
+708
+normal zo
+755
+normal zo
+755
+normal zc
+let s:l = 30 - ((10 * winheight(0) + 10) / 21)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+30
 normal! 0
 wincmd w
-exe '1resize ' . ((&lines * 22 + 35) / 70)
-exe '2resize ' . ((&lines * 22 + 35) / 70)
-exe '3resize ' . ((&lines * 22 + 35) / 70)
-exe 'vert 3resize ' . ((&columns * 55 + 57) / 115)
-exe '4resize ' . ((&lines * 22 + 35) / 70)
-exe 'vert 4resize ' . ((&columns * 59 + 57) / 115)
+4wincmd w
+exe '1resize ' . ((&lines * 21 + 34) / 69)
+exe '2resize ' . ((&lines * 23 + 34) / 69)
+exe '3resize ' . ((&lines * 21 + 34) / 69)
+exe 'vert 3resize ' . ((&columns * 57 + 57) / 115)
+exe '4resize ' . ((&lines * 21 + 34) / 69)
+exe 'vert 4resize ' . ((&columns * 57 + 57) / 115)
 tabnext 1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf

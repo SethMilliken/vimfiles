@@ -2,16 +2,16 @@ let SessionLoad = 1
 if &cp | set nocp | endif
 let s:cpo_save=&cpo
 set cpo&vim
-imap <silent> <D-0> :tabn 10
-imap <silent> <D-9> :tabn 9
-imap <silent> <D-8> :tabn 8
-imap <silent> <D-7> :tabn 7
-imap <silent> <D-6> :tabn 6
-imap <silent> <D-5> :tabn 5
-imap <silent> <D-4> :tabn 4
-imap <silent> <D-3> :tabn 3
-imap <silent> <D-2> :tabn 2 
 imap <silent> <D-1> :tabn 1 
+imap <silent> <D-2> :tabn 2 
+imap <silent> <D-3> :tabn 3
+imap <silent> <D-4> :tabn 4
+imap <silent> <D-5> :tabn 5
+imap <silent> <D-6> :tabn 6
+imap <silent> <D-7> :tabn 7
+imap <silent> <D-8> :tabn 8
+imap <silent> <D-9> :tabn 9
+imap <silent> <D-0> :tabn 10
 imap <D-BS> 
 imap <M-BS> 
 imap <M-Down> }
@@ -39,34 +39,35 @@ nmap   
 snoremap % b<BS>%
 snoremap ' b<BS>'
 nnoremap :: q:
-imap <silent> ° :tabn 10
-imap <silent> ¹ :tabn 9
-imap <silent> ¸ :tabn 8
-imap <silent> · :tabn 7
-imap <silent> ¶ :tabn 6
-imap <silent> µ :tabn 5
-imap <silent> ´ :tabn 4
-imap <silent> ³ :tabn 3
-imap <silent> ² :tabn 2 
 imap <silent> ± :tabn 1 
+imap <silent> ² :tabn 2 
+imap <silent> ³ :tabn 3
+imap <silent> ´ :tabn 4
+imap <silent> µ :tabn 5
+imap <silent> ¶ :tabn 6
+imap <silent> · :tabn 7
+imap <silent> ¸ :tabn 8
+imap <silent> ¹ :tabn 9
+imap <silent> ° :tabn 10
 nnoremap <silent> K :e:$
 map Q gq
 xmap S <Plug>VSurround
-nnoremap SS :w:SessionSave:call FixSession():echo "Saved fixed session: " . v:this_session
+nnoremap SS :w:SessionSave:call FixSession():SessionOpenLast:echo "Saved fixed session: " . v:this_session
 snoremap U b<BS>U
 vmap [% [%m'gv``
-nnoremap <silent> \tj \td\tf
-nnoremap <silent> \th \ds\tf
-nnoremap <silent> \tg \ts\tf
-nnoremap <silent> \tt :call FoldInsert()
-nnoremap <silent> \tf :call FoldWrap()
-nnoremap <silent> \td :call Timestamp("date")
-nnoremap <silent> \tl :call Timestamp("long")
-nnoremap <silent> \ts :call Timestamp("short")
-snoremap \ b<BS>\
-map <silent> \ws <Plug>VimwikiUISelect
-map <silent> \wt <Plug>VimwikiTabGoHome
+nnoremap <silent> \- :silent g/^done {{/call FoldUnfolded()
 map <silent> \ww <Plug>VimwikiGoHome
+map <silent> \wt <Plug>VimwikiTabGoHome
+map <silent> \ws <Plug>VimwikiUISelect
+nnoremap <silent> \ts :call Timestamp("short")
+nnoremap <silent> \tl :call Timestamp("long")
+nnoremap <silent> \td :call Timestamp("date")
+nnoremap <silent> \tf :call FoldWrap()
+nnoremap <silent> \tt :call FoldInsert()
+nnoremap <silent> \tg \ts\tf
+nnoremap <silent> \th \ds\tf
+nnoremap <silent> \tj \td\tf
+snoremap \ b<BS>\
 nmap \cv <Plug>VCSVimDiff
 nmap \cu <Plug>VCSUpdate
 nmap \cU <Plug>VCSUnlock
@@ -104,8 +105,8 @@ nnoremap <silent> \\ :call HandleURI()
 nnoremap <silent> \c :call ScratchBuffer("scratch")
 nmap <silent> \0 :silent normal zvzt
 nmap <silent> \= :call FoldDefaultNodes():normal zvzkzjzt
-nnoremap <silent> \- :silent g/^done {{/call FoldUnfolded()
 nnoremap <silent> \] :NERDTreeToggle
+nnoremap \j :call JournalEntry()
 nnoremap <silent> \w :!wc -w %
 vmap ]% ]%m'gv``
 snoremap ^ b<BS>^
@@ -120,16 +121,16 @@ nmap ySs <Plug>YSsurround
 nmap yss <Plug>Yssurround
 nmap yS <Plug>YSurround
 nmap ys <Plug>Ysurround
-nmap <silent> <D-0> 10gt 
-nmap <silent> <D-9> 9gt 
-nmap <silent> <D-8> 8gt 
-nmap <silent> <D-7> 7gt 
-nmap <silent> <D-6> 6gt 
-nmap <silent> <D-5> 5gt 
-nmap <silent> <D-4> 4gt 
-nmap <silent> <D-3> 3gt 
-nmap <silent> <D-2> 2gt
 nmap <silent> <D-1> 1gt
+nmap <silent> <D-2> 2gt
+nmap <silent> <D-3> 3gt 
+nmap <silent> <D-4> 4gt 
+nmap <silent> <D-5> 5gt 
+nmap <silent> <D-6> 6gt 
+nmap <silent> <D-7> 7gt 
+nmap <silent> <D-8> 8gt 
+nmap <silent> <D-9> 9gt 
+nmap <silent> <D-0> 10gt 
 nnoremap <C-Down> :silent! :call AdjustFont(-1)
 nnoremap <C-Up> :silent! :call AdjustFont(1)
 nnoremap <silent> <C-Right> gt
@@ -203,19 +204,19 @@ inoremap <silent> 	 =ShowAvailableSnips()
 imap  <Plug>Isurround
 imap  =CtrlXPP()
 map! + Bi<em>ea</em>
-nnoremap ® :echo "Fooobar"
-nmap <silent> ° 10gt 
-nmap <silent> ¹ 9gt 
-nmap <silent> ¸ 8gt 
-nmap <silent> · 7gt 
-nmap <silent> ¶ 6gt 
-nmap <silent> µ 5gt 
-nmap <silent> ´ 4gt 
-nmap <silent> ³ 3gt 
-nmap <silent> ² 2gt
 nmap <silent> ± 1gt
-nmap ò :echo "Fum"
+nmap <silent> ² 2gt
+nmap <silent> ³ 3gt 
+nmap <silent> ´ 4gt 
+nmap <silent> µ 5gt 
+nmap <silent> ¶ 6gt 
+nmap <silent> · 7gt 
+nmap <silent> ¸ 8gt 
+nmap <silent> ¹ 9gt 
+nmap <silent> ° 10gt 
+nnoremap ® :echo "Fooobar"
 nmap ô 
+nmap ò :echo "Fum"
 map! \_ Bi<em>ea</em>
 nnoremap † :echo "Testing"
 let &cpo=s:cpo_save
@@ -227,10 +228,10 @@ set backspace=indent,eol,start
 set clipboard=unnamed
 set comments=
 set commentstring=\ %s
+set diffopt=filler,vertical
 set directory=~/.vim/swap//,~/vimfiles/swap//
 set noequalalways
 set fileencodings=ucs-bom,utf-8,default,latin1
-set foldlevelstart=0
 set fuoptions=maxhorz,maxvert
 set guifont=Inconsolata:h11
 set guioptions=egmrLt
@@ -264,11 +265,13 @@ set tabstop=4
 set tags=/tmp/ctags/autest.py,~/sandbox/personal/tags
 set termencoding=utf-8
 set textwidth=80
+set transparency=5
 set undolevels=100
 set updatetime=500
 set visualbell
 set wildignore=*.pyc
 set wildmode=list
+set window=72
 set winheight=10
 set winminheight=0
 set winwidth=1
@@ -282,12 +285,13 @@ let TailMinusF_Loaded =  1
 let SuperTabLongestHighlight =  0 
 let NERDTreeMapCloseDir = "x"
 let SuperTabMappingTabLiteral = "<c-tab>"
-let NERDTreeShowLineNumbers = "0"
+let NERDTreeMapRefresh = "r"
 let DirDiffSort =  1 
 let NERDTreeBookmarksFile = "/Users/seth/.NERDTreeBookmarks"
 let SuperTabDefaultCompletionType = "<c-p>"
 let NERDTreeMapToggleHidden = "I"
 let NERDTreeWinSize = "31"
+let NERDTreeMapJumpParent = "p"
 let DirDiffInteractive =  0 
 let NERDTreeMapPreview = "go"
 let NERDTreeMapActivateNode = "o"
@@ -296,10 +300,9 @@ let DirDiffAddArgs = ""
 let NERDTreeStatusline = "%{b:NERDTreeRoot.path.strForOS(0)}"
 let NERDTreeMapOpenInTabSilent = "T"
 let NERDTreeMapHelp = "?"
-let NERDTreeMapJumpParent = "p"
 let NERDTreeMapToggleFilters = "f"
 let SuperTabMappingForward = "<tab>"
-let NERDTreeMapJumpLastChild = "J"
+let NERDTreeAutoCenter = "1"
 let SuperTabContextDefaultCompletionType = "<c-p>"
 let SuperTabRetainCompletionType =  1 
 let NERDTreeMapJumpPrevSibling = "<C-k>"
@@ -316,7 +319,7 @@ let DirDiffTextFiles = "Files "
 let NERDTreeCaseSensitiveSort = "0"
 let NERDTreeHijackNetrw = "1"
 let NERDTreeMapFilesystemMenu = "m"
-let NERDTreeMapRefresh = "r"
+let NERDTreeShowLineNumbers = "0"
 let TailMinusF_Height =  10 
 let NERDTreeHighlightCursorline = "1"
 let CSV_field_list = ""
@@ -334,13 +337,14 @@ let NERDTreeMapChdir = "cd"
 let DirDiffWindowSize =  14 
 let NERDTreeMapExecute = "!"
 let NERDTreeMapRefreshRoot = "R"
-let NERDTreeAutoCenter = "1"
+let NERDTreeMapJumpLastChild = "J"
 let DirDiffTextOnlyIn = "Only in "
 let TailMinusF_Center_Win =  0 
 let DirDiffTextAnd = " and "
 let NERDTreeMapOpenVSplit = "s"
 let NERDTreeMapDeleteBookmark = "D"
 let AutoHiVersion = "0.2"
+let NERDTreeMapUpdirKeepOpen = "U"
 let NERDTreeMapJumpNextSibling = "<C-j>"
 let DirDiffIgnoreCase =  0 
 let NERDTreeMapJumpRoot = "P"
@@ -356,7 +360,6 @@ let NERDTreeMapOpenRecursively = "O"
 let NERDTreeMapToggleBookmarks = "B"
 let SuperTabMappingBackward = "<s-tab>"
 let NERDTreeMapUpdir = "u"
-let NERDTreeMapUpdirKeepOpen = "U"
 let NERDTreeQuitOnOpen = "0"
 silent only
 exe "cd " . escape(expand("<sfile>:p:h"), ' ')
@@ -364,17 +367,18 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +356 ~/.vimrc
+badd +144 ~/.vimrc
 badd +24 ~/.gvimrc
-badd +47 ~/.vim/after/syntax/txt.vim
+badd +1 ~/.vim/after/syntax/txt.vim
 badd +13 ~/sandbox/personal/tech/vim.txt
 badd +226 ~/sandbox/personal/tech/TodoSort.vim
-badd +104 ~/.vim/plugin/snipMate.vim
-badd +8 ~/sandbox/personal/tech/foo.vim
+badd +1 ~/.vim/plugin/snipMate.vim
+badd +1 ~/sandbox/personal/tech/foo.vim
 badd +1 ~/.vim/snippets/_.snippets
 badd +1 ~/.vim/snippets/vim.snippets
 silent! argdel *
 set lines=73 columns=234
+set fullscreen
 winpos 0 0
 buffer ~/sandbox/personal/tech/foo.vim
 set splitbelow splitright
@@ -616,7 +620,7 @@ setlocal includeexpr=
 setlocal indentexpr=GetVimIndent()
 setlocal indentkeys=0{,0},:,0#,!^F,o,O,e,=end,=else,=cat,=fina,=END,0\\
 setlocal noinfercase
-setlocal iskeyword=@,48-57,_,192-255,#
+setlocal iskeyword=@,48-57,_,192-255,#,-
 setlocal keywordprg=
 set linebreak
 setlocal linebreak
@@ -843,17 +847,11 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-1
-normal zo
-39
-normal zc
-1
-normal zo
-let s:l = 112 - ((111 * winheight(0) + 35) / 71)
+let s:l = 1 - ((0 * winheight(0) + 35) / 71)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-112
+1
 normal! 0
 wincmd w
 argglobal
@@ -1056,7 +1054,7 @@ setlocal includeexpr=
 setlocal indentexpr=GetVimIndent()
 setlocal indentkeys=0{,0},:,0#,!^F,o,O,e,=end,=else,=cat,=fina,=END,0\\
 setlocal noinfercase
-setlocal iskeyword=@,48-57,_,192-255,#
+setlocal iskeyword=@,48-57,_,192-255,#,-
 setlocal keywordprg=
 set linebreak
 setlocal linebreak
@@ -1103,16 +1101,24 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-42
+29
+normal zo
+36
+normal zo
+36
+normal zo
+29
 normal zo
 42
 normal zo
-let s:l = 163 - ((162 * winheight(0) + 35) / 71)
+42
+normal zo
+let s:l = 36 - ((35 * winheight(0) + 35) / 71)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-163
-normal! 022l
+36
+normal! 021l
 wincmd w
 argglobal
 buffer ~/.vim/snippets/_.snippets
@@ -1323,7 +1329,7 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 20 - ((0 * winheight(0) + 19) / 39)
+let s:l = 20 - ((19 * winheight(0) + 19) / 39)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -1482,12 +1488,12 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 42 - ((16 * winheight(0) + 30) / 60)
+let s:l = 1 - ((0 * winheight(0) + 30) / 60)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-42
-normal! 04l
+1
+normal! 011l
 wincmd w
 argglobal
 buffer ~/.gvimrc
@@ -1556,7 +1562,7 @@ setlocal includeexpr=
 setlocal indentexpr=GetVimIndent()
 setlocal indentkeys=0{,0},:,0#,!^F,o,O,e,=end,=else,=cat,=fina,=END,0\\
 setlocal noinfercase
-setlocal iskeyword=@,48-57,_,192-255,#
+setlocal iskeyword=@,48-57,_,192-255,#,-
 setlocal keywordprg=
 set linebreak
 setlocal linebreak
@@ -1679,7 +1685,7 @@ setlocal includeexpr=
 setlocal indentexpr=GetVimIndent()
 setlocal indentkeys=0{,0},:,0#,!^F,o,O,e,=end,=else,=cat,=fina,=END,0\\
 setlocal noinfercase
-setlocal iskeyword=@,48-57,_,192-255,#
+setlocal iskeyword=@,48-57,_,192-255,#,-
 setlocal keywordprg=
 set linebreak
 setlocal linebreak
@@ -1726,7 +1732,7 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 22 - ((4 * winheight(0) + 0) / 0)
+let s:l = 22 - ((0 * winheight(0) + 0) / 0)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -1890,12 +1896,54 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 146 - ((19 * winheight(0) + 29) / 59)
+1
+normal zo
+85
+normal zo
+131
+normal zo
+131
+normal zo
+235
+normal zo
+237
+normal zo
+256
+normal zo
+281
+normal zo
+290
+normal zo
+310
+normal zo
+342
+normal zo
+369
+normal zo
+413
+normal zo
+431
+normal zo
+442
+normal zo
+463
+normal zo
+484
+normal zo
+535
+normal zo
+552
+normal zo
+235
+normal zo
+594
+normal zo
+let s:l = 108 - ((36 * winheight(0) + 29) / 59)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-146
-normal! 031l
+108
+normal! 06l
 wincmd w
 argglobal
 buffer ~/.vim/after/syntax/txt.vim
@@ -2010,11 +2058,11 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 46 - ((0 * winheight(0) + 5) / 10)
+let s:l = 1 - ((0 * winheight(0) + 5) / 10)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-46
+1
 normal! 050l
 wincmd w
 argglobal

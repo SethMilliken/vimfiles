@@ -156,6 +156,9 @@ nnoremap <silent> <S-k> <Esc>:e<CR><Esc>:$<CR>
 " Save Session: (verify cwd to not stomp on existing sessions)
 nnoremap SS <Esc>:w<CR><Esc>:SessionSave<CR><Esc>:call FixSession()<CR><Esc>:SessionOpenLast<CR><Esc>:echo "Saved fixed session: " . v:this_session<CR>
 
+" Journal:
+nnoremap \j <Esc>:call JournalEntry()<CR>
+
 " Misc:
 nnoremap <silent> <Leader>] :NERDTreeToggle<CR>
 " nnoremap <silent> <Leader>[ :TMiniBufExplorer<CR>
@@ -231,19 +234,63 @@ endfor
 "}}}
 " FUNCTIONS: {{{
 
+function! JournalEntry() " {{{
+	let l:journaldir = $HOME . "/sandbox/personal/zaurus/zlog/"
+	let l:currentdate = TimestampText('date')
+	let l:entry = l:journaldir . l:currentdate . ".txt"
+	let l:entryexists = filereadable(l:entry)
+	exec "edit " . l:entry
+	exec "lcd " . l:journaldir
+	if l:entryexists
+		normal Go
+		normal o
+		exec "call setline(\".\", \"" . TimestampText('time') . "\")" 
+	else
+		exec "call setline(\".\", \"" . TimestampText('journal') . "\")" 
+		exec "silent !svn add " . l:entry
+	endif
+	normal o
+endfunction
 
+" }}}
+function! FormFieldArchive() " {{{
+	let l:contents = getbufline("%", 1, "$")
+	let l:filepath = expand("%")
+	let l:filename = expand("%:t:r")
+	let l:formfielddir = $HOME . "/sandbox/personal/forms/"
+	let l:currentdate = TimestampText('date')
+	let l:entry = l:formfielddir . l:currentdate . ".txt"
+	let l:entryexists = filereadable(l:entry)
+	exec "split " . l:entry
+	if l:entryexists
+		normal Go
+		normal o
+		exec "call setline(\".\", \"" . TimestampText('time') . "\")" 
+	else
+		exec "call setline(\".\", \"" . TimestampText('journal') . "\")" 
+		exec "silent !svn add " . l:entry
+	endif
+	normal o
+	exec "call setline(\".\", \"" . l:filename . "\")" 
+	normal o
+	exec "call setline(\".\", " . string(l:contents) . ")" 
+	write
+	bd
+endfunction
+
+" }}}
 function! FindNode(label) "{{{
-	let s:openmarker = FoldOpenMarker()
-	let s:expression = a:label . "\\s*" . s:openmarker
-	let s:matchline = search(s:expression, 'csw')	
-    echo printf("line: %2s had expression: %s", s:matchline, s:expression)
-	return s:matchline
+	let l:openmarker = FoldOpenMarker()
+	let l:expression = a:label . "\\s*" . l:openmarker
+	let l:matchline = search(l:expression, 'csw')	
+    echo printf("line: %2s had expression: %s", l:matchline, l:expression)
+	return l:matchline
 endfunction
 
 " }}}
 function! OpenNode(label) "{{{
-	let s:nodefound = FindNode(a:label)
-	if s:nodefound
+	let l:nodefound = FindNode(a:label)
+	if l:nodefound
 		normal zv
 		return 1
 	endif
@@ -252,8 +299,8 @@ endfunction
 
 "}}}
 function! CloseNode(label) "{{{
-	let s:nodefound = FindNode(a:label)
-	if s:nodefound
+	let l:nodefound = FindNode(a:label)
+	if l:nodefound
 		normal zc
 		return 1
 	endif
@@ -262,29 +309,29 @@ endfunction
 
 "}}}
 function! InsertNode(label) "{{{
-	let s:origpos = getpos(".")
+	let l:origpos = getpos(".")
 	call append(line(".") - 1, [""])
 	normal k
 	call AppendText(a:label)
 	call FoldWrap()
 	call OpenNode(a:label)
-	call setpos('.', s:origpos)
+	call setpos('.', l:origpos)
 endfunction
 
 "}}}
 function! DateNode() "{{{
-	let s:currentdate = TimestampText('date')
-	if FindNode(s:currentdate) == 0
+	let l:currentdate = TimestampText('date')
+	if FindNode(l:currentdate) == 0
 		normal gg
-        let s:openmarker = FoldOpenMarker()
+        let l:openmarker = FoldOpenMarker()
 		call FindNode('[0-9]\{,4}-[0-9]\{,2}-[0-9]\{,2}')
 		call append(line(".") - 1, [""])
 		normal k
-		call AppendText(s:currentdate)
+		call AppendText(l:currentdate)
 		call FoldWrap()
         normal zM
 	endif
-	call OpenNode(s:currentdate)
+	call OpenNode(l:currentdate)
 endfunction
 
 "}}}
@@ -294,33 +341,36 @@ endfunction
 
 " }}}
 function! TimestampText(style) "{{{
-	let s:iswindows = has("win16") || has("win32") || has("win64")
-	if s:iswindows
+	let l:iswindows = has("win16") || has("win32") || has("win64")
+	if l:iswindows
 		if a:style == "long"
-			let s:dateformat = strftime("%#x %H:%M:%S ")
+			let l:dateformat = strftime("%#x %H:%M:%S ")
 		elseif a:style == "short"
-			let s:dateformat = strftime("%Y-%m-%d %H:%M:%S ") 
+			let l:dateformat = strftime("%Y-%m-%d %H:%M:%S ") 
 		endif
-		let s:dateformat .= substitute(strftime("%#z"), '[a-z]\+\($\| \)', '', 'g')
+		let l:dateformat .= substitute(strftime("%#z"), '[a-z]\+\($\| \)', '', 'g')
 	else
 		if a:style == "long"
-			let s:dateformat = strftime("%Y %b %d %a %X %Z")
-			" let s:dateformat = strftime("%A, %B %d, %Y %H:%M:%S %Z")
+			let l:dateformat = strftime("%Y %b %d %a %X %Z")
+		elseif a:style == "journal"
+			let l:dateformat = strftime("%A, %B %d, %Y %H:%M:%S %Z")
 		elseif a:style == "short"
-			let s:dateformat = strftime("%Y-%m-%d %H:%M:%S %Z")
+			let l:dateformat = strftime("%Y-%m-%d %H:%M:%S %Z")
+		elseif a:style == "time"
+			let l:dateformat = strftime("%H:%M:%S %Z")
 		endif
 	endif
 	if a:style == "date"
-		let s:dateformat = strftime("%Y-%m-%d")
+		let l:dateformat = strftime("%Y-%m-%d")
 	endif
-	return s:dateformat
+	return l:dateformat
 endfunction
 
 " }}}
 function! AppendText(text) "{{{
-	let s:originalline = getline(".")
+	let l:originalline = getline(".")
 	call append(line("."),[a:text])
-	if substitute(s:originalline, "\\s", "", "g") == ""
+	if substitute(l:originalline, "\\s", "", "g") == ""
 		 normal J$
 	else
 		 normal J$
@@ -329,19 +379,19 @@ endfunction
 
 "}}}
 function! InsertItem(text, status) "{{{
-	let s:origpos = getpos(".")
+	let l:origpos = getpos(".")
 	call DateNode()
 	normal ]zk
-	let s:itemnostatus = substitute(a:text, '^\s*. ', '', 'g')
-	let s:result = printf("%s [%s] %s", a:status, TimestampText('short'), s:itemnostatus)
-	let s:toappend = [s:result]
+	let l:itemnostatus = substitute(a:text, '^\s*. ', '', 'g')
+	let l:result = printf("%s [%s] %s", a:status, TimestampText('short'), l:itemnostatus)
+	let l:toappend = [l:result]
 	if LineIsWhiteSpace(getline("."))
-		call append(line(".") - 1, s:toappend)
+		call append(line(".") - 1, l:toappend)
 	else
-		call insert(s:toappend, "", len(s:toappend))
-		call append(line("."), s:toappend)
+		call insert(l:toappend, "", len(l:toappend))
+		call append(line("."), l:toappend)
 	endif
-	call setpos('.', s:origpos)
+	call setpos('.', l:origpos)
     normal zodd
 endfunction
 
@@ -353,9 +403,9 @@ endfunction
 "}}}
 function! FoldWrap() "{{{
 	" spliting markers here to prevent false markers
-	let s:openmarker = FoldOpenMarker()
-	let s:closemarker = FoldCloseMarker()
-	call append(line("."), [s:openmarker, "", s:closemarker])
+	let l:openmarker = FoldOpenMarker()
+	let l:closemarker = FoldCloseMarker()
+	call append(line("."), [l:openmarker, "", l:closemarker])
 	normal Jj
 	" startinsert
 endfunction
@@ -392,53 +442,53 @@ endfunction
 " }}}
 function! FoldDefaultNodes() "{{{
 	" Save positions
-	let s:origpos = getpos(".")
+	let l:origpos = getpos(".")
 	normal H
-	let s:origscroll = getpos(".")
+	let l:origscroll = getpos(".")
 	" Do work
 	normal gg
 	normal zR
-	let s:hasnext = 1
-	while (s:hasnext)
-		let s:currentline = line(".")
+	let l:hasnext = 1
+	while (l:hasnext)
+		let l:currentline = line(".")
 		call FoldNodeIfDefault()
 		silent! normal zj
-		let s:hasnext = s:currentline != line(".")
+		let l:hasnext = l:currentline != line(".")
 	endwhile
 	" Restore positions
-	call setpos('.', s:origscroll)
+	call setpos('.', l:origscroll)
 	normal zt
-	call setpos('.', s:origpos)
+	call setpos('.', l:origpos)
 endfunction
 "}}}
 function! FoldNodeIfDefault() "{{{
-	let s:isdone = match(getline("."), '^done.* {{') > -1
-	let s:hasat = match(getline("."), '^@.* {{') > -1
-	let s:allcaps = match(getline("."), '^[A-Z]* {{') > -1
-	let s:isrecurring = match(getline("."), '^(.).* {{') > -1
-	" echo printf("isdone: %s, hasat: %s, allcap: %s", s:isdone, s:hasat, s:allcaps)
-	if (s:hasat)
+	let l:isdone = match(getline("."), '^done.* {{') > -1
+	let l:hasat = match(getline("."), '^@.* {{') > -1
+	let l:allcaps = match(getline("."), '^[A-Z]* {{') > -1
+	let l:isrecurring = match(getline("."), '^(.).* {{') > -1
+	" echo printf("isdone: %s, hasat: %s, allcap: %s", l:isdone, l:hasat, l:allcaps)
+	if (l:hasat)
 		return	
 	endif
-	if (s:isrecurring)
+	if (l:isrecurring)
 		return
 	endif
-	if (s:allcaps)
+	if (l:allcaps)
 		return
 	endif
-	if (s:isdone)
+	if (l:isdone)
 	endif
 	normal zc
 endfunction
 
 "}}}
 function! HandleTS() " {{{
-  let s:ticket = matchstr(getline("."), 'TS#[0-9]\+')
-  let s:number = matchstr(s:ticket, '[0-9]\+')
-  if s:ticket != "<Esc>:"
-	let s:tsuri = 'https://trackstudio.nimblefish.com/task/' . s:number . '?thisframe=true'
-	exec "silent !start rundll32.exe url.dll,FileProtocolHandler " . s:tsuri
-	echo "Opened Ticket: " . s:number
+  let l:ticket = matchstr(getline("."), 'TS#[0-9]\+')
+  let l:number = matchstr(l:ticket, '[0-9]\+')
+  if l:ticket != "<Esc>:"
+	let l:tsuri = 'http://trackstudio.nimblefish.com/task/' . l:number . '?thisframe=true'
+	exec "silent !start rundll32.exe url.dll,FileProtocolHandler " . l:tsuri
+	echo "Opened Ticket: " . l:number
   else
 	  echo "No TS ticket found in line."
   endif
@@ -446,14 +496,14 @@ endfunction
 
 " }}}
 function! HandleURI() " {{{
-  let s:uri = matchstr(getline("."), '[a-z]*:\/\/[^ >,;]*')
-  if s:uri != ""
+  let l:uri = matchstr(getline("."), '[a-z]*:\/\/[^ >,;]*')
+  if l:uri != ""
 	  if has("win32")
-		  exec "silent !start rundll32.exe url.dll,FileProtocolHandler " . s:uri
+		  exec "silent !start rundll32.exe url.dll,FileProtocolHandler " . l:uri
 	  else
-		  exec "silent !open \"" . s:uri . "\""
+		  exec "silent !open \"" . l:uri . "\""
 	  endif
-	  echo "Opened URI: " . s:uri
+	  echo "Opened URI: " . l:uri
   else
 	  echo "No URI found in line."
   endif
@@ -467,9 +517,9 @@ endfunction
 " }}}
 function! FormatSqlStatement() " {{{
   3match Todo /select .*/
-  let s:uri = matchstr(getline("."), '\cselect .*')
-  if s:uri != ""
-	  let @a = s:uri
+  let l:uri = matchstr(getline("."), '\cselect .*')
+  if l:uri != ""
+	  let @a = l:uri
 	  call ScratchBuffer("sql statement")
 	  setlocal bufhidden=delete
 	  normal "ap
@@ -498,7 +548,6 @@ function! Reset() " {{{
 	redraw
 	echo "Reset"
 endfunction
-
 
 " }}}
 function! AutoTagComplete() " {{{
@@ -560,6 +609,12 @@ augroup TaskStack
 	au BufRead *.tst.* nmap <buffer> <C-j> ddp
 	au BufRead *.tst.* nmap <buffer> <C-k> ddkP
 	au! FocusLost *.tst.* write
+augroup END
+
+" Vimperator:
+augroup Vimperator
+	au! BufRead vimperator-* nnoremap <buffer> ZZ :call FormFieldArchive() \| :silent write \| :bd \| :macaction hide:<CR>
+	au BufRead vimperator-* imap <buffer> ZZ <Esc>ZZ
 augroup END
 
 " autocomplete tags in html
