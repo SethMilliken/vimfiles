@@ -6,6 +6,14 @@ snippet c)
 snippet date
 	`strftime("%Y-%m-%d")`
 snippet fff
-	${1: foldName}`FoldOpenMarker()`
-	- ${2: contents}
+	${1:foldName}`FoldOpenMarker()`
+	- ${2:contents}
 	`FoldCloseMarker()`
+snippet pres
+	<pre class="brush: ${1:brush}; toolbar: false; wrap-lines: true">
+	${2:contents}
+	</pre>
+snippet presh
+	<pre class="brush: ${1:brush}; auto-links: true; toolbar: false; first-line: 10; highlight: [2, 4, 6]; class-name: none; collapse: false; gutter: true; html-script: false; light: false; smart-tabs: true; tab-size: 2; ruler: false; wrap-lines: true">
+	${2:contents}
+	</pre>

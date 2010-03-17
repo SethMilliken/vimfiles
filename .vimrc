@@ -623,6 +623,10 @@ au! FileType xhtml imap <buffer> > <Esc>:call AutoTagComplete()<CR>
 " python syntax
 let python_highlight_all = 1
 
+" HTML.vim
+let g:no_html_tab_mapping=1
+let g:no_html_toolbar=1
+
 " minbufexplorer
 let g:miniBufExplVSplit=30
 let g:miniBufExplMaxSize = 50
@@ -652,7 +656,7 @@ let $PYTHONPATH = 'C:\Python24\'
 
 " SnipMate:
 let g:snips_author = 'Seth Milliken'
-map <silent> <Leader>snip <Esc>:call ResetSnippets() \| call GetSnippets(g:snippets_dir, &ft)<CR><Esc>:echo "Snippets for format \"" . &ft . "\" updated."<CR>
+map <silent> <Leader>snip <Esc>:call ResetSnippets() \| call GetSnippets(g:snippets_dir, "_") \| call GetSnippets(g:snippets_dir, &ft)<CR><Esc>:echo "Snippets for format \"" . &ft . "\" updated."<CR>
 
 " Vimwiki:
 map <silent> <Leader>w2 <Esc>:w<CR>:VimwikiAll2HTML<CR><Esc>:echo "Saved wiki to HTML."<CR>
