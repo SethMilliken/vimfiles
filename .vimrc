@@ -158,6 +158,7 @@ nnoremap SS <Esc>:w<CR><Esc>:SessionSave<CR><Esc>:call FixSession()<CR><Esc>:Ses
 
 " Journal:
 nnoremap \j <Esc>:call JournalEntry()<CR>
+command! Journal :call JournalEntry()
 
 " Misc:
 nnoremap <silent> <Leader>] :NERDTreeToggle<CR>

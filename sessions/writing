@@ -345,7 +345,8 @@ set termencoding=utf-8
 set transparency=5
 set undolevels=100
 set updatetime=500
-set winminheight=0
+set winheight=10
+set winminheight=10
 set nowritebackup
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
@@ -492,7 +493,7 @@ silent! argdel *
 set lines=73 columns=234
 set fullscreen
 winpos 0 0
-buffer ~/Desktop/vimprogress.txt
+edit ~/Desktop/vimprogress.txt
 set splitbelow splitright
 wincmd _ | wincmd |
 vsplit
@@ -510,13 +511,13 @@ wincmd w
 wincmd w
 wincmd t
 set winheight=1 winwidth=1
-exe '1resize ' . ((&lines * 0 + 36) / 73)
+exe '1resize ' . ((&lines * 68 + 36) / 73)
 exe 'vert 1resize ' . ((&columns * 117 + 117) / 234)
 exe '2resize ' . ((&lines * 0 + 36) / 73)
 exe 'vert 2resize ' . ((&columns * 117 + 117) / 234)
 exe '3resize ' . ((&lines * 0 + 36) / 73)
 exe 'vert 3resize ' . ((&columns * 117 + 117) / 234)
-exe '4resize ' . ((&lines * 68 + 36) / 73)
+exe '4resize ' . ((&lines * 0 + 36) / 73)
 exe 'vert 4resize ' . ((&columns * 117 + 117) / 234)
 exe 'vert 5resize ' . ((&columns * 116 + 117) / 234)
 argglobal
@@ -619,15 +620,65 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 1 - ((0 * winheight(0) + 0) / 0)
+1
+normal zo
+1
+normal zo
+230
+normal zo
+231
+normal zo
+274
+normal zo
+231
+normal zo
+230
+normal zo
+476
+normal zo
+722
+normal zo
+729
+normal zo
+732
+normal zo
+767
+normal zc
+722
+normal zo
+864
+normal zo
+901
+normal zo
+943
+normal zo
+948
+normal zo
+1144
+normal zo
+943
+normal zo
+901
+normal zo
+2043
+normal zo
+2058
+normal zo
+2059
+normal zo
+2058
+normal zo
+476
+normal zo
+let s:l = 739 - ((126 * winheight(0) + 34) / 68)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-1
-normal! 0
+739
+normal! 0176l
 wincmd w
 argglobal
-buffer ~/Desktop/vimprogress.txt
+edit ~/Desktop/vimprogress.txt
 setlocal keymap=
 setlocal noarabic
 setlocal noautoindent
@@ -735,7 +786,7 @@ normal! zt
 normal! 0
 wincmd w
 argglobal
-buffer ~/Desktop/vimprogress.txt
+edit ~/Desktop/vimprogress.txt
 setlocal keymap=
 setlocal noarabic
 setlocal noautoindent
@@ -843,7 +894,7 @@ normal! zt
 normal! 0
 wincmd w
 argglobal
-buffer ~/Desktop/vimprogress.txt
+edit ~/Desktop/vimprogress.txt
 setlocal keymap=
 setlocal noarabic
 setlocal noautoindent
@@ -953,15 +1004,15 @@ normal zo
 normal zo
 105
 normal zo
-let s:l = 2077 - ((2076 * winheight(0) + 34) / 68)
+let s:l = 114 - ((1 * winheight(0) + 0) / 0)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-2077
-normal! 0
+114
+normal! 012l
 wincmd w
 argglobal
-buffer ~/sandbox/personal/temp.txt
+edit ~/sandbox/personal/temp.txt
 let s:cpo_save=&cpo
 set cpo&vim
 imap <buffer> <silent> <D-0> :tabn 10
@@ -1112,14 +1163,13 @@ normal! zt
 22
 normal! 019l
 wincmd w
-5wincmd w
-exe '1resize ' . ((&lines * 0 + 36) / 73)
+exe '1resize ' . ((&lines * 68 + 36) / 73)
 exe 'vert 1resize ' . ((&columns * 117 + 117) / 234)
 exe '2resize ' . ((&lines * 0 + 36) / 73)
 exe 'vert 2resize ' . ((&columns * 117 + 117) / 234)
 exe '3resize ' . ((&lines * 0 + 36) / 73)
 exe 'vert 3resize ' . ((&columns * 117 + 117) / 234)
-exe '4resize ' . ((&lines * 68 + 36) / 73)
+exe '4resize ' . ((&lines * 0 + 36) / 73)
 exe 'vert 4resize ' . ((&columns * 117 + 117) / 234)
 exe 'vert 5resize ' . ((&columns * 116 + 117) / 234)
 tabedit ~/sandbox/personal/misc/scratch.txt
@@ -1226,13 +1276,16 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 1 - ((0 * winheight(0) + 35) / 71)
+1
+normal zc
+6
+normal zo
+let s:l = 54 - ((53 * winheight(0) + 35) / 71)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-1
+54
 normal! 0
-5wincmd w
 tabedit ~/sandbox/personal/people/me.txt
 set splitbelow splitright
 wincmd _ | wincmd |
@@ -1365,7 +1418,7 @@ normal! 0
 lcd ~/Desktop
 wincmd w
 argglobal
-buffer ~/sandbox/personal/people/me.txt
+edit ~/sandbox/personal/people/me.txt
 setlocal keymap=
 setlocal noarabic
 setlocal noautoindent
@@ -1472,7 +1525,6 @@ normal! zt
 1
 normal! 0
 wincmd w
-5wincmd w
 exe 'vert 1resize ' . ((&columns * 117 + 117) / 234)
 exe 'vert 2resize ' . ((&columns * 116 + 117) / 234)
 tabedit ~/sandbox/personal/people/friends.txt
@@ -1595,7 +1647,7 @@ normal! 01l
 lcd ~/Desktop
 wincmd w
 argglobal
-buffer ~/sandbox/personal/people/okc.txt
+edit ~/sandbox/personal/people/okc.txt
 setlocal keymap=
 setlocal noarabic
 setlocal noautoindent
@@ -1704,7 +1756,6 @@ normal! zt
 normal! 0
 lcd ~/Desktop
 wincmd w
-5wincmd w
 exe 'vert 1resize ' . ((&columns * 117 + 117) / 234)
 exe 'vert 2resize ' . ((&columns * 116 + 117) / 234)
 tabedit ~/sandbox/personal/people/acquaintances.txt
@@ -1827,7 +1878,7 @@ normal! 0
 lcd ~/Desktop
 wincmd w
 argglobal
-buffer ~/sandbox/personal/people/acquaintances.txt
+edit ~/sandbox/personal/people/acquaintances.txt
 setlocal keymap=
 setlocal noarabic
 setlocal noautoindent
@@ -1936,7 +1987,6 @@ normal! zt
 normal! 0
 lcd ~/Desktop
 wincmd w
-5wincmd w
 exe 'vert 1resize ' . ((&columns * 117 + 117) / 234)
 exe 'vert 2resize ' . ((&columns * 116 + 117) / 234)
 tabedit ~/sandbox/personal/@nextsteps.txt
@@ -2061,7 +2111,7 @@ normal! 0
 lcd ~/Desktop
 wincmd w
 argglobal
-buffer ~/sandbox/personal/@personal.txt
+edit ~/sandbox/personal/@personal.txt
 setlocal keymap=
 setlocal noarabic
 setlocal noautoindent
@@ -2170,7 +2220,6 @@ normal! zt
 normal! 0
 lcd ~/Desktop
 wincmd w
-5wincmd w
 exe 'vert 1resize ' . ((&columns * 117 + 117) / 234)
 exe 'vert 2resize ' . ((&columns * 116 + 117) / 234)
 tabedit ~/sandbox/personal/writing/quietness.txt
@@ -2297,7 +2346,7 @@ normal! 0
 lcd ~/Desktop
 wincmd w
 argglobal
-buffer ~/sandbox/personal/writing/quietness.txt
+edit ~/sandbox/personal/writing/quietness.txt
 setlocal keymap=
 setlocal noarabic
 setlocal noautoindent
@@ -2407,7 +2456,7 @@ normal! 0
 lcd ~/Desktop
 wincmd w
 argglobal
-buffer ~/sandbox/personal/writing/quietness.txt
+edit ~/sandbox/personal/writing/quietness.txt
 setlocal keymap=
 setlocal noarabic
 setlocal noautoindent
@@ -2516,7 +2565,6 @@ normal! zt
 normal! 0
 lcd ~/Desktop
 wincmd w
-5wincmd w
 exe 'vert 1resize ' . ((&columns * 77 + 117) / 234)
 exe 'vert 2resize ' . ((&columns * 78 + 117) / 234)
 exe 'vert 3resize ' . ((&columns * 77 + 117) / 234)
@@ -2640,7 +2688,7 @@ normal! 0
 lcd ~/Desktop
 wincmd w
 argglobal
-buffer ~/sandbox/personal/writing/story.txt
+edit ~/sandbox/personal/writing/story.txt
 setlocal keymap=
 setlocal noarabic
 setlocal noautoindent
@@ -2749,7 +2797,6 @@ normal! zt
 normal! 0
 lcd ~/Desktop
 wincmd w
-5wincmd w
 exe 'vert 1resize ' . ((&columns * 83 + 117) / 234)
 exe 'vert 2resize ' . ((&columns * 150 + 117) / 234)
 tabedit ~/sandbox/personal/writing/healing.txt
@@ -2872,7 +2919,7 @@ normal! 0
 lcd ~/Desktop
 wincmd w
 argglobal
-buffer ~/sandbox/personal/writing/healing.txt
+edit ~/sandbox/personal/writing/healing.txt
 setlocal keymap=
 setlocal noarabic
 setlocal noautoindent
@@ -2981,15 +3028,14 @@ normal! zt
 normal! 0
 lcd ~/Desktop
 wincmd w
-5wincmd w
 exe 'vert 1resize ' . ((&columns * 134 + 117) / 234)
 exe 'vert 2resize ' . ((&columns * 99 + 117) / 234)
-tabnext 1
+tabnext 2
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf
 endif
 unlet! s:wipebuf
-set winheight=1 winwidth=20 shortmess=filnxtToOIA
+set winheight=10 winwidth=20 shortmess=filnxtToOIA
 let s:sx = expand("<sfile>:p:r")."x.vim"
 if file_readable(s:sx)
   exe "source " . fnameescape(s:sx)

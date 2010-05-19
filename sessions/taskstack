@@ -13,7 +13,6 @@ noremap! <D-Right> <End>
 noremap! <M-Left> <C-Left>
 noremap! <D-Left> <Home>
 inoremap <silent> <S-Tab> =BackwardsSnippet()
-inoremap <C-Tab> 	
 imap <F1> 
 imap <Nul> :
 map! <D-v> *
@@ -29,17 +28,17 @@ snoremap % b<BS>%
 snoremap ' b<BS>'
 nnoremap :: q:
 nnoremap <silent> K :e:$
-nnoremap O :call vimwiki_lst#insertOo('O')a
 map Q gq
 xmap S <Plug>VSurround
 nnoremap SS :w:SessionSave:call FixSession():SessionOpenLast:echo "Saved fixed session: " . v:this_session
 snoremap U b<BS>U
 vmap [% [%m'gv``
-map <silent> \ww <Plug>VimwikiGoHome
-map <silent> \wt <Plug>VimwikiTabGoHome
-map <silent> \ws <Plug>VimwikiUISelect
-nnoremap <silent> \- :silent g/^done {{/call FoldUnfolded()
 snoremap \ b<BS>\
+map <silent> \w\t <Plug>VimwikiTabMakeDiaryNote
+map <silent> \w\w <Plug>VimwikiMakeDiaryNote
+map <silent> \ws <Plug>VimwikiUISelect
+map <silent> \wt <Plug>VimwikiTabGoHome
+map <silent> \ww <Plug>VimwikiGoHome
 nmap \cv <Plug>VCSVimDiff
 nmap \cu <Plug>VCSUpdate
 nmap \cU <Plug>VCSUnlock
@@ -61,7 +60,7 @@ map \dj <Plug>DirDiffNext
 map \dp <Plug>DirDiffPut
 map \dg <Plug>DirDiffGet
 map <silent> \w2 :w:VimwikiAll2HTML:echo "Saved wiki to HTML."
-map <silent> \snip :call ResetSnippets() | call GetSnippets(g:snippets_dir, &ft):echo "Snippets for format \"" . &ft . "\" updated."
+map <silent> \snip :call ResetSnippets() | call GetSnippets(g:snippets_dir, "_") | call GetSnippets(g:snippets_dir, &ft):echo "Snippets for format \"" . &ft . "\" updated."
 nnoremap <silent> \ll o:call Timestamp("short") | call FoldWrap()
 nnoremap <silent> \fi :call FoldInsert()
 nnoremap <silent> \fw :call FoldWrap()
@@ -87,7 +86,6 @@ vmap a% [%v]%
 nmap cs <Plug>Csurround
 nmap ds <Plug>Dsurround
 nmap gx <Plug>NetrwBrowseX
-nnoremap o :call vimwiki_lst#insertOo('o')a
 xmap s <Plug>Vsurround
 nmap ySS <Plug>YSsurround
 nmap ySs <Plug>YSsurround
@@ -162,16 +160,13 @@ imap S <Plug>ISurround
 imap s <Plug>Isurround
 inoremap <silent> 	 =TriggerSnippet()
 imap <silent>  :call Reset() | nohlsa
-inoremap <expr>  vimwiki_lst#insertCR()
 inoremap  :set completeopt+=menuonea
 inoremap <silent> 	 =ShowAvailableSnips()
 imap  <Plug>Isurround
-imap  =CtrlXPP()
 let &cpo=s:cpo_save
 unlet s:cpo_save
 set autoindent
 set autowrite
-set autowriteall
 set background=dark
 set backspace=indent,eol,start
 set clipboard=unnamed
@@ -212,8 +207,7 @@ set termencoding=utf-8
 set transparency=5
 set undolevels=100
 set updatetime=500
-set window=68
-set winheight=10
+set window=69
 set winminheight=0
 set nowritebackup
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
@@ -222,15 +216,13 @@ let NERDTreeMapPreviewSplit = "gi"
 let NERDTreeMapCloseChildren = "X"
 let NERDTreeShowHidden = "0"
 let TailMinusF_Loaded =  1 
-let SuperTabLongestHighlight =  0 
 let NERDTreeMapCloseDir = "x"
-let SuperTabMappingTabLiteral = "<c-tab>"
-let NERDTreeShowLineNumbers = "0"
+let NERDTreeMapRefresh = "r"
 let DirDiffSort =  1 
 let NERDTreeBookmarksFile = "/Users/seth/.NERDTreeBookmarks"
-let SuperTabDefaultCompletionType = "<c-p>"
 let NERDTreeMapToggleHidden = "I"
 let NERDTreeWinSize = "31"
+let NERDTreeMapJumpParent = "p"
 let DirDiffInteractive =  0 
 let NERDTreeMapPreview = "go"
 let NERDTreeMapActivateNode = "o"
@@ -239,12 +231,8 @@ let DirDiffAddArgs = ""
 let NERDTreeStatusline = "%{b:NERDTreeRoot.path.strForOS(0)}"
 let NERDTreeMapOpenInTabSilent = "T"
 let NERDTreeMapHelp = "?"
-let NERDTreeMapJumpParent = "p"
 let NERDTreeMapToggleFilters = "f"
-let SuperTabMappingForward = "<tab>"
-let NERDTreeMapJumpLastChild = "J"
-let SuperTabContextDefaultCompletionType = "<c-p>"
-let SuperTabRetainCompletionType =  1 
+let NERDTreeAutoCenter = "1"
 let NERDTreeMapJumpPrevSibling = "<C-k>"
 let NERDTreeShowBookmarks = "0"
 let NERDTreeRemoveDirCmd = "rm -rf "
@@ -258,7 +246,7 @@ let DirDiffTextFiles = "Files "
 let NERDTreeCaseSensitiveSort = "0"
 let NERDTreeHijackNetrw = "1"
 let NERDTreeMapFilesystemMenu = "m"
-let NERDTreeMapRefresh = "r"
+let NERDTreeShowLineNumbers = "0"
 let TailMinusF_Height =  10 
 let NERDTreeHighlightCursorline = "1"
 let CSV_field_list = ""
@@ -276,7 +264,8 @@ let NERDTreeMapChdir = "cd"
 let DirDiffWindowSize =  14 
 let NERDTreeMapExecute = "!"
 let NERDTreeMapRefreshRoot = "R"
-let NERDTreeAutoCenter = "1"
+let DirDiffIgnore = ""
+let NERDTreeMapJumpLastChild = "J"
 let DirDiffTextOnlyIn = "Only in "
 let TailMinusF_Center_Win =  0 
 let DirDiffTextAnd = " and "
@@ -291,13 +280,10 @@ let NERDTreeMapQuit = "q"
 let NERDTreeMapChangeRoot = "C"
 let NERDTreeSortDirs = "1"
 let NERDTreeMapToggleFiles = "F"
-let DirDiffIgnore = ""
-let SuperTabMidWordCompletion =  1 
 let NERDTreeMapOpenExpl = "e"
 let NERDTreeMapJumpFirstChild = "K"
 let NERDTreeMapOpenRecursively = "O"
 let NERDTreeMapToggleBookmarks = "B"
-let SuperTabMappingBackward = "<s-tab>"
 let NERDTreeMapUpdir = "u"
 let NERDTreeMapUpdirKeepOpen = "U"
 let NERDTreeQuitOnOpen = "0"
@@ -307,11 +293,11 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +428 ~/sandbox/personal/todo/personal.tst.txt
-badd +30 ~/sandbox/personal/todo/todo.txt
-badd +1 ~/sandbox/personal/todo/techtodo.txt
+badd +1 ~/sandbox/personal/todo/personal.tst.txt
+badd +1 ~/sandbox/personal/todo/todo.txt
+badd +173 ~/sandbox/personal/todo/techtodo.txt
 silent! argdel *
-set lines=69 columns=115
+set lines=70 columns=115
 winpos 0 0
 edit ~/sandbox/personal/todo/personal.tst.txt
 set splitbelow splitright
@@ -328,11 +314,11 @@ vsplit
 wincmd w
 wincmd t
 set winheight=1 winwidth=1
-exe '1resize ' . ((&lines * 21 + 34) / 69)
-exe '2resize ' . ((&lines * 23 + 34) / 69)
-exe '3resize ' . ((&lines * 21 + 34) / 69)
+exe '1resize ' . ((&lines * 20 + 35) / 70)
+exe '2resize ' . ((&lines * 20 + 35) / 70)
+exe '3resize ' . ((&lines * 26 + 35) / 70)
 exe 'vert 3resize ' . ((&columns * 57 + 57) / 115)
-exe '4resize ' . ((&lines * 21 + 34) / 69)
+exe '4resize ' . ((&lines * 26 + 35) / 70)
 exe 'vert 4resize ' . ((&columns * 57 + 57) / 115)
 argglobal
 let s:cpo_save=&cpo
@@ -383,7 +369,7 @@ setlocal foldcolumn=4
 setlocal foldenable
 setlocal foldexpr=0
 setlocal foldignore=#
-setlocal foldlevel=2
+setlocal foldlevel=0
 setlocal foldmarker={{{,}}}
 set foldmethod=marker
 setlocal foldmethod=marker
@@ -399,10 +385,10 @@ setlocal iminsert=2
 setlocal imsearch=2
 setlocal include=
 setlocal includeexpr=
-setlocal indentexpr=
+setlocal indentexpr=GetJsIndent()
 setlocal indentkeys=0{,0},0),:,!^F,O,e,*<Return>,=*/
 setlocal noinfercase
-setlocal iskeyword=@,48-57,_,192-255,-
+setlocal iskeyword=@,48-57,_,192-255,-,$
 setlocal keywordprg=
 set linebreak
 setlocal linebreak
@@ -410,7 +396,7 @@ setlocal nolisp
 setlocal nolist
 setlocal nomacmeta
 setlocal makeprg=
-setlocal matchpairs=(:),{:},[:]
+setlocal matchpairs=(:),{:},[:],<:>
 setlocal modeline
 setlocal modifiable
 setlocal nrformats=octal,hex
@@ -449,12 +435,12 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 11 - ((10 * winheight(0) + 10) / 21)
+let s:l = 1 - ((0 * winheight(0) + 10) / 20)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-11
-normal! 022l
+1
+normal! 0
 wincmd w
 argglobal
 edit ~/sandbox/personal/todo/personal.tst.txt
@@ -506,7 +492,7 @@ setlocal foldcolumn=4
 setlocal foldenable
 setlocal foldexpr=0
 setlocal foldignore=#
-setlocal foldlevel=2
+setlocal foldlevel=0
 setlocal foldmarker={{{,}}}
 set foldmethod=marker
 setlocal foldmethod=marker
@@ -522,10 +508,10 @@ setlocal iminsert=2
 setlocal imsearch=2
 setlocal include=
 setlocal includeexpr=
-setlocal indentexpr=
+setlocal indentexpr=GetJsIndent()
 setlocal indentkeys=0{,0},0),:,!^F,O,e,*<Return>,=*/
 setlocal noinfercase
-setlocal iskeyword=@,48-57,_,192-255,-
+setlocal iskeyword=@,48-57,_,192-255,-,$
 setlocal keywordprg=
 set linebreak
 setlocal linebreak
@@ -533,7 +519,7 @@ setlocal nolisp
 setlocal nolist
 setlocal nomacmeta
 setlocal makeprg=
-setlocal matchpairs=(:),{:},[:]
+setlocal matchpairs=(:),{:},[:],<:>
 setlocal modeline
 setlocal modifiable
 setlocal nrformats=octal,hex
@@ -572,84 +558,12 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-1
-normal zo
-7
-normal zc
-21
-normal zc
-26
-normal zc
-34
-normal zc
-44
-normal zc
-51
-normal zc
-55
-normal zc
-60
-normal zc
-66
-normal zc
-75
-normal zc
-81
-normal zc
-85
-normal zc
-92
-normal zc
-97
-normal zc
-103
-normal zc
-114
-normal zc
-124
-normal zc
-130
-normal zc
-136
-normal zc
-163
-normal zc
-169
-normal zc
-176
-normal zc
-184
-normal zc
-197
-normal zc
-201
-normal zc
-208
-normal zc
-225
-normal zc
-247
-normal zc
-261
-normal zc
-267
-normal zc
-275
-normal zc
-284
-normal zc
-342
-normal zo
-355
-normal zo
-355
-normal zo
-let s:l = 460 - ((0 * winheight(0) + 11) / 23)
+let s:l = 1 - ((0 * winheight(0) + 10) / 20)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-460
-normal! 02l
+1
+normal! 0
 wincmd w
 argglobal
 edit ~/sandbox/personal/todo/techtodo.txt
@@ -686,7 +600,7 @@ setlocal foldcolumn=4
 setlocal foldenable
 setlocal foldexpr=0
 setlocal foldignore=#
-setlocal foldlevel=4
+setlocal foldlevel=0
 setlocal foldmarker={{{,}}}
 set foldmethod=marker
 setlocal foldmethod=marker
@@ -725,7 +639,7 @@ setlocal path=
 setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
-setlocal readonly
+setlocal noreadonly
 setlocal norightleft
 setlocal rightleftcmd=search
 setlocal noscrollbind
@@ -752,154 +666,16 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-19
-normal zo
-20
-normal zc
-31
-normal zc
-67
-normal zc
-71
-normal zc
-76
-normal zc
-82
-normal zc
-87
-normal zc
-91
-normal zc
-107
-normal zc
-115
-normal zc
-129
-normal zc
-158
-normal zc
-162
-normal zc
-166
-normal zc
-19
+173
 normal zo
 173
 normal zo
-175
-normal zc
-187
-normal zo
-188
-normal zo
-188
-normal zc
-209
-normal zc
-187
-normal zo
-215
-normal zo
-228
-normal zc
-215
-normal zo
-250
-normal zc
-264
-normal zc
-173
-normal zo
-280
-normal zo
-302
-normal zc
-309
-normal zc
-314
-normal zc
-280
-normal zo
-333
-normal zo
-351
-normal zc
-356
-normal zc
-359
-normal zc
-362
-normal zc
-369
-normal zc
-376
-normal zc
-382
-normal zc
-388
-normal zc
-333
-normal zo
-402
-normal zo
-436
-normal zc
-402
-normal zo
-456
-normal zo
-485
-normal zc
-456
-normal zo
-490
-normal zo
-491
-normal zc
-496
-normal zc
-501
-normal zc
-509
-normal zc
-516
-normal zo
-516
-normal zc
-490
-normal zo
-547
-normal zo
-549
-normal zc
-547
-normal zo
-553
-normal zo
-571
-normal zc
-553
-normal zo
-582
-normal zo
-597
-normal zc
-582
-normal zo
-601
-normal zo
-601
-normal zc
-618
-normal zo
-618
-normal zc
-let s:l = 204 - ((0 * winheight(0) + 10) / 21)
+let s:l = 173 - ((0 * winheight(0) + 13) / 26)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-204
-normal! 02l
+173
+normal! 0
 wincmd w
 argglobal
 edit ~/sandbox/personal/todo/todo.txt
@@ -936,7 +712,7 @@ setlocal foldcolumn=0
 setlocal foldenable
 setlocal foldexpr=0
 setlocal foldignore=#
-setlocal foldlevel=4
+setlocal foldlevel=0
 setlocal foldmarker={{{,}}}
 set foldmethod=marker
 setlocal foldmethod=marker
@@ -975,7 +751,7 @@ setlocal path=
 setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
-setlocal readonly
+setlocal noreadonly
 setlocal norightleft
 setlocal rightleftcmd=search
 setlocal noscrollbind
@@ -1002,164 +778,29 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-1
-normal zo
-2
-normal zc
-1
+30
 normal zo
 30
 normal zo
-71
-normal zc
-129
-normal zo
-130
-normal zo
-130
-normal zc
-129
-normal zo
-165
-normal zo
-179
-normal zc
-165
-normal zo
-190
-normal zo
-210
-normal zo
-211
-normal zc
-210
-normal zo
-225
-normal zo
-231
-normal zc
-244
-normal zc
-225
-normal zo
-190
-normal zo
-254
-normal zo
-254
-normal zc
-275
-normal zo
-276
-normal zc
-284
-normal zo
-284
-normal zc
-275
-normal zo
-312
-normal zo
-315
-normal zc
-312
-normal zo
-326
-normal zc
-30
-normal zo
-371
-normal zo
-372
-normal zo
-388
-normal zc
-372
-normal zo
-371
-normal zo
-472
-normal zo
-473
-normal zc
-485
-normal zc
-505
-normal zc
-510
-normal zc
-537
-normal zc
-472
-normal zo
-543
-normal zo
-557
-normal zc
-543
-normal zo
-569
-normal zo
-570
-normal zc
-605
-normal zc
-569
-normal zo
-666
-normal zo
-678
-normal zc
-666
-normal zo
-708
-normal zo
-709
-normal zc
-712
-normal zo
-712
-normal zc
-719
-normal zc
-723
-normal zc
-726
-normal zo
-726
-normal zc
-734
-normal zo
-734
-normal zc
-751
-normal zc
-708
-normal zo
-755
-normal zo
-755
-normal zc
-let s:l = 30 - ((10 * winheight(0) + 10) / 21)
+let s:l = 30 - ((0 * winheight(0) + 13) / 26)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 30
 normal! 0
 wincmd w
-4wincmd w
-exe '1resize ' . ((&lines * 21 + 34) / 69)
-exe '2resize ' . ((&lines * 23 + 34) / 69)
-exe '3resize ' . ((&lines * 21 + 34) / 69)
+exe '1resize ' . ((&lines * 20 + 35) / 70)
+exe '2resize ' . ((&lines * 20 + 35) / 70)
+exe '3resize ' . ((&lines * 26 + 35) / 70)
 exe 'vert 3resize ' . ((&columns * 57 + 57) / 115)
-exe '4resize ' . ((&lines * 21 + 34) / 69)
+exe '4resize ' . ((&lines * 26 + 35) / 70)
 exe 'vert 4resize ' . ((&columns * 57 + 57) / 115)
 tabnext 1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf
 endif
 unlet! s:wipebuf
-set winheight=10 winwidth=20 shortmess=filnxtToOIA
+set winheight=1 winwidth=20 shortmess=filnxtToOIA
 let s:sx = expand("<sfile>:p:r")."x.vim"
 if file_readable(s:sx)
   exe "source " . fnameescape(s:sx)
