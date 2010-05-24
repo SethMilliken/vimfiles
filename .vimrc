@@ -121,7 +121,7 @@ set winminheight=0 					" minimized horizontal splits show only statusline
 set switchbuf=useopen,usetab 		" when switching to a buffer, go to where it's already open
 set history=10000					" keep craploads of command history
 set undolevels=100					" keep lots of undo history
-set foldlevelstart=0				" don't use a default fold level
+set foldlevelstart=999   			" don't use a default fold level; all folds open by default
 " TODO: only set if missing
 " set cms=\ %s						" generally don't want commentstring for folds
 set fdm=marker						" make the default foldmethod markers
@@ -661,10 +661,13 @@ map <silent> <Leader>snip <Esc>:call ResetSnippets() \| call GetSnippets(g:snipp
 
 " Vimwiki:
 map <silent> <Leader>w2 <Esc>:w<CR>:VimwikiAll2HTML<CR><Esc>:echo "Saved wiki to HTML."<CR>
+" let wiki.nested_syntaxes = {'python': 'python'}
 let g:vimwiki_hl_headers = 1 				" hilight header colors
 let g:vimwiki_hl_cb_checked = 1 			" hilight todo item colors
 let g:vimwiki_list_ignore_newline = 0 		" convert newlines to <br /> in list
-let g:vimwiki_list = [{'path': '~/sandbox/personal/vimwiki/', 'index': 'PersonalWiki'}, {'path': '~/sandbox/public/wiki', 'index': 'SethMilliken'}, {'path': '~/sandbox/work/wiki/', 'index': 'SethMilliken', 'html_header': '~/sandbox/work/wiki/header.tpl'}]
+let g:vimwiki_folding = 1                   " allow outline folding
+let g:vimwiki_fold_lists = 1                " allow folding of list subitems
+let g:vimwiki_list = [{'path': '~/sandbox/personal/vimwiki/', 'index': 'PersonalWiki', 'auto_export': 1}, {'path': '~/sandbox/public/wiki', 'index': 'SethMilliken', 'auto_export': 1}, {'path': '~/sandbox/work/wiki/', 'index': 'SethMilliken', 'html_header': '~/sandbox/work/wiki/header.tpl', 'auto_export': 1}]
 
 " 2html.vim
 let html_dynamic_folds = 1
