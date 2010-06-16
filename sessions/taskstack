@@ -217,12 +217,11 @@ let NERDTreeMapCloseChildren = "X"
 let NERDTreeShowHidden = "0"
 let TailMinusF_Loaded =  1 
 let NERDTreeMapCloseDir = "x"
-let NERDTreeMapRefresh = "r"
+let NERDTreeShowLineNumbers = "0"
 let DirDiffSort =  1 
 let NERDTreeBookmarksFile = "/Users/seth/.NERDTreeBookmarks"
 let NERDTreeMapToggleHidden = "I"
 let NERDTreeWinSize = "31"
-let NERDTreeMapJumpParent = "p"
 let DirDiffInteractive =  0 
 let NERDTreeMapPreview = "go"
 let NERDTreeMapActivateNode = "o"
@@ -231,10 +230,12 @@ let DirDiffAddArgs = ""
 let NERDTreeStatusline = "%{b:NERDTreeRoot.path.strForOS(0)}"
 let NERDTreeMapOpenInTabSilent = "T"
 let NERDTreeMapHelp = "?"
+let NERDTreeMapJumpParent = "p"
 let NERDTreeMapToggleFilters = "f"
-let NERDTreeAutoCenter = "1"
+let NERDTreeMapJumpLastChild = "J"
 let NERDTreeMapJumpPrevSibling = "<C-k>"
 let NERDTreeShowBookmarks = "0"
+let NERDTreeMapOpenExpl = "e"
 let NERDTreeRemoveDirCmd = "rm -rf "
 let CSV_string_delimiter = "\""
 let NERDTreeMouseMode = "1"
@@ -246,7 +247,7 @@ let DirDiffTextFiles = "Files "
 let NERDTreeCaseSensitiveSort = "0"
 let NERDTreeHijackNetrw = "1"
 let NERDTreeMapFilesystemMenu = "m"
-let NERDTreeShowLineNumbers = "0"
+let NERDTreeMapRefresh = "r"
 let TailMinusF_Height =  10 
 let NERDTreeHighlightCursorline = "1"
 let CSV_field_list = ""
@@ -264,8 +265,7 @@ let NERDTreeMapChdir = "cd"
 let DirDiffWindowSize =  14 
 let NERDTreeMapExecute = "!"
 let NERDTreeMapRefreshRoot = "R"
-let DirDiffIgnore = ""
-let NERDTreeMapJumpLastChild = "J"
+let NERDTreeAutoCenter = "1"
 let DirDiffTextOnlyIn = "Only in "
 let TailMinusF_Center_Win =  0 
 let DirDiffTextAnd = " and "
@@ -280,7 +280,7 @@ let NERDTreeMapQuit = "q"
 let NERDTreeMapChangeRoot = "C"
 let NERDTreeSortDirs = "1"
 let NERDTreeMapToggleFiles = "F"
-let NERDTreeMapOpenExpl = "e"
+let DirDiffIgnore = ""
 let NERDTreeMapJumpFirstChild = "K"
 let NERDTreeMapOpenRecursively = "O"
 let NERDTreeMapToggleBookmarks = "B"
@@ -294,7 +294,7 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
 endif
 set shortmess=aoO
 badd +1 ~/sandbox/personal/todo/personal.tst.txt
-badd +1 ~/sandbox/personal/todo/todo.txt
+badd +63 ~/sandbox/personal/todo/todo.txt
 badd +173 ~/sandbox/personal/todo/techtodo.txt
 silent! argdel *
 set lines=70 columns=115
@@ -315,10 +315,10 @@ wincmd w
 wincmd t
 set winheight=1 winwidth=1
 exe '1resize ' . ((&lines * 20 + 35) / 70)
-exe '2resize ' . ((&lines * 20 + 35) / 70)
-exe '3resize ' . ((&lines * 26 + 35) / 70)
+exe '2resize ' . ((&lines * 21 + 35) / 70)
+exe '3resize ' . ((&lines * 25 + 35) / 70)
 exe 'vert 3resize ' . ((&columns * 57 + 57) / 115)
-exe '4resize ' . ((&lines * 26 + 35) / 70)
+exe '4resize ' . ((&lines * 25 + 35) / 70)
 exe 'vert 4resize ' . ((&columns * 57 + 57) / 115)
 argglobal
 let s:cpo_save=&cpo
@@ -435,11 +435,15 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 1 - ((0 * winheight(0) + 10) / 20)
+1
+normal zo
+6
+normal zo
+let s:l = 2 - ((1 * winheight(0) + 10) / 20)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-1
+2
 normal! 0
 wincmd w
 argglobal
@@ -558,12 +562,22 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 1 - ((0 * winheight(0) + 10) / 20)
+502
+normal zo
+503
+normal zo
+618
+normal zo
+621
+normal zc
+502
+normal zo
+let s:l = 503 - ((0 * winheight(0) + 10) / 21)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-1
-normal! 0
+503
+normal! 019l
 wincmd w
 argglobal
 edit ~/sandbox/personal/todo/techtodo.txt
@@ -639,7 +653,7 @@ setlocal path=
 setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
-setlocal noreadonly
+setlocal readonly
 setlocal norightleft
 setlocal rightleftcmd=search
 setlocal noscrollbind
@@ -666,15 +680,11 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-173
-normal zo
-173
-normal zo
-let s:l = 173 - ((0 * winheight(0) + 13) / 26)
+let s:l = 401 - ((1 * winheight(0) + 12) / 25)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-173
+401
 normal! 0
 wincmd w
 argglobal
@@ -715,7 +725,7 @@ setlocal foldignore=#
 setlocal foldlevel=0
 setlocal foldmarker={{{,}}}
 set foldmethod=marker
-setlocal foldmethod=marker
+setlocal foldmethod=syntax
 setlocal foldminlines=1
 setlocal foldnestmax=20
 set foldtext=MyFoldText()
@@ -751,7 +761,7 @@ setlocal path=
 setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
-setlocal noreadonly
+setlocal readonly
 setlocal norightleft
 setlocal rightleftcmd=search
 setlocal noscrollbind
@@ -778,22 +788,19 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-30
-normal zo
-30
-normal zo
-let s:l = 30 - ((0 * winheight(0) + 13) / 26)
+let s:l = 63 - ((12 * winheight(0) + 12) / 25)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-30
+63
 normal! 0
 wincmd w
+2wincmd w
 exe '1resize ' . ((&lines * 20 + 35) / 70)
-exe '2resize ' . ((&lines * 20 + 35) / 70)
-exe '3resize ' . ((&lines * 26 + 35) / 70)
+exe '2resize ' . ((&lines * 21 + 35) / 70)
+exe '3resize ' . ((&lines * 25 + 35) / 70)
 exe 'vert 3resize ' . ((&columns * 57 + 57) / 115)
-exe '4resize ' . ((&lines * 26 + 35) / 70)
+exe '4resize ' . ((&lines * 25 + 35) / 70)
 exe 'vert 4resize ' . ((&columns * 57 + 57) / 115)
 tabnext 1
 if exists('s:wipebuf')

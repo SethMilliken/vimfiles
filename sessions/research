@@ -2,6 +2,7 @@ let SessionLoad = 1
 if &cp | set nocp | endif
 let s:cpo_save=&cpo
 set cpo&vim
+inoremap <C-Tab> 	
 imap <D-BS> 
 imap <M-BS> 
 imap <M-Down> }
@@ -13,7 +14,6 @@ noremap! <D-Right> <End>
 noremap! <M-Left> <C-Left>
 noremap! <D-Left> <Home>
 inoremap <silent> <S-Tab> =BackwardsSnippet()
-inoremap <C-Tab> 	
 imap <F1> 
 imap <Nul> :
 map! <D-v> *
@@ -34,10 +34,12 @@ xmap S <Plug>VSurround
 nnoremap SS :w:SessionSave:call FixSession():SessionOpenLast:echo "Saved fixed session: " . v:this_session
 snoremap U b<BS>U
 vmap [% [%m'gv``
-map <silent> \ww <Plug>VimwikiGoHome
-map <silent> \wt <Plug>VimwikiTabGoHome
-map <silent> \ws <Plug>VimwikiUISelect
 snoremap \ b<BS>\
+map <silent> \w\t <Plug>VimwikiTabMakeDiaryNote
+map <silent> \w\w <Plug>VimwikiMakeDiaryNote
+map <silent> \ws <Plug>VimwikiUISelect
+map <silent> \wt <Plug>VimwikiTabGoHome
+map <silent> \ww <Plug>VimwikiGoHome
 nmap \cv <Plug>VCSVimDiff
 nmap \cu <Plug>VCSUpdate
 nmap \cU <Plug>VCSUnlock
@@ -220,25 +222,25 @@ let TailMinusF_Loaded =  1
 let SuperTabLongestHighlight =  0 
 let NERDTreeMapCloseDir = "x"
 let SuperTabMappingTabLiteral = "<c-tab>"
-let NERDTreeShowLineNumbers = "0"
+let NERDTreeMapRefresh = "r"
 let DirDiffSort =  1 
 let NERDTreeBookmarksFile = "/Users/seth/.NERDTreeBookmarks"
 let SuperTabDefaultCompletionType = "<c-p>"
 let NERDTreeMapToggleHidden = "I"
 let NERDTreeWinSize = "31"
+let NERDTreeMapJumpParent = "p"
 let DirDiffInteractive =  0 
 let NERDTreeMapPreview = "go"
 let NERDTreeMapActivateNode = "o"
 let NERDTreeWinPos = "left"
+let SuperTabContextDefaultCompletionType = "<c-p>"
 let DirDiffAddArgs = ""
 let NERDTreeStatusline = "%{b:NERDTreeRoot.path.strForOS(0)}"
 let NERDTreeMapOpenInTabSilent = "T"
 let NERDTreeMapHelp = "?"
-let NERDTreeMapJumpParent = "p"
 let NERDTreeMapToggleFilters = "f"
 let SuperTabMappingForward = "<tab>"
-let NERDTreeMapJumpLastChild = "J"
-let SuperTabContextDefaultCompletionType = "<c-p>"
+let NERDTreeAutoCenter = "1"
 let SuperTabRetainCompletionType =  1 
 let NERDTreeMapJumpPrevSibling = "<C-k>"
 let NERDTreeShowBookmarks = "0"
@@ -253,7 +255,7 @@ let DirDiffTextFiles = "Files "
 let NERDTreeCaseSensitiveSort = "0"
 let NERDTreeHijackNetrw = "1"
 let NERDTreeMapFilesystemMenu = "m"
-let NERDTreeMapRefresh = "r"
+let NERDTreeShowLineNumbers = "0"
 let TailMinusF_Height =  10 
 let NERDTreeHighlightCursorline = "1"
 let CSV_field_list = ""
@@ -271,7 +273,8 @@ let NERDTreeMapChdir = "cd"
 let DirDiffWindowSize =  14 
 let NERDTreeMapExecute = "!"
 let NERDTreeMapRefreshRoot = "R"
-let NERDTreeAutoCenter = "1"
+let DirDiffIgnore = ""
+let NERDTreeMapJumpLastChild = "J"
 let DirDiffTextOnlyIn = "Only in "
 let TailMinusF_Center_Win =  0 
 let DirDiffTextAnd = " and "
@@ -286,7 +289,6 @@ let NERDTreeMapQuit = "q"
 let NERDTreeMapChangeRoot = "C"
 let NERDTreeSortDirs = "1"
 let NERDTreeMapToggleFiles = "F"
-let DirDiffIgnore = ""
 let SuperTabMidWordCompletion =  1 
 let NERDTreeMapOpenExpl = "e"
 let NERDTreeMapJumpFirstChild = "K"
@@ -302,11 +304,11 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +1 ~/sandbox/personal/todo/research.tst.txt
+badd +69 ~/sandbox/personal/todo/research.tst.txt
 badd +1 ~/.vimperatorrc
 badd +1 ~/.firefox/userChrome.css
 silent! argdel *
-set lines=70 columns=115
+set lines=70 columns=117
 winpos 0 0
 edit ~/sandbox/personal/todo/research.tst.txt
 set splitbelow splitright
@@ -325,53 +327,53 @@ exe '3resize ' . ((&lines * 22 + 35) / 70)
 argglobal
 let s:cpo_save=&cpo
 set cpo&vim
-imap <buffer> <silent> <D-9> :tabn 9
-imap <buffer> <silent> <D-8> :tabn 8
-imap <buffer> <silent> <D-7> :tabn 7
-imap <buffer> <silent> <D-6> :tabn 6
-imap <buffer> <silent> <D-5> :tabn 5
-imap <buffer> <silent> <D-4> :tabn 4
-imap <buffer> <silent> <D-3> :tabn 3
-imap <buffer> <silent> <D-2> :tabn 2
-imap <buffer> <silent> <D-1> :tabn 1
 imap <buffer> <silent> <D-0> :tabn 10
+imap <buffer> <silent> <D-1> :tabn 1
+imap <buffer> <silent> <D-2> :tabn 2
+imap <buffer> <silent> <D-3> :tabn 3
+imap <buffer> <silent> <D-4> :tabn 4
+imap <buffer> <silent> <D-5> :tabn 5
+imap <buffer> <silent> <D-6> :tabn 6
+imap <buffer> <silent> <D-7> :tabn 7
+imap <buffer> <silent> <D-8> :tabn 8
+imap <buffer> <silent> <D-9> :tabn 9
 nmap <buffer> <NL> ddp
 nmap <buffer>  ddkP
-imap <buffer> <silent> ¹ :tabn 9
-imap <buffer> <silent> ¸ :tabn 8
-imap <buffer> <silent> · :tabn 7
-imap <buffer> <silent> ¶ :tabn 6
-imap <buffer> <silent> µ :tabn 5
-imap <buffer> <silent> ´ :tabn 4
-imap <buffer> <silent> ³ :tabn 3
-imap <buffer> <silent> ² :tabn 2
-imap <buffer> <silent> ± :tabn 1
 imap <buffer> <silent> ° :tabn 10
+imap <buffer> <silent> ± :tabn 1
+imap <buffer> <silent> ² :tabn 2
+imap <buffer> <silent> ³ :tabn 3
+imap <buffer> <silent> ´ :tabn 4
+imap <buffer> <silent> µ :tabn 5
+imap <buffer> <silent> ¶ :tabn 6
+imap <buffer> <silent> · :tabn 7
+imap <buffer> <silent> ¸ :tabn 8
+imap <buffer> <silent> ¹ :tabn 9
 nnoremap <buffer> LL :silent! call FindNode("SCRATCH")zo]zO
 nnoremap <buffer> NN ggzoo-a 
 nnoremap <buffer> QQ :silent! call InsertItem(getline("."), "o")
 nnoremap <buffer> XX :silent! call InsertItem(getline("."), "x")
 nnoremap <buffer> ZZ :maca hide:
-nmap <buffer> <silent> <D-9> 9gt
-nmap <buffer> <silent> <D-8> 8gt
-nmap <buffer> <silent> <D-7> 7gt
-nmap <buffer> <silent> <D-6> 6gt
-nmap <buffer> <silent> <D-5> 5gt
-nmap <buffer> <silent> <D-4> 4gt
-nmap <buffer> <silent> <D-3> 3gt
-nmap <buffer> <silent> <D-2> 2gt
-nmap <buffer> <silent> <D-1> 1gt
 nmap <buffer> <silent> <D-0> 10gt
-nmap <buffer> <silent> ¹ 9gt
-nmap <buffer> <silent> ¸ 8gt
-nmap <buffer> <silent> · 7gt
-nmap <buffer> <silent> ¶ 6gt
-nmap <buffer> <silent> µ 5gt
-nmap <buffer> <silent> ´ 4gt
-nmap <buffer> <silent> ³ 3gt
-nmap <buffer> <silent> ² 2gt
-nmap <buffer> <silent> ± 1gt
+nmap <buffer> <silent> <D-1> 1gt
+nmap <buffer> <silent> <D-2> 2gt
+nmap <buffer> <silent> <D-3> 3gt
+nmap <buffer> <silent> <D-4> 4gt
+nmap <buffer> <silent> <D-5> 5gt
+nmap <buffer> <silent> <D-6> 6gt
+nmap <buffer> <silent> <D-7> 7gt
+nmap <buffer> <silent> <D-8> 8gt
+nmap <buffer> <silent> <D-9> 9gt
 nmap <buffer> <silent> ° 10gt
+nmap <buffer> <silent> ± 1gt
+nmap <buffer> <silent> ² 2gt
+nmap <buffer> <silent> ³ 3gt
+nmap <buffer> <silent> ´ 4gt
+nmap <buffer> <silent> µ 5gt
+nmap <buffer> <silent> ¶ 6gt
+nmap <buffer> <silent> · 7gt
+nmap <buffer> <silent> ¸ 8gt
+nmap <buffer> <silent> ¹ 9gt
 imap <buffer> NN NN
 imap <buffer> QQ QQ
 imap <buffer> XX XX
@@ -479,28 +481,16 @@ setlocal wrap
 setlocal wrapmargin=0
 1
 normal zo
-12
+20
 normal zo
-16
-normal zc
-31
-normal zc
-44
+20
 normal zo
-45
-normal zc
-68
-normal zo
-68
-normal zc
-44
-normal zo
-let s:l = 69 - ((63 * winheight(0) + 11) / 23)
+let s:l = 2 - ((1 * winheight(0) + 11) / 23)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-69
-normal! 074l
+2
+normal! 0
 wincmd w
 argglobal
 edit ~/.firefox/userChrome.css
@@ -612,18 +602,18 @@ normal! 0
 wincmd w
 argglobal
 edit ~/.vimperatorrc
-nnoremap <buffer> <silent> [[ m':call search('^\s*fu\%[nction]\>', "bW")
-vnoremap <buffer> <silent> [[ m':exe "normal! gv"|call search('^\s*fu\%[nction]\>', "bW")
-nnoremap <buffer> <silent> [] m':call search('^\s*endf*\%[unction]\>', "bW")
-vnoremap <buffer> <silent> [] m':exe "normal! gv"|call search('^\s*endf*\%[unction]\>', "bW")
-nnoremap <buffer> <silent> [" :call search('\%(^\s*".*\n\)\%(^\s*"\)\@!', "bW")
 vnoremap <buffer> <silent> [" :exe "normal! gv"|call search('\%(^\s*".*\n\)\%(^\s*"\)\@!', "bW")
-nnoremap <buffer> <silent> ]] m':call search('^\s*fu\%[nction]\>', "W")
-vnoremap <buffer> <silent> ]] m':exe "normal! gv"|call search('^\s*fu\%[nction]\>', "W")
-nnoremap <buffer> <silent> ][ m':call search('^\s*endf*\%[unction]\>', "W")
-vnoremap <buffer> <silent> ][ m':exe "normal! gv"|call search('^\s*endf*\%[unction]\>', "W")
-nnoremap <buffer> <silent> ]" :call search('^\(\s*".*\n\)\@<!\(\s*"\)', "W")
+nnoremap <buffer> <silent> [" :call search('\%(^\s*".*\n\)\%(^\s*"\)\@!', "bW")
+vnoremap <buffer> <silent> [] m':exe "normal! gv"|call search('^\s*endf*\%[unction]\>', "bW")
+nnoremap <buffer> <silent> [] m':call search('^\s*endf*\%[unction]\>', "bW")
+vnoremap <buffer> <silent> [[ m':exe "normal! gv"|call search('^\s*fu\%[nction]\>', "bW")
+nnoremap <buffer> <silent> [[ m':call search('^\s*fu\%[nction]\>', "bW")
 vnoremap <buffer> <silent> ]" :exe "normal! gv"|call search('^\(\s*".*\n\)\@<!\(\s*"\)', "W")
+nnoremap <buffer> <silent> ]" :call search('^\(\s*".*\n\)\@<!\(\s*"\)', "W")
+vnoremap <buffer> <silent> ][ m':exe "normal! gv"|call search('^\s*endf*\%[unction]\>', "W")
+nnoremap <buffer> <silent> ][ m':call search('^\s*endf*\%[unction]\>', "W")
+vnoremap <buffer> <silent> ]] m':exe "normal! gv"|call search('^\s*fu\%[nction]\>', "W")
+nnoremap <buffer> <silent> ]] m':call search('^\s*fu\%[nction]\>', "W")
 setlocal keymap=
 setlocal noarabic
 setlocal autoindent

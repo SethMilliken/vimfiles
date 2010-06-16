@@ -2,17 +2,18 @@ let SessionLoad = 1
 if &cp | set nocp | endif
 let s:cpo_save=&cpo
 set cpo&vim
-cmap <Nul> :
-imap <silent> <D-0> :tabn 10
-imap <silent> <D-9> :tabn 9
-imap <silent> <D-8> :tabn 8
-imap <silent> <D-7> :tabn 7
-imap <silent> <D-6> :tabn 6
-imap <silent> <D-5> :tabn 5
-imap <silent> <D-4> :tabn 4
-imap <silent> <D-3> :tabn 3
-imap <silent> <D-2> :tabn 2 
+inoremap <C-Tab> 	
 imap <silent> <D-1> :tabn 1 
+imap <silent> <D-2> :tabn 2 
+imap <silent> <D-3> :tabn 3
+imap <silent> <D-4> :tabn 4
+imap <silent> <D-5> :tabn 5
+imap <silent> <D-6> :tabn 6
+imap <silent> <D-7> :tabn 7
+imap <silent> <D-8> :tabn 8
+imap <silent> <D-9> :tabn 9
+imap <silent> <D-0> :tabn 10
+cmap <Nul> :
 imap <D-BS> 
 imap <M-BS> 
 imap <M-Down> }
@@ -24,122 +25,123 @@ noremap! <D-Right> <End>
 noremap! <M-Left> <C-Left>
 noremap! <D-Left> <Home>
 inoremap <silent> <S-Tab> =BackwardsSnippet()
-inoremap <C-Tab> 	
 imap <F1> 
 imap <Nul> :
 map! <D-v> *
-map d :call RopeShowDoc()
-map f :call RopeFindOccurrences()
-map g :call RopeGotoDefinition()
-map ru :call RopeUseFunction()
-map rad :call RopeShowDoc()
-map rac :call RopeShowCalltip()
-map rx :call RopeRestructure()
-map r1r :call RopeRenameCurrentModule()
-map rr :call RopeRename()
-map ro :call RopeOrganizeImports()
-map r1v :call RopeMoveCurrentModule()
-map rv :call RopeMove()
-map r1p :call RopeModuleToPackage()
-map ra? :call RopeLuckyAssist()
-map raj :call RopeJumpToGlobal()
-map rf :call RopeIntroduceFactory()
-map ri :call RopeInline()
-map rag :call RopeGotoDefinition()
-map rnv :call RopeGenerateVariable()
-map rnp :call RopeGeneratePackage()
-map rnm :call RopeGenerateModule()
-map rnf :call RopeGenerateFunction()
-map rnc :call RopeGenerateClass()
-map raf :call RopeFindOccurrences()
-map rai :call RopeFindImplementations()
-map rl :call RopeExtractVariable()
-map rm :call RopeExtractMethod()
-map ra/ :call RopeCodeAssist()
 map rs :call RopeChangeSignature()
-omap <silent>  l:set winheight=9999 | set winminheight=0
+map ra/ :call RopeCodeAssist()
+map rm :call RopeExtractMethod()
+map rl :call RopeExtractVariable()
+map rai :call RopeFindImplementations()
+map raf :call RopeFindOccurrences()
+map rnc :call RopeGenerateClass()
+map rnf :call RopeGenerateFunction()
+map rnm :call RopeGenerateModule()
+map rnp :call RopeGeneratePackage()
+map rnv :call RopeGenerateVariable()
+map rag :call RopeGotoDefinition()
+map ri :call RopeInline()
+map rf :call RopeIntroduceFactory()
+map raj :call RopeJumpToGlobal()
+map ra? :call RopeLuckyAssist()
+map r1p :call RopeModuleToPackage()
+map rv :call RopeMove()
+map r1v :call RopeMoveCurrentModule()
+map ro :call RopeOrganizeImports()
+map rr :call RopeRename()
+map r1r :call RopeRenameCurrentModule()
+map rx :call RopeRestructure()
+map rac :call RopeShowCalltip()
+map rad :call RopeShowDoc()
+map ru :call RopeUseFunction()
+map g :call RopeGotoDefinition()
+map f :call RopeFindOccurrences()
+map d :call RopeShowDoc()
 vmap <silent>  l:set winheight=9999 | set winminheight=0
+omap <silent>  l:set winheight=9999 | set winminheight=0
 nmap <silent>  l:call AccordionMode()
 snoremap <silent> 	 i<Right>=TriggerSnippet()
-omap <NL> <NL>_
 vmap <NL> <NL>_
+omap <NL> <NL>_
 nmap <silent> <NL> j:call AccordionMode()
-omap  _
 vmap  _
+omap  _
 nmap <silent>  k:call AccordionMode()
 nnoremap <silent>  :call Reset() | nohls
 nnoremap = :set winheight=10 | set winminheight=10 | wincmd =
-map pu :call RopeUndo()
-map pr :call RopeRedo()
-map pc :call RopeProjectConfig()
-map po :call RopeOpenProject()
-map p4f :call RopeFindFileOtherWindow()
-map pf :call RopeFindFile()
-map pnp :call RopeCreatePackage()
-map pnm :call RopeCreateModule()
-map pnf :call RopeCreateFile()
-map pnd :call RopeCreateDirectory()
 map pk :call RopeCloseProject()
+map pnd :call RopeCreateDirectory()
+map pnf :call RopeCreateFile()
+map pnm :call RopeCreateModule()
+map pnp :call RopeCreatePackage()
+map pf :call RopeFindFile()
+map p4f :call RopeFindFileOtherWindow()
+map po :call RopeOpenProject()
+map pc :call RopeProjectConfig()
+map pr :call RopeRedo()
+map pu :call RopeUndo()
 snoremap  b<BS>
-omap <silent>  h:set winheight=9999 | set winminheight=0
 vmap <silent>  h:set winheight=9999 | set winminheight=0
+omap <silent>  h:set winheight=9999 | set winminheight=0
 nmap <silent>  h:call AccordionMode()
 map  /<# .* #>W
 nmap   
 snoremap % b<BS>%
 snoremap ' b<BS>'
 nnoremap :: q:
-map <s :set nospell
 map <l :set nolist
-map >- Ea <# tag  #>BBcw
-map >b F a<em>ea</em>
-map >s :set spell
-map >l :set list
+map <s :set nospell
 nmap <silent> >c :!wc -w %
-imap ¿ =RopeLuckyAssistInsertMode()
-imap ¯ =RopeCodeAssistInsertMode()
-imap <silent> ° :tabn 10
-imap <silent> ¹ :tabn 9
-imap <silent> ¸ :tabn 8
-imap <silent> · :tabn 7
-imap <silent> ¶ :tabn 6
-imap <silent> µ :tabn 5
-imap <silent> ´ :tabn 4
-imap <silent> ³ :tabn 3
-imap <silent> ² :tabn 2 
+map >l :set list
+map >s :set spell
+map >b F a<em>ea</em>
+map >- Ea <# tag  #>BBcw
 imap <silent> ± :tabn 1 
+imap <silent> ² :tabn 2 
+imap <silent> ³ :tabn 3
+imap <silent> ´ :tabn 4
+imap <silent> µ :tabn 5
+imap <silent> ¶ :tabn 6
+imap <silent> · :tabn 7
+imap <silent> ¸ :tabn 8
+imap <silent> ¹ :tabn 9
+imap <silent> ° :tabn 10
+imap ¯ =RopeCodeAssistInsertMode()
+imap ¿ =RopeLuckyAssistInsertMode()
 nnoremap <silent> K :e:$
 map Q gq
-omap SS :w:mks! | call FixSession():echo "Saved fixed session: " . v:this_session
 vmap SS :w:mks! | call FixSession():echo "Saved fixed session: " . v:this_session
+omap SS :w:mks! | call FixSession():echo "Saved fixed session: " . v:this_session
 xmap S <Plug>VSurround
 nnoremap SS :w:SessionSave:call FixSession():echo "Saved fixed session: " . v:this_session
 snoremap U b<BS>U
 vmap [% [%m'gv``
-nnoremap <silent> \- :silent g/^done {{/call FoldUnfolded()
-omap <silent> \\ :call HandleURI()
-vmap <silent> \\ :call HandleURI()
-omap <silent> \t :call HandleTS()
-vmap <silent> \t :call HandleTS()
-map <silent> \ww <Plug>VimwikiGoHome
-map <silent> \wt <Plug>VimwikiTabGoHome
-map <silent> \ws <Plug>VimwikiUISelect
-map <silent> \s :call ResetSnippets() | call GetSnippets(g:snippets_dir, &ft):echo "Snippets for format \"" . &ft . "\" updated."
-map \/ :call HandleURI()
-nnoremap <silent> \[ :TMiniBufExplorer
-map \mbe <Plug>MiniBufExplorer
-map \mbc <Plug>CMiniBufExplorer
-map \mbu <Plug>UMiniBufExplorer
-map \mbt <Plug>TMiniBufExplorer
-nmap <silent> \tj tdtf
-nmap <silent> \th dstf
-nmap <silent> \tg tstf
-nnoremap <silent> \tt :call FoldInsert()
-nnoremap <silent> \tf :call FoldWrap()
-nmap <silent> \td :call Timestamp("date")
-nmap <silent> \tl :call Timestamp("long")
 nmap <silent> \ts :call Timestamp("short")
+nmap <silent> \tl :call Timestamp("long")
+nmap <silent> \td :call Timestamp("date")
+nnoremap <silent> \tf :call FoldWrap()
+nnoremap <silent> \tt :call FoldInsert()
+nmap <silent> \tg tstf
+nmap <silent> \th dstf
+nmap <silent> \tj tdtf
+map \mbt <Plug>TMiniBufExplorer
+map \mbu <Plug>UMiniBufExplorer
+map \mbc <Plug>CMiniBufExplorer
+map \mbe <Plug>MiniBufExplorer
+nnoremap <silent> \[ :TMiniBufExplorer
+map \/ :call HandleURI()
+map <silent> \s :call ResetSnippets() | call GetSnippets(g:snippets_dir, &ft):echo "Snippets for format \"" . &ft . "\" updated."
+vmap <silent> \t :call HandleTS()
+omap <silent> \t :call HandleTS()
+vmap <silent> \\ :call HandleURI()
+omap <silent> \\ :call HandleURI()
+nnoremap <silent> \- :silent g/^done {{/call FoldUnfolded()
 snoremap \ b<BS>\
+map <silent> \w\t <Plug>VimwikiTabMakeDiaryNote
+map <silent> \w\w <Plug>VimwikiMakeDiaryNote
+map <silent> \ws <Plug>VimwikiUISelect
+map <silent> \wt <Plug>VimwikiTabGoHome
+map <silent> \ww <Plug>VimwikiGoHome
 nmap \cv <Plug>VCSVimDiff
 nmap \cu <Plug>VCSUpdate
 nmap \cU <Plug>VCSUnlock
@@ -188,32 +190,32 @@ nmap cs <Plug>Csurround
 nmap <silent> ds :r !date +'\%A, \%B \%d, \%Y, \%T \%Z'$a  {{{o}}}kkao 
 nmap gx <Plug>NetrwBrowseX
 xmap s <Plug>Vsurround
-nmap <silent> tj tdtf
-nmap <silent> th dstf
-nmap <silent> tg tstf
-nnoremap <silent> tt :call FoldInsert()
-nnoremap <silent> tf :call FoldWrap()
-nmap <silent> td :call Timestamp("date")
-nmap <silent> tl :call Timestamp("long")
 nmap <silent> ts :call Timestamp("short")
+nmap <silent> tl :call Timestamp("long")
+nmap <silent> td :call Timestamp("date")
+nnoremap <silent> tf :call FoldWrap()
+nnoremap <silent> tt :call FoldInsert()
+nmap <silent> tg tstf
+nmap <silent> th dstf
+nmap <silent> tj tdtf
 nmap ySS <Plug>YSsurround
 nmap ySs <Plug>YSsurround
 nmap yss <Plug>Yssurround
 nmap yS <Plug>YSurround
 nmap ys <Plug>Ysurround
 map  /<# .* #>W
-omap <Nul> :
-vmap <Nul> :
-nmap <silent> <D-0> 10gt 
-nmap <silent> <D-9> 9gt 
-nmap <silent> <D-8> 8gt 
-nmap <silent> <D-7> 7gt 
-nmap <silent> <D-6> 6gt 
-nmap <silent> <D-5> 5gt 
-nmap <silent> <D-4> 4gt 
-nmap <silent> <D-3> 3gt 
-nmap <silent> <D-2> 2gt
 nmap <silent> <D-1> 1gt
+nmap <silent> <D-2> 2gt
+nmap <silent> <D-3> 3gt 
+nmap <silent> <D-4> 4gt 
+nmap <silent> <D-5> 5gt 
+nmap <silent> <D-6> 6gt 
+nmap <silent> <D-7> 7gt 
+nmap <silent> <D-8> 8gt 
+nmap <silent> <D-9> 9gt 
+nmap <silent> <D-0> 10gt 
+vmap <Nul> :
+omap <Nul> :
 nnoremap <C-Down> :silent! let &guifont = substitute( &guifont, ':h\zs\d\+', '\=eval(submatch(0)-1)', '')
 nnoremap <C-Up> :silent! let &guifont = substitute( &guifont, ':h\zs\d\+', '\=eval(submatch(0)+1)', '')
 nnoremap <silent> <C-Right> gt
@@ -286,18 +288,18 @@ inoremap <silent> 	 =ShowAvailableSnips()
 imap  <Plug>Isurround
 imap  =CtrlXPP()
 map! + Bi<em>ea</em>
-map ¿ :call RopeLuckyAssist()
-map ¯ :call RopeCodeAssist()
-nmap <silent> ° 10gt 
-nmap <silent> ¹ 9gt 
-nmap <silent> ¸ 8gt 
-nmap <silent> · 7gt 
-nmap <silent> ¶ 6gt 
-nmap <silent> µ 5gt 
-nmap <silent> ´ 4gt 
-nmap <silent> ³ 3gt 
-nmap <silent> ² 2gt
 nmap <silent> ± 1gt
+nmap <silent> ² 2gt
+nmap <silent> ³ 3gt 
+nmap <silent> ´ 4gt 
+nmap <silent> µ 5gt 
+nmap <silent> ¶ 6gt 
+nmap <silent> · 7gt 
+nmap <silent> ¸ 8gt 
+nmap <silent> ¹ 9gt 
+nmap <silent> ° 10gt 
+map ¯ :call RopeCodeAssist()
+map ¿ :call RopeLuckyAssist()
 map! \_ Bi<em>ea</em>
 let &cpo=s:cpo_save
 unlet s:cpo_save
@@ -345,6 +347,7 @@ set termencoding=utf-8
 set transparency=5
 set undolevels=100
 set updatetime=500
+set window=72
 set winheight=10
 set winminheight=10
 set nowritebackup
@@ -369,43 +372,42 @@ let SuperTabDefaultCompletionType = "<c-p>"
 let NERDTreeMapToggleHidden = "I"
 let NERDTreeWinSize = "31"
 let Tlist_Ctags_Cmd = "ctags"
+let EclimInfoHighlight = "Statement"
 let NERDTreeMapJumpParent = "p"
 let EclimProjectTreeTitle = "ProjectTree_"
-let EclimInfoHighlight = "Statement"
 let EclimErrorReason = "Could not locate file: /Users/Shared/Applications/eclipse/plugins/org.eclim_1.3.3/bin/eclim"
 let DirDiffInteractive =  0 
 let NERDTreeMapPreview = "go"
 let EclimSystemWorkaround =  0 
 let EclimSignLevel =  5 
 let NERDTreeMapActivateNode = "o"
+let MaximizeStatusLine = "%<%f\\ %M\\ %h%r%=%-10.(%l,%c%V\\ b=%n,w=%{winnr()}%)\\ %P"
 let EclimMakeLCD =  1 
 let NERDTreeWinPos = "left"
+let SuperTabContextDefaultCompletionType = "<c-p>"
 let DirDiffAddArgs = ""
 let EclimDebugHighlight = "Normal"
+let TagList_title = "__Tag_List__"
 let NERDTreeStatusline = "%{b:NERDTreeRoot.path.strForOS(0)}"
 let NERDTreeMapOpenInTabSilent = "T"
 let NERDTreeMapHelp = "?"
 let NERDTreeMapToggleFilters = "f"
 let SuperTabMappingForward = "<tab>"
 let NERDTreeAutoCenter = "1"
-let SuperTabContextDefaultCompletionType = "<c-p>"
-let TagList_title = "__Tag_List__"
 let EclimHome = "/Users/Shared/Applications/eclipse/plugins/org.eclim_1.3.3"
 let SuperTabRetainCompletionType =  1 
 let NERDTreeMapJumpPrevSibling = "<C-k>"
 let NERDTreeShowBookmarks = "0"
-let NERDTreeMapOpenExpl = "e"
+let EclimLargeFileSize =  5 
 let NERDTreeRemoveDirCmd = "rm -rf "
 let CSV_string_delimiter = "\""
 let NERDTreeMouseMode = "1"
-let TailMinusF_Height =  10 
 let NERDTreeChDirMode = "0"
 let NetrwMenuPriority =  80 
 let NERDTreeAutoCenterThreshold = "3"
 let NERDTreeShowFiles = "1"
 let NERDTreeMapOpenSplit = "i"
 let EclimUserSignHighlight = "Statement"
-let EclimLargeFileSize =  5 
 let DirDiffTextFiles = "Files "
 let NERDTreeCaseSensitiveSort = "0"
 let NERDTreeHijackNetrw = "1"
@@ -413,20 +415,19 @@ let NERDTreeMapFilesystemMenu = "m"
 let NERDTreeShowLineNumbers = "0"
 let EclimUserSignText = "#"
 let EclimCommand = "eclim"
-let MaximizeStatusLine = "%<%f\\ %M\\ %h%r%=%-10.(%l,%c%V\\ b=%n,w=%{winnr()}%)\\ %P"
+let TailMinusF_Height =  10 
 let NERDTreeHighlightCursorline = "1"
 let CSV_field_list = ""
 let NERDTreeMapOpenInTab = "t"
 let CSV_separator = ","
 let EclimProjectTreeAutoOpen =  0 
 let DirDiffExcludes = ""
-let DirDiffDynamicDiffText =  0 
 let EclimMakeQfFilter =  1 
+let DirDiffDynamicDiffText =  0 
 let NERDTreeMapPreviewVSplit = "gs"
 let NERDChristmasTree = "1"
 let EclimIndent = "	"
 let NERDTreeNotificationThreshold = "100"
-let EclimShowErrors =  1 
 let CSV_mono =  0 
 let DirDiffTextDiffer = " differ"
 let BufExplorer_title = "[Buf List]"
@@ -444,9 +445,9 @@ let TailMinusF_Center_Win =  0
 let DirDiffTextAnd = " and "
 let EclimTaglistEnabled =  1 
 let NERDTreeMapOpenVSplit = "s"
+let EclimShowErrors =  1 
 let NERDTreeMapDeleteBookmark = "D"
 let AutoHiVersion = "0.2"
-let NERDTreeMapUpdirKeepOpen = "U"
 let NERDTreeMapJumpNextSibling = "<C-j>"
 let Tlist_Auto_Open =  0 
 let DirDiffIgnoreCase =  0 
@@ -461,6 +462,7 @@ let NERDTreeMapToggleFiles = "F"
 let EclimTempDir = "/tmp"
 let SuperTabMidWordCompletion =  1 
 let EclimShowCurrentErrorBalloon =  1 
+let NERDTreeMapOpenExpl = "e"
 let NetrwTopLvlMenu = "Netrw."
 let NERDTreeMapJumpFirstChild = "K"
 let EclimShowQuickfixSigns =  1 
@@ -469,6 +471,7 @@ let EclimQuote = "['\"]"
 let NERDTreeMapToggleBookmarks = "B"
 let SuperTabMappingBackward = "<s-tab>"
 let NERDTreeMapUpdir = "u"
+let NERDTreeMapUpdirKeepOpen = "U"
 let NERDTreeQuitOnOpen = "0"
 let EclimShowCurrentError =  1 
 silent only
@@ -477,13 +480,13 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +407 ~/Desktop/vimprogress.txt
+badd +1 ~/Desktop/vimprogress.txt
 badd +1 ~/sandbox/personal/people/okc.txt
 badd +1 ~/sandbox/personal/people/friends.txt
 badd +1 ~/sandbox/personal/people/acquaintances.txt
 badd +1 ~/sandbox/personal/misc/scratch.txt
 badd +251 ~/sandbox/personal/temp.txt
-badd +1 ~/sandbox/personal/@nextsteps.txt
+badd +25 ~/sandbox/personal/@nextsteps.txt
 badd +17 ~/sandbox/personal/@personal.txt
 badd +1 ~/sandbox/personal/people/me.txt
 badd +1 ~/sandbox/personal/writing/healing.txt
@@ -511,11 +514,11 @@ wincmd w
 wincmd w
 wincmd t
 set winheight=1 winwidth=1
-exe '1resize ' . ((&lines * 68 + 36) / 73)
+exe '1resize ' . ((&lines * 38 + 36) / 73)
 exe 'vert 1resize ' . ((&columns * 117 + 117) / 234)
 exe '2resize ' . ((&lines * 0 + 36) / 73)
 exe 'vert 2resize ' . ((&columns * 117 + 117) / 234)
-exe '3resize ' . ((&lines * 0 + 36) / 73)
+exe '3resize ' . ((&lines * 30 + 36) / 73)
 exe 'vert 3resize ' . ((&columns * 117 + 117) / 234)
 exe '4resize ' . ((&lines * 0 + 36) / 73)
 exe 'vert 4resize ' . ((&columns * 117 + 117) / 234)
@@ -623,59 +626,33 @@ setlocal wrapmargin=0
 1
 normal zo
 1
-normal zo
-230
-normal zo
-231
-normal zo
-274
-normal zo
-231
-normal zo
-230
-normal zo
-476
-normal zo
-722
-normal zo
-729
-normal zo
-732
-normal zo
-767
 normal zc
-722
+105
 normal zo
-864
+105
+normal zc
+230
 normal zo
-901
+231
 normal zo
-943
+231
+normal zc
+230
 normal zo
-948
+417
 normal zo
-1144
-normal zo
-943
-normal zo
-901
-normal zo
-2043
-normal zo
-2058
-normal zo
-2059
-normal zo
-2058
-normal zo
+417
+normal zc
 476
 normal zo
-let s:l = 739 - ((126 * winheight(0) + 34) / 68)
+476
+normal zc
+let s:l = 476 - ((475 * winheight(0) + 19) / 38)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-739
-normal! 0176l
+476
+normal! 08l
 wincmd w
 argglobal
 edit ~/Desktop/vimprogress.txt
@@ -886,7 +863,7 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 1 - ((0 * winheight(0) + 0) / 0)
+let s:l = 1 - ((0 * winheight(0) + 15) / 30)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -1004,7 +981,7 @@ normal zo
 normal zo
 105
 normal zo
-let s:l = 114 - ((1 * winheight(0) + 0) / 0)
+let s:l = 114 - ((113 * winheight(0) + 0) / 0)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -1015,46 +992,46 @@ argglobal
 edit ~/sandbox/personal/temp.txt
 let s:cpo_save=&cpo
 set cpo&vim
-imap <buffer> <silent> <D-0> :tabn 10
-imap <buffer> <silent> <D-1> :tabn 1
-imap <buffer> <silent> <D-2> :tabn 2
-imap <buffer> <silent> <D-3> :tabn 3
-imap <buffer> <silent> <D-4> :tabn 4
-imap <buffer> <silent> <D-5> :tabn 5
-imap <buffer> <silent> <D-6> :tabn 6
-imap <buffer> <silent> <D-7> :tabn 7
-imap <buffer> <silent> <D-8> :tabn 8
 imap <buffer> <silent> <D-9> :tabn 9
-imap <buffer> <silent> ° :tabn 10
-imap <buffer> <silent> ± :tabn 1
-imap <buffer> <silent> ² :tabn 2
-imap <buffer> <silent> ³ :tabn 3
-imap <buffer> <silent> ´ :tabn 4
-imap <buffer> <silent> µ :tabn 5
-imap <buffer> <silent> ¶ :tabn 6
-imap <buffer> <silent> · :tabn 7
-imap <buffer> <silent> ¸ :tabn 8
+imap <buffer> <silent> <D-8> :tabn 8
+imap <buffer> <silent> <D-7> :tabn 7
+imap <buffer> <silent> <D-6> :tabn 6
+imap <buffer> <silent> <D-5> :tabn 5
+imap <buffer> <silent> <D-4> :tabn 4
+imap <buffer> <silent> <D-3> :tabn 3
+imap <buffer> <silent> <D-2> :tabn 2
+imap <buffer> <silent> <D-1> :tabn 1
+imap <buffer> <silent> <D-0> :tabn 10
 imap <buffer> <silent> ¹ :tabn 9
-nmap <buffer> <silent> <D-0> 10gt
-nmap <buffer> <silent> <D-1> 1gt
-nmap <buffer> <silent> <D-2> 2gt
-nmap <buffer> <silent> <D-3> 3gt
-nmap <buffer> <silent> <D-4> 4gt
-nmap <buffer> <silent> <D-5> 5gt
-nmap <buffer> <silent> <D-6> 6gt
-nmap <buffer> <silent> <D-7> 7gt
-nmap <buffer> <silent> <D-8> 8gt
+imap <buffer> <silent> ¸ :tabn 8
+imap <buffer> <silent> · :tabn 7
+imap <buffer> <silent> ¶ :tabn 6
+imap <buffer> <silent> µ :tabn 5
+imap <buffer> <silent> ´ :tabn 4
+imap <buffer> <silent> ³ :tabn 3
+imap <buffer> <silent> ² :tabn 2
+imap <buffer> <silent> ± :tabn 1
+imap <buffer> <silent> ° :tabn 10
 nmap <buffer> <silent> <D-9> 9gt
-nmap <buffer> <silent> ° 10gt
-nmap <buffer> <silent> ± 1gt
-nmap <buffer> <silent> ² 2gt
-nmap <buffer> <silent> ³ 3gt
-nmap <buffer> <silent> ´ 4gt
-nmap <buffer> <silent> µ 5gt
-nmap <buffer> <silent> ¶ 6gt
-nmap <buffer> <silent> · 7gt
-nmap <buffer> <silent> ¸ 8gt
+nmap <buffer> <silent> <D-8> 8gt
+nmap <buffer> <silent> <D-7> 7gt
+nmap <buffer> <silent> <D-6> 6gt
+nmap <buffer> <silent> <D-5> 5gt
+nmap <buffer> <silent> <D-4> 4gt
+nmap <buffer> <silent> <D-3> 3gt
+nmap <buffer> <silent> <D-2> 2gt
+nmap <buffer> <silent> <D-1> 1gt
+nmap <buffer> <silent> <D-0> 10gt
 nmap <buffer> <silent> ¹ 9gt
+nmap <buffer> <silent> ¸ 8gt
+nmap <buffer> <silent> · 7gt
+nmap <buffer> <silent> ¶ 6gt
+nmap <buffer> <silent> µ 5gt
+nmap <buffer> <silent> ´ 4gt
+nmap <buffer> <silent> ³ 3gt
+nmap <buffer> <silent> ² 2gt
+nmap <buffer> <silent> ± 1gt
+nmap <buffer> <silent> ° 10gt
 let &cpo=s:cpo_save
 unlet s:cpo_save
 setlocal keymap=
@@ -1156,18 +1133,18 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 22 - ((2 * winheight(0) + 35) / 71)
+let s:l = 32 - ((12 * winheight(0) + 35) / 71)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-22
-normal! 019l
+32
+normal! 0
 wincmd w
-exe '1resize ' . ((&lines * 68 + 36) / 73)
+exe '1resize ' . ((&lines * 38 + 36) / 73)
 exe 'vert 1resize ' . ((&columns * 117 + 117) / 234)
 exe '2resize ' . ((&lines * 0 + 36) / 73)
 exe 'vert 2resize ' . ((&columns * 117 + 117) / 234)
-exe '3resize ' . ((&lines * 0 + 36) / 73)
+exe '3resize ' . ((&lines * 30 + 36) / 73)
 exe 'vert 3resize ' . ((&columns * 117 + 117) / 234)
 exe '4resize ' . ((&lines * 0 + 36) / 73)
 exe 'vert 4resize ' . ((&columns * 117 + 117) / 234)
@@ -1202,8 +1179,8 @@ setlocal nodiff
 setlocal equalprg=
 setlocal errorformat=
 setlocal noexpandtab
-if &filetype != ''
-setlocal filetype=
+if &filetype != 'txt'
+setlocal filetype=txt
 endif
 set foldcolumn=4
 setlocal foldcolumn=0
@@ -1265,8 +1242,8 @@ setlocal statusline=
 setlocal suffixesadd=
 setlocal swapfile
 setlocal synmaxcol=3000
-if &syntax != ''
-setlocal syntax=
+if &syntax != 'txt'
+setlocal syntax=txt
 endif
 setlocal tabstop=2
 setlocal tags=
@@ -1277,15 +1254,19 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 1
-normal zc
-6
 normal zo
-let s:l = 54 - ((53 * winheight(0) + 35) / 71)
+5
+normal zo
+30
+normal zo
+37
+normal zc
+let s:l = 16 - ((15 * winheight(0) + 35) / 71)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-54
-normal! 0
+16
+normal! 023l
 tabedit ~/sandbox/personal/people/me.txt
 set splitbelow splitright
 wincmd _ | wincmd |
@@ -1397,18 +1378,6 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-1
-normal zo
-25
-normal zo
-26
-normal zo
-25
-normal zo
-46
-normal zo
-1
-normal zo
 let s:l = 1 - ((0 * winheight(0) + 35) / 71)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
@@ -2102,7 +2071,7 @@ setlocal wrap
 setlocal wrapmargin=0
 36
 normal zc
-let s:l = 25 - ((0 * winheight(0) + 35) / 71)
+let s:l = 25 - ((24 * winheight(0) + 35) / 71)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -2337,11 +2306,11 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 30 - ((0 * winheight(0) + 35) / 71)
+let s:l = 1 - ((0 * winheight(0) + 35) / 71)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-30
+1
 normal! 0
 lcd ~/Desktop
 wincmd w
@@ -3030,7 +2999,7 @@ lcd ~/Desktop
 wincmd w
 exe 'vert 1resize ' . ((&columns * 134 + 117) / 234)
 exe 'vert 2resize ' . ((&columns * 99 + 117) / 234)
-tabnext 2
+tabnext 1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf
 endif

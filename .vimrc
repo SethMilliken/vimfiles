@@ -674,6 +674,9 @@ let html_dynamic_folds = 1
 let html_use_css = 1
 let html_number_lines = 1
 let use_xhtml = 1
+" unlet html_no_foldcolumn
+" unlet html_hover_unfold
+let html_no_pre = 1
 
 " }}}
 " TESTING: {{{
