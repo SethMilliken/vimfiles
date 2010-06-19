@@ -217,9 +217,9 @@ endfunction
 
 " Timestamp: {{{
 nnoremap <silent> <Leader>sd <Esc>:call Timestamp("date")<CR>
-nnoremap <silent> <Leader>st <Esc>:call Timestamp("short")<CR>
+nnoremap <silent> <Leader>st <Esc>:call AddOrUpdateTimestamp()<CR>
 nnoremap <silent> <Leader>sl <Esc>:call Timestamp("long")<CR>
-nnoremap <silent> <Leader>fw <Esc>:call FoldWrap()<CR>
+nnoremap <silent> <Leder>fw <Esc>:call FoldWrap()<CR>
 nnoremap <silent> <Leader>fi <Esc>:call FoldInsert()<CR>
 nnoremap <silent> <Leader>ll o<Esc>:call Timestamp("short") \| call FoldWrap()<CR>
 " }}}
@@ -368,6 +368,19 @@ function! TimestampText(style) "{{{
 endfunction
 
 " }}}
+function! AddOrUpdateTimestamp() "{{{
+	let l:commentstring = substitute(FoldCommentString(), "%s", "", "")
+	let l:timestampmatch = l:commentstring . '[0-9]\{4}-[0-9]\{2}-[0-9]\{2} [0-9:]\{8} [A-Z]\{3}'
+	let l:hastimestamp = match(getline("."), l:timestampmatch)
+	let l:newtimestamp = substitute(FoldCommentString(), "%s", TimestampText("short"), "")
+	if (l:hastimestamp < 0)
+		call AppendText(l:newtimestamp)
+	else
+		call setline(".", substitute(getline("."), l:timestampmatch, l:newtimestamp, ""))
+	end
+endfunction
+
+"}}}
 function! AppendText(text) "{{{
 	let l:originalline = getline(".")
 	call append(line("."),[a:text])

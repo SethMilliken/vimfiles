@@ -208,7 +208,6 @@ set tags=./tags,tags,~/sandbox/personal/tags
 set termencoding=utf-8
 set transparency=5
 set undolevels=100
-set window=69
 set winheight=10
 set winminheight=0
 set winwidth=500
@@ -222,28 +221,29 @@ let TailMinusF_Loaded =  1
 let SuperTabLongestHighlight =  0 
 let NERDTreeMapCloseDir = "x"
 let SuperTabMappingTabLiteral = "<c-tab>"
-let NERDTreeMapRefresh = "r"
+let NERDTreeShowLineNumbers = "0"
 let DirDiffSort =  1 
 let NERDTreeBookmarksFile = "/Users/seth/.NERDTreeBookmarks"
 let SuperTabDefaultCompletionType = "<c-p>"
 let NERDTreeMapToggleHidden = "I"
 let NERDTreeWinSize = "31"
-let NERDTreeMapJumpParent = "p"
 let DirDiffInteractive =  0 
 let NERDTreeMapPreview = "go"
 let NERDTreeMapActivateNode = "o"
 let NERDTreeWinPos = "left"
-let SuperTabContextDefaultCompletionType = "<c-p>"
 let DirDiffAddArgs = ""
 let NERDTreeStatusline = "%{b:NERDTreeRoot.path.strForOS(0)}"
 let NERDTreeMapOpenInTabSilent = "T"
 let NERDTreeMapHelp = "?"
+let NERDTreeMapJumpParent = "p"
 let NERDTreeMapToggleFilters = "f"
 let SuperTabMappingForward = "<tab>"
-let NERDTreeAutoCenter = "1"
+let NERDTreeMapJumpLastChild = "J"
+let SuperTabContextDefaultCompletionType = "<c-p>"
 let SuperTabRetainCompletionType =  1 
 let NERDTreeMapJumpPrevSibling = "<C-k>"
 let NERDTreeShowBookmarks = "0"
+let NERDTreeMapOpenExpl = "e"
 let NERDTreeRemoveDirCmd = "rm -rf "
 let CSV_string_delimiter = "\""
 let NERDTreeMouseMode = "1"
@@ -255,7 +255,7 @@ let DirDiffTextFiles = "Files "
 let NERDTreeCaseSensitiveSort = "0"
 let NERDTreeHijackNetrw = "1"
 let NERDTreeMapFilesystemMenu = "m"
-let NERDTreeShowLineNumbers = "0"
+let NERDTreeMapRefresh = "r"
 let TailMinusF_Height =  10 
 let NERDTreeHighlightCursorline = "1"
 let CSV_field_list = ""
@@ -273,8 +273,7 @@ let NERDTreeMapChdir = "cd"
 let DirDiffWindowSize =  14 
 let NERDTreeMapExecute = "!"
 let NERDTreeMapRefreshRoot = "R"
-let DirDiffIgnore = ""
-let NERDTreeMapJumpLastChild = "J"
+let NERDTreeAutoCenter = "1"
 let DirDiffTextOnlyIn = "Only in "
 let TailMinusF_Center_Win =  0 
 let DirDiffTextAnd = " and "
@@ -289,8 +288,8 @@ let NERDTreeMapQuit = "q"
 let NERDTreeMapChangeRoot = "C"
 let NERDTreeSortDirs = "1"
 let NERDTreeMapToggleFiles = "F"
+let DirDiffIgnore = ""
 let SuperTabMidWordCompletion =  1 
-let NERDTreeMapOpenExpl = "e"
 let NERDTreeMapJumpFirstChild = "K"
 let NERDTreeMapOpenRecursively = "O"
 let NERDTreeMapToggleBookmarks = "B"
@@ -304,11 +303,11 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +69 ~/sandbox/personal/todo/research.tst.txt
+badd +2 ~/sandbox/personal/todo/research.tst.txt
 badd +1 ~/.vimperatorrc
 badd +1 ~/.firefox/userChrome.css
 silent! argdel *
-set lines=70 columns=117
+set lines=70 columns=115
 winpos 0 0
 edit ~/sandbox/personal/todo/research.tst.txt
 set splitbelow splitright
@@ -481,16 +480,14 @@ setlocal wrap
 setlocal wrapmargin=0
 1
 normal zo
-20
-normal zo
-20
+21
 normal zo
 let s:l = 2 - ((1 * winheight(0) + 11) / 23)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 2
-normal! 0
+normal! 030l
 wincmd w
 argglobal
 edit ~/.firefox/userChrome.css

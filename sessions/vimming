@@ -2,17 +2,17 @@ let SessionLoad = 1
 if &cp | set nocp | endif
 let s:cpo_save=&cpo
 set cpo&vim
-inoremap <C-Tab> 	
-imap <silent> <D-0> :tabn 10
-imap <silent> <D-9> :tabn 9
-imap <silent> <D-8> :tabn 8
-imap <silent> <D-7> :tabn 7
-imap <silent> <D-6> :tabn 6
-imap <silent> <D-5> :tabn 5
-imap <silent> <D-4> :tabn 4
-imap <silent> <D-3> :tabn 3
-imap <silent> <D-2> :tabn 2 
 imap <silent> <D-1> :tabn 1 
+imap <silent> <D-2> :tabn 2 
+imap <silent> <D-3> :tabn 3
+imap <silent> <D-4> :tabn 4
+imap <silent> <D-5> :tabn 5
+imap <silent> <D-6> :tabn 6
+imap <silent> <D-7> :tabn 7
+imap <silent> <D-8> :tabn 8
+imap <silent> <D-9> :tabn 9
+imap <silent> <D-0> :tabn 10
+inoremap <C-Tab> 	
 imap <D-BS> 
 imap <M-BS> 
 imap <M-Down> }
@@ -39,31 +39,31 @@ nmap   
 snoremap % b<BS>%
 snoremap ' b<BS>'
 nnoremap :: q:
-imap <silent> ° :tabn 10
-imap <silent> ¹ :tabn 9
-imap <silent> ¸ :tabn 8
-imap <silent> · :tabn 7
-imap <silent> ¶ :tabn 6
-imap <silent> µ :tabn 5
-imap <silent> ´ :tabn 4
-imap <silent> ³ :tabn 3
-imap <silent> ² :tabn 2 
 imap <silent> ± :tabn 1 
+imap <silent> ² :tabn 2 
+imap <silent> ³ :tabn 3
+imap <silent> ´ :tabn 4
+imap <silent> µ :tabn 5
+imap <silent> ¶ :tabn 6
+imap <silent> · :tabn 7
+imap <silent> ¸ :tabn 8
+imap <silent> ¹ :tabn 9
+imap <silent> ° :tabn 10
 nnoremap <silent> K :e:$
 map Q gq
 xmap S <Plug>VSurround
 nnoremap SS :w:SessionSave:call FixSession():SessionOpenLast:echo "Saved fixed session: " . v:this_session
 snoremap U b<BS>U
 vmap [% [%m'gv``
-nnoremap <silent> \tj \td\tf
-nnoremap <silent> \th \ds\tf
-nnoremap <silent> \tg \ts\tf
-nnoremap <silent> \tt :call FoldInsert()
-nnoremap <silent> \tf :call FoldWrap()
-nnoremap <silent> \td :call Timestamp("date")
-nnoremap <silent> \tl :call Timestamp("long")
-nnoremap <silent> \ts :call Timestamp("short")
 nnoremap <silent> \- :silent g/^done {{/call FoldUnfolded()
+nnoremap <silent> \ts :call Timestamp("short")
+nnoremap <silent> \tl :call Timestamp("long")
+nnoremap <silent> \td :call Timestamp("date")
+nnoremap <silent> \tf :call FoldWrap()
+nnoremap <silent> \tt :call FoldInsert()
+nnoremap <silent> \tg \ts\tf
+nnoremap <silent> \th \ds\tf
+nnoremap <silent> \tj \td\tf
 snoremap \ b<BS>\
 map <silent> \w\t <Plug>VimwikiTabMakeDiaryNote
 map <silent> \w\w <Plug>VimwikiMakeDiaryNote
@@ -123,16 +123,16 @@ nmap ySs <Plug>YSsurround
 nmap yss <Plug>Yssurround
 nmap yS <Plug>YSurround
 nmap ys <Plug>Ysurround
-nmap <silent> <D-0> 10gt 
-nmap <silent> <D-9> 9gt 
-nmap <silent> <D-8> 8gt 
-nmap <silent> <D-7> 7gt 
-nmap <silent> <D-6> 6gt 
-nmap <silent> <D-5> 5gt 
-nmap <silent> <D-4> 4gt 
-nmap <silent> <D-3> 3gt 
-nmap <silent> <D-2> 2gt
 nmap <silent> <D-1> 1gt
+nmap <silent> <D-2> 2gt
+nmap <silent> <D-3> 3gt 
+nmap <silent> <D-4> 4gt 
+nmap <silent> <D-5> 5gt 
+nmap <silent> <D-6> 6gt 
+nmap <silent> <D-7> 7gt 
+nmap <silent> <D-8> 8gt 
+nmap <silent> <D-9> 9gt 
+nmap <silent> <D-0> 10gt 
 nnoremap <C-Down> :silent! :call AdjustFont(-1)
 nnoremap <C-Up> :silent! :call AdjustFont(1)
 nnoremap <silent> <C-Right> gt
@@ -206,19 +206,19 @@ inoremap <silent> 	 =ShowAvailableSnips()
 imap  <Plug>Isurround
 imap  =CtrlXPP()
 map! + Bi<em>ea</em>
-nnoremap ® :echo "Fooobar"
-nmap <silent> ° 10gt 
-nmap <silent> ¹ 9gt 
-nmap <silent> ¸ 8gt 
-nmap <silent> · 7gt 
-nmap <silent> ¶ 6gt 
-nmap <silent> µ 5gt 
-nmap <silent> ´ 4gt 
-nmap <silent> ³ 3gt 
-nmap <silent> ² 2gt
 nmap <silent> ± 1gt
-nmap ò :echo "Fum"
+nmap <silent> ² 2gt
+nmap <silent> ³ 3gt 
+nmap <silent> ´ 4gt 
+nmap <silent> µ 5gt 
+nmap <silent> ¶ 6gt 
+nmap <silent> · 7gt 
+nmap <silent> ¸ 8gt 
+nmap <silent> ¹ 9gt 
+nmap <silent> ° 10gt 
+nnoremap ® :echo "Fooobar"
 nmap ô 
+nmap ò :echo "Fum"
 map! \_ Bi<em>ea</em>
 nnoremap † :echo "Testing"
 let &cpo=s:cpo_save
@@ -286,28 +286,29 @@ let TailMinusF_Loaded =  1
 let SuperTabLongestHighlight =  0 
 let NERDTreeMapCloseDir = "x"
 let SuperTabMappingTabLiteral = "<c-tab>"
-let NERDTreeMapRefresh = "r"
+let NERDTreeShowLineNumbers = "0"
 let DirDiffSort =  1 
 let NERDTreeBookmarksFile = "/Users/seth/.NERDTreeBookmarks"
 let SuperTabDefaultCompletionType = "<c-p>"
 let NERDTreeMapToggleHidden = "I"
 let NERDTreeWinSize = "31"
-let NERDTreeMapJumpParent = "p"
 let DirDiffInteractive =  0 
 let NERDTreeMapPreview = "go"
 let NERDTreeMapActivateNode = "o"
 let NERDTreeWinPos = "left"
-let SuperTabContextDefaultCompletionType = "<c-p>"
 let DirDiffAddArgs = ""
 let NERDTreeStatusline = "%{b:NERDTreeRoot.path.strForOS(0)}"
 let NERDTreeMapOpenInTabSilent = "T"
 let NERDTreeMapHelp = "?"
+let NERDTreeMapJumpParent = "p"
 let NERDTreeMapToggleFilters = "f"
 let SuperTabMappingForward = "<tab>"
-let NERDTreeAutoCenter = "1"
+let NERDTreeMapJumpLastChild = "J"
+let SuperTabContextDefaultCompletionType = "<c-p>"
 let SuperTabRetainCompletionType =  1 
 let NERDTreeMapJumpPrevSibling = "<C-k>"
 let NERDTreeShowBookmarks = "0"
+let NERDTreeMapOpenExpl = "e"
 let NERDTreeRemoveDirCmd = "rm -rf "
 let CSV_string_delimiter = "\""
 let NERDTreeMouseMode = "1"
@@ -319,7 +320,7 @@ let DirDiffTextFiles = "Files "
 let NERDTreeCaseSensitiveSort = "0"
 let NERDTreeHijackNetrw = "1"
 let NERDTreeMapFilesystemMenu = "m"
-let NERDTreeShowLineNumbers = "0"
+let NERDTreeMapRefresh = "r"
 let TailMinusF_Height =  10 
 let NERDTreeHighlightCursorline = "1"
 let CSV_field_list = ""
@@ -337,8 +338,7 @@ let NERDTreeMapChdir = "cd"
 let DirDiffWindowSize =  14 
 let NERDTreeMapExecute = "!"
 let NERDTreeMapRefreshRoot = "R"
-let DirDiffIgnore = ""
-let NERDTreeMapJumpLastChild = "J"
+let NERDTreeAutoCenter = "1"
 let DirDiffTextOnlyIn = "Only in "
 let TailMinusF_Center_Win =  0 
 let DirDiffTextAnd = " and "
@@ -353,8 +353,8 @@ let NERDTreeMapQuit = "q"
 let NERDTreeMapChangeRoot = "C"
 let NERDTreeSortDirs = "1"
 let NERDTreeMapToggleFiles = "F"
+let DirDiffIgnore = ""
 let SuperTabMidWordCompletion =  1 
-let NERDTreeMapOpenExpl = "e"
 let NERDTreeMapJumpFirstChild = "K"
 let NERDTreeMapOpenRecursively = "O"
 let NERDTreeMapToggleBookmarks = "B"
@@ -377,7 +377,7 @@ badd +1 ~/sandbox/personal/tech/foo.vim
 badd +1 ~/.vim/snippets/_.snippets
 badd +1 ~/.vim/snippets/vim.snippets
 badd +46 ~/bin/vimperator
-badd +0 ~/.vim/.vimrc
+badd +1 ~/.vim/.vimrc
 silent! argdel *
 set lines=73 columns=234
 set fullscreen
@@ -1789,16 +1789,18 @@ normal zo
 normal zo
 257
 normal zo
+537
+normal zo
 236
 normal zo
 596
 normal zo
-let s:l = 257 - ((131 * winheight(0) + 24) / 49)
+let s:l = 669 - ((0 * winheight(0) + 24) / 49)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-257
-normal! 010l
+669
+normal! 046l
 wincmd w
 argglobal
 edit ~/.gvimrc

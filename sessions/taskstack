@@ -207,7 +207,6 @@ set termencoding=utf-8
 set transparency=5
 set undolevels=100
 set updatetime=500
-set window=69
 set winminheight=0
 set nowritebackup
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
@@ -293,8 +292,8 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +1 ~/sandbox/personal/todo/personal.tst.txt
-badd +63 ~/sandbox/personal/todo/todo.txt
+badd +503 ~/sandbox/personal/todo/personal.tst.txt
+badd +39 ~/sandbox/personal/todo/todo.txt
 badd +173 ~/sandbox/personal/todo/techtodo.txt
 silent! argdel *
 set lines=70 columns=115
@@ -315,10 +314,10 @@ wincmd w
 wincmd t
 set winheight=1 winwidth=1
 exe '1resize ' . ((&lines * 20 + 35) / 70)
-exe '2resize ' . ((&lines * 21 + 35) / 70)
-exe '3resize ' . ((&lines * 25 + 35) / 70)
+exe '2resize ' . ((&lines * 22 + 35) / 70)
+exe '3resize ' . ((&lines * 24 + 35) / 70)
 exe 'vert 3resize ' . ((&columns * 57 + 57) / 115)
-exe '4resize ' . ((&lines * 25 + 35) / 70)
+exe '4resize ' . ((&lines * 24 + 35) / 70)
 exe 'vert 4resize ' . ((&columns * 57 + 57) / 115)
 argglobal
 let s:cpo_save=&cpo
@@ -437,14 +436,14 @@ setlocal wrap
 setlocal wrapmargin=0
 1
 normal zo
-6
+18
 normal zo
 let s:l = 2 - ((1 * winheight(0) + 10) / 20)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 2
-normal! 0
+normal! 038l
 wincmd w
 argglobal
 edit ~/sandbox/personal/todo/personal.tst.txt
@@ -562,22 +561,12 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-502
-normal zo
-503
-normal zo
-618
-normal zo
-621
-normal zc
-502
-normal zo
-let s:l = 503 - ((0 * winheight(0) + 10) / 21)
+let s:l = 688 - ((144 * winheight(0) + 11) / 22)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-503
-normal! 019l
+688
+normal! 0
 wincmd w
 argglobal
 edit ~/sandbox/personal/todo/techtodo.txt
@@ -653,7 +642,7 @@ setlocal path=
 setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
-setlocal readonly
+setlocal noreadonly
 setlocal norightleft
 setlocal rightleftcmd=search
 setlocal noscrollbind
@@ -680,11 +669,19 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 401 - ((1 * winheight(0) + 12) / 25)
+22
+normal zo
+23
+normal zo
+23
+normal zo
+22
+normal zo
+let s:l = 23 - ((0 * winheight(0) + 12) / 24)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-401
+23
 normal! 0
 wincmd w
 argglobal
@@ -725,7 +722,7 @@ setlocal foldignore=#
 setlocal foldlevel=0
 setlocal foldmarker={{{,}}}
 set foldmethod=marker
-setlocal foldmethod=syntax
+setlocal foldmethod=marker
 setlocal foldminlines=1
 setlocal foldnestmax=20
 set foldtext=MyFoldText()
@@ -788,19 +785,19 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 63 - ((12 * winheight(0) + 12) / 25)
+let s:l = 39 - ((0 * winheight(0) + 12) / 24)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-63
+39
 normal! 0
 wincmd w
-2wincmd w
+3wincmd w
 exe '1resize ' . ((&lines * 20 + 35) / 70)
-exe '2resize ' . ((&lines * 21 + 35) / 70)
-exe '3resize ' . ((&lines * 25 + 35) / 70)
+exe '2resize ' . ((&lines * 22 + 35) / 70)
+exe '3resize ' . ((&lines * 24 + 35) / 70)
 exe 'vert 3resize ' . ((&columns * 57 + 57) / 115)
-exe '4resize ' . ((&lines * 25 + 35) / 70)
+exe '4resize ' . ((&lines * 24 + 35) / 70)
 exe 'vert 4resize ' . ((&columns * 57 + 57) / 115)
 tabnext 1
 if exists('s:wipebuf')
