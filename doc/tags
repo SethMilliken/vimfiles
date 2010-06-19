@@ -31,6 +31,7 @@
 'snippets'	snipMate.txt	/*'snippets'*
 .snippet	snipMate.txt	/*.snippet*
 .snippets	snipMate.txt	/*.snippets*
+:BuildMethods	cocoa.txt	/*:BuildMethods*
 :CVSEdit	vcscommand.txt	/*:CVSEdit*
 :CVSEditors	vcscommand.txt	/*:CVSEditors*
 :CVSUnedit	vcscommand.txt	/*:CVSUnedit*
@@ -40,6 +41,7 @@
 :CVSWatchOn	vcscommand.txt	/*:CVSWatchOn*
 :CVSWatchRemove	vcscommand.txt	/*:CVSWatchRemove*
 :CVSWatchers	vcscommand.txt	/*:CVSWatchers*
+:ListMethods	cocoa.txt	/*:ListMethods*
 :MatchDebug	matchit.txt	/*:MatchDebug*
 :NERDTree	NERD_tree.txt	/*:NERDTree*
 :NERDTreeClose	NERD_tree.txt	/*:NERDTreeClose*
@@ -199,6 +201,18 @@ bufexplorer-usage	bufexplorer.txt	/*bufexplorer-usage*
 bufexplorer-windowlayout	bufexplorer.txt	/*bufexplorer-windowlayout*
 bufexplorer.txt	bufexplorer.txt	/*bufexplorer.txt*
 buffer-explorer	bufexplorer.txt	/*buffer-explorer*
+cocoa	cocoa.txt	/*cocoa*
+cocoa-author	cocoa.txt	/*cocoa-author*
+cocoa-commands	cocoa.txt	/*cocoa-commands*
+cocoa-completion	cocoa.txt	/*cocoa-completion*
+cocoa-contact	cocoa.txt	/*cocoa-contact*
+cocoa-features	cocoa.txt	/*cocoa-features*
+cocoa-installation	cocoa.txt	/*cocoa-installation*
+cocoa-intro	cocoa.txt	/*cocoa-intro*
+cocoa-license	cocoa.txt	/*cocoa-license*
+cocoa-mappings	cocoa.txt	/*cocoa-mappings*
+cocoa-suggested-plugins	cocoa.txt	/*cocoa-suggested-plugins*
+cocoa.txt	cocoa.txt	/*cocoa.txt*
 cs	surround.txt	/*cs*
 ds	surround.txt	/*ds*
 g%	matchit.txt	/*g%*
@@ -214,6 +228,7 @@ g:bufExplorerSortBy	bufexplorer.txt	/*g:bufExplorerSortBy*
 g:bufExplorerSplitBelow	bufexplorer.txt	/*g:bufExplorerSplitBelow*
 g:bufExplorerSplitOutPathName	bufexplorer.txt	/*g:bufExplorerSplitOutPathName*
 g:bufExplorerSplitRight	bufexplorer.txt	/*g:bufExplorerSplitRight*
+g:objc_man_key	cocoa.txt	/*g:objc_man_key*
 g:snippets_dir	snipMate.txt	/*g:snippets_dir*
 g:snips_author	snipMate.txt	/*g:snips_author*
 g:vimwiki_CJK_length	vimwiki.txt	/*g:vimwiki_CJK_length*
@@ -244,6 +259,7 @@ g:vimwiki_w32_dir_enc	vimwiki.txt	/*g:vimwiki_w32_dir_enc*
 i_CTRL-G_S	surround.txt	/*i_CTRL-G_S*
 i_CTRL-G_s	surround.txt	/*i_CTRL-G_s*
 i_CTRL-R_<Tab>	snipMate.txt	/*i_CTRL-R_<Tab>*
+leopard-security-alert	cocoa.txt	/*leopard-security-alert*
 list-snippets	snipMate.txt	/*list-snippets*
 matchit	matchit.txt	/*matchit*
 matchit-%	matchit.txt	/*matchit-%*

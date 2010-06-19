@@ -631,6 +631,11 @@ augroup Vimperator
 	au BufRead vimperator-* imap <buffer> ZZ <Esc>ZZ
 augroup END
 
+" Cocoa:
+augroup Cocoa
+	au BufRead *.[mh] nnoremap <buffer> <d-1> :ListMethods<CR>
+augroup END
+
 " autocomplete tags in html
 au! FileType xhtml imap <buffer> > <Esc>:call AutoTagComplete()<CR>
 
@@ -678,7 +683,7 @@ map <silent> <Leader>w2 <Esc>:w<CR>:VimwikiAll2HTML<CR><Esc>:echo "Saved wiki to
 let g:vimwiki_hl_headers = 1 				" hilight header colors
 let g:vimwiki_hl_cb_checked = 1 			" hilight todo item colors
 let g:vimwiki_list_ignore_newline = 0 		" convert newlines to <br /> in list
-let g:vimwiki_folding = 1                   " allow outline folding
+let g:vimwiki_folding = 0                   " don't allow outline folding
 let g:vimwiki_fold_lists = 1                " allow folding of list subitems
 let g:vimwiki_list = [{'path': '~/sandbox/personal/vimwiki/', 'index': 'PersonalWiki', 'auto_export': 1}, {'path': '~/sandbox/public/wiki', 'index': 'SethMilliken', 'auto_export': 1}, {'path': '~/sandbox/work/wiki/', 'index': 'SethMilliken', 'html_header': '~/sandbox/work/wiki/header.tpl', 'auto_export': 1}]
 
