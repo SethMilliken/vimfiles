@@ -12,6 +12,10 @@ syntax match url /[a-z]*:\/\/[^ >]*/
 syntax region duration start="^\s*(.)\|\%(^\|^\s\+\)+" end="\s\|$" oneline
 " TS#<####>, PF#<####>, BUG:, FIXME: 
 syntax region bug start="\%(\%(TS#\|PF#\)[0-9]\+\|BUG:\|FIXME:\|STORY:\)" end="\s\|$" oneline
+" SECTION
+syntax match section /^[A-Z]\+ /
+" @context
+syntax match context /^@[a-z.]\+/
 " = statement
 syntax region declaration start="\%(^\|^\s\+\)= " end="$" contains=bug,date,url oneline
 " o completed todo item
@@ -33,6 +37,8 @@ highlight default link foldmarkend Ignore
 highlight default link bug SpecialKey
 highlight default link done NonText
 highlight default link abandoned Ignore
+highlight default link context DiffText
+highlight default link section Directory
 highlight default link declaration Constant
 highlight default link undetermined Question
 highlight default link expense MoreMsg
