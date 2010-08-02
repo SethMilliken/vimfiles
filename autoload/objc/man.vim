@@ -18,7 +18,9 @@ let locations = [
 			\	{'path': '/Developer/Documentation/DocSets/com.apple.adc.documentation.AppleSnowLeopard.CoreReference.docset',
 			\	'alias': 'Snow Leopard'},
 			\	{'path': '/Developer/Platforms/iPhoneOS.platform/Developer/Documentation/DocSets/com.apple.adc.documentation.AppleiPhone3_0.iPhoneLibrary.docset',
-			\	'alias': 'iPhone 3.0'}
+			\	'alias': 'iPhone 3.0'},
+			\	{'path': '/Developer/Platforms/iPhoneOS.platform/Developer/Documentation/DocSets/com.apple.adc.documentation.AppleiPhone4_0.iPhoneLibrary.docset',
+			\	'alias': 'iPhone 4.0'}
 			\	]
 for location in locations
 	if isdirectory(location.path)

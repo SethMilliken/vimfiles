@@ -88,6 +88,7 @@ set shortmess+=A 					" don't show message on existing swapfile
 set nospell							" spelling off by default
 set spellcapcheck=off				" ignore case in spellcheck
 set encoding=UTF-8 					" use UTF-8 encoding
+set fileencoding=UTF-8 				" use UTF-8 encoding as default
 set nolist							" don't show invisibles
 set listchars=tab:>-,trail:-		" ...but make them look nice when they do show 
 set iskeyword+=-					" usually want - to not divide words
@@ -136,8 +137,7 @@ nnoremap <Nul> :
 "Annoyances: Stop F1 from invoking Help
 map <F1> <Esc>
 imap <F1> <Esc>
-nmap <Space> <C-f>
-nmap <S-Space> <C-b>
+nmap <S-Space> <C-f>
 
 " Reset: restore some default settings and redraw
 nnoremap <silent> <C-L> :call Reset() \| nohls<CR>
@@ -684,8 +684,8 @@ let g:vimwiki_hl_headers = 1 				" hilight header colors
 let g:vimwiki_hl_cb_checked = 1 			" hilight todo item colors
 let g:vimwiki_list_ignore_newline = 0 		" convert newlines to <br /> in list
 let g:vimwiki_folding = 0                   " don't allow outline folding
-let g:vimwiki_fold_lists = 1                " allow folding of list subitems
-let g:vimwiki_list = [{'path': '~/sandbox/personal/vimwiki/', 'index': 'PersonalWiki', 'auto_export': 1}, {'path': '~/sandbox/public/wiki', 'index': 'SethMilliken', 'auto_export': 1}, {'path': '~/sandbox/work/wiki/', 'index': 'SethMilliken', 'html_header': '~/sandbox/work/wiki/header.tpl', 'auto_export': 1}]
+let g:vimwiki_fold_lists = 0                " don't allow folding of list subitems
+let g:vimwiki_list = [{'path': '~/sandbox/personal/vimwiki/', 'index': 'PersonalWiki'}, {'path': '~/sandbox/public/wiki', 'index': 'SethMilliken', 'auto_export': 1}, {'path': '~/sandbox/work/wiki/', 'index': 'SethMilliken', 'html_header': '~/sandbox/work/wiki/header.tpl', 'auto_export': 1}]
 
 " 2html.vim
 let html_dynamic_folds = 1

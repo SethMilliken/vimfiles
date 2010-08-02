@@ -28,12 +28,14 @@ nmap   
 snoremap % b<BS>%
 snoremap ' b<BS>'
 nnoremap :: q:
+nnoremap <silent> <Leder>fw :call FoldWrap()
 nnoremap <silent> K :e:$
 map Q gq
 xmap S <Plug>VSurround
 nnoremap SS :w:SessionSave:call FixSession():SessionOpenLast:echo "Saved fixed session: " . v:this_session
 snoremap U b<BS>U
 vmap [% [%m'gv``
+nnoremap <silent> \fw :call FoldWrap()
 snoremap \ b<BS>\
 map <silent> \w\t <Plug>VimwikiTabMakeDiaryNote
 map <silent> \w\w <Plug>VimwikiMakeDiaryNote
@@ -64,7 +66,6 @@ map <silent> \w2 :w:VimwikiAll2HTML:echo "Saved wiki to HTML."
 map <silent> \snip :call ResetSnippets() | call GetSnippets(g:snippets_dir, &ft):echo "Snippets for format \"" . &ft . "\" updated."
 nnoremap <silent> \ll o:call Timestamp("short") | call FoldWrap()
 nnoremap <silent> \fi :call FoldInsert()
-nnoremap <silent> \fw :call FoldWrap()
 nnoremap <silent> \sl :call Timestamp("long")
 nnoremap <silent> \st :call Timestamp("short")
 nnoremap <silent> \sd :call Timestamp("date")
@@ -208,6 +209,7 @@ set tags=./tags,tags,~/sandbox/personal/tags
 set termencoding=utf-8
 set transparency=5
 set undolevels=100
+set window=69
 set winheight=10
 set winminheight=0
 set winwidth=500
@@ -303,13 +305,13 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +2 ~/sandbox/personal/todo/research.tst.txt
+badd +1 ~/sandbox/personal/todo/research.tst.txt
 badd +1 ~/.vimperatorrc
 badd +1 ~/.firefox/userChrome.css
 silent! argdel *
-set lines=70 columns=115
+set lines=70 columns=117
 winpos 0 0
-edit ~/sandbox/personal/todo/research.tst.txt
+buffer ~/sandbox/personal/todo/research.tst.txt
 set splitbelow splitright
 wincmd _ | wincmd |
 split
@@ -326,53 +328,53 @@ exe '3resize ' . ((&lines * 22 + 35) / 70)
 argglobal
 let s:cpo_save=&cpo
 set cpo&vim
-imap <buffer> <silent> <D-0> :tabn 10
-imap <buffer> <silent> <D-1> :tabn 1
-imap <buffer> <silent> <D-2> :tabn 2
-imap <buffer> <silent> <D-3> :tabn 3
-imap <buffer> <silent> <D-4> :tabn 4
-imap <buffer> <silent> <D-5> :tabn 5
-imap <buffer> <silent> <D-6> :tabn 6
-imap <buffer> <silent> <D-7> :tabn 7
-imap <buffer> <silent> <D-8> :tabn 8
 imap <buffer> <silent> <D-9> :tabn 9
+imap <buffer> <silent> <D-8> :tabn 8
+imap <buffer> <silent> <D-7> :tabn 7
+imap <buffer> <silent> <D-6> :tabn 6
+imap <buffer> <silent> <D-5> :tabn 5
+imap <buffer> <silent> <D-4> :tabn 4
+imap <buffer> <silent> <D-3> :tabn 3
+imap <buffer> <silent> <D-2> :tabn 2
+imap <buffer> <silent> <D-1> :tabn 1
+imap <buffer> <silent> <D-0> :tabn 10
 nmap <buffer> <NL> ddp
 nmap <buffer>  ddkP
-imap <buffer> <silent> ° :tabn 10
-imap <buffer> <silent> ± :tabn 1
-imap <buffer> <silent> ² :tabn 2
-imap <buffer> <silent> ³ :tabn 3
-imap <buffer> <silent> ´ :tabn 4
-imap <buffer> <silent> µ :tabn 5
-imap <buffer> <silent> ¶ :tabn 6
-imap <buffer> <silent> · :tabn 7
-imap <buffer> <silent> ¸ :tabn 8
 imap <buffer> <silent> ¹ :tabn 9
+imap <buffer> <silent> ¸ :tabn 8
+imap <buffer> <silent> · :tabn 7
+imap <buffer> <silent> ¶ :tabn 6
+imap <buffer> <silent> µ :tabn 5
+imap <buffer> <silent> ´ :tabn 4
+imap <buffer> <silent> ³ :tabn 3
+imap <buffer> <silent> ² :tabn 2
+imap <buffer> <silent> ± :tabn 1
+imap <buffer> <silent> ° :tabn 10
 nnoremap <buffer> LL :silent! call FindNode("SCRATCH")zo]zO
 nnoremap <buffer> NN ggzoo-a 
 nnoremap <buffer> QQ :silent! call InsertItem(getline("."), "o")
 nnoremap <buffer> XX :silent! call InsertItem(getline("."), "x")
 nnoremap <buffer> ZZ :maca hide:
-nmap <buffer> <silent> <D-0> 10gt
-nmap <buffer> <silent> <D-1> 1gt
-nmap <buffer> <silent> <D-2> 2gt
-nmap <buffer> <silent> <D-3> 3gt
-nmap <buffer> <silent> <D-4> 4gt
-nmap <buffer> <silent> <D-5> 5gt
-nmap <buffer> <silent> <D-6> 6gt
-nmap <buffer> <silent> <D-7> 7gt
-nmap <buffer> <silent> <D-8> 8gt
 nmap <buffer> <silent> <D-9> 9gt
-nmap <buffer> <silent> ° 10gt
-nmap <buffer> <silent> ± 1gt
-nmap <buffer> <silent> ² 2gt
-nmap <buffer> <silent> ³ 3gt
-nmap <buffer> <silent> ´ 4gt
-nmap <buffer> <silent> µ 5gt
-nmap <buffer> <silent> ¶ 6gt
-nmap <buffer> <silent> · 7gt
-nmap <buffer> <silent> ¸ 8gt
+nmap <buffer> <silent> <D-8> 8gt
+nmap <buffer> <silent> <D-7> 7gt
+nmap <buffer> <silent> <D-6> 6gt
+nmap <buffer> <silent> <D-5> 5gt
+nmap <buffer> <silent> <D-4> 4gt
+nmap <buffer> <silent> <D-3> 3gt
+nmap <buffer> <silent> <D-2> 2gt
+nmap <buffer> <silent> <D-1> 1gt
+nmap <buffer> <silent> <D-0> 10gt
 nmap <buffer> <silent> ¹ 9gt
+nmap <buffer> <silent> ¸ 8gt
+nmap <buffer> <silent> · 7gt
+nmap <buffer> <silent> ¶ 6gt
+nmap <buffer> <silent> µ 5gt
+nmap <buffer> <silent> ´ 4gt
+nmap <buffer> <silent> ³ 3gt
+nmap <buffer> <silent> ² 2gt
+nmap <buffer> <silent> ± 1gt
+nmap <buffer> <silent> ° 10gt
 imap <buffer> NN NN
 imap <buffer> QQ QQ
 imap <buffer> XX XX
@@ -480,17 +482,17 @@ setlocal wrap
 setlocal wrapmargin=0
 1
 normal zo
-21
+20
 normal zo
 let s:l = 2 - ((1 * winheight(0) + 11) / 23)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 2
-normal! 030l
+normal! 069l
 wincmd w
 argglobal
-edit ~/.firefox/userChrome.css
+buffer ~/.firefox/userChrome.css
 setlocal keymap=
 setlocal noarabic
 setlocal autoindent
@@ -598,19 +600,19 @@ normal! zt
 normal! 0
 wincmd w
 argglobal
-edit ~/.vimperatorrc
-vnoremap <buffer> <silent> [" :exe "normal! gv"|call search('\%(^\s*".*\n\)\%(^\s*"\)\@!', "bW")
-nnoremap <buffer> <silent> [" :call search('\%(^\s*".*\n\)\%(^\s*"\)\@!', "bW")
-vnoremap <buffer> <silent> [] m':exe "normal! gv"|call search('^\s*endf*\%[unction]\>', "bW")
-nnoremap <buffer> <silent> [] m':call search('^\s*endf*\%[unction]\>', "bW")
-vnoremap <buffer> <silent> [[ m':exe "normal! gv"|call search('^\s*fu\%[nction]\>', "bW")
+buffer ~/.vimperatorrc
 nnoremap <buffer> <silent> [[ m':call search('^\s*fu\%[nction]\>', "bW")
-vnoremap <buffer> <silent> ]" :exe "normal! gv"|call search('^\(\s*".*\n\)\@<!\(\s*"\)', "W")
-nnoremap <buffer> <silent> ]" :call search('^\(\s*".*\n\)\@<!\(\s*"\)', "W")
-vnoremap <buffer> <silent> ][ m':exe "normal! gv"|call search('^\s*endf*\%[unction]\>', "W")
-nnoremap <buffer> <silent> ][ m':call search('^\s*endf*\%[unction]\>', "W")
-vnoremap <buffer> <silent> ]] m':exe "normal! gv"|call search('^\s*fu\%[nction]\>', "W")
+vnoremap <buffer> <silent> [[ m':exe "normal! gv"|call search('^\s*fu\%[nction]\>', "bW")
+nnoremap <buffer> <silent> [] m':call search('^\s*endf*\%[unction]\>', "bW")
+vnoremap <buffer> <silent> [] m':exe "normal! gv"|call search('^\s*endf*\%[unction]\>', "bW")
+nnoremap <buffer> <silent> [" :call search('\%(^\s*".*\n\)\%(^\s*"\)\@!', "bW")
+vnoremap <buffer> <silent> [" :exe "normal! gv"|call search('\%(^\s*".*\n\)\%(^\s*"\)\@!', "bW")
 nnoremap <buffer> <silent> ]] m':call search('^\s*fu\%[nction]\>', "W")
+vnoremap <buffer> <silent> ]] m':exe "normal! gv"|call search('^\s*fu\%[nction]\>', "W")
+nnoremap <buffer> <silent> ][ m':call search('^\s*endf*\%[unction]\>', "W")
+vnoremap <buffer> <silent> ][ m':exe "normal! gv"|call search('^\s*endf*\%[unction]\>', "W")
+nnoremap <buffer> <silent> ]" :call search('^\(\s*".*\n\)\@<!\(\s*"\)', "W")
+vnoremap <buffer> <silent> ]" :exe "normal! gv"|call search('^\(\s*".*\n\)\@<!\(\s*"\)', "W")
 setlocal keymap=
 setlocal noarabic
 setlocal autoindent
