@@ -50,6 +50,7 @@ nmap   
 snoremap % b<BS>%
 snoremap ' b<BS>'
 nnoremap :: q:
+nnoremap <silent> <Leder>fw :call FoldWrap()
 map <l :set nolist
 map <s :set nospell
 nmap <silent> >c :!wc -w %
@@ -76,6 +77,7 @@ xmap S <Plug>VSurround
 nnoremap SS :w:SessionSave:call FixSession():echo "Saved fixed session: " . v:this_session
 snoremap U b<BS>U
 vmap [% [%m'gv``
+nnoremap \p+ :tab help 
 nnoremap <silent> \- :silent g/^done {{/call FoldUnfolded()
 omap <silent> \\ :call HandleURI()
 vmap <silent> \\ :call HandleURI()
@@ -141,7 +143,7 @@ nnoremap <silent> \fw :call FoldWrap()
 nnoremap <silent> \sl :call Timestamp("long")
 nnoremap <silent> \st :call Timestamp("short")
 nnoremap <silent> \sd :call Timestamp("date")
-nnoremap \p+ :tab help 
+nmap \po :tab help 
 nnoremap \pp :help:winc _:winc |:help 
 nnoremap \_ Bi<em>ea</em>
 nnoremap <silent> \q :call FormatSqlStatement()
@@ -303,6 +305,7 @@ set diffopt=filler,vertical
 set directory=~/.vim/swap//,~/vimfiles/swap//
 set noequalalways
 set fileencodings=ucs-bom,utf-8,default,latin1
+set foldlevelstart=999
 set fuoptions=maxhorz,maxvert
 set guifont=Inconsolata:h11
 set guioptions=egmrLt
@@ -337,9 +340,9 @@ set tags=./tags,tags,~/sandbox/personal/tags
 set termencoding=utf-8
 set transparency=5
 set undolevels=100
-set window=72
+set updatetime=500
 set winheight=10
-set winminheight=0
+set winminheight=10
 set nowritebackup
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
@@ -477,20 +480,20 @@ badd +1 ~/sandbox/personal/lists/accomplishments.txt
 badd +1 ~/sandbox/personal/lists/wishlist.txt
 badd +20 ~/sandbox/personal/tech/osannoyances.txt
 badd +111 ~/sandbox/personal/tech/osxsetup.txt
-badd +445 ~/sandbox/personal/todo/techtodo.txt
+badd +326 ~/sandbox/personal/todo/techtodo.txt
 badd +30 ~/sandbox/personal/todo/todo.txt
 badd +18 ~/sandbox/personal/zaurus/ztodo.txt
-badd +12 ~/sandbox/personal/tech/techannoyances.txt
+badd +3 ~/sandbox/personal/tech/techannoyances.txt
 badd +18 ~/sandbox/personal/tech/interesting_files.txt
 badd +13 ~/sandbox/personal/howto/How\ to\ Prepare\ for\ a\ Trip.txt
-badd +14 ~/sandbox/personal/tech/osgoodies.txt
+badd +1 ~/sandbox/personal/tech/osgoodies.txt
 badd +18 ~/sandbox/personal/zaurus/znotes.txt
 badd +1 ~/sandbox/personal/zaurus/openbsd_notes.txt
 badd +27 ~/sandbox/personal/howto/How\ to\ Move.txt
 silent! argdel *
 set lines=73 columns=234
 set fullscreen
-winpos 0 0
+winpos 0 878
 buffer ~/sandbox/personal/todo/todo.txt
 set splitbelow splitright
 wincmd _ | wincmd |
@@ -557,6 +560,7 @@ unlet s:cpo_save
 setlocal keymap=
 setlocal noarabic
 setlocal autoindent
+setlocal balloonexpr=
 setlocal nobinary
 setlocal bufhidden=
 setlocal buflisted
@@ -565,11 +569,16 @@ setlocal nocindent
 setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
 setlocal cinoptions=
 setlocal cinwords=if,else,while,do,for,switch
+setlocal colorcolumn=
 setlocal comments=sO:\"\ -,mO:\"\ \ ,eO:\"\",:\"
 setlocal commentstring=
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
+setlocal cryptmethod=
+setlocal nocursorbind
 setlocal nocursorcolumn
 set cursorline
 setlocal cursorline
@@ -627,6 +636,7 @@ setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
+setlocal norelativenumber
 setlocal norightleft
 setlocal rightleftcmd=search
 setlocal noscrollbind
@@ -649,6 +659,7 @@ setlocal tabstop=2
 setlocal tags=
 setlocal textwidth=0
 setlocal thesaurus=
+setlocal noundofile
 setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
@@ -667,161 +678,161 @@ normal zo
 normal zc
 39
 normal zo
-127
+130
 normal zo
-173
+176
 normal zc
-179
+182
 normal zc
-127
+130
 normal zo
-241
+244
 normal zo
-250
+253
 normal zc
-263
+266
 normal zc
-241
+244
 normal zo
-268
+271
 normal zo
-269
+272
 normal zc
-268
+271
 normal zo
-312
+315
 normal zo
-320
+323
 normal zc
-312
+315
 normal zo
-332
+335
 normal zo
-346
+349
 normal zc
-332
+335
 normal zo
-350
+353
 normal zo
-351
+354
 normal zc
-360
+363
 normal zo
-360
+363
 normal zc
-350
+353
 normal zo
 38
 normal zo
-432
+435
 normal zo
-433
+436
 normal zc
-432
+435
 normal zo
-438
+441
 normal zo
-439
+442
 normal zo
-439
+442
 normal zc
-463
+466
 normal zo
-464
+467
 normal zc
-473
+476
 normal zo
-473
+476
 normal zc
-463
-normal zo
-503
+466
 normal zo
 506
-normal zc
-503
 normal zo
-438
-normal zo
-518
-normal zo
-519
+509
 normal zc
-526
+506
 normal zo
-541
-normal zc
-526
+441
 normal zo
-546
+521
 normal zo
-560
+522
 normal zc
-546
+529
 normal zo
-518
+545
+normal zc
+529
 normal zo
-658
+550
 normal zo
-661
+564
 normal zc
-673
-normal zc
-691
-normal zc
-696
-normal zc
-726
-normal zc
-658
+550
 normal zo
-732
+521
 normal zo
-742
-normal zc
-732
+662
 normal zo
-753
+665
+normal zc
+677
+normal zc
+695
+normal zc
+700
+normal zc
+730
+normal zc
+662
 normal zo
-754
-normal zc
-794
-normal zc
-753
+736
 normal zo
-909
+746
+normal zc
+736
 normal zo
-910
-normal zc
-913
+757
 normal zo
-913
+758
 normal zc
-920
+795
 normal zc
-924
-normal zc
-927
+757
 normal zo
-927
-normal zc
-935
+915
 normal zo
-935
+916
 normal zc
-952
-normal zc
-909
+919
 normal zo
-956
-normal zo
-956
+919
 normal zc
-let s:l = 37 - ((0 * winheight(0) + 35) / 71)
+926
+normal zc
+930
+normal zc
+933
+normal zo
+933
+normal zc
+941
+normal zo
+941
+normal zc
+958
+normal zc
+915
+normal zo
+962
+normal zo
+962
+normal zc
+let s:l = 38 - ((37 * winheight(0) + 35) / 71)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-37
+38
 normal! 0
 wincmd w
 argglobal
@@ -873,6 +884,7 @@ unlet s:cpo_save
 setlocal keymap=
 setlocal noarabic
 setlocal autoindent
+setlocal balloonexpr=
 setlocal nobinary
 setlocal bufhidden=
 setlocal buflisted
@@ -881,11 +893,16 @@ setlocal nocindent
 setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
 setlocal cinoptions=
 setlocal cinwords=if,else,while,do,for,switch
+setlocal colorcolumn=
 setlocal comments=sO:\"\ -,mO:\"\ \ ,eO:\"\",:\"
 setlocal commentstring=
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
+setlocal cryptmethod=
+setlocal nocursorbind
 setlocal nocursorcolumn
 set cursorline
 setlocal cursorline
@@ -943,6 +960,7 @@ setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
+setlocal norelativenumber
 setlocal norightleft
 setlocal rightleftcmd=search
 setlocal noscrollbind
@@ -965,6 +983,7 @@ setlocal tabstop=2
 setlocal tags=
 setlocal textwidth=0
 setlocal thesaurus=
+setlocal noundofile
 setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
@@ -983,161 +1002,161 @@ normal zo
 normal zc
 39
 normal zo
-127
+130
 normal zo
-173
+176
 normal zc
-179
+182
 normal zc
-127
+130
 normal zo
-241
+244
 normal zo
-250
+253
 normal zc
-263
+266
 normal zc
-241
+244
 normal zo
-268
+271
 normal zo
-269
+272
 normal zc
-268
+271
 normal zo
-312
+315
 normal zo
-320
+323
 normal zc
-312
+315
 normal zo
-332
+335
 normal zo
-346
+349
 normal zc
-332
+335
 normal zo
-350
+353
 normal zo
-351
+354
 normal zc
-360
+363
 normal zo
-360
+363
 normal zc
-350
+353
 normal zo
 38
 normal zo
-432
+435
 normal zo
-433
+436
 normal zc
-432
+435
 normal zo
-438
+441
 normal zo
-439
+442
 normal zo
-439
+442
 normal zc
-463
+466
 normal zo
-464
+467
 normal zc
-473
+476
 normal zo
-473
+476
 normal zc
-463
-normal zo
-503
+466
 normal zo
 506
-normal zc
-503
 normal zo
-438
-normal zo
-518
-normal zo
-519
+509
 normal zc
-526
+506
 normal zo
-541
-normal zc
-526
+441
 normal zo
-546
+521
 normal zo
-560
+522
 normal zc
-546
+529
 normal zo
-518
+545
+normal zc
+529
 normal zo
-658
+550
 normal zo
-661
+564
 normal zc
-673
-normal zc
-691
-normal zc
-696
-normal zc
-726
-normal zc
-658
+550
 normal zo
-732
+521
 normal zo
-742
-normal zc
-732
+662
 normal zo
-753
+665
+normal zc
+677
+normal zc
+695
+normal zc
+700
+normal zc
+730
+normal zc
+662
 normal zo
-754
-normal zc
-794
-normal zc
-753
+736
 normal zo
-909
+746
+normal zc
+736
 normal zo
-910
-normal zc
-913
+757
 normal zo
-913
+758
 normal zc
-920
+795
 normal zc
-924
-normal zc
-927
+757
 normal zo
-927
-normal zc
-935
+915
 normal zo
-935
+916
 normal zc
-952
-normal zc
-909
+919
 normal zo
-956
-normal zo
-956
+919
 normal zc
-let s:l = 518 - ((0 * winheight(0) + 35) / 71)
+926
+normal zc
+930
+normal zc
+933
+normal zo
+933
+normal zc
+941
+normal zo
+941
+normal zc
+958
+normal zc
+915
+normal zo
+962
+normal zo
+962
+normal zc
+let s:l = 521 - ((0 * winheight(0) + 35) / 71)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-518
+521
 normal! 0
 wincmd w
 argglobal
@@ -1189,6 +1208,7 @@ unlet s:cpo_save
 setlocal keymap=
 setlocal noarabic
 setlocal autoindent
+setlocal balloonexpr=
 setlocal nobinary
 setlocal bufhidden=
 setlocal buflisted
@@ -1197,11 +1217,16 @@ setlocal nocindent
 setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
 setlocal cinoptions=
 setlocal cinwords=if,else,while,do,for,switch
+setlocal colorcolumn=
 setlocal comments=sO:\"\ -,mO:\"\ \ ,eO:\"\",:\"
 setlocal commentstring=
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
+setlocal cryptmethod=
+setlocal nocursorbind
 setlocal nocursorcolumn
 set cursorline
 setlocal cursorline
@@ -1259,6 +1284,7 @@ setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
+setlocal norelativenumber
 setlocal norightleft
 setlocal rightleftcmd=search
 setlocal noscrollbind
@@ -1281,6 +1307,7 @@ setlocal tabstop=2
 setlocal tags=
 setlocal textwidth=0
 setlocal thesaurus=
+setlocal noundofile
 setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
@@ -1299,161 +1326,163 @@ normal zo
 normal zc
 39
 normal zo
-127
+130
 normal zo
-173
+176
 normal zc
-179
+182
 normal zc
-127
+130
 normal zo
-241
+244
 normal zo
-250
+253
 normal zc
-263
+266
 normal zc
-241
+244
 normal zo
-268
+271
 normal zo
-269
+272
 normal zc
-268
+271
 normal zo
-312
+315
 normal zo
-320
+323
 normal zc
-312
+315
 normal zo
-332
+335
 normal zo
-346
+349
 normal zc
-332
+335
 normal zo
-350
+353
 normal zo
-351
+354
 normal zc
-360
+363
 normal zo
-360
+363
 normal zc
-350
+353
 normal zo
 38
 normal zo
-432
+435
 normal zo
-433
+436
 normal zc
-432
+435
 normal zo
-438
+441
 normal zo
-439
+442
 normal zo
-439
+442
 normal zc
-463
+466
 normal zo
-464
+467
 normal zc
-473
+476
 normal zo
-473
+476
 normal zc
-463
-normal zo
-503
+466
 normal zo
 506
-normal zc
-503
 normal zo
-438
-normal zo
-518
-normal zo
-519
+509
 normal zc
-526
+506
 normal zo
-541
-normal zc
-526
+441
 normal zo
-546
+521
 normal zo
-560
+522
 normal zc
-546
+529
 normal zo
-518
+545
+normal zc
+529
 normal zo
-658
+550
 normal zo
-661
+564
 normal zc
-673
-normal zc
-691
-normal zc
-696
-normal zc
-726
-normal zc
-658
+550
 normal zo
-732
+521
 normal zo
-742
-normal zc
-732
+657
 normal zo
-753
+662
 normal zo
-754
+665
 normal zc
-794
+677
 normal zc
-753
+695
+normal zc
+700
+normal zc
+730
+normal zc
+662
 normal zo
-909
+736
 normal zo
-910
+746
 normal zc
-913
+736
 normal zo
-913
-normal zc
-920
-normal zc
-924
-normal zc
-927
+757
 normal zo
-927
+758
 normal zc
-935
+795
+normal zc
+757
 normal zo
-935
-normal zc
-952
-normal zc
-909
+915
 normal zo
-956
-normal zo
-956
+916
 normal zc
-let s:l = 653 - ((0 * winheight(0) + 35) / 71)
+919
+normal zo
+919
+normal zc
+926
+normal zc
+930
+normal zc
+933
+normal zo
+933
+normal zc
+941
+normal zo
+941
+normal zc
+958
+normal zc
+915
+normal zo
+962
+normal zo
+962
+normal zc
+let s:l = 657 - ((0 * winheight(0) + 35) / 71)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-653
+657
 normal! 0
 wincmd w
 argglobal
@@ -1505,6 +1534,7 @@ unlet s:cpo_save
 setlocal keymap=
 setlocal noarabic
 setlocal autoindent
+setlocal balloonexpr=
 setlocal nobinary
 setlocal bufhidden=
 setlocal buflisted
@@ -1513,11 +1543,16 @@ setlocal nocindent
 setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
 setlocal cinoptions=
 setlocal cinwords=if,else,while,do,for,switch
+setlocal colorcolumn=
 setlocal comments=sO:\"\ -,mO:\"\ \ ,eO:\"\",:\"
 setlocal commentstring=
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
+setlocal cryptmethod=
+setlocal nocursorbind
 setlocal nocursorcolumn
 set cursorline
 setlocal cursorline
@@ -1535,7 +1570,7 @@ setlocal foldcolumn=0
 setlocal foldenable
 setlocal foldexpr=0
 setlocal foldignore=#
-setlocal foldlevel=5
+setlocal foldlevel=4
 setlocal foldmarker={{{,}}}
 set foldmethod=marker
 setlocal foldmethod=marker
@@ -1575,6 +1610,7 @@ setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
+setlocal norelativenumber
 setlocal norightleft
 setlocal rightleftcmd=search
 setlocal noscrollbind
@@ -1597,6 +1633,7 @@ setlocal tabstop=2
 setlocal tags=
 setlocal textwidth=0
 setlocal thesaurus=
+setlocal noundofile
 setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
@@ -1615,171 +1652,161 @@ normal zo
 normal zc
 39
 normal zo
-127
+130
 normal zo
-173
+176
 normal zc
-179
+182
 normal zc
-127
+130
 normal zo
-241
+244
 normal zo
-250
+253
 normal zc
-263
+266
 normal zc
-241
+244
 normal zo
-268
+271
 normal zo
-269
+272
 normal zc
-268
+271
 normal zo
-312
+315
 normal zo
-320
+323
 normal zc
-312
+315
 normal zo
-332
+335
 normal zo
-346
+349
 normal zc
-332
+335
 normal zo
-350
+353
 normal zo
-351
+354
 normal zc
-360
+363
 normal zo
-388
-normal zo
-398
-normal zo
-404
-normal zo
-419
-normal zo
-360
-normal zo
-350
+363
+normal zc
+353
 normal zo
 38
 normal zo
-432
+435
 normal zo
-433
-normal zo
-432
-normal zo
-438
-normal zo
-439
-normal zo
-439
+436
 normal zc
-463
+435
 normal zo
-464
+441
+normal zo
+442
+normal zo
+442
 normal zc
-473
+466
 normal zo
-473
+467
 normal zc
-463
+476
 normal zo
-503
+476
+normal zc
+466
 normal zo
 506
+normal zo
+509
 normal zc
-503
+506
 normal zo
-438
+441
 normal zo
-518
+521
 normal zo
-519
+522
 normal zc
-526
+529
 normal zo
-541
+545
 normal zc
-526
+529
 normal zo
-546
+550
 normal zo
-560
+564
 normal zc
-546
+550
 normal zo
-518
+521
 normal zo
-658
+662
 normal zo
-661
+665
 normal zc
-673
+677
 normal zc
-691
+695
 normal zc
-696
+700
 normal zc
-726
+730
 normal zc
-658
+662
 normal zo
-732
+736
 normal zo
-742
+746
 normal zc
-732
+736
 normal zo
-748
+757
 normal zo
-753
+758
+normal zc
+795
+normal zc
+757
 normal zo
-754
-normal zc
-794
-normal zc
-753
+915
 normal zo
-909
+916
+normal zc
+919
 normal zo
-910
+919
 normal zc
-913
+926
+normal zc
+930
+normal zc
+933
 normal zo
-913
+933
 normal zc
-920
-normal zc
-924
-normal zc
-927
+941
 normal zo
-927
+941
 normal zc
-935
+958
+normal zc
+915
 normal zo
-935
-normal zc
-952
-normal zc
-909
+962
 normal zo
-956
-normal zo
-956
+962
 normal zc
-let s:l = 753 - ((0 * winheight(0) + 35) / 71)
+let s:l = 758 - ((0 * winheight(0) + 35) / 71)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-753
+758
 normal! 0
 wincmd w
 exe 'vert 1resize ' . ((&columns * 58 + 117) / 234)
@@ -1792,22 +1819,19 @@ wincmd _ | wincmd |
 vsplit
 wincmd _ | wincmd |
 vsplit
-wincmd _ | wincmd |
-vsplit
-3wincmd h
-wincmd w
+2wincmd h
 wincmd w
 wincmd w
 wincmd t
 set winheight=1 winwidth=1
-exe 'vert 1resize ' . ((&columns * 58 + 117) / 234)
-exe 'vert 2resize ' . ((&columns * 58 + 117) / 234)
-exe 'vert 3resize ' . ((&columns * 58 + 117) / 234)
-exe 'vert 4resize ' . ((&columns * 57 + 117) / 234)
+exe 'vert 1resize ' . ((&columns * 77 + 117) / 234)
+exe 'vert 2resize ' . ((&columns * 77 + 117) / 234)
+exe 'vert 3resize ' . ((&columns * 78 + 117) / 234)
 argglobal
 setlocal keymap=
 setlocal noarabic
 setlocal noautoindent
+setlocal balloonexpr=
 setlocal nobinary
 setlocal bufhidden=
 setlocal buflisted
@@ -1816,11 +1840,16 @@ setlocal nocindent
 setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
 setlocal cinoptions=
 setlocal cinwords=if,else,while,do,for,switch
+setlocal colorcolumn=
 setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
 setlocal commentstring=
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
+setlocal cryptmethod=
+setlocal nocursorbind
 setlocal nocursorcolumn
 set cursorline
 setlocal cursorline
@@ -1878,6 +1907,7 @@ setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
+setlocal norelativenumber
 setlocal norightleft
 setlocal rightleftcmd=search
 setlocal noscrollbind
@@ -1900,119 +1930,128 @@ setlocal tabstop=2
 setlocal tags=
 setlocal textwidth=0
 setlocal thesaurus=
+setlocal noundofile
 setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-22
+18
 normal zo
-23
-normal zo
-52
-normal zc
-23
-normal zo
-73
-normal zo
-84
-normal zc
-73
-normal zo
-88
-normal zo
-106
-normal zo
-106
-normal zc
-88
+21
 normal zo
 22
 normal zo
-157
-normal zo
-193
+51
 normal zc
+22
+normal zo
+72
+normal zo
+83
+normal zc
+72
+normal zo
+87
+normal zo
+91
+normal zc
+87
+normal zo
+95
+normal zo
+113
+normal zo
+113
+normal zc
+95
+normal zo
+21
+normal zo
+164
+normal zo
 200
 normal zc
-205
+207
 normal zc
-157
+212
+normal zc
+164
 normal zo
-225
+232
 normal zo
-252
+259
 normal zc
-257
+264
 normal zc
-260
-normal zc
-263
+267
 normal zc
 270
 normal zc
 277
 normal zc
-283
+284
 normal zc
-289
+290
 normal zc
-225
+296
+normal zc
+232
 normal zo
-303
+310
 normal zo
-357
+364
 normal zc
-303
+310
 normal zo
-362
+369
 normal zo
-363
+370
 normal zc
-368
+375
 normal zc
-373
-normal zc
-381
+380
 normal zc
 388
-normal zo
-388
 normal zc
-419
+395
+normal zo
+395
 normal zc
-362
-normal zo
-429
-normal zo
-431
+426
 normal zc
-429
+369
 normal zo
-435
+436
 normal zo
-453
+438
 normal zc
-435
+436
 normal zo
-464
+442
 normal zo
-479
+460
 normal zc
-464
+442
 normal zo
-483
+471
 normal zo
-483
+486
 normal zc
-500
+471
 normal zo
-500
+490
+normal zo
+490
 normal zc
-let s:l = 22 - ((0 * winheight(0) + 35) / 71)
+507
+normal zo
+507
+normal zc
+let s:l = 21 - ((0 * winheight(0) + 35) / 71)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-22
+21
 normal! 0
 wincmd w
 argglobal
@@ -2020,6 +2059,7 @@ buffer ~/sandbox/personal/todo/techtodo.txt
 setlocal keymap=
 setlocal noarabic
 setlocal noautoindent
+setlocal balloonexpr=
 setlocal nobinary
 setlocal bufhidden=
 setlocal buflisted
@@ -2028,11 +2068,16 @@ setlocal nocindent
 setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
 setlocal cinoptions=
 setlocal cinwords=if,else,while,do,for,switch
+setlocal colorcolumn=
 setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
 setlocal commentstring=
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
+setlocal cryptmethod=
+setlocal nocursorbind
 setlocal nocursorcolumn
 set cursorline
 setlocal cursorline
@@ -2090,6 +2135,7 @@ setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
+setlocal norelativenumber
 setlocal norightleft
 setlocal rightleftcmd=search
 setlocal noscrollbind
@@ -2112,119 +2158,130 @@ setlocal tabstop=2
 setlocal tags=
 setlocal textwidth=0
 setlocal thesaurus=
+setlocal noundofile
 setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-22
-normal zo
-23
-normal zo
-52
-normal zc
-23
-normal zo
-73
-normal zo
-84
-normal zc
-73
-normal zo
-88
-normal zo
-106
-normal zo
-106
-normal zc
-88
+21
 normal zo
 22
 normal zo
-157
-normal zo
-193
+51
 normal zc
+22
+normal zo
+72
+normal zo
+83
+normal zc
+72
+normal zo
+87
+normal zo
+91
+normal zc
+87
+normal zo
+95
+normal zo
+113
+normal zo
+113
+normal zc
+95
+normal zo
+21
+normal zo
+145
+normal zo
+145
+normal zo
+164
+normal zo
 200
 normal zc
-205
+207
 normal zc
-157
+212
+normal zc
+164
 normal zo
-225
+232
 normal zo
-252
+259
 normal zc
-257
+264
 normal zc
-260
-normal zc
-263
+267
 normal zc
 270
 normal zc
 277
 normal zc
-283
+284
 normal zc
-289
+290
 normal zc
-225
+296
+normal zc
+232
 normal zo
-303
+310
 normal zo
-357
+364
 normal zc
-303
+310
 normal zo
-362
+369
 normal zo
-363
+370
 normal zc
-368
+375
 normal zc
-373
-normal zc
-381
+380
 normal zc
 388
-normal zo
-388
 normal zc
-419
+395
+normal zo
+395
 normal zc
-362
-normal zo
-429
-normal zo
-431
+426
 normal zc
-429
+369
 normal zo
-435
+436
 normal zo
-453
+438
 normal zc
-435
+436
 normal zo
-464
+442
 normal zo
-479
+460
 normal zc
-464
+442
 normal zo
-483
+471
 normal zo
-483
+486
 normal zc
-500
+471
 normal zo
-500
+490
+normal zo
+490
 normal zc
-let s:l = 138 - ((0 * winheight(0) + 35) / 71)
+507
+normal zo
+507
+normal zc
+let s:l = 145 - ((0 * winheight(0) + 35) / 71)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-138
+145
 normal! 0
 wincmd w
 argglobal
@@ -2232,6 +2289,7 @@ buffer ~/sandbox/personal/todo/techtodo.txt
 setlocal keymap=
 setlocal noarabic
 setlocal noautoindent
+setlocal balloonexpr=
 setlocal nobinary
 setlocal bufhidden=
 setlocal buflisted
@@ -2240,11 +2298,16 @@ setlocal nocindent
 setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
 setlocal cinoptions=
 setlocal cinwords=if,else,while,do,for,switch
+setlocal colorcolumn=
 setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
 setlocal commentstring=
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
+setlocal cryptmethod=
+setlocal nocursorbind
 setlocal nocursorcolumn
 set cursorline
 setlocal cursorline
@@ -2302,6 +2365,7 @@ setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
+setlocal norelativenumber
 setlocal norightleft
 setlocal rightleftcmd=search
 setlocal noscrollbind
@@ -2324,346 +2388,132 @@ setlocal tabstop=2
 setlocal tags=
 setlocal textwidth=0
 setlocal thesaurus=
+setlocal noundofile
 setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-22
-normal zo
-23
-normal zo
-52
-normal zc
-23
-normal zo
-73
-normal zo
-84
-normal zc
-73
-normal zo
-88
-normal zo
-106
-normal zo
-106
-normal zc
-88
+21
 normal zo
 22
 normal zo
-157
-normal zo
-193
+51
 normal zc
+22
+normal zo
+72
+normal zo
+83
+normal zc
+72
+normal zo
+87
+normal zo
+91
+normal zc
+87
+normal zo
+95
+normal zo
+113
+normal zo
+113
+normal zc
+95
+normal zo
+21
+normal zo
+164
+normal zo
 200
 normal zc
-205
+207
 normal zc
-157
+212
+normal zc
+164
 normal zo
-225
+232
 normal zo
-252
+259
 normal zc
-257
+264
 normal zc
-260
-normal zc
-263
+267
 normal zc
 270
 normal zc
 277
 normal zc
-283
+284
 normal zc
-289
+290
 normal zc
-225
+296
+normal zc
+232
 normal zo
-303
+310
 normal zo
-357
+364
 normal zc
-303
+310
 normal zo
-362
+369
 normal zo
-363
+370
 normal zc
-368
+375
 normal zc
-373
-normal zc
-381
+380
 normal zc
 388
-normal zo
-388
 normal zc
-419
+395
+normal zo
+395
 normal zc
-362
-normal zo
-429
-normal zo
-431
+426
 normal zc
-429
+369
 normal zo
-435
+436
 normal zo
-453
+438
 normal zc
-435
+436
 normal zo
-464
+442
 normal zo
-479
+460
 normal zc
-464
+442
 normal zo
-483
+471
 normal zo
-483
+486
 normal zc
-500
+471
 normal zo
-500
+490
+normal zo
+490
 normal zc
-let s:l = 225 - ((0 * winheight(0) + 35) / 71)
+507
+normal zo
+507
+normal zc
+let s:l = 310 - ((0 * winheight(0) + 35) / 71)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-225
+310
 normal! 0
 wincmd w
-argglobal
-buffer ~/sandbox/personal/todo/techtodo.txt
-setlocal keymap=
-setlocal noarabic
-setlocal noautoindent
-setlocal nobinary
-setlocal bufhidden=
-setlocal buflisted
-setlocal buftype=
-setlocal nocindent
-setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
-setlocal cinoptions=
-setlocal cinwords=if,else,while,do,for,switch
-setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
-setlocal commentstring=
-setlocal complete=.,w,b,u,t,i
-setlocal completefunc=
-setlocal nocopyindent
-setlocal nocursorcolumn
-set cursorline
-setlocal cursorline
-setlocal define=
-setlocal dictionary=
-setlocal nodiff
-setlocal equalprg=
-setlocal errorformat=
-setlocal noexpandtab
-if &filetype != 'txt'
-setlocal filetype=txt
-endif
-set foldcolumn=4
-setlocal foldcolumn=0
-setlocal foldenable
-setlocal foldexpr=0
-setlocal foldignore=#
-setlocal foldlevel=4
-setlocal foldmarker={{{,}}}
-set foldmethod=marker
-setlocal foldmethod=marker
-setlocal foldminlines=1
-setlocal foldnestmax=20
-set foldtext=MyFoldText()
-setlocal foldtext=MyFoldText()
-setlocal formatexpr=
-setlocal formatoptions=tcq
-setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
-setlocal grepprg=
-setlocal iminsert=0
-setlocal imsearch=0
-setlocal include=
-setlocal includeexpr=
-setlocal indentexpr=
-setlocal indentkeys=0{,0},:,0#,!^F,o,O,e
-setlocal noinfercase
-setlocal iskeyword=@,48-57,_,192-255,-
-setlocal keywordprg=
-set linebreak
-setlocal linebreak
-setlocal nolisp
-setlocal nolist
-setlocal nomacmeta
-setlocal makeprg=
-setlocal matchpairs=(:),{:},[:]
-setlocal modeline
-setlocal modifiable
-setlocal nrformats=octal,hex
-set number
-setlocal number
-setlocal numberwidth=4
-setlocal omnifunc=
-setlocal path=
-setlocal nopreserveindent
-setlocal nopreviewwindow
-setlocal quoteescape=\\
-setlocal noreadonly
-setlocal norightleft
-setlocal rightleftcmd=search
-setlocal noscrollbind
-setlocal shiftwidth=4
-setlocal noshortname
-setlocal nosmartindent
-setlocal softtabstop=0
-setlocal nospell
-setlocal spellcapcheck=off
-setlocal spellfile=
-setlocal spelllang=en
-setlocal statusline=
-setlocal suffixesadd=
-setlocal swapfile
-setlocal synmaxcol=3000
-if &syntax != 'txt'
-setlocal syntax=txt
-endif
-setlocal tabstop=2
-setlocal tags=
-setlocal textwidth=0
-setlocal thesaurus=
-setlocal nowinfixheight
-setlocal nowinfixwidth
-setlocal wrap
-setlocal wrapmargin=0
-19
-normal zo
-22
-normal zo
-23
-normal zo
-52
-normal zo
-23
-normal zo
-73
-normal zo
-84
-normal zo
-73
-normal zo
-88
-normal zo
-106
-normal zo
-111
-normal zo
-106
-normal zo
-88
-normal zo
-120
-normal zo
-127
-normal zo
-22
-normal zo
-157
-normal zo
-193
-normal zc
-200
-normal zc
-205
-normal zc
-157
-normal zo
-225
-normal zo
-252
-normal zc
-257
-normal zc
-260
-normal zc
-263
-normal zc
-270
-normal zc
-277
-normal zc
-283
-normal zc
-289
-normal zc
-225
-normal zo
-303
-normal zo
-357
-normal zc
-303
-normal zo
-362
-normal zo
-363
-normal zc
-368
-normal zc
-373
-normal zc
-381
-normal zo
-388
-normal zo
-388
-normal zo
-419
-normal zc
-362
-normal zo
-429
-normal zo
-431
-normal zc
-429
-normal zo
-435
-normal zo
-453
-normal zc
-435
-normal zo
-464
-normal zo
-479
-normal zc
-464
-normal zo
-483
-normal zo
-483
-normal zc
-500
-normal zo
-500
-normal zc
-let s:l = 303 - ((0 * winheight(0) + 35) / 71)
-if s:l < 1 | let s:l = 1 | endif
-exe s:l
-normal! zt
-303
-normal! 0
-wincmd w
-4wincmd w
-exe 'vert 1resize ' . ((&columns * 58 + 117) / 234)
-exe 'vert 2resize ' . ((&columns * 58 + 117) / 234)
-exe 'vert 3resize ' . ((&columns * 58 + 117) / 234)
-exe 'vert 4resize ' . ((&columns * 57 + 117) / 234)
+2wincmd w
+exe 'vert 1resize ' . ((&columns * 77 + 117) / 234)
+exe 'vert 2resize ' . ((&columns * 77 + 117) / 234)
+exe 'vert 3resize ' . ((&columns * 78 + 117) / 234)
 tabedit ~/sandbox/personal/lists/accomplishments.txt
 set splitbelow splitright
 wincmd _ | wincmd |
@@ -2680,6 +2530,7 @@ argglobal
 setlocal keymap=
 setlocal noarabic
 setlocal noautoindent
+setlocal balloonexpr=
 setlocal nobinary
 setlocal bufhidden=
 setlocal buflisted
@@ -2688,11 +2539,16 @@ setlocal nocindent
 setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
 setlocal cinoptions=
 setlocal cinwords=if,else,while,do,for,switch
+setlocal colorcolumn=
 setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
 setlocal commentstring=
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
+setlocal cryptmethod=
+setlocal nocursorbind
 setlocal nocursorcolumn
 set cursorline
 setlocal cursorline
@@ -2751,6 +2607,7 @@ setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
+setlocal norelativenumber
 setlocal norightleft
 setlocal rightleftcmd=search
 setlocal noscrollbind
@@ -2773,6 +2630,7 @@ setlocal tabstop=4
 setlocal tags=
 setlocal textwidth=0
 setlocal thesaurus=
+setlocal noundofile
 setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
@@ -2789,6 +2647,7 @@ buffer ~/sandbox/personal/lists/accomplishments.txt
 setlocal keymap=
 setlocal noarabic
 setlocal noautoindent
+setlocal balloonexpr=
 setlocal nobinary
 setlocal bufhidden=
 setlocal buflisted
@@ -2797,11 +2656,16 @@ setlocal nocindent
 setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
 setlocal cinoptions=
 setlocal cinwords=if,else,while,do,for,switch
+setlocal colorcolumn=
 setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
 setlocal commentstring=
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
+setlocal cryptmethod=
+setlocal nocursorbind
 setlocal nocursorcolumn
 set cursorline
 setlocal cursorline
@@ -2860,6 +2724,7 @@ setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
+setlocal norelativenumber
 setlocal norightleft
 setlocal rightleftcmd=search
 setlocal noscrollbind
@@ -2882,6 +2747,7 @@ setlocal tabstop=4
 setlocal tags=
 setlocal textwidth=0
 setlocal thesaurus=
+setlocal noundofile
 setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
@@ -2893,7 +2759,7 @@ normal! zt
 1
 normal! 02l
 wincmd w
-4wincmd w
+2wincmd w
 exe '1resize ' . ((&lines * 67 + 36) / 73)
 exe 'vert 1resize ' . ((&columns * 117 + 117) / 234)
 exe '2resize ' . ((&lines * 67 + 36) / 73)
@@ -2919,6 +2785,7 @@ argglobal
 setlocal keymap=
 setlocal noarabic
 setlocal noautoindent
+setlocal balloonexpr=
 setlocal nobinary
 setlocal bufhidden=
 setlocal buflisted
@@ -2927,11 +2794,16 @@ setlocal nocindent
 setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
 setlocal cinoptions=
 setlocal cinwords=if,else,while,do,for,switch
+setlocal colorcolumn=
 setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
 setlocal commentstring=
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
+setlocal cryptmethod=
+setlocal nocursorbind
 setlocal nocursorcolumn
 set cursorline
 setlocal cursorline
@@ -2990,6 +2862,7 @@ setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
+setlocal norelativenumber
 setlocal norightleft
 setlocal rightleftcmd=search
 setlocal noscrollbind
@@ -3012,6 +2885,7 @@ setlocal tabstop=2
 setlocal tags=
 setlocal textwidth=0
 setlocal thesaurus=
+setlocal noundofile
 setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
@@ -3034,6 +2908,7 @@ buffer ~/sandbox/personal/zaurus/openbsd_notes.txt
 setlocal keymap=
 setlocal noarabic
 setlocal noautoindent
+setlocal balloonexpr=
 setlocal nobinary
 setlocal bufhidden=
 setlocal buflisted
@@ -3042,11 +2917,16 @@ setlocal nocindent
 setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
 setlocal cinoptions=
 setlocal cinwords=if,else,while,do,for,switch
+setlocal colorcolumn=
 setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
 setlocal commentstring=
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
+setlocal cryptmethod=
+setlocal nocursorbind
 setlocal nocursorcolumn
 set cursorline
 setlocal cursorline
@@ -3105,6 +2985,7 @@ setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
+setlocal norelativenumber
 setlocal norightleft
 setlocal rightleftcmd=search
 setlocal noscrollbind
@@ -3127,6 +3008,7 @@ setlocal tabstop=2
 setlocal tags=
 setlocal textwidth=0
 setlocal thesaurus=
+setlocal noundofile
 setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
@@ -3143,6 +3025,7 @@ buffer ~/sandbox/personal/zaurus/ztodo.txt
 setlocal keymap=
 setlocal noarabic
 setlocal noautoindent
+setlocal balloonexpr=
 setlocal nobinary
 setlocal bufhidden=
 setlocal buflisted
@@ -3151,11 +3034,16 @@ setlocal nocindent
 setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
 setlocal cinoptions=
 setlocal cinwords=if,else,while,do,for,switch
+setlocal colorcolumn=
 setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
 setlocal commentstring=
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
+setlocal cryptmethod=
+setlocal nocursorbind
 setlocal nocursorcolumn
 set cursorline
 setlocal cursorline
@@ -3214,6 +3102,7 @@ setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
+setlocal norelativenumber
 setlocal norightleft
 setlocal rightleftcmd=search
 setlocal noscrollbind
@@ -3236,6 +3125,7 @@ setlocal tabstop=2
 setlocal tags=
 setlocal textwidth=0
 setlocal thesaurus=
+setlocal noundofile
 setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
@@ -3247,7 +3137,7 @@ normal! zt
 31
 normal! 026l
 wincmd w
-4wincmd w
+2wincmd w
 exe '1resize ' . ((&lines * 67 + 36) / 73)
 exe 'vert 1resize ' . ((&columns * 78 + 117) / 234)
 exe '2resize ' . ((&lines * 67 + 36) / 73)
@@ -3256,20 +3146,13 @@ exe '3resize ' . ((&lines * 67 + 36) / 73)
 exe 'vert 3resize ' . ((&columns * 77 + 117) / 234)
 tabedit ~/sandbox/personal/lists/wishlist.txt
 set splitbelow splitright
-wincmd _ | wincmd |
-vsplit
-1wincmd h
-wincmd w
 wincmd t
 set winheight=1 winwidth=1
-exe '1resize ' . ((&lines * 67 + 36) / 73)
-exe 'vert 1resize ' . ((&columns * 118 + 117) / 234)
-exe '2resize ' . ((&lines * 67 + 36) / 73)
-exe 'vert 2resize ' . ((&columns * 115 + 117) / 234)
 argglobal
 setlocal keymap=
 setlocal noarabic
 setlocal noautoindent
+setlocal balloonexpr=
 setlocal nobinary
 setlocal bufhidden=
 setlocal buflisted
@@ -3278,11 +3161,16 @@ setlocal nocindent
 setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
 setlocal cinoptions=
 setlocal cinwords=if,else,while,do,for,switch
+setlocal colorcolumn=
 setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
 setlocal commentstring=
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
+setlocal cryptmethod=
+setlocal nocursorbind
 setlocal nocursorcolumn
 set cursorline
 setlocal cursorline
@@ -3341,6 +3229,7 @@ setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
+setlocal norelativenumber
 setlocal norightleft
 setlocal rightleftcmd=search
 setlocal noscrollbind
@@ -3363,6 +3252,7 @@ setlocal tabstop=4
 setlocal tags=
 setlocal textwidth=0
 setlocal thesaurus=
+setlocal noundofile
 setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
@@ -3373,145 +3263,22 @@ exe s:l
 normal! zt
 1
 normal! 08l
-wincmd w
-argglobal
-buffer ~/sandbox/personal/lists/wishlist.txt
-setlocal keymap=
-setlocal noarabic
-setlocal noautoindent
-setlocal nobinary
-setlocal bufhidden=
-setlocal buflisted
-setlocal buftype=
-setlocal nocindent
-setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
-setlocal cinoptions=
-setlocal cinwords=if,else,while,do,for,switch
-setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
-setlocal commentstring=
-setlocal complete=.,w,b,u,t,i
-setlocal completefunc=
-setlocal nocopyindent
-setlocal nocursorcolumn
-set cursorline
-setlocal cursorline
-setlocal define=
-setlocal dictionary=
-setlocal nodiff
-setlocal equalprg=
-setlocal errorformat=
-setlocal noexpandtab
-if &filetype != 'txt'
-setlocal filetype=txt
-endif
-set foldcolumn=4
-setlocal foldcolumn=0
-setlocal foldenable
-setlocal foldexpr=0
-setlocal foldignore=#
-set foldlevel=2
-setlocal foldlevel=1
-setlocal foldmarker={{{,}}}
-set foldmethod=marker
-setlocal foldmethod=marker
-setlocal foldminlines=1
-setlocal foldnestmax=20
-set foldtext=MyFoldText()
-setlocal foldtext=MyFoldText()
-setlocal formatexpr=
-setlocal formatoptions=tcq
-setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
-setlocal grepprg=
-setlocal iminsert=0
-setlocal imsearch=0
-setlocal include=
-setlocal includeexpr=
-setlocal indentexpr=
-setlocal indentkeys=0{,0},:,0#,!^F,o,O,e
-setlocal noinfercase
-setlocal iskeyword=@,48-57,_,192-255,-
-setlocal keywordprg=
-set linebreak
-setlocal linebreak
-setlocal nolisp
-setlocal nolist
-setlocal nomacmeta
-setlocal makeprg=
-setlocal matchpairs=(:),{:},[:]
-setlocal modeline
-setlocal modifiable
-setlocal nrformats=octal,hex
-set number
-setlocal number
-setlocal numberwidth=4
-setlocal omnifunc=
-setlocal path=
-setlocal nopreserveindent
-setlocal nopreviewwindow
-setlocal quoteescape=\\
-setlocal noreadonly
-setlocal norightleft
-setlocal rightleftcmd=search
-setlocal noscrollbind
-setlocal shiftwidth=4
-setlocal noshortname
-setlocal nosmartindent
-setlocal softtabstop=0
-setlocal nospell
-setlocal spellcapcheck=off
-setlocal spellfile=
-setlocal spelllang=en
-setlocal statusline=
-setlocal suffixesadd=
-setlocal swapfile
-setlocal synmaxcol=3000
-if &syntax != 'txt'
-setlocal syntax=txt
-endif
-setlocal tabstop=4
-setlocal tags=
-setlocal textwidth=0
-setlocal thesaurus=
-setlocal nowinfixheight
-setlocal nowinfixwidth
-setlocal wrap
-setlocal wrapmargin=0
-92
-normal zc
-let s:l = 96 - ((4 * winheight(0) + 33) / 67)
-if s:l < 1 | let s:l = 1 | endif
-exe s:l
-normal! zt
-96
-normal! 02l
-wincmd w
-4wincmd w
-exe '1resize ' . ((&lines * 67 + 36) / 73)
-exe 'vert 1resize ' . ((&columns * 118 + 117) / 234)
-exe '2resize ' . ((&lines * 67 + 36) / 73)
-exe 'vert 2resize ' . ((&columns * 115 + 117) / 234)
+2wincmd w
 tabedit ~/sandbox/personal/howto/How\ to\ Move.txt
 set splitbelow splitright
 wincmd _ | wincmd |
 vsplit
 1wincmd h
-wincmd _ | wincmd |
-split
-1wincmd k
-wincmd w
 wincmd w
 wincmd t
 set winheight=1 winwidth=1
-exe '1resize ' . ((&lines * 66 + 36) / 73)
-exe 'vert 1resize ' . ((&columns * 117 + 117) / 234)
-exe '2resize ' . ((&lines * 0 + 36) / 73)
+exe 'vert 1resize ' . ((&columns * 116 + 117) / 234)
 exe 'vert 2resize ' . ((&columns * 117 + 117) / 234)
-exe '3resize ' . ((&lines * 67 + 36) / 73)
-exe 'vert 3resize ' . ((&columns * 116 + 117) / 234)
 argglobal
 setlocal keymap=
 setlocal noarabic
 setlocal autoindent
+setlocal balloonexpr=
 setlocal nobinary
 setlocal bufhidden=
 setlocal buflisted
@@ -3520,11 +3287,16 @@ setlocal nocindent
 setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
 setlocal cinoptions=
 setlocal cinwords=if,else,while,do,for,switch
+setlocal colorcolumn=
 setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
 setlocal commentstring=
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
+setlocal cryptmethod=
+setlocal nocursorbind
 setlocal nocursorcolumn
 set cursorline
 setlocal cursorline
@@ -3583,6 +3355,7 @@ setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
+setlocal norelativenumber
 setlocal norightleft
 setlocal rightleftcmd=search
 setlocal noscrollbind
@@ -3605,11 +3378,12 @@ setlocal tabstop=4
 setlocal tags=
 setlocal textwidth=0
 setlocal thesaurus=
+setlocal noundofile
 setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 27 - ((24 * winheight(0) + 33) / 66)
+let s:l = 27 - ((26 * winheight(0) + 35) / 71)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -3621,6 +3395,7 @@ buffer ~/sandbox/personal/howto/How\ to\ Prepare\ for\ a\ Trip.txt
 setlocal keymap=
 setlocal noarabic
 setlocal noautoindent
+setlocal balloonexpr=
 setlocal nobinary
 setlocal bufhidden=
 setlocal buflisted
@@ -3629,11 +3404,16 @@ setlocal nocindent
 setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
 setlocal cinoptions=
 setlocal cinwords=if,else,while,do,for,switch
+setlocal colorcolumn=
 setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
 setlocal commentstring=
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
+setlocal cryptmethod=
+setlocal nocursorbind
 setlocal nocursorcolumn
 set cursorline
 setlocal cursorline
@@ -3647,12 +3427,12 @@ if &filetype != 'txt'
 setlocal filetype=txt
 endif
 set foldcolumn=4
-setlocal foldcolumn=0
+setlocal foldcolumn=4
 setlocal foldenable
 setlocal foldexpr=0
 setlocal foldignore=#
 set foldlevel=2
-setlocal foldlevel=1
+setlocal foldlevel=999
 setlocal foldmarker={{{,}}}
 set foldmethod=marker
 setlocal foldmethod=marker
@@ -3692,6 +3472,7 @@ setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
+setlocal norelativenumber
 setlocal norightleft
 setlocal rightleftcmd=search
 setlocal noscrollbind
@@ -3714,151 +3495,23 @@ setlocal tabstop=4
 setlocal tags=
 setlocal textwidth=0
 setlocal thesaurus=
+setlocal noundofile
 setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 1
-normal zc
-8
 normal zo
-9
-normal zo
-19
-normal zc
-9
-normal zc
-8
-normal zo
-54
-normal zo
-86
-normal zo
-54
-normal zo
-let s:l = 13 - ((4 * winheight(0) + 0) / 0)
-if s:l < 1 | let s:l = 1 | endif
-exe s:l
-normal! zt
-13
-normal! 0
-wincmd w
-argglobal
-buffer ~/sandbox/personal/tech/osgoodies.txt
-setlocal keymap=
-setlocal noarabic
-setlocal noautoindent
-setlocal nobinary
-setlocal bufhidden=
-setlocal buflisted
-setlocal buftype=
-setlocal nocindent
-setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
-setlocal cinoptions=
-setlocal cinwords=if,else,while,do,for,switch
-setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
-setlocal commentstring=
-setlocal complete=.,w,b,u,t,i
-setlocal completefunc=
-setlocal nocopyindent
-setlocal nocursorcolumn
-set cursorline
-setlocal cursorline
-setlocal define=
-setlocal dictionary=
-setlocal nodiff
-setlocal equalprg=
-setlocal errorformat=
-setlocal noexpandtab
-if &filetype != 'txt'
-setlocal filetype=txt
-endif
-set foldcolumn=4
-setlocal foldcolumn=0
-setlocal foldenable
-setlocal foldexpr=0
-setlocal foldignore=#
-set foldlevel=2
-setlocal foldlevel=1
-setlocal foldmarker={{{,}}}
-set foldmethod=marker
-setlocal foldmethod=marker
-setlocal foldminlines=1
-setlocal foldnestmax=20
-set foldtext=MyFoldText()
-setlocal foldtext=MyFoldText()
-setlocal formatexpr=
-setlocal formatoptions=tcq
-setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
-setlocal grepprg=
-setlocal iminsert=0
-setlocal imsearch=0
-setlocal include=
-setlocal includeexpr=
-setlocal indentexpr=
-setlocal indentkeys=0{,0},:,0#,!^F,o,O,e
-setlocal noinfercase
-setlocal iskeyword=@,48-57,_,192-255,-
-setlocal keywordprg=
-set linebreak
-setlocal linebreak
-setlocal nolisp
-setlocal nolist
-setlocal nomacmeta
-setlocal makeprg=
-setlocal matchpairs=(:),{:},[:]
-setlocal modeline
-setlocal modifiable
-setlocal nrformats=octal,hex
-set number
-setlocal number
-setlocal numberwidth=4
-setlocal omnifunc=
-setlocal path=
-setlocal nopreserveindent
-setlocal nopreviewwindow
-setlocal quoteescape=\\
-setlocal noreadonly
-setlocal norightleft
-setlocal rightleftcmd=search
-setlocal noscrollbind
-setlocal shiftwidth=4
-setlocal noshortname
-setlocal nosmartindent
-setlocal softtabstop=0
-setlocal nospell
-setlocal spellcapcheck=off
-setlocal spellfile=
-setlocal spelllang=en
-setlocal statusline=
-setlocal suffixesadd=
-setlocal swapfile
-setlocal synmaxcol=3000
-if &syntax != 'txt'
-setlocal syntax=txt
-endif
-setlocal tabstop=4
-setlocal tags=
-setlocal textwidth=0
-setlocal thesaurus=
-setlocal nowinfixheight
-setlocal nowinfixwidth
-setlocal wrap
-setlocal wrapmargin=0
-let s:l = 1 - ((0 * winheight(0) + 33) / 67)
+let s:l = 1 - ((0 * winheight(0) + 35) / 71)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 1
 normal! 0
 wincmd w
-4wincmd w
-exe '1resize ' . ((&lines * 66 + 36) / 73)
-exe 'vert 1resize ' . ((&columns * 117 + 117) / 234)
-exe '2resize ' . ((&lines * 0 + 36) / 73)
+2wincmd w
+exe 'vert 1resize ' . ((&columns * 116 + 117) / 234)
 exe 'vert 2resize ' . ((&columns * 117 + 117) / 234)
-exe '3resize ' . ((&lines * 67 + 36) / 73)
-exe 'vert 3resize ' . ((&columns * 116 + 117) / 234)
 tabedit ~/sandbox/personal/tech/osxsetup.txt
 set splitbelow splitright
 wincmd _ | wincmd |
@@ -3867,14 +3520,13 @@ vsplit
 wincmd w
 wincmd t
 set winheight=1 winwidth=1
-exe '1resize ' . ((&lines * 67 + 36) / 73)
-exe 'vert 1resize ' . ((&columns * 116 + 117) / 234)
-exe '2resize ' . ((&lines * 67 + 36) / 73)
-exe 'vert 2resize ' . ((&columns * 117 + 117) / 234)
+exe 'vert 1resize ' . ((&columns * 117 + 117) / 234)
+exe 'vert 2resize ' . ((&columns * 116 + 117) / 234)
 argglobal
 setlocal keymap=
 setlocal noarabic
 setlocal noautoindent
+setlocal balloonexpr=
 setlocal nobinary
 setlocal bufhidden=
 setlocal buflisted
@@ -3883,11 +3535,16 @@ setlocal nocindent
 setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
 setlocal cinoptions=
 setlocal cinwords=if,else,while,do,for,switch
+setlocal colorcolumn=
 setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
 setlocal commentstring=
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
+setlocal cryptmethod=
+setlocal nocursorbind
 setlocal nocursorcolumn
 set cursorline
 setlocal cursorline
@@ -3946,6 +3603,7 @@ setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
+setlocal norelativenumber
 setlocal norightleft
 setlocal rightleftcmd=search
 setlocal noscrollbind
@@ -3968,6 +3626,7 @@ setlocal tabstop=4
 setlocal tags=
 setlocal textwidth=0
 setlocal thesaurus=
+setlocal noundofile
 setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
@@ -3978,18 +3637,19 @@ normal zo
 normal zc
 111
 normal zc
-let s:l = 111 - ((104 * winheight(0) + 33) / 67)
+let s:l = 1 - ((0 * winheight(0) + 35) / 71)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-111
-normal! 016l
+1
+normal! 0
 wincmd w
 argglobal
 buffer ~/sandbox/personal/tech/interesting_files.txt
 setlocal keymap=
 setlocal noarabic
 setlocal noautoindent
+setlocal balloonexpr=
 setlocal nobinary
 setlocal bufhidden=
 setlocal buflisted
@@ -3998,11 +3658,16 @@ setlocal nocindent
 setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
 setlocal cinoptions=
 setlocal cinwords=if,else,while,do,for,switch
+setlocal colorcolumn=
 setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
 setlocal commentstring=
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
+setlocal cryptmethod=
+setlocal nocursorbind
 setlocal nocursorcolumn
 set cursorline
 setlocal cursorline
@@ -4061,6 +3726,7 @@ setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
+setlocal norelativenumber
 setlocal norightleft
 setlocal rightleftcmd=search
 setlocal noscrollbind
@@ -4083,23 +3749,22 @@ setlocal tabstop=4
 setlocal tags=
 setlocal textwidth=0
 setlocal thesaurus=
+setlocal noundofile
 setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 18 - ((16 * winheight(0) + 33) / 67)
+let s:l = 1 - ((0 * winheight(0) + 35) / 71)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-18
+1
 normal! 0
 wincmd w
-4wincmd w
-exe '1resize ' . ((&lines * 67 + 36) / 73)
-exe 'vert 1resize ' . ((&columns * 116 + 117) / 234)
-exe '2resize ' . ((&lines * 67 + 36) / 73)
-exe 'vert 2resize ' . ((&columns * 117 + 117) / 234)
-tabedit ~/sandbox/personal/tech/osgoodies.txt
+2wincmd w
+exe 'vert 1resize ' . ((&columns * 117 + 117) / 234)
+exe 'vert 2resize ' . ((&columns * 116 + 117) / 234)
+tabedit ~/sandbox/personal/tech/techannoyances.txt
 set splitbelow splitright
 wincmd _ | wincmd |
 split
@@ -4109,23 +3774,18 @@ wincmd _ | wincmd |
 vsplit
 1wincmd h
 wincmd w
-wincmd _ | wincmd |
-split
-1wincmd k
-wincmd w
 wincmd t
 set winheight=1 winwidth=1
 exe '1resize ' . ((&lines * 40 + 36) / 73)
 exe '2resize ' . ((&lines * 30 + 36) / 73)
 exe 'vert 2resize ' . ((&columns * 117 + 117) / 234)
-exe '3resize ' . ((&lines * 4 + 36) / 73)
+exe '3resize ' . ((&lines * 30 + 36) / 73)
 exe 'vert 3resize ' . ((&columns * 116 + 117) / 234)
-exe '4resize ' . ((&lines * 25 + 36) / 73)
-exe 'vert 4resize ' . ((&columns * 116 + 117) / 234)
 argglobal
 setlocal keymap=
 setlocal noarabic
 setlocal noautoindent
+setlocal balloonexpr=
 setlocal nobinary
 setlocal bufhidden=
 setlocal buflisted
@@ -4134,11 +3794,16 @@ setlocal nocindent
 setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
 setlocal cinoptions=
 setlocal cinwords=if,else,while,do,for,switch
+setlocal colorcolumn=
 setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
 setlocal commentstring=
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
+setlocal cryptmethod=
+setlocal nocursorbind
 setlocal nocursorcolumn
 set cursorline
 setlocal cursorline
@@ -4152,12 +3817,12 @@ if &filetype != 'txt'
 setlocal filetype=txt
 endif
 set foldcolumn=4
-setlocal foldcolumn=0
+setlocal foldcolumn=4
 setlocal foldenable
 setlocal foldexpr=0
 setlocal foldignore=#
 set foldlevel=2
-setlocal foldlevel=2
+setlocal foldlevel=999
 setlocal foldmarker={{{,}}}
 set foldmethod=marker
 setlocal foldmethod=marker
@@ -4197,6 +3862,7 @@ setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
+setlocal norelativenumber
 setlocal norightleft
 setlocal rightleftcmd=search
 setlocal noscrollbind
@@ -4219,23 +3885,25 @@ setlocal tabstop=4
 setlocal tags=
 setlocal textwidth=0
 setlocal thesaurus=
+setlocal noundofile
 setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 1 - ((0 * winheight(0) + 20) / 40)
+let s:l = 8 - ((7 * winheight(0) + 20) / 40)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-1
+8
 normal! 0
 lcd ~/
 wincmd w
 argglobal
-buffer ~/sandbox/personal/tech/techannoyances.txt
+buffer ~/sandbox/personal/tech/osgoodies.txt
 setlocal keymap=
 setlocal noarabic
 setlocal noautoindent
+setlocal balloonexpr=
 setlocal nobinary
 setlocal bufhidden=
 setlocal buflisted
@@ -4244,11 +3912,16 @@ setlocal nocindent
 setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
 setlocal cinoptions=
 setlocal cinwords=if,else,while,do,for,switch
+setlocal colorcolumn=
 setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
 setlocal commentstring=
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
+setlocal cryptmethod=
+setlocal nocursorbind
 setlocal nocursorcolumn
 set cursorline
 setlocal cursorline
@@ -4262,12 +3935,12 @@ if &filetype != 'txt'
 setlocal filetype=txt
 endif
 set foldcolumn=4
-setlocal foldcolumn=0
+setlocal foldcolumn=4
 setlocal foldenable
 setlocal foldexpr=0
 setlocal foldignore=#
 set foldlevel=2
-setlocal foldlevel=0
+setlocal foldlevel=999
 setlocal foldmarker={{{,}}}
 set foldmethod=marker
 setlocal foldmethod=marker
@@ -4307,6 +3980,7 @@ setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
+setlocal norelativenumber
 setlocal norightleft
 setlocal rightleftcmd=search
 setlocal noscrollbind
@@ -4329,19 +4003,16 @@ setlocal tabstop=4
 setlocal tags=
 setlocal textwidth=0
 setlocal thesaurus=
+setlocal noundofile
 setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-1
-normal zo
-22
-normal zc
-let s:l = 3 - ((2 * winheight(0) + 15) / 30)
+let s:l = 14 - ((13 * winheight(0) + 15) / 30)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-3
+14
 normal! 0
 wincmd w
 argglobal
@@ -4349,6 +4020,7 @@ buffer ~/sandbox/personal/tech/osannoyances.txt
 setlocal keymap=
 setlocal noarabic
 setlocal noautoindent
+setlocal balloonexpr=
 setlocal nobinary
 setlocal bufhidden=
 setlocal buflisted
@@ -4357,11 +4029,16 @@ setlocal nocindent
 setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
 setlocal cinoptions=
 setlocal cinwords=if,else,while,do,for,switch
+setlocal colorcolumn=
 setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
 setlocal commentstring=
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
+setlocal cryptmethod=
+setlocal nocursorbind
 setlocal nocursorcolumn
 set cursorline
 setlocal cursorline
@@ -4420,6 +4097,7 @@ setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
+setlocal norelativenumber
 setlocal norightleft
 setlocal rightleftcmd=search
 setlocal noscrollbind
@@ -4442,134 +4120,24 @@ setlocal tabstop=4
 setlocal tags=
 setlocal textwidth=0
 setlocal thesaurus=
+setlocal noundofile
 setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 20 - ((0 * winheight(0) + 2) / 4)
+let s:l = 1 - ((0 * winheight(0) + 15) / 30)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-20
-normal! 013l
-wincmd w
-argglobal
-buffer ~/sandbox/personal/tech/osgoodies.txt
-setlocal keymap=
-setlocal noarabic
-setlocal noautoindent
-setlocal nobinary
-setlocal bufhidden=
-setlocal buflisted
-setlocal buftype=
-setlocal nocindent
-setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
-setlocal cinoptions=
-setlocal cinwords=if,else,while,do,for,switch
-setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
-setlocal commentstring=
-setlocal complete=.,w,b,u,t,i
-setlocal completefunc=
-setlocal nocopyindent
-setlocal nocursorcolumn
-set cursorline
-setlocal cursorline
-setlocal define=
-setlocal dictionary=
-setlocal nodiff
-setlocal equalprg=
-setlocal errorformat=
-setlocal noexpandtab
-if &filetype != 'txt'
-setlocal filetype=txt
-endif
-set foldcolumn=4
-setlocal foldcolumn=0
-setlocal foldenable
-setlocal foldexpr=0
-setlocal foldignore=#
-set foldlevel=2
-setlocal foldlevel=1
-setlocal foldmarker={{{,}}}
-set foldmethod=marker
-setlocal foldmethod=marker
-setlocal foldminlines=1
-setlocal foldnestmax=20
-set foldtext=MyFoldText()
-setlocal foldtext=MyFoldText()
-setlocal formatexpr=
-setlocal formatoptions=tcq
-setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
-setlocal grepprg=
-setlocal iminsert=0
-setlocal imsearch=0
-setlocal include=
-setlocal includeexpr=
-setlocal indentexpr=
-setlocal indentkeys=0{,0},:,0#,!^F,o,O,e
-setlocal noinfercase
-setlocal iskeyword=@,48-57,_,192-255,-
-setlocal keywordprg=
-set linebreak
-setlocal linebreak
-setlocal nolisp
-setlocal nolist
-setlocal nomacmeta
-setlocal makeprg=
-setlocal matchpairs=(:),{:},[:]
-setlocal modeline
-setlocal modifiable
-setlocal nrformats=octal,hex
-set number
-setlocal number
-setlocal numberwidth=4
-setlocal omnifunc=
-setlocal path=
-setlocal nopreserveindent
-setlocal nopreviewwindow
-setlocal quoteescape=\\
-setlocal noreadonly
-setlocal norightleft
-setlocal rightleftcmd=search
-setlocal noscrollbind
-setlocal shiftwidth=4
-setlocal noshortname
-setlocal nosmartindent
-setlocal softtabstop=0
-setlocal nospell
-setlocal spellcapcheck=off
-setlocal spellfile=
-setlocal spelllang=en
-setlocal statusline=
-setlocal suffixesadd=
-setlocal swapfile
-setlocal synmaxcol=3000
-if &syntax != 'txt'
-setlocal syntax=txt
-endif
-setlocal tabstop=4
-setlocal tags=
-setlocal textwidth=0
-setlocal thesaurus=
-setlocal nowinfixheight
-setlocal nowinfixwidth
-setlocal wrap
-setlocal wrapmargin=0
-let s:l = 14 - ((0 * winheight(0) + 12) / 25)
-if s:l < 1 | let s:l = 1 | endif
-exe s:l
-normal! zt
-14
+1
 normal! 0
 wincmd w
-4wincmd w
+2wincmd w
 exe '1resize ' . ((&lines * 40 + 36) / 73)
 exe '2resize ' . ((&lines * 30 + 36) / 73)
 exe 'vert 2resize ' . ((&columns * 117 + 117) / 234)
-exe '3resize ' . ((&lines * 4 + 36) / 73)
+exe '3resize ' . ((&lines * 30 + 36) / 73)
 exe 'vert 3resize ' . ((&columns * 116 + 117) / 234)
-exe '4resize ' . ((&lines * 25 + 36) / 73)
-exe 'vert 4resize ' . ((&columns * 116 + 117) / 234)
 tabedit ~/sandbox/code/learnc/test_program.c
 set splitbelow splitright
 wincmd _ | wincmd |
@@ -4596,6 +4164,7 @@ argglobal
 setlocal keymap=
 setlocal noarabic
 setlocal noautoindent
+setlocal balloonexpr=
 setlocal nobinary
 setlocal bufhidden=
 setlocal buflisted
@@ -4604,11 +4173,16 @@ setlocal cindent
 setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
 setlocal cinoptions=
 setlocal cinwords=if,else,while,do,for,switch
+setlocal colorcolumn=
 setlocal comments=sO:*\ -,mO:*\ \ ,exO:*/,s1:/*,mb:*,ex:*/,://
 setlocal commentstring=
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
+setlocal cryptmethod=
+setlocal nocursorbind
 setlocal nocursorcolumn
 set cursorline
 setlocal cursorline
@@ -4667,6 +4241,7 @@ setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
+setlocal norelativenumber
 setlocal norightleft
 setlocal rightleftcmd=search
 setlocal noscrollbind
@@ -4689,6 +4264,7 @@ setlocal tabstop=4
 setlocal tags=
 setlocal textwidth=0
 setlocal thesaurus=
+setlocal noundofile
 setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
@@ -4706,6 +4282,7 @@ buffer ~/sandbox/code/learnc/test_program.c
 setlocal keymap=
 setlocal noarabic
 setlocal noautoindent
+setlocal balloonexpr=
 setlocal nobinary
 setlocal bufhidden=
 setlocal buflisted
@@ -4714,11 +4291,16 @@ setlocal cindent
 setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
 setlocal cinoptions=
 setlocal cinwords=if,else,while,do,for,switch
+setlocal colorcolumn=
 setlocal comments=sO:*\ -,mO:*\ \ ,exO:*/,s1:/*,mb:*,ex:*/,://
 setlocal commentstring=
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
+setlocal cryptmethod=
+setlocal nocursorbind
 setlocal nocursorcolumn
 set cursorline
 setlocal cursorline
@@ -4777,6 +4359,7 @@ setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
+setlocal norelativenumber
 setlocal norightleft
 setlocal rightleftcmd=search
 setlocal noscrollbind
@@ -4799,6 +4382,7 @@ setlocal tabstop=4
 setlocal tags=
 setlocal textwidth=0
 setlocal thesaurus=
+setlocal noundofile
 setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
@@ -4816,6 +4400,7 @@ buffer ~/sandbox/code/learnc/test_program.c
 setlocal keymap=
 setlocal noarabic
 setlocal noautoindent
+setlocal balloonexpr=
 setlocal nobinary
 setlocal bufhidden=
 setlocal buflisted
@@ -4824,11 +4409,16 @@ setlocal cindent
 setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
 setlocal cinoptions=
 setlocal cinwords=if,else,while,do,for,switch
+setlocal colorcolumn=
 setlocal comments=sO:*\ -,mO:*\ \ ,exO:*/,s1:/*,mb:*,ex:*/,://
 setlocal commentstring=
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
+setlocal cryptmethod=
+setlocal nocursorbind
 setlocal nocursorcolumn
 set cursorline
 setlocal cursorline
@@ -4887,6 +4477,7 @@ setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
+setlocal norelativenumber
 setlocal norightleft
 setlocal rightleftcmd=search
 setlocal noscrollbind
@@ -4909,6 +4500,7 @@ setlocal tabstop=4
 setlocal tags=
 setlocal textwidth=0
 setlocal thesaurus=
+setlocal noundofile
 setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
@@ -4926,6 +4518,7 @@ buffer ~/sandbox/code/learnc/test_program.c
 setlocal keymap=
 setlocal noarabic
 setlocal noautoindent
+setlocal balloonexpr=
 setlocal nobinary
 setlocal bufhidden=
 setlocal buflisted
@@ -4934,11 +4527,16 @@ setlocal cindent
 setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
 setlocal cinoptions=
 setlocal cinwords=if,else,while,do,for,switch
+setlocal colorcolumn=
 setlocal comments=sO:*\ -,mO:*\ \ ,exO:*/,s1:/*,mb:*,ex:*/,://
 setlocal commentstring=
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
+setlocal cryptmethod=
+setlocal nocursorbind
 setlocal nocursorcolumn
 set cursorline
 setlocal cursorline
@@ -4997,6 +4595,7 @@ setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
+setlocal norelativenumber
 setlocal norightleft
 setlocal rightleftcmd=search
 setlocal noscrollbind
@@ -5019,6 +4618,7 @@ setlocal tabstop=4
 setlocal tags=
 setlocal textwidth=0
 setlocal thesaurus=
+setlocal noundofile
 setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
@@ -5031,7 +4631,7 @@ normal! zt
 normal! 0
 lcd ~/
 wincmd w
-4wincmd w
+2wincmd w
 exe '1resize ' . ((&lines * 46 + 36) / 73)
 exe '2resize ' . ((&lines * 24 + 36) / 73)
 exe 'vert 2resize ' . ((&columns * 77 + 117) / 234)

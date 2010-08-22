@@ -35,7 +35,7 @@ xmap S <Plug>VSurround
 nnoremap SS :w:SessionSave:call FixSession():SessionOpenLast:echo "Saved fixed session: " . v:this_session
 snoremap U b<BS>U
 vmap [% [%m'gv``
-nnoremap <silent> \fw :call FoldWrap()
+nnoremap \p+ :tab help 
 snoremap \ b<BS>\
 map <silent> \w\t <Plug>VimwikiTabMakeDiaryNote
 map <silent> \w\w <Plug>VimwikiMakeDiaryNote
@@ -66,10 +66,11 @@ map <silent> \w2 :w:VimwikiAll2HTML:echo "Saved wiki to HTML."
 map <silent> \snip :call ResetSnippets() | call GetSnippets(g:snippets_dir, &ft):echo "Snippets for format \"" . &ft . "\" updated."
 nnoremap <silent> \ll o:call Timestamp("short") | call FoldWrap()
 nnoremap <silent> \fi :call FoldInsert()
+nnoremap <silent> \fw :call FoldWrap()
 nnoremap <silent> \sl :call Timestamp("long")
 nnoremap <silent> \st :call Timestamp("short")
 nnoremap <silent> \sd :call Timestamp("date")
-nnoremap \p+ :tab help 
+nmap \po :tab help 
 nnoremap \pp :help:winc _:winc |:help 
 nnoremap \_ Bi<em>ea</em>
 nnoremap <silent> \q :call FormatSqlStatement()
@@ -176,6 +177,7 @@ set clipboard=unnamed
 set diffopt=filler,vertical
 set directory=~/.vim/swap//,~/vimfiles/swap//
 set fileencodings=ucs-bom,utf-8,default,latin1
+set foldlevelstart=999
 set fuoptions=maxhorz,maxvert
 set guifont=Inconsolata:h11
 set guioptions=egmrLt
@@ -209,7 +211,6 @@ set tags=./tags,tags,~/sandbox/personal/tags
 set termencoding=utf-8
 set transparency=5
 set undolevels=100
-set window=69
 set winheight=10
 set winminheight=0
 set winwidth=500
@@ -305,12 +306,12 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +1 ~/sandbox/personal/todo/research.tst.txt
+badd +2 ~/sandbox/personal/todo/research.tst.txt
 badd +1 ~/.vimperatorrc
 badd +1 ~/.firefox/userChrome.css
 silent! argdel *
 set lines=70 columns=117
-winpos 0 0
+winpos 0 878
 buffer ~/sandbox/personal/todo/research.tst.txt
 set splitbelow splitright
 wincmd _ | wincmd |
@@ -384,6 +385,7 @@ unlet s:cpo_save
 setlocal keymap=
 setlocal noarabic
 setlocal noautoindent
+setlocal balloonexpr=
 setlocal nobinary
 setlocal bufhidden=
 setlocal buflisted
@@ -392,11 +394,16 @@ setlocal nocindent
 setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
 setlocal cinoptions=
 setlocal cinwords=if,else,while,do,for,switch
+setlocal colorcolumn=
 setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
 setlocal commentstring=
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
+setlocal cryptmethod=
+setlocal nocursorbind
 setlocal nocursorcolumn
 set cursorline
 setlocal cursorline
@@ -454,6 +461,7 @@ setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
+setlocal norelativenumber
 setlocal norightleft
 setlocal rightleftcmd=search
 setlocal noscrollbind
@@ -476,26 +484,26 @@ setlocal tabstop=2
 setlocal tags=
 setlocal textwidth=0
 setlocal thesaurus=
+setlocal noundofile
 setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 1
 normal zo
-20
-normal zo
 let s:l = 2 - ((1 * winheight(0) + 11) / 23)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 2
-normal! 069l
+normal! 032l
 wincmd w
 argglobal
 buffer ~/.firefox/userChrome.css
 setlocal keymap=
 setlocal noarabic
 setlocal autoindent
+setlocal balloonexpr=
 setlocal nobinary
 setlocal bufhidden=
 setlocal buflisted
@@ -504,11 +512,16 @@ setlocal nocindent
 setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
 setlocal cinoptions=
 setlocal cinwords=if,else,while,do,for,switch
+setlocal colorcolumn=
 setlocal comments=s1:/*,mb:*,ex:*/
 setlocal commentstring=/*%s*/
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
+setlocal cryptmethod=
+setlocal nocursorbind
 setlocal nocursorcolumn
 set cursorline
 setlocal cursorline
@@ -566,6 +579,7 @@ setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
+setlocal norelativenumber
 setlocal norightleft
 setlocal rightleftcmd=search
 setlocal noscrollbind
@@ -588,6 +602,7 @@ setlocal tabstop=4
 setlocal tags=
 setlocal textwidth=0
 setlocal thesaurus=
+setlocal noundofile
 setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
@@ -616,6 +631,7 @@ vnoremap <buffer> <silent> ]" :exe "normal! gv"|call search('^\(\s*".*\n\)\@
 setlocal keymap=
 setlocal noarabic
 setlocal autoindent
+setlocal balloonexpr=
 setlocal nobinary
 setlocal bufhidden=
 setlocal buflisted
@@ -624,11 +640,16 @@ setlocal nocindent
 setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
 setlocal cinoptions=
 setlocal cinwords=if,else,while,do,for,switch
+setlocal colorcolumn=
 setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
 setlocal commentstring=/*%s*/
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
+setlocal cryptmethod=
+setlocal nocursorbind
 setlocal nocursorcolumn
 set cursorline
 setlocal cursorline
@@ -686,6 +707,7 @@ setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
+setlocal norelativenumber
 setlocal norightleft
 setlocal rightleftcmd=search
 setlocal noscrollbind
@@ -708,6 +730,7 @@ setlocal tabstop=4
 setlocal tags=
 setlocal textwidth=0
 setlocal thesaurus=
+setlocal noundofile
 setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap

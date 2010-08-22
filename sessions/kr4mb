@@ -166,12 +166,12 @@ let &cpo=s:cpo_save
 unlet s:cpo_save
 set autoindent
 set autowrite
-set autowriteall
 set background=dark
 set backspace=indent,eol,start
 set clipboard=unnamed
 set diffopt=filler,vertical
 set directory=~/.vim/swap//,~/vimfiles/swap//
+set expandtab
 set fileencodings=ucs-bom,utf-8,default,latin1
 set fuoptions=maxhorz,maxvert
 set guifont=Inconsolata:h11
@@ -186,6 +186,7 @@ set langmenu=none
 set laststatus=2
 set listchars=tab:>-,trail:-
 set mouse=a
+set operatorfunc=<SNR>27_opfunc
 set printexpr=system('open\ -a\ Preview\ '.v:fname_in)\ +\ v:shell_error
 set ruler
 set sessionoptions=folds,help,options,tabpages,winsize,globals,sesdir,resize,winpos,unix
@@ -205,7 +206,9 @@ set termencoding=utf-8
 set transparency=5
 set undolevels=100
 set updatetime=500
-set winminheight=0
+set window=73
+set winheight=10
+set winminheight=10
 set nowritebackup
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
@@ -278,6 +281,7 @@ let NERDTreeMapChangeRoot = "C"
 let NERDTreeSortDirs = "1"
 let NERDTreeMapToggleFiles = "F"
 let DirDiffIgnore = ""
+let NetrwTopLvlMenu = "Netrw."
 let NERDTreeMapJumpFirstChild = "K"
 let NERDTreeMapOpenRecursively = "O"
 let NERDTreeMapToggleBookmarks = "B"
@@ -290,22 +294,30 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +24 ~/sandbox/personal/vimwiki/BigNerdRanchIphoneBook.wiki
-badd +1 ~/temp_al.txt
+badd +2 ~/sandbox/code/3rd/KeyRemap4MacBook/files/prefpane/include/UbiquitousVimBindings.xml
+badd +12 ~/sandbox/code/3rd/KeyRemap4MacBook/files/prefpane/include/UbiquitousVimBindingsDvorak.xml
+badd +11 ~/sandbox/code/3rd/KeyRemap4MacBook/files/prefpane/include/UbiquitousVimBindings.txt
 silent! argdel *
 set lines=74 columns=234
 set fullscreen
 winpos 0 0
-edit ~/temp_al.txt
+edit ~/sandbox/code/3rd/KeyRemap4MacBook/files/prefpane/include/UbiquitousVimBindings.txt
 set splitbelow splitright
 wincmd _ | wincmd |
 vsplit
 1wincmd h
+wincmd _ | wincmd |
+split
+1wincmd k
+wincmd w
 wincmd w
 wincmd t
 set winheight=1 winwidth=1
-exe 'vert 1resize ' . ((&columns * 116 + 117) / 234)
-exe 'vert 2resize ' . ((&columns * 117 + 117) / 234)
+exe '1resize ' . ((&lines * 71 + 37) / 74)
+exe 'vert 1resize ' . ((&columns * 164 + 117) / 234)
+exe '2resize ' . ((&lines * 0 + 37) / 74)
+exe 'vert 2resize ' . ((&columns * 164 + 117) / 234)
+exe 'vert 3resize ' . ((&columns * 69 + 117) / 234)
 argglobal
 setlocal keymap=
 setlocal noarabic
@@ -331,7 +343,7 @@ setlocal dictionary=
 setlocal nodiff
 setlocal equalprg=
 setlocal errorformat=
-setlocal noexpandtab
+setlocal expandtab
 if &filetype != 'txt'
 setlocal filetype=txt
 endif
@@ -406,54 +418,15 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 6 - ((5 * winheight(0) + 36) / 72)
+let s:l = 1 - ((0 * winheight(0) + 35) / 71)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-6
+1
 normal! 0
 wincmd w
 argglobal
-edit ~/sandbox/personal/vimwiki/BigNerdRanchIphoneBook.wiki
-let s:cpo_save=&cpo
-set cpo&vim
-inoremap <buffer> <S-CR> <br />
-inoremap <buffer> <expr> <S-Tab> vimwiki_tbl#kbd_shift_tab()
-nmap <buffer> <silent> 	 <Plug>VimwikiNextWord
-nmap <buffer> <silent>  <Plug>VimwikiFollowWord
-noremap <buffer> <silent> - :call vimwiki#RemoveHeaderLevel()
-noremap <buffer> <silent> = :call vimwiki#AddHeaderLevel()
-nnoremap <buffer> O :call vimwiki_lst#insertOo('O')a
-nmap <buffer> <silent> \wr <Plug>VimwikiRenameWord
-nmap <buffer> <silent> \wd <Plug>VimwikiDeleteWord
-vnoremap <buffer> <silent> ac :call vimwiki#TO_table_col(0, 1)
-onoremap <buffer> <silent> ac :call vimwiki#TO_table_col(0, 0)
-vnoremap <buffer> <silent> a\ :call vimwiki#TO_table_cell(0, 1)
-onoremap <buffer> <silent> a\ :call vimwiki#TO_table_cell(0, 0)
-vnoremap <buffer> <silent> ah :call vimwiki#TO_header(0, 1)
-onoremap <buffer> <silent> ah :call vimwiki#TO_header(0, 0)
-nnoremap <buffer> gww :VimwikiTableAlignW
-nnoremap <buffer> gqq :VimwikiTableAlignQ
-vnoremap <buffer> <silent> ic :call vimwiki#TO_table_col(1, 1)
-onoremap <buffer> <silent> ic :call vimwiki#TO_table_col(1, 0)
-vnoremap <buffer> <silent> i\ :call vimwiki#TO_table_cell(1, 1)
-onoremap <buffer> <silent> i\ :call vimwiki#TO_table_cell(1, 0)
-vnoremap <buffer> <silent> ih :call vimwiki#TO_header(1, 1)
-onoremap <buffer> <silent> ih :call vimwiki#TO_header(1, 0)
-nnoremap <buffer> o :call vimwiki_lst#insertOo('o')a
-nnoremap <buffer> <M-Right> :VimwikiTableMoveColumnRight
-nnoremap <buffer> <M-Left> :VimwikiTableMoveColumnLeft
-nmap <buffer> <silent> <Nul> <Plug>VimwikiToggleListItem
-vmap <buffer> <silent> <C-Space> <Plug>VimwikiToggleListItem
-nmap <buffer> <silent> <C-Space> <Plug>VimwikiToggleListItem
-nmap <buffer> <silent> <S-Tab> <Plug>VimwikiPrevWord
-nmap <buffer> <silent> <BS> <Plug>VimwikiGoBackWord
-nmap <buffer> <silent> <C-CR> <Plug>VimwikiVSplitWord
-nmap <buffer> <silent> <S-CR> <Plug>VimwikiSplitWord
-inoremap <buffer> <expr> 	 vimwiki_tbl#kbd_tab()
-inoremap <buffer> <expr>  vimwiki_tbl#kbd_cr()
-let &cpo=s:cpo_save
-unlet s:cpo_save
+edit ~/sandbox/code/3rd/KeyRemap4MacBook/files/prefpane/include/UbiquitousVimBindings.xml
 setlocal keymap=
 setlocal noarabic
 setlocal autoindent
@@ -465,7 +438,7 @@ setlocal nocindent
 setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
 setlocal cinoptions=
 setlocal cinwords=if,else,while,do,for,switch
-setlocal comments=b:*,b:#,b:-
+setlocal comments=s:<!--,m:\ \ \ \ \ ,e:-->
 setlocal commentstring=<!--%s-->
 setlocal complete=.,w,b,u,t,i
 setlocal completefunc=
@@ -478,9 +451,9 @@ setlocal dictionary=
 setlocal nodiff
 setlocal equalprg=
 setlocal errorformat=
-setlocal noexpandtab
-if &filetype != 'vimwiki'
-setlocal filetype=vimwiki
+setlocal expandtab
+if &filetype != 'xml'
+setlocal filetype=xml
 endif
 set foldcolumn=4
 setlocal foldcolumn=4
@@ -490,21 +463,21 @@ setlocal foldignore=#
 setlocal foldlevel=0
 setlocal foldmarker={{{,}}}
 set foldmethod=marker
-setlocal foldmethod=marker
+setlocal foldmethod=syntax
 setlocal foldminlines=1
 setlocal foldnestmax=20
 set foldtext=MyFoldText()
 setlocal foldtext=MyFoldText()
 setlocal formatexpr=
-setlocal formatoptions=tnro
-setlocal formatlistpat=^\\s*[*#-]\\s*
+setlocal formatoptions=croql
+setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
 setlocal grepprg=
 setlocal iminsert=2
 setlocal imsearch=2
 setlocal include=
 setlocal includeexpr=
-setlocal indentexpr=
-setlocal indentkeys=0{,0},:,0#,!^F,o,O,e
+setlocal indentexpr=XmlIndentGet(v:lnum,1)
+setlocal indentkeys=o,O,*<Return>,<>>,<<>,/,{,}
 setlocal noinfercase
 setlocal iskeyword=@,48-57,_,192-255,-
 setlocal keywordprg=
@@ -521,7 +494,7 @@ setlocal nrformats=octal,hex
 set number
 setlocal number
 setlocal numberwidth=4
-setlocal omnifunc=
+setlocal omnifunc=xmlcomplete#CompleteTags
 setlocal path=
 setlocal nopreserveindent
 setlocal nopreviewwindow
@@ -539,11 +512,11 @@ setlocal spellcapcheck=off
 setlocal spellfile=
 setlocal spelllang=en
 setlocal statusline=
-setlocal suffixesadd=.wiki
+setlocal suffixesadd=
 setlocal swapfile
 setlocal synmaxcol=3000
-if &syntax != 'vimwiki'
-setlocal syntax=vimwiki
+if &syntax != 'xml'
+setlocal syntax=xml
 endif
 setlocal tabstop=4
 setlocal tags=
@@ -553,23 +526,132 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-49
-normal zo
-let s:l = 49 - ((48 * winheight(0) + 36) / 72)
+let s:l = 1 - ((0 * winheight(0) + 0) / 0)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+1
+normal! 0
+wincmd w
+argglobal
+edit ~/sandbox/code/3rd/KeyRemap4MacBook/files/prefpane/include/UbiquitousVimBindingsDvorak.xml
+setlocal keymap=
+setlocal noarabic
+setlocal autoindent
+setlocal nobinary
+setlocal bufhidden=
+setlocal buflisted
+setlocal buftype=
+setlocal nocindent
+setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
+setlocal cinoptions=
+setlocal cinwords=if,else,while,do,for,switch
+setlocal comments=s:<!--,m:\ \ \ \ \ ,e:-->
+setlocal commentstring=<!--%s-->
+setlocal complete=.,w,b,u,t,i
+setlocal completefunc=
+setlocal nocopyindent
+setlocal nocursorcolumn
+set cursorline
+setlocal cursorline
+setlocal define=
+setlocal dictionary=
+setlocal nodiff
+setlocal equalprg=
+setlocal errorformat=
+setlocal expandtab
+if &filetype != 'xml'
+setlocal filetype=xml
+endif
+set foldcolumn=4
+setlocal foldcolumn=4
+setlocal foldenable
+setlocal foldexpr=0
+setlocal foldignore=#
+setlocal foldlevel=0
+setlocal foldmarker={{{,}}}
+set foldmethod=marker
+setlocal foldmethod=syntax
+setlocal foldminlines=1
+setlocal foldnestmax=20
+set foldtext=MyFoldText()
+setlocal foldtext=MyFoldText()
+setlocal formatexpr=
+setlocal formatoptions=croql
+setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
+setlocal grepprg=
+setlocal iminsert=2
+setlocal imsearch=2
+setlocal include=
+setlocal includeexpr=
+setlocal indentexpr=XmlIndentGet(v:lnum,1)
+setlocal indentkeys=o,O,*<Return>,<>>,<<>,/,{,}
+setlocal noinfercase
+setlocal iskeyword=@,48-57,_,192-255,-
+setlocal keywordprg=
+set linebreak
+setlocal linebreak
+setlocal nolisp
+setlocal nolist
+setlocal nomacmeta
+setlocal makeprg=
+setlocal matchpairs=(:),{:},[:]
+setlocal modeline
+setlocal modifiable
+setlocal nrformats=octal,hex
+set number
+setlocal number
+setlocal numberwidth=4
+setlocal omnifunc=xmlcomplete#CompleteTags
+setlocal path=
+setlocal nopreserveindent
+setlocal nopreviewwindow
+setlocal quoteescape=\\
+setlocal noreadonly
+setlocal norightleft
+setlocal rightleftcmd=search
+setlocal noscrollbind
+setlocal shiftwidth=4
+setlocal noshortname
+setlocal nosmartindent
+setlocal softtabstop=0
+setlocal nospell
+setlocal spellcapcheck=off
+setlocal spellfile=
+setlocal spelllang=en
+setlocal statusline=
+setlocal suffixesadd=
+setlocal swapfile
+setlocal synmaxcol=3000
+if &syntax != 'xml'
+setlocal syntax=xml
+endif
+setlocal tabstop=4
+setlocal tags=
+setlocal textwidth=0
+setlocal thesaurus=
+setlocal nowinfixheight
+setlocal nowinfixwidth
+setlocal wrap
+setlocal wrapmargin=0
+let s:l = 49 - ((33 * winheight(0) + 36) / 72)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 49
-normal! 017l
+normal! 0
 wincmd w
-exe 'vert 1resize ' . ((&columns * 116 + 117) / 234)
-exe 'vert 2resize ' . ((&columns * 117 + 117) / 234)
+exe '1resize ' . ((&lines * 71 + 37) / 74)
+exe 'vert 1resize ' . ((&columns * 164 + 117) / 234)
+exe '2resize ' . ((&lines * 0 + 37) / 74)
+exe 'vert 2resize ' . ((&columns * 164 + 117) / 234)
+exe 'vert 3resize ' . ((&columns * 69 + 117) / 234)
 tabnext 1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf
 endif
 unlet! s:wipebuf
-set winheight=1 winwidth=20 shortmess=filnxtToOIA
+set winheight=10 winwidth=20 shortmess=filnxtToOIA
 let s:sx = expand("<sfile>:p:r")."x.vim"
 if file_readable(s:sx)
   exe "source " . fnameescape(s:sx)
