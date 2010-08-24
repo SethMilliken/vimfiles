@@ -169,6 +169,7 @@ let &cpo=s:cpo_save
 unlet s:cpo_save
 set autoindent
 set autowrite
+set autowriteall
 set background=dark
 set backspace=indent,eol,start
 set clipboard=unnamed
@@ -210,7 +211,9 @@ set termencoding=utf-8
 set transparency=5
 set undolevels=100
 set updatetime=500
-set winminheight=0
+set window=68
+set winheight=10
+set winminheight=10
 set nowritebackup
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
@@ -295,33 +298,20 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +655 ~/sandbox/personal/todo/personal.tst.txt
-badd +39 ~/sandbox/personal/todo/todo.txt
-badd +22 ~/sandbox/personal/todo/techtodo.txt
+badd +875 ~/sandbox/personal/todo/personal.tst.txt
 silent! argdel *
-set lines=70 columns=115
-winpos 705 878
+set lines=69 columns=115
+winpos 714 878
 buffer ~/sandbox/personal/todo/personal.tst.txt
 set splitbelow splitright
 wincmd _ | wincmd |
 split
-wincmd _ | wincmd |
-split
-2wincmd k
-wincmd w
-wincmd w
-wincmd _ | wincmd |
-vsplit
-1wincmd h
+1wincmd k
 wincmd w
 wincmd t
 set winheight=1 winwidth=1
-exe '1resize ' . ((&lines * 20 + 35) / 70)
-exe '2resize ' . ((&lines * 24 + 35) / 70)
-exe '3resize ' . ((&lines * 22 + 35) / 70)
-exe 'vert 3resize ' . ((&columns * 57 + 57) / 115)
-exe '4resize ' . ((&lines * 22 + 35) / 70)
-exe 'vert 4resize ' . ((&columns * 57 + 57) / 115)
+exe '1resize ' . ((&lines * 39 + 34) / 69)
+exe '2resize ' . ((&lines * 27 + 34) / 69)
 argglobal
 let s:cpo_save=&cpo
 set cpo&vim
@@ -447,13 +437,15 @@ setlocal wrap
 setlocal wrapmargin=0
 1
 normal zo
-7
+6
 normal zo
-let s:l = 1 - ((0 * winheight(0) + 10) / 20)
+69
+normal zc
+let s:l = 2 - ((1 * winheight(0) + 19) / 39)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-1
+2
 normal! 0
 wincmd w
 argglobal
@@ -512,7 +504,7 @@ setlocal foldcolumn=4
 setlocal foldenable
 setlocal foldexpr=0
 setlocal foldignore=#
-setlocal foldlevel=0
+setlocal foldlevel=999
 setlocal foldmarker={{{,}}}
 set foldmethod=marker
 setlocal foldmethod=marker
@@ -580,463 +572,25 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-655
-normal zo
-655
-normal zo
-let s:l = 655 - ((0 * winheight(0) + 12) / 24)
+let s:l = 893 - ((0 * winheight(0) + 13) / 27)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-655
+893
 normal! 0
 wincmd w
-argglobal
-buffer ~/sandbox/personal/todo/todo.txt
-setlocal keymap=
-setlocal noarabic
-setlocal autoindent
-setlocal balloonexpr=
-setlocal nobinary
-setlocal bufhidden=
-setlocal buflisted
-setlocal buftype=
-setlocal nocindent
-setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
-setlocal cinoptions=
-setlocal cinwords=if,else,while,do,for,switch
-setlocal colorcolumn=
-setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
-setlocal commentstring=
-setlocal complete=.,w,b,u,t,i
-setlocal concealcursor=
-setlocal conceallevel=0
-setlocal completefunc=
-setlocal nocopyindent
-setlocal cryptmethod=
-setlocal nocursorbind
-setlocal nocursorcolumn
-set cursorline
-setlocal cursorline
-setlocal define=
-setlocal dictionary=
-setlocal nodiff
-setlocal equalprg=
-setlocal errorformat=
-setlocal noexpandtab
-if &filetype != 'txt'
-setlocal filetype=txt
-endif
-set foldcolumn=4
-setlocal foldcolumn=0
-setlocal foldenable
-setlocal foldexpr=0
-setlocal foldignore=#
-setlocal foldlevel=4
-setlocal foldmarker={{{,}}}
-set foldmethod=marker
-setlocal foldmethod=marker
-setlocal foldminlines=1
-setlocal foldnestmax=20
-set foldtext=MyFoldText()
-setlocal foldtext=MyFoldText()
-setlocal formatexpr=
-setlocal formatoptions=tcq
-setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
-setlocal grepprg=
-setlocal iminsert=2
-setlocal imsearch=2
-setlocal include=
-setlocal includeexpr=
-setlocal indentexpr=
-setlocal indentkeys=0{,0},0),:,!^F,O,e,*<Return>,=*/
-setlocal noinfercase
-setlocal iskeyword=@,48-57,_,192-255,-
-setlocal keywordprg=
-set linebreak
-setlocal linebreak
-setlocal nolisp
-setlocal nolist
-setlocal nomacmeta
-setlocal makeprg=
-setlocal matchpairs=(:),{:},[:]
-setlocal modeline
-setlocal modifiable
-setlocal nrformats=octal,hex
-set number
-setlocal number
-setlocal numberwidth=4
-setlocal omnifunc=
-setlocal path=
-setlocal nopreserveindent
-setlocal nopreviewwindow
-setlocal quoteescape=\\
-setlocal readonly
-setlocal norelativenumber
-setlocal norightleft
-setlocal rightleftcmd=search
-setlocal noscrollbind
-setlocal shiftwidth=4
-setlocal noshortname
-setlocal nosmartindent
-setlocal softtabstop=0
-setlocal nospell
-setlocal spellcapcheck=off
-setlocal spellfile=
-setlocal spelllang=en
-setlocal statusline=
-setlocal suffixesadd=
-setlocal swapfile
-setlocal synmaxcol=3000
-if &syntax != 'txt'
-setlocal syntax=txt
-endif
-setlocal tabstop=2
-setlocal tags=
-setlocal textwidth=0
-setlocal thesaurus=
-setlocal noundofile
-setlocal nowinfixheight
-setlocal nowinfixwidth
-setlocal wrap
-setlocal wrapmargin=0
-1
-normal zo
-2
-normal zc
-1
-normal zo
-38
-normal zo
-39
-normal zo
-41
-normal zc
-39
-normal zo
-130
-normal zo
-176
-normal zc
-182
-normal zc
-130
-normal zo
-244
-normal zo
-253
-normal zc
-266
-normal zc
-244
-normal zo
-271
-normal zo
-272
-normal zc
-271
-normal zo
-315
-normal zo
-323
-normal zc
-315
-normal zo
-335
-normal zo
-349
-normal zc
-335
-normal zo
-353
-normal zo
-354
-normal zc
-363
-normal zo
-363
-normal zc
-353
-normal zo
-38
-normal zo
-435
-normal zo
-436
-normal zc
-435
-normal zo
-441
-normal zo
-442
-normal zo
-442
-normal zc
-466
-normal zo
-467
-normal zc
-476
-normal zo
-476
-normal zc
-466
-normal zo
-506
-normal zo
-509
-normal zc
-506
-normal zo
-441
-normal zo
-521
-normal zo
-522
-normal zc
-529
-normal zo
-545
-normal zc
-529
-normal zo
-550
-normal zo
-564
-normal zc
-550
-normal zo
-521
-normal zo
-662
-normal zo
-665
-normal zc
-677
-normal zc
-695
-normal zc
-700
-normal zc
-730
-normal zc
-662
-normal zo
-736
-normal zo
-746
-normal zc
-736
-normal zo
-757
-normal zo
-758
-normal zc
-795
-normal zo
-757
-normal zo
-915
-normal zo
-916
-normal zc
-919
-normal zo
-919
-normal zc
-926
-normal zc
-930
-normal zc
-933
-normal zo
-933
-normal zc
-941
-normal zo
-941
-normal zc
-958
-normal zc
-915
-normal zo
-962
-normal zo
-962
-normal zc
-let s:l = 38 - ((0 * winheight(0) + 11) / 22)
-if s:l < 1 | let s:l = 1 | endif
-exe s:l
-normal! zt
-38
-normal! 0
-wincmd w
-argglobal
-buffer ~/sandbox/personal/todo/techtodo.txt
-setlocal keymap=
-setlocal noarabic
-setlocal autoindent
-setlocal balloonexpr=
-setlocal nobinary
-setlocal bufhidden=
-setlocal buflisted
-setlocal buftype=
-setlocal nocindent
-setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
-setlocal cinoptions=
-setlocal cinwords=if,else,while,do,for,switch
-setlocal colorcolumn=
-setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
-setlocal commentstring=
-setlocal complete=.,w,b,u,t,i
-setlocal concealcursor=
-setlocal conceallevel=0
-setlocal completefunc=
-setlocal nocopyindent
-setlocal cryptmethod=
-setlocal nocursorbind
-setlocal nocursorcolumn
-set cursorline
-setlocal cursorline
-setlocal define=
-setlocal dictionary=
-setlocal nodiff
-setlocal equalprg=
-setlocal errorformat=
-setlocal noexpandtab
-if &filetype != 'txt'
-setlocal filetype=txt
-endif
-set foldcolumn=4
-setlocal foldcolumn=4
-setlocal foldenable
-setlocal foldexpr=0
-setlocal foldignore=#
-setlocal foldlevel=4
-setlocal foldmarker={{{,}}}
-set foldmethod=marker
-setlocal foldmethod=marker
-setlocal foldminlines=1
-setlocal foldnestmax=20
-set foldtext=MyFoldText()
-setlocal foldtext=MyFoldText()
-setlocal formatexpr=
-setlocal formatoptions=tcq
-setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
-setlocal grepprg=
-setlocal iminsert=2
-setlocal imsearch=2
-setlocal include=
-setlocal includeexpr=
-setlocal indentexpr=
-setlocal indentkeys=0{,0},0),:,!^F,O,e,*<Return>,=*/
-setlocal noinfercase
-setlocal iskeyword=@,48-57,_,192-255,-
-setlocal keywordprg=
-set linebreak
-setlocal linebreak
-setlocal nolisp
-setlocal nolist
-setlocal nomacmeta
-setlocal makeprg=
-setlocal matchpairs=(:),{:},[:]
-setlocal modeline
-setlocal modifiable
-setlocal nrformats=octal,hex
-set number
-setlocal number
-setlocal numberwidth=4
-setlocal omnifunc=
-setlocal path=
-setlocal nopreserveindent
-setlocal nopreviewwindow
-setlocal quoteescape=\\
-setlocal readonly
-setlocal norelativenumber
-setlocal norightleft
-setlocal rightleftcmd=search
-setlocal noscrollbind
-setlocal shiftwidth=4
-setlocal noshortname
-setlocal nosmartindent
-setlocal softtabstop=0
-setlocal nospell
-setlocal spellcapcheck=off
-setlocal spellfile=
-setlocal spelllang=en
-setlocal statusline=
-setlocal suffixesadd=
-setlocal swapfile
-setlocal synmaxcol=3000
-if &syntax != 'txt'
-setlocal syntax=txt
-endif
-setlocal tabstop=2
-setlocal tags=
-setlocal textwidth=0
-setlocal thesaurus=
-setlocal noundofile
-setlocal nowinfixheight
-setlocal nowinfixwidth
-setlocal wrap
-setlocal wrapmargin=0
-19
-normal zo
-22
-normal zo
-23
-normal zo
-52
-normal zo
-23
-normal zo
-73
-normal zo
-84
-normal zo
-73
-normal zo
-88
-normal zo
-92
-normal zo
-88
-normal zo
-96
-normal zo
-114
-normal zo
-119
-normal zo
-114
-normal zo
-96
-normal zo
-128
-normal zo
-135
-normal zo
-22
-normal zo
-let s:l = 22 - ((0 * winheight(0) + 11) / 22)
-if s:l < 1 | let s:l = 1 | endif
-exe s:l
-normal! zt
-22
-normal! 0
-wincmd w
-exe '1resize ' . ((&lines * 20 + 35) / 70)
-exe '2resize ' . ((&lines * 24 + 35) / 70)
-exe '3resize ' . ((&lines * 22 + 35) / 70)
-exe 'vert 3resize ' . ((&columns * 57 + 57) / 115)
-exe '4resize ' . ((&lines * 22 + 35) / 70)
-exe 'vert 4resize ' . ((&columns * 57 + 57) / 115)
+exe '1resize ' . ((&lines * 39 + 34) / 69)
+exe '2resize ' . ((&lines * 27 + 34) / 69)
+tabnew
+set splitbelow splitright
+wincmd t
+set winheight=1 winwidth=1
 tabnext 1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf
 endif
 unlet! s:wipebuf
-set winheight=1 winwidth=20 shortmess=filnxtToOIA
+set winheight=10 winwidth=20 shortmess=filnxtToOIA
 let s:sx = expand("<sfile>:p:r")."x.vim"
 if file_readable(s:sx)
   exe "source " . fnameescape(s:sx)

@@ -13,7 +13,7 @@
 
 
 "}}}
-" DEFAULT example .vimrc {{{
+" DEFAULT: from example .vimrc {{{
 " When started as "evim", evim.vim will already have done these settings.
 if v:progname =~? "evim"
 	finish
@@ -99,14 +99,12 @@ set autowrite						" auto write changes when switching buffers
 set shiftwidth=4					" smaller tab stops
 set tabstop=4						" reasonable tab stop width
 set softtabstop=0					" use only tabs	
-set autoindent 						" keep indent at same level
 set hlsearch 						" highlight searches
 set tags+=$HOME/sandbox/personal/tags
 									" universal tags file
 set directory=$HOME/.vim/swap//,~/vimfiles/swap//
 									" centralize swap files (with unique names, //)
-set nowritebackup					" allow crontab editing.
-									" TODO: should this be in an au?
+									" set noaw
 set nobackup						" don't like ~ files littered about
 									" TODO: can these be stored centrally a la swap?
 " Sessionopts: defaults are blank,buffers,curdir,folds,help,options,tabpages,winsize
@@ -115,7 +113,7 @@ set ssop+=globals,sesdir,resize,winpos,unix
 " TODO: annotate this status line description
 set statusline=%<\(%n\)\ %m%y%r\ %f\ %=%-14.(%l,%c%V%)\ %P
 set laststatus=2					" always show the status line
-set diffopt+=vertical
+set diffopt+=vertical				" use vertical splits for diff
 set splitright						" open vertical splits to the right
 set splitbelow						" open horizonal splits below
 set winminheight=0 					" minimized horizontal splits show only statusline
@@ -123,8 +121,6 @@ set switchbuf=useopen,usetab 		" when switching to a buffer, go to where it's al
 set history=10000					" keep craploads of command history
 set undolevels=100					" keep lots of undo history
 set foldlevelstart=999   			" don't use a default fold level; all folds open by default
-" TODO: only set if missing
-" set cms=\ %s						" generally don't want commentstring for folds
 set fdm=marker						" make the default foldmethod markers
 set foldcolumn=4					" trying out fold indicator column
 
@@ -144,49 +140,49 @@ nnoremap <silent> <C-L> :call Reset() \| nohls<CR>
 imap <silent> <C-L> <Esc>:call Reset() \| nohls<CR>a
 
 " Get word count of current file
-nnoremap <silent> <Leader>w <Esc>:!wc -w %<CR>
+nmap <silent> <Leader>w <Esc>:!wc -w %<CR>
 
 " Copy buffer to clipbard
 "" map <something>	<Esc>:%y*<CR>
 
 " Tail: reload buffer from disk and go to end
 " FIXME: find a non-conflicting binding
-nnoremap <silent> <S-k> <Esc>:e<CR><Esc>:$<CR>
+nmap <silent> <S-k> <Esc>:e<CR><Esc>:$<CR>
 
 " Save Session: (verify cwd to not stomp on existing sessions)
-nnoremap SS <Esc>:w<CR><Esc>:SessionSave<CR><Esc>:call FixSession()<CR><Esc>:SessionOpenLast<CR><Esc>:echo "Saved fixed session: " . v:this_session<CR>
+nmap SS <Esc>:w<CR><Esc>:SessionSave<CR><Esc>:call FixSession()<CR><Esc>:SessionOpenLast<CR><Esc>:echo "Saved fixed session: " . v:this_session<CR>
 
 " Journal:
-nnoremap \j <Esc>:call JournalEntry()<CR>
+nmap \j <Esc>:call JournalEntry()<CR>
 command! Journal :call JournalEntry()
 
 " Misc:
-nnoremap <silent> <Leader>] :NERDTreeToggle<CR>
-" nnoremap <silent> <Leader>[ :TMiniBufExplorer<CR>
+nmap <silent> <Leader>] :NERDTreeToggle<CR>
+" nmap <silent> <Leader>[ :TMiniBufExplorer<CR>
 
 " Folds:
 nmap <silent> <Leader>= <Esc>:call FoldDefaultNodes()<CR>:normal zvzkzjzt<CR><C-l>
 nmap <silent> <Leader>0 <Esc>:silent normal zvzt<CR><C-l>
 
 " Scratch Buffer: close with ZZ
-nnoremap <silent> <Leader>c <Esc>:call ScratchBuffer("scratch")<CR>
+nmap <silent> <Leader>c <Esc>:call ScratchBuffer("scratch")<CR>
 
 " Open URIs:
-nnoremap <silent> <Leader>\ :call HandleURI()<CR>
-nnoremap <silent> <Leader>t :call HandleTS()<CR>
+nmap <silent> <Leader>\ :call HandleURI()<CR>
+nmap <silent> <Leader>t :call HandleTS()<CR>
 
 " SQL: grab and format sql statement from current line
-nnoremap <silent> <Leader>q <Esc>:call FormatSqlStatement()<CR>
+nmap <silent> <Leader>q <Esc>:call FormatSqlStatement()<CR>
 
 " Formatting: Wrap current or immediately preceding word in in <em> tag
-nnoremap <Leader>_ <Esc>Bi<em><Esc>ea</em>
+nmap <Leader>_ <Esc>Bi<em><Esc>ea</em>
 
 " Completion: show completion preview, without actually completing
-inoremap <C-p> <Esc>:set completeopt+=menuone<CR>a<C-n><C-p>
+imap <C-p> <Esc>:set completeopt+=menuone<CR>a<C-n><C-p>
 
 " help help help
-nnoremap <Leader>pp	 	<Esc>:help<CR><Esc>:winc _<CR><Esc>:winc \|<CR><Esc>:help<Space>
-nnoremap <Leader>p+ 	<Esc>:tab help<Space>
+nmap <Leader>pp	 	<Esc>:help<CR><Esc>:winc _<CR><Esc>:winc \|<CR><Esc>:help<Space>
+nmap <Leader>po 	<Esc>:tab help<Space>
 
 " Cmdline Window: shortcut 
 nnoremap :: q:
@@ -199,10 +195,10 @@ augroup cmdline-window
 augroup END
 
 " Learn your hjkl!
-nnoremap <Left> 	<Esc>:echo "You should have typed h instead"<CR>
-nnoremap <Right> 	<Esc>:echo "You should have typed l instead"<CR>
-nnoremap <Up> 		<Esc>:echo "You should have typed k instead"<CR>
-nnoremap <Down> 	<Esc>:echo "You should have typed j instead"<CR>
+nmap <Left> 	<Esc>:echo "You should have typed h instead"<CR>
+nmap <Right> 	<Esc>:echo "You should have typed l instead"<CR>
+nmap <Up> 		<Esc>:echo "You should have typed k instead"<CR>
+nmap <Down> 	<Esc>:echo "You should have typed j instead"<CR>
 
 " Accordion Mode: accordion style horizontal split navigation mode
 nmap <silent> <C-j> <C-w>j:call AccordionMode()<CR><C-l>
@@ -216,12 +212,12 @@ function! AccordionMode()
 endfunction
 
 " Timestamp: {{{
-nnoremap <silent> <Leader>sd <Esc>:call Timestamp("date")<CR>
-nnoremap <silent> <Leader>st <Esc>:call AddOrUpdateTimestamp()<CR>
-nnoremap <silent> <Leader>sl <Esc>:call Timestamp("long")<CR>
-nnoremap <silent> <Leder>fw <Esc>:call FoldWrap()<CR>
-nnoremap <silent> <Leader>fi <Esc>:call FoldInsert()<CR>
-nnoremap <silent> <Leader>ll o<Esc>:call Timestamp("short") \| call FoldWrap()<CR>
+nmap <silent> <Leader>sd <Esc>:call Timestamp("date")<CR>
+nmap <silent> <Leader>st <Esc>:call AddOrUpdateTimestamp()<CR>
+nmap <silent> <Leader>sl <Esc>:call Timestamp("long")<CR>
+nmap <silent> <Leader>fw <Esc>:call FoldWrap()<CR>
+nmap <silent> <Leader>fi <Esc>:call FoldInsert()<CR>
+nmap <silent> <Leader>ll o<Esc>:call Timestamp("short") \| call FoldWrap()<CR>
 " }}}
 " Cmd-# and Alt-# to switch tabs {{{
 for n in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
@@ -549,7 +545,7 @@ endfunction
 " }}}
 function! FixSession() " {{{
   silent exe "split " . v:this_session
-  silent exe "%s/^edit /buffer /g"
+  silent exe "%s/^edit /buffer /ge"
   silent exe "w"
   silent exe "close"
 endfunction
@@ -595,15 +591,17 @@ endfunction
 " SYNTAX: {{{
 " Java:
 augroup java
-	au BufReadPre * setlocal foldmethod=syntax
-	au BufReadPre * setlocal foldlevelstart=-1
+	au BufReadPre *.java setlocal foldmethod=syntax
+	au BufReadPre *.java setlocal foldlevelstart=-1
 augroup END
 
 " SVN:
 au BufNewFile,BufRead  svn-commit.* setf svn	" handle svn commits
 
 " Text:
-au BufNewFile *.txt set fdm=marker
+augroup txt
+	au BufNewFile *.txt set fdm=marker
+augroup END
 
 "}}}
 " PLUGINS: {{{
@@ -627,17 +625,23 @@ augroup END
 
 " Vimperator:
 augroup Vimperator
-	au! BufRead vimperator-* nnoremap <buffer> ZZ :call FormFieldArchive() \| :silent write \| :bd \| :macaction hide:<CR>
+	au! BufRead vimperator-* nmap <buffer> ZZ :call FormFieldArchive() \| :silent write \| :bd \| :macaction hide:<CR>
 	au BufRead vimperator-* imap <buffer> ZZ <Esc>ZZ
+augroup END
+
+" Crontab:
+augroup crontab
+	au! BufRead crontab.* set nowritebackup
+	au BufRead crontab.* set filetype=crontab
 augroup END
 
 " Cocoa:
 augroup Cocoa
-	au BufRead *.[mh] nnoremap <buffer> <d-1> :ListMethods<CR>
+	au BufRead *.[mh] nmap <buffer> <d-1> :ListMethods<CR>
 augroup END
 
 " autocomplete tags in html
-au! FileType xhtml imap <buffer> > <Esc>:call AutoTagComplete()<CR>
+au! FileType xhtml inoremap <buffer> > <Esc>:call AutoTagComplete()<CR>
 
 " python syntax
 let python_highlight_all = 1
@@ -652,7 +656,8 @@ let g:miniBufExplMaxSize = 50
 let g:miniBufExplMapCTabSwitchBufs = 1
 
 " sessionmanager:
-"
+let g:sessionman_save_on_exit = 0
+
 " BufExplorer:
 map <silent> <C-Tab> :BufExplorer<CR>j
 map <silent> <C-S-Tab> :BufExplorer<CR>k
