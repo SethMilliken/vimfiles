@@ -27,6 +27,14 @@ inoremap <silent> <S-Tab> =BackwardsSnippet()
 imap <F1> 
 imap <Nul> :
 map! <D-v> *
+nnoremap <silent>  
+nnoremap <silent> e 
+nmap <silent> - :call AccordionMode()
+nmap <silent> l l:call AccordionMode()
+nmap <silent> h h:call AccordionMode()
+nmap <silent> k k:call AccordionMode()
+nmap <silent> j j:call AccordionMode()
+nmap <silent>  l:call AccordionMode()
 nmap <silent>  l:call AccordionMode()
 snoremap <silent> 	 i<Right>=TriggerSnippet()
 nmap <silent> <NL> j:call AccordionMode()
@@ -50,10 +58,10 @@ imap <silent> · :tabn 7
 imap <silent> ¸ :tabn 8
 imap <silent> ¹ :tabn 9
 imap <silent> ° :tabn 10
-nnoremap <silent> K :e:$
+nmap <silent> K :e:$
 map Q gq
-xmap S <Plug>VSurround
 nnoremap SS :w:SessionSave:call FixSession():SessionOpenLast:echo "Saved fixed session: " . v:this_session
+xmap S <Plug>VSurround
 snoremap U b<BS>U
 vmap [% [%m'gv``
 nnoremap <silent> \- :silent g/^done {{/call FoldUnfolded()
@@ -93,25 +101,26 @@ map \dj <Plug>DirDiffNext
 map \dp <Plug>DirDiffPut
 map \dg <Plug>DirDiffGet
 map <silent> \w2 :w:VimwikiAll2HTML:echo "Saved wiki to HTML."
-map <silent> \snip :call ResetSnippets() | call GetSnippets(g:snippets_dir, &ft):echo "Snippets for format \"" . &ft . "\" updated."
-nnoremap <silent> \ll o:call Timestamp("short") | call FoldWrap()
-nnoremap <silent> \fi :call FoldInsert()
-nnoremap <silent> \fw :call FoldWrap()
-nnoremap <silent> \sl :call Timestamp("long")
-nnoremap <silent> \st :call Timestamp("short")
-nnoremap <silent> \sd :call Timestamp("date")
+map <silent> \snip :call ResetSnippets() | call GetSnippets(g:snippets_dir, "_") | call GetSnippets(g:snippets_dir, &ft):echo "Snippets for format \"" . &ft . "\" updated."
+nmap <silent> \ll o:call Timestamp("short") | call FoldWrap()
+nmap <silent> \fi :call FoldInsert()
+nmap <silent> \fw :call FoldWrap()
+nmap <silent> \sl :call Timestamp("long")
+nmap <silent> \st :call AddOrUpdateTimestamp()
+nmap <silent> \sd :call Timestamp("date")
 nmap \po :tab help 
-nnoremap \pp :help:winc _:winc |:help 
-nnoremap \_ Bi<em>ea</em>
-nnoremap <silent> \q :call FormatSqlStatement()
-nnoremap <silent> \t :call HandleTS()
-nnoremap <silent> \\ :call HandleURI()
-nnoremap <silent> \c :call ScratchBuffer("scratch")
+nmap \pp :help:winc _:winc |:help 
+nmap \_ Bi<em>ea</em>
+nmap <silent> \q :call FormatSqlStatement()
+nmap <silent> \t :call HandleTS()
+nmap <silent> \/ :call HandleURI()
+nmap <silent> \c :call ScratchBuffer("scratch")
 nmap <silent> \0 :silent normal zvzt
 nmap <silent> \= :call FoldDefaultNodes():normal zvzkzjzt
-nnoremap <silent> \] :NERDTreeToggle
-nnoremap \j :call JournalEntry()
-nnoremap <silent> \w :!wc -w %
+nmap <silent> \] :NERDTreeToggle
+nmap \j :call JournalEntry()
+nmap \\ :call CommitSession()
+nmap <silent> \w :!wc -w %
 vmap ]% ]%m'gv``
 snoremap ^ b<BS>^
 snoremap ` b<BS>`
@@ -187,11 +196,11 @@ map <C-F6> :call CSV_get_new_sep()
 map <silent> <C-S-Tab> :BufExplorerk
 map <silent> <C-Tab> :BufExplorerj
 nmap <silent> <C--> :call AccordionMode()
-nnoremap <Down> :echo "You should have typed j instead"
-nnoremap <Up> :echo "You should have typed k instead"
-nnoremap <Right> :echo "You should have typed l instead"
-nnoremap <Left> :echo "You should have typed h instead"
-nmap <S-Space> 
+nmap <Down> :echo "You should have typed j instead."
+nmap <Up> :echo "You should have typed k instead."
+nmap <Right> :echo "You should have typed l instead."
+nmap <Left> :echo "You should have typed h instead."
+nmap <S-Space> 
 map <F1> 
 nnoremap <Nul> :
 xmap <BS> "-d
@@ -203,7 +212,7 @@ imap S <Plug>ISurround
 imap s <Plug>Isurround
 inoremap <silent> 	 =TriggerSnippet()
 imap <silent>  :call Reset() | nohlsa
-inoremap  :set completeopt+=menuonea
+imap  :set completeopt+=menuonea
 inoremap <silent> 	 =ShowAvailableSnips()
 imap  <Plug>Isurround
 imap  =CtrlXPP()
@@ -225,7 +234,6 @@ map! \_ Bi<em>ea</em>
 nnoremap † :echo "Testing"
 let &cpo=s:cpo_save
 unlet s:cpo_save
-set autoindent
 set autowrite
 set background=dark
 set backspace=indent,eol,start
@@ -270,13 +278,11 @@ set tabstop=4
 set tags=/tmp/ctags/autest.py,~/sandbox/personal/tags
 set termencoding=utf-8
 set textwidth=80
-set transparency=5
 set undolevels=100
 set updatetime=500
 set visualbell
 set wildignore=*.pyc
 set wildmode=list
-set window=72
 set winheight=10
 set winminheight=10
 set winwidth=1
@@ -379,11 +385,11 @@ badd +1 ~/.vim/snippets/_.snippets
 badd +20 ~/.vim/snippets/vim.snippets
 badd +136 ~/.vim/.vimrc
 badd +8 ~/.vim/notes
-badd +5 ~/.vim/after/scripts.vim
+badd +4 ~/.vim/after/scripts.vim
+badd +0 ~/sandbox/code/3rd/KeyRemap4MacBook/files/prefpane/include/UbiquitousVimBindings.xml
 silent! argdel *
 set lines=73 columns=234
-set fullscreen
-winpos 0 900
+winpos 0 878
 buffer ~/.vim/after/scripts.vim
 set splitbelow splitright
 wincmd _ | wincmd |
@@ -534,12 +540,12 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 4 - ((2 * winheight(0) + 17) / 35)
+let s:l = 1 - ((0 * winheight(0) + 17) / 35)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-4
-normal! 09l
+1
+normal! 0
 wincmd w
 argglobal
 buffer ~/.gvimrc
@@ -614,7 +620,7 @@ setlocal includeexpr=
 setlocal indentexpr=GetVimIndent()
 setlocal indentkeys=0{,0},:,0#,!^F,o,O,e,=end,=else,=cat,=fina,=END,0\\
 setlocal noinfercase
-setlocal iskeyword=@,48-57,_,192-255,#,-
+setlocal iskeyword=@,48-57,_,192-255,#
 setlocal keywordprg=
 set linebreak
 setlocal linebreak
@@ -663,7 +669,7 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 8 - ((7 * winheight(0) + 17) / 35)
+let s:l = 8 - ((0 * winheight(0) + 17) / 35)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -672,6 +678,28 @@ normal! 013l
 wincmd w
 argglobal
 buffer ~/.vim/.vimrc
+let s:cpo_save=&cpo
+set cpo&vim
+imap <buffer> <silent> <D-9> :tabn 9
+imap <buffer> <silent> <D-8> :tabn 8
+imap <buffer> <silent> <D-7> :tabn 7
+imap <buffer> <silent> <D-6> :tabn 6
+imap <buffer> <silent> <D-5> :tabn 5
+imap <buffer> <silent> <D-4> :tabn 4
+imap <buffer> <silent> <D-3> :tabn 3
+imap <buffer> <silent> <D-2> :tabn 2
+imap <buffer> <silent> <D-1> :tabn 1
+imap <buffer> <silent> <D-0> :tabn 10
+imap <buffer> <silent> ¹ :tabn 9
+imap <buffer> <silent> ¸ :tabn 8
+imap <buffer> <silent> · :tabn 7
+imap <buffer> <silent> ¶ :tabn 6
+imap <buffer> <silent> µ :tabn 5
+imap <buffer> <silent> ´ :tabn 4
+imap <buffer> <silent> ³ :tabn 3
+imap <buffer> <silent> ² :tabn 2
+imap <buffer> <silent> ± :tabn 1
+imap <buffer> <silent> ° :tabn 10
 vnoremap <buffer> <silent> [" :exe "normal! gv"|call search('\%(^\s*".*\n\)\%(^\s*"\)\@!', "bW")
 nnoremap <buffer> <silent> [" :call search('\%(^\s*".*\n\)\%(^\s*"\)\@!', "bW")
 vnoremap <buffer> <silent> [] m':exe "normal! gv"|call search('^\s*endf*\%[unction]\>', "bW")
@@ -684,9 +712,31 @@ vnoremap <buffer> <silent> ][ m':exe "normal! gv"|call search('^\s*endf*\%[un
 nnoremap <buffer> <silent> ][ m':call search('^\s*endf*\%[unction]\>', "W")
 vnoremap <buffer> <silent> ]] m':exe "normal! gv"|call search('^\s*fu\%[nction]\>', "W")
 nnoremap <buffer> <silent> ]] m':call search('^\s*fu\%[nction]\>', "W")
+nmap <buffer> <silent> <D-9> 9gt
+nmap <buffer> <silent> <D-8> 8gt
+nmap <buffer> <silent> <D-7> 7gt
+nmap <buffer> <silent> <D-6> 6gt
+nmap <buffer> <silent> <D-5> 5gt
+nmap <buffer> <silent> <D-4> 4gt
+nmap <buffer> <silent> <D-3> 3gt
+nmap <buffer> <silent> <D-2> 2gt
+nmap <buffer> <silent> <D-1> 1gt
+nmap <buffer> <silent> <D-0> 10gt
+nmap <buffer> <silent> ¹ 9gt
+nmap <buffer> <silent> ¸ 8gt
+nmap <buffer> <silent> · 7gt
+nmap <buffer> <silent> ¶ 6gt
+nmap <buffer> <silent> µ 5gt
+nmap <buffer> <silent> ´ 4gt
+nmap <buffer> <silent> ³ 3gt
+nmap <buffer> <silent> ² 2gt
+nmap <buffer> <silent> ± 1gt
+nmap <buffer> <silent> ° 10gt
+let &cpo=s:cpo_save
+unlet s:cpo_save
 setlocal keymap=
 setlocal noarabic
-setlocal autoindent
+setlocal noautoindent
 setlocal balloonexpr=
 setlocal nobinary
 setlocal bufhidden=
@@ -797,43 +847,57 @@ normal zc
 normal zc
 85
 normal zo
-128
+129
 normal zo
-214
+129
 normal zo
-128
+236
 normal zo
-232
+257
 normal zo
-234
+344
 normal zo
-253
+499
 normal zo
-474
-normal zo
-546
-normal zo
-554
+512
 normal zc
-563
+585
 normal zo
-232
+236
 normal zo
-591
+629
 normal zo
-607
-normal zo
-705
-normal zo
-let s:l = 107 - ((106 * winheight(0) + 30) / 60)
+let s:l = 690 - ((43 * winheight(0) + 30) / 60)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-107
-normal! 011l
+690
+normal! 026l
 wincmd w
 argglobal
 buffer ~/.vim/.vimrc
+let s:cpo_save=&cpo
+set cpo&vim
+imap <buffer> <silent> <D-9> :tabn 9
+imap <buffer> <silent> <D-8> :tabn 8
+imap <buffer> <silent> <D-7> :tabn 7
+imap <buffer> <silent> <D-6> :tabn 6
+imap <buffer> <silent> <D-5> :tabn 5
+imap <buffer> <silent> <D-4> :tabn 4
+imap <buffer> <silent> <D-3> :tabn 3
+imap <buffer> <silent> <D-2> :tabn 2
+imap <buffer> <silent> <D-1> :tabn 1
+imap <buffer> <silent> <D-0> :tabn 10
+imap <buffer> <silent> ¹ :tabn 9
+imap <buffer> <silent> ¸ :tabn 8
+imap <buffer> <silent> · :tabn 7
+imap <buffer> <silent> ¶ :tabn 6
+imap <buffer> <silent> µ :tabn 5
+imap <buffer> <silent> ´ :tabn 4
+imap <buffer> <silent> ³ :tabn 3
+imap <buffer> <silent> ² :tabn 2
+imap <buffer> <silent> ± :tabn 1
+imap <buffer> <silent> ° :tabn 10
 vnoremap <buffer> <silent> [" :exe "normal! gv"|call search('\%(^\s*".*\n\)\%(^\s*"\)\@!', "bW")
 nnoremap <buffer> <silent> [" :call search('\%(^\s*".*\n\)\%(^\s*"\)\@!', "bW")
 vnoremap <buffer> <silent> [] m':exe "normal! gv"|call search('^\s*endf*\%[unction]\>', "bW")
@@ -846,9 +910,31 @@ vnoremap <buffer> <silent> ][ m':exe "normal! gv"|call search('^\s*endf*\%[un
 nnoremap <buffer> <silent> ][ m':call search('^\s*endf*\%[unction]\>', "W")
 vnoremap <buffer> <silent> ]] m':exe "normal! gv"|call search('^\s*fu\%[nction]\>', "W")
 nnoremap <buffer> <silent> ]] m':call search('^\s*fu\%[nction]\>', "W")
+nmap <buffer> <silent> <D-9> 9gt
+nmap <buffer> <silent> <D-8> 8gt
+nmap <buffer> <silent> <D-7> 7gt
+nmap <buffer> <silent> <D-6> 6gt
+nmap <buffer> <silent> <D-5> 5gt
+nmap <buffer> <silent> <D-4> 4gt
+nmap <buffer> <silent> <D-3> 3gt
+nmap <buffer> <silent> <D-2> 2gt
+nmap <buffer> <silent> <D-1> 1gt
+nmap <buffer> <silent> <D-0> 10gt
+nmap <buffer> <silent> ¹ 9gt
+nmap <buffer> <silent> ¸ 8gt
+nmap <buffer> <silent> · 7gt
+nmap <buffer> <silent> ¶ 6gt
+nmap <buffer> <silent> µ 5gt
+nmap <buffer> <silent> ´ 4gt
+nmap <buffer> <silent> ³ 3gt
+nmap <buffer> <silent> ² 2gt
+nmap <buffer> <silent> ± 1gt
+nmap <buffer> <silent> ° 10gt
+let &cpo=s:cpo_save
+unlet s:cpo_save
 setlocal keymap=
 setlocal noarabic
-setlocal autoindent
+setlocal noautoindent
 setlocal balloonexpr=
 setlocal nobinary
 setlocal bufhidden=
@@ -953,7 +1039,11 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 148 - ((4 * winheight(0) + 5) / 10)
+129
+normal zo
+129
+normal zo
+let s:l = 148 - ((1 * winheight(0) + 5) / 10)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -1069,7 +1159,7 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 8 - ((7 * winheight(0) + 5) / 10)
+let s:l = 8 - ((0 * winheight(0) + 5) / 10)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -1087,6 +1177,127 @@ exe '4resize ' . ((&lines * 10 + 36) / 73)
 exe 'vert 4resize ' . ((&columns * 78 + 117) / 234)
 exe '5resize ' . ((&lines * 10 + 36) / 73)
 exe 'vert 5resize ' . ((&columns * 77 + 117) / 234)
+tabedit ~/sandbox/code/3rd/KeyRemap4MacBook/files/prefpane/include/UbiquitousVimBindings.xml
+set splitbelow splitright
+wincmd t
+set winheight=1 winwidth=1
+argglobal
+inoremap <buffer> \> >
+inoremap <buffer> \. >
+setlocal keymap=
+setlocal noarabic
+setlocal autoindent
+setlocal balloonexpr=
+setlocal nobinary
+setlocal bufhidden=
+setlocal buflisted
+setlocal buftype=
+setlocal nocindent
+setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
+setlocal cinoptions=
+setlocal cinwords=if,else,while,do,for,switch
+setlocal colorcolumn=
+setlocal comments=s:<!--,m:\ \ \ \ \ ,e:-->
+setlocal commentstring=<!--%s-->
+setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
+setlocal completefunc=
+setlocal nocopyindent
+setlocal cryptmethod=
+setlocal nocursorbind
+setlocal nocursorcolumn
+set cursorline
+setlocal cursorline
+setlocal define=
+setlocal dictionary=
+setlocal nodiff
+setlocal equalprg=
+setlocal errorformat=
+setlocal noexpandtab
+if &filetype != 'xml'
+setlocal filetype=xml
+endif
+set foldcolumn=4
+setlocal foldcolumn=4
+setlocal foldenable
+setlocal foldexpr=0
+setlocal foldignore=#
+setlocal foldlevel=999
+setlocal foldmarker={{{,}}}
+set foldmethod=marker
+setlocal foldmethod=marker
+setlocal foldminlines=1
+setlocal foldnestmax=20
+set foldtext=MyFoldText()
+setlocal foldtext=MyFoldText()
+setlocal formatexpr=
+setlocal formatoptions=croql
+setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
+setlocal grepprg=
+setlocal iminsert=2
+setlocal imsearch=2
+setlocal include=
+setlocal includeexpr=
+setlocal indentexpr=XmlIndentGet(v:lnum,1)
+setlocal indentkeys=o,O,*<Return>,<>>,<<>,/,{,}
+setlocal noinfercase
+setlocal iskeyword=@,48-57,_,192-255,#,-
+setlocal keywordprg=
+set linebreak
+setlocal linebreak
+setlocal nolisp
+setlocal nolist
+setlocal nomacmeta
+setlocal makeprg=
+setlocal matchpairs=(:),{:},[:],<:>
+setlocal modeline
+setlocal modifiable
+setlocal nrformats=octal,hex
+set number
+setlocal number
+setlocal numberwidth=4
+setlocal omnifunc=xmlcomplete#CompleteTags
+setlocal path=
+setlocal nopreserveindent
+setlocal nopreviewwindow
+setlocal quoteescape=\\
+setlocal noreadonly
+setlocal norelativenumber
+setlocal norightleft
+setlocal rightleftcmd=search
+setlocal noscrollbind
+setlocal shiftwidth=4
+setlocal noshortname
+setlocal nosmartindent
+setlocal softtabstop=0
+setlocal nospell
+setlocal spellcapcheck=
+setlocal spellfile=
+setlocal spelllang=en
+setlocal statusline=
+setlocal suffixesadd=
+setlocal swapfile
+setlocal synmaxcol=3000
+if &syntax != 'xml'
+setlocal syntax=xml
+endif
+setlocal tabstop=4
+setlocal tags=
+setlocal textwidth=80
+setlocal thesaurus=
+setlocal noundofile
+setlocal nowinfixheight
+setlocal nowinfixwidth
+setlocal wrap
+setlocal wrapmargin=0
+let s:l = 532 - ((38 * winheight(0) + 35) / 71)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+532
+normal! 081l
+3wincmd w
 tabedit ~/.vim/snippets/vim.snippets
 set splitbelow splitright
 wincmd _ | wincmd |
@@ -1544,7 +1755,7 @@ setlocal includeexpr=
 setlocal indentexpr=GetVimIndent()
 setlocal indentkeys=0{,0},:,0#,!^F,o,O,e,=end,=else,=cat,=fina,=END,0\\
 setlocal noinfercase
-setlocal iskeyword=@,48-57,_,192-255,#,-
+setlocal iskeyword=@,48-57,_,192-255,#
 setlocal keywordprg=
 set linebreak
 setlocal linebreak
@@ -1672,7 +1883,7 @@ setlocal includeexpr=
 setlocal indentexpr=GetVimIndent()
 setlocal indentkeys=0{,0},:,0#,!^F,o,O,e,=end,=else,=cat,=fina,=END,0\\
 setlocal noinfercase
-setlocal iskeyword=@,48-57,_,192-255,#,-
+setlocal iskeyword=@,48-57,_,192-255,#
 setlocal keywordprg=
 set linebreak
 setlocal linebreak
@@ -1910,12 +2121,18 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 6 - ((5 * winheight(0) + 35) / 71)
+1
+normal zo
+29
+normal zo
+1
+normal zo
+let s:l = 4 - ((3 * winheight(0) + 35) / 71)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-6
-normal! 022l
+4
+normal! 0
 wincmd w
 argglobal
 buffer ~/sandbox/personal/tech/vim.txt
@@ -2029,16 +2246,18 @@ setlocal wrap
 setlocal wrapmargin=0
 1
 normal zo
-39
+29
 normal zc
 1
 normal zc
-let s:l = 90 - ((89 * winheight(0) + 35) / 71)
+104
+normal zo
+let s:l = 109 - ((108 * winheight(0) + 35) / 71)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-90
-normal! 08l
+109
+normal! 01l
 wincmd w
 3wincmd w
 exe 'vert 1resize ' . ((&columns * 116 + 117) / 234)

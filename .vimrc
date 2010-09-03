@@ -5,15 +5,30 @@
 " 	Araxia on #vim irc.freenode.net
 
 " Version:
-" 	1.0 2010-01-16 22:49:45 PST 
+" 	1.0 " 2010-09-02 17:48:45 EDT
 
-" Tabs: #vim conventional wisdom recommends not using real tabs at all, ever
-" 		ts=8:sw=4:sts=4
-" 	I disagree and find consistent use of real tabs very useful.
+" Notes:
+" 	- I'm deliberately overloading <C-e> and <C-y> for more useful purposes.
+" 	- I try to group distinct features in such a way that I can easily use a simple text-object operation on them (vap, yap, etc.).
+" 	- Folds can be quickly selected simply by closing the fold (za) and yanking
+" 	the folded line (yy).
+"   - #vim conventional wisdom recommends not using real tabs at all, ever (ts=8:sw=4:sts=4). I disagree and find consistent use of real tabs can be very useful.
+"   - /^""/ indicate intentionally disabled options
 
+" Todo:
+"	- clean up SETTINGS; provide better descriptions 
+"	- for clarity, replace abbreviated forms of options in all settings
+"	- annotate all line noise, especially statusline
+"	- publish on bitbucket.org
+"	- make .vimrc re-source-able without sideeffects (guards around au, maps, etc.)
+"	- create section navigation mechanism (location window? keybindings? MAJOR/Minor sections?)
+"	- consider: is keeping example .vimrc useful
+"	- consider: add tw setting to .vimrc modeline
+"	- consider: move ft-specific settings to individual files
+"	- consider: :: shortcut worth the : pause? (remember that the pause is essentially only percieved; immediately continuing to type the : command works fine)
 
 "}}}
-" DEFAULT: from example .vimrc {{{
+" DEFAULTS: from example .vimrc {{{
 " When started as "evim", evim.vim will already have done these settings.
 if v:progname =~? "evim"
 	finish
@@ -83,6 +98,7 @@ endif " has("autocmd")
 "}}}
 " Seth Milliken additions
 " SETTINGS {{{
+set winfixheight
 set shortmess+=I 					" don't show intro on start
 set shortmess+=A 					" don't show message on existing swapfile
 set nospell							" spelling off by default
@@ -134,23 +150,26 @@ nnoremap <Nul> :
 map <F1> <Esc>
 imap <F1> <Esc>
 nmap <S-Space> <C-f>
+nmap :W :w
 
 " Reset: restore some default settings and redraw
 nnoremap <silent> <C-L> :call Reset() \| nohls<CR>
 imap <silent> <C-L> <Esc>:call Reset() \| nohls<CR>a
 
-" Get word count of current file
+" Utility: word count of current file
 nmap <silent> <Leader>w <Esc>:!wc -w %<CR>
 
-" Copy buffer to clipbard
+" Clipboard: Copy buffer to clipboard
+" trying 'set clipboard=unnamed' instead; see .gvimrc
 "" map <something>	<Esc>:%y*<CR>
 
 " Tail: reload buffer from disk and go to end
-" FIXME: find a non-conflicting binding
+" - FIXME: find a non-conflicting binding
+" - TODO: restrict to certain filetypes, e.g. only .log?
 nmap <silent> <S-k> <Esc>:e<CR><Esc>:$<CR>
 
-" Save Session: (verify cwd to not stomp on existing sessions)
-nmap SS <Esc>:w<CR><Esc>:SessionSave<CR><Esc>:call FixSession()<CR><Esc>:SessionOpenLast<CR><Esc>:echo "Saved fixed session: " . v:this_session<CR>
+" Save Session:
+nmap <Leader>\ <Esc>:call CommitSession()<CR>
 
 " Journal:
 nmap \j <Esc>:call JournalEntry()<CR>
@@ -168,7 +187,7 @@ nmap <silent> <Leader>0 <Esc>:silent normal zvzt<CR><C-l>
 nmap <silent> <Leader>c <Esc>:call ScratchBuffer("scratch")<CR>
 
 " Open URIs:
-nmap <silent> <Leader>\ :call HandleURI()<CR>
+nmap <silent> <Leader>/ :call HandleURI()<CR>
 nmap <silent> <Leader>t :call HandleTS()<CR>
 
 " SQL: grab and format sql statement from current line
@@ -180,46 +199,102 @@ nmap <Leader>_ <Esc>Bi<em><Esc>ea</em>
 " Completion: show completion preview, without actually completing
 imap <C-p> <Esc>:set completeopt+=menuone<CR>a<C-n><C-p>
 
-" help help help
+" Help: help help help
+nmap <Leader>hw	 	<Esc>:help<CR>:silent call AdjustFont(-4)<CR>:set columns=115 lines=999<CR>:winc _<CR>:winc \|<CR>:help<Space>
 nmap <Leader>pp	 	<Esc>:help<CR><Esc>:winc _<CR><Esc>:winc \|<CR><Esc>:help<Space>
-nmap <Leader>po 	<Esc>:tab help<Space>
+nmap <Leader>po 	<Esc>:Help<CR>
+command! Help :call HelpSmart()
+function! HelpSmart() " {{{
+  let a:additional = ""
+  let a:setup = ""
+  if expand("%") == ""
+      let a:additional = " | only | normal zt"
+  elseif &buftype != "help"
+      let a:setup = "0tab"
+  endif
+  let a:command = input("Help topic: ", "", "help")
+  exec ":" . a:setup . " help " . a:command . a:additional
+endfunction
 
-" Cmdline Window: shortcut 
+" }}}
+
+" Navigation: shortcuts
+nmap <C-e>n :call SectionHeadNav(1, 0)<CR>
+nmap <C-e>N :call SectionHeadNav(1, 1)<CR>
+nmap <C-e>p :call SectionHeadNav(-1, 0)<CR>
+nmap <C-e>P :call SectionHeadNav(-1, 1)<CR>
+function! SectionHeadNav(count, mode) " {{{
+	" TODO: mb preserve hls value and restore it?
+	if a:count > 0
+		let a:searchdirection = "/"
+	else
+		let a:searchdirection = "?"
+	end
+	if a:mode > 0
+		" Matches ^MAJORHEADER:
+		let a:modematch = "[[:upper:][:space:]]\\{1,}:*.*" . FoldOpenMarker()
+	else
+		" Matches ^Minorheader:
+		let a:modematch = "[[:upper:]]\\{1,}[^:]*:*"
+	end
+	set nohls
+    exec a:searchdirection . "^" .  ExpandedCommentString() . a:modematch
+    normal zz
+    set hls
+endfunction
+
+" }}}
+
+" Cmdline Window: shortcuts
 nnoremap :: q:
+nnoremap // q/
+nnoremap ?? q?
 
 " Cmdline Window:
 augroup cmdline-window
 	au! CmdwinEnter *
+	" Execute the current line in cmndline-window and then reopen it.
+	" n.b. Deliberately overloading <C-y> here.
 	au CmdwinEnter * map <buffer> <C-y> <C-c><CR>q:
+	au CmdwinEnter * inoremap <buffer> <C-y> <Esc><C-y>
+	" Quickly close cmdline-window
 	au CmdwinEnter * map <buffer> ZZ <C-c><C-c>
+	au CmdwinEnter * inoremap <buffer> ZZ <Esc>ZZ
 augroup END
 
-" Learn your hjkl!
-nmap <Left> 	<Esc>:echo "You should have typed h instead"<CR>
-nmap <Right> 	<Esc>:echo "You should have typed l instead"<CR>
-nmap <Up> 		<Esc>:echo "You should have typed k instead"<CR>
-nmap <Down> 	<Esc>:echo "You should have typed j instead"<CR>
+" Learn: hjkl
+nmap <Left> 	<Esc>:echo "You should have typed h instead."<CR>
+nmap <Right> 	<Esc>:echo "You should have typed l instead."<CR>
+nmap <Up> 		<Esc>:echo "You should have typed k instead."<CR>
+nmap <Down> 	<Esc>:echo "You should have typed j instead."<CR>
 
 " Accordion Mode: accordion style horizontal split navigation mode
-nmap <silent> <C-j> <C-w>j:call AccordionMode()<CR><C-l>
-nmap <silent> <C-k> <C-w>k:call AccordionMode()<CR><C-l>
-nmap <silent> <C-y> <C-w>h:call AccordionMode()<CR><C-l>
-nmap <silent> <C-h> <C-w>l:call AccordionMode()<CR><C-l>
-nmap <silent> <C--> :call AccordionMode()<CR><C-l>
+" yes, kids, I know WTF I'm doing WRT <C-e>
+nmap <silent> <C-e>j <C-w>j:call AccordionMode()<CR><C-l>
+nmap <silent> <C-e>k <C-w>k:call AccordionMode()<CR><C-l>
+nmap <silent> <C-e>h <C-w>h:call AccordionMode()<CR><C-l>
+nmap <silent> <C-e>l <C-w>l:call AccordionMode()<CR><C-l>
+nmap <silent> <C-e>- :call AccordionMode()<CR><C-l>
+nnoremap <silent> <C-e><C-e> <C-e>
 function! AccordionMode()
 	set winminheight=0 winheight=9999
 	set winheight=10 winminheight=10
 endfunction
 
-" Timestamp: {{{
-nmap <silent> <Leader>sd <Esc>:call Timestamp("date")<CR>
-nmap <silent> <Leader>st <Esc>:call AddOrUpdateTimestamp()<CR>
-nmap <silent> <Leader>sl <Esc>:call Timestamp("long")<CR>
-nmap <silent> <Leader>fw <Esc>:call FoldWrap()<CR>
-nmap <silent> <Leader>fi <Esc>:call FoldInsert()<CR>
+" Timestamps: {{{
+" yes, kids, I know WTF I'm doing WRT <C-y>
+nmap <silent> <C-y> :call AddOrUpdateTimestamp("")<CR>
+inoremap <silent> <C-y> <Esc><C-y>
+nmap <silent> <Leader>st :call AddOrUpdateTimestamp(" MARK")<CR>
+nmap <silent> <Leader>sd :call Timestamp("date")<CR>
+nmap <silent> <Leader>sl :call Timestamp("long")<CR>
+nmap <silent> <Leader>fw :call FoldWrap()<CR>
+nmap <silent> <Leader>fi :call FoldInsert()<CR>
 nmap <silent> <Leader>ll o<Esc>:call Timestamp("short") \| call FoldWrap()<CR>
 " }}}
-" Cmd-# and Alt-# to switch tabs {{{
+
+" Tabs: switching
+" set Cmd-# and Alt-# to switch tabs {{{
 for n in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
 	let k = n == "0" ? "10" : n
 	for m in ["A", "D"]
@@ -227,6 +302,7 @@ for n in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
 		exec printf("nmap <buffer> <silent> <%s-%s> %sgt<CR>", m, n, k)
 	endfor
 endfor
+
 " }}}
 "}}}
 " FUNCTIONS: {{{
@@ -277,7 +353,7 @@ endfunction
 
 " }}}
 function! FindNode(label) "{{{
-	let l:openmarker = FoldOpenMarker()
+	let l:openmarker = CommentedFoldOpenMarker()
 	let l:expression = a:label . "\\s*" . l:openmarker
 	let l:matchline = search(l:expression, 'csw')	
     echo printf("line: %2s had expression: %s", l:matchline, l:expression)
@@ -320,7 +396,7 @@ function! DateNode() "{{{
 	let l:currentdate = TimestampText('date')
 	if FindNode(l:currentdate) == 0
 		normal gg
-        let l:openmarker = FoldOpenMarker()
+        let l:openmarker = CommentedFoldOpenMarker()
 		call FindNode('[0-9]\{,4}-[0-9]\{,2}-[0-9]\{,2}')
 		call append(line(".") - 1, [""])
 		normal k
@@ -364,11 +440,10 @@ function! TimestampText(style) "{{{
 endfunction
 
 " }}}
-function! AddOrUpdateTimestamp() "{{{
-	let l:commentstring = substitute(FoldCommentString(), "%s", "", "")
-	let l:timestampmatch = l:commentstring . '[0-9]\{4}-[0-9]\{2}-[0-9]\{2} [0-9:]\{8} [A-Z]\{3}'
+function! AddOrUpdateTimestamp(annotation) "{{{
+	let l:timestampmatch = substitute(FoldCommentString(), "%s", '[0-9]\\{4}-[0-9]\\{2}-[0-9]\\{2} [0-9:]\\{8} [A-Z]\\{3}' . a:annotation, "")
 	let l:hastimestamp = match(getline("."), l:timestampmatch)
-	let l:newtimestamp = substitute(FoldCommentString(), "%s", TimestampText("short"), "")
+	let l:newtimestamp = substitute(FoldCommentString(), "%s", TimestampText("short") . a:annotation, "")
 	if (l:hastimestamp < 0)
 		call AppendText(l:newtimestamp)
 	else
@@ -412,12 +487,43 @@ endfunction
 
 "}}}
 function! FoldWrap() "{{{
-	" spliting markers here to prevent false markers
-	let l:openmarker = FoldOpenMarker()
-	let l:closemarker = FoldCloseMarker()
-	call append(line("."), [l:openmarker, "", l:closemarker])
+	" appending closemarker first to prevent ruining current folds
+	call append(line("."), CommentedFoldCloseMarker())
+	call append(line("."), [CommentedFoldOpenMarker(), ""])
 	normal Jj
-	" startinsert
+endfunction
+
+"}}}
+function! Strip(string) "{{{
+	return FrontStrip(BackStrip(a:string))
+endfunction
+
+"}}}
+function! BackStrip(string) "{{{
+	return substitute(a:string, "[[:space:]]*$", "", "")
+endfunction
+
+"}}}
+function! FrontStrip(string) "{{{
+	return substitute(a:string, "^[[:space:]]*", "", "")
+endfunction
+
+"}}}
+function! ExpandedCommentString() "{{{
+	return FrontStrip(substitute(FoldCommentString(), "%s", "", ""))
+endfunction
+
+"}}}
+function! CommentedFoldOpenMarker() "{{{
+	let fcms = FoldCommentString()
+	return substitute(fcms, '%s', FoldOpenMarker(), 'g')
+endfunction
+
+"}}}
+function! CommentedFoldCloseMarker() "{{{
+	let fcms = FoldCommentString()
+	let rawclosemarker = substitute(fcms, '%s', FoldCloseMarker(), 'g')
+	return FrontStrip(rawclosemarker)
 endfunction
 
 "}}}
@@ -427,15 +533,12 @@ endfunction
 
 "}}}
 function! FoldOpenMarker() "{{{
-	let fcms = FoldCommentString()
-	return substitute(fcms, '%s', "{{" ."{", 'g')
+	return substitute(&foldmarker, ",.*", "", "")
 endfunction
 
 "}}}
 function! FoldCloseMarker() "{{{
-	let fcms = FoldCommentString()
-	let rawclosemarker = substitute(fcms, '%s', "}}" ."}", 'g')
-	return substitute(rawclosemarker, '^\s', '', '') " strip pre-space
+	return substitute(&foldmarker, ".*,", "", "")
 endfunction
 
 "}}}
@@ -544,10 +647,28 @@ endfunction
 
 " }}}
 function! FixSession() " {{{
-  silent exe "split " . v:this_session
-  silent exe "%s/^edit /buffer /ge"
-  silent exe "w"
-  silent exe "close"
+  exe "vsplit " . v:this_session
+  exe "%s/^edit /buffer /ge"
+  write
+  close
+endfunction
+
+" }}}
+function! CommitSession() " {{{
+	try
+		silent write
+		if exists('g:LAST_SESSION')
+			silent SessionSave
+			silent call FixSession()
+			redraw
+			echo "Saved repaired session: " . v:this_session
+		else
+			echo "No active session."
+		end
+	catch
+		redraw
+		echo "Error committing session: " . v:this_session
+	endtry
 endfunction
 
 " }}}
@@ -608,20 +729,22 @@ augroup END
 
 " Taskstack:
 augroup TaskStack
-	au! BufRead *.tst.* set indentkeys-=o indentkeys-=0 showbreak=\ \  filetype=_.tst.txt
+	au! BufRead *.tst.* set indentkeys-=o indentkeys-=0 showbreak=\ \  filetype=_.tst.txt noai fdm=marker cms= ts=2
 	au BufRead *.tst.* nnoremap <buffer> XX :silent! call InsertItem(getline("."), "x")<CR>
 	au BufRead *.tst.* imap <buffer> XX <Esc>XX
 	au BufRead *.tst.* nnoremap <buffer> QQ :silent! call InsertItem(getline("."), "o")<CR>
 	au BufRead *.tst.* imap <buffer> QQ <Esc>QQ
-	au BufRead *.tst.* nnoremap <buffer> NN ggzoo-<Esc>a 
+	au BufRead *.tst.* nnoremap <buffer> NN :silent! wincmd t \| normal ggzoo- <Esc>a
 	au BufRead *.tst.* imap <buffer> NN <Esc>NN
 	au BufRead *.tst.* nnoremap <buffer> ZZ :maca hide:<CR>
 	au BufRead *.tst.* imap <buffer> ZZ <Esc>ZZ
-	au BufRead *.tst.* nnoremap <buffer> LL :silent! call FindNode("SCRATCH")<CR>zo]zO
+	au BufRead *.tst.* nmap <buffer> LL :silent! wincmd b \| :silent! call FindNode("SCRATCH")<CR>ztzo]zk
 	au BufRead *.tst.* nmap <buffer> <C-j> ddp
 	au BufRead *.tst.* nmap <buffer> <C-k> ddkP
-	au! FocusLost *.tst.* write
+	au BufRead *.tst.* nmap <buffer> :w<CR> :exec ":echo 'Taskstack buffers auto save when you switch away. Use ZZ.'" \| silent write<CR>
+    au! FocusLost *.tst.* write
 augroup END
+
 
 " Vimperator:
 augroup Vimperator
@@ -643,28 +766,35 @@ augroup END
 " autocomplete tags in html
 au! FileType xhtml inoremap <buffer> > <Esc>:call AutoTagComplete()<CR>
 
-" python syntax
+" Python Syntax:
 let python_highlight_all = 1
 
-" HTML.vim
+" HTML:
 let g:no_html_tab_mapping=1
 let g:no_html_toolbar=1
 
-" minbufexplorer
+" Minbufexplorer:
 let g:miniBufExplVSplit=30
 let g:miniBufExplMaxSize = 50
 let g:miniBufExplMapCTabSwitchBufs = 1
 
-" sessionmanager:
+" Sessionman:
 let g:sessionman_save_on_exit = 0
 
 " BufExplorer:
 map <silent> <C-Tab> :BufExplorer<CR>j
 map <silent> <C-S-Tab> :BufExplorer<CR>k
-au! BufWinEnter \[BufExplorer\] map <buffer> <Tab> <CR>
-au BufWinEnter \[BufExplorer\] set updatetime=500
-au! CursorHold \[BufExplorer\] normal y
-" au BufWinEnter \[BufExplorer\]
+augroup BufExplorerAdd
+	if !exists("g:BufExploreAdd")
+		let g:BufExploreAdd = 1
+		au BufWinEnter \[BufExplorer\] map <buffer> <Tab> <CR>
+		" FIXME: Subsequent invocations fail with this autoselect for some reason.
+		" Navigate to the file under the cursor when you let go of Tab
+		"au BufWinEnter \[BufExplorer\] set updatetime=1000
+		" o is the BufExplorer command to select a file
+		"au! CursorHold \[BufExplorer\] normal o 
+	endif	
+augroup END
 
 " Pydiction:
 let g:pydiction_location = '~/.vim/complete-dict'
@@ -673,8 +803,8 @@ let g:pydiction_location = '~/.vim/complete-dict'
 let g:PASTER_BROWSER_COMMAND = 'open'
 
 " Rope:
-" let $PYTHONPATH .= ":/Library/Python/2.5/site-packages/ropemode:/Library/Python/2.5/site-packages:/Users/seth/sandbox/code/python/"
-" source ~/sandbox/code/python/ropevim/ropevim.vim
+"" let $PYTHONPATH .= ":/Library/Python/2.5/site-packages/ropemode:/Library/Python/2.5/site-packages:/Users/seth/sandbox/code/python/"
+"" source ~/sandbox/code/python/ropevim/ropevim.vim
 let $PATH .= ';C:\Python24\'
 let $PYTHONPATH = 'C:\Python24\'
 
@@ -684,7 +814,7 @@ map <silent> <Leader>snip <Esc>:call ResetSnippets() \| call GetSnippets(g:snipp
 
 " Vimwiki:
 map <silent> <Leader>w2 <Esc>:w<CR>:VimwikiAll2HTML<CR><Esc>:echo "Saved wiki to HTML."<CR>
-" let wiki.nested_syntaxes = {'python': 'python'}
+"" let wiki.nested_syntaxes = {'python': 'python'}
 let g:vimwiki_hl_headers = 1 				" hilight header colors
 let g:vimwiki_hl_cb_checked = 1 			" hilight todo item colors
 let g:vimwiki_list_ignore_newline = 0 		" convert newlines to <br /> in list
@@ -692,21 +822,37 @@ let g:vimwiki_folding = 0                   " don't allow outline folding
 let g:vimwiki_fold_lists = 0                " don't allow folding of list subitems
 let g:vimwiki_list = [{'path': '~/sandbox/personal/vimwiki/', 'index': 'PersonalWiki'}, {'path': '~/sandbox/public/wiki', 'index': 'SethMilliken', 'auto_export': 1}, {'path': '~/sandbox/work/wiki/', 'index': 'SethMilliken', 'html_header': '~/sandbox/work/wiki/header.tpl', 'auto_export': 1}]
 
-" 2html.vim
+" TOhtml:
 let html_dynamic_folds = 1
 let html_use_css = 1
 let html_number_lines = 1
 let use_xhtml = 1
-" unlet html_no_foldcolumn
-" unlet html_hover_unfold
+"" unlet html_no_foldcolumn
+"" unlet html_hover_unfold
 let html_no_pre = 1
 
-" }}}
-" TESTING: {{{
+" AppleScript:
+au! BufNewFile,BufRead *.applescript   setf applescript
 
-" set ff=unix
-" let string="!echo 'bar' | ls"
-" let mapleader=","
 
 " }}}
-" vim: set ft=vim fdm=marker tw=80 cms=\ \"\ %s  :
+" EXPERIMENT: {{{
+
+" type number then : to get relative range prepopulated in cmdline
+" new vocab word "idem" to get relative range prepopulated in cmdline
+" . as range, e.g. :.w >> foo
+" can @ take a range?
+
+" :help local-additions
+" :help guioptions
+
+" :options
+" :runtime syntax/colortest.vim
+" :file
+" :diffpatch
+" :set ff=unix
+" :let string="!echo 'bar' | ls"
+" :let mapleader=","
+
+" }}}
+" vim: set ft=vim fdm=marker cms=\ \"\ %s  :
