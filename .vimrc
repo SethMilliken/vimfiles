@@ -601,11 +601,11 @@ endfunction
 function! AddOrUpdateTimestamp(annotation) "{{{
 	if !exists("g:auto_timestamp_bypass")
 		let l:origpos = getpos(".")
-		let l:timestampmatch = substitute(CommentStringFull(), "%s", g:timestamp_matchstring . a:annotation, "")
+		let l:timestampmatch = TimestampTag(a:annotation)
 		let l:hastimestamp = match(getline("."), l:timestampmatch)
 		let l:newtimestamp = substitute(CommentStringFull(), "%s", TimestampText("short") . a:annotation, "")
 		silent! undojoin
-		if (l:hastimestamp < 0)
+		if l:hastimestamp < 0
 			call AppendText(l:newtimestamp)
 		else
 			call setline(".", substitute(getline("."), l:timestampmatch, l:newtimestamp, ""))
@@ -615,6 +615,11 @@ function! AddOrUpdateTimestamp(annotation) "{{{
 		end
 		call setpos('.', l:origpos)
 	end
+endfunction
+
+"}}}
+function! TimestampTag(annotation) "{{{
+	return substitute(CommentStringFull(), "%s", g:timestamp_matchstring . a:annotation, "")
 endfunction
 
 "}}}
@@ -829,6 +834,7 @@ augroup END
 " Taskstack: {{{
 augroup TaskStack
 	au! BufRead *.tst.* set indentkeys-=o indentkeys-=0 showbreak=\ \  filetype=_.tst.txt noai fdm=marker cms= ts=2
+	au BufRead *.tst.* nmap <buffer> $ :call TaskstackEOL()<CR>
 	au BufRead *.tst.* nmap <buffer> XX :call TaskstackAbortItem()<CR>
 	au BufRead *.tst.* imap <buffer> XX <C-c>:call TaskstackAbortItem()<CR>
 	au BufRead *.tst.* nmap <buffer> QQ :call TaskstackCompleteItem()<CR>
@@ -846,6 +852,14 @@ augroup TaskStack
     au! FocusLost *.tst.* write
 augroup END
 
+function! TaskstackEOL() " {{{
+	let l:timestamp_location = match(getline("."), TimestampTag("") . ".*")
+	if l:timestamp_location > 0
+		call cursor(line("."), l:timestamp_location)
+	end
+endfunction
+
+" }}}
 function! TaskstackMain() " {{{
 	silent! wincmd t
 	if FindNode("DOING") == 0
