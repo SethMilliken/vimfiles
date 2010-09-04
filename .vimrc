@@ -146,9 +146,10 @@ set foldcolumn=4					" trying out fold indicator column
 imap <Nul> <Esc>:
 nnoremap <Nul> :
 
-"Annoyances: Stop F1 from invoking Help
-map <F1> <Esc>
-imap <F1> <Esc>
+"Annoyances: Use my own help function for F1
+map <F1> :Help<CR>
+imap <F1> <Esc><F1>
+
 nmap <S-Space> <C-f>
 nmap :W :w
 
@@ -232,7 +233,7 @@ function! SectionHeadNav(count, mode) " {{{
 	end
 	if a:mode > 0
 		" Matches ^MAJORHEADER:
-		let a:modematch = "[[:upper:][:space:]]\\{1,}:*.*" . FoldOpenMarker()
+		let a:modematch = "[[:upper:][:space:]]\\{1,}:*.*" . FoldMarkerOpen()
 	else
 		" Matches ^Minorheader:
 		let a:modematch = "[[:upper:]]\\{1,}[^:]*:*"
@@ -282,10 +283,15 @@ function! AccordionMode()
 endfunction
 
 " Timestamps: {{{
+let g:timestamp_matchstring = '[0-9]\\{4}-[0-9]\\{2}-[0-9]\\{2} [0-9:]\\{8} [A-Z]\\{3}'
+let g:timestamp_annotation = ' MARK'
 " yes, kids, I know WTF I'm doing WRT <C-y>
-nmap <silent> <C-y> :call AddOrUpdateTimestamp("")<CR>
-inoremap <silent> <C-y> <Esc><C-y>
-nmap <silent> <Leader>st :call AddOrUpdateTimestamp(" MARK")<CR>
+nmap <silent> <C-y><C-y> :call AddOrUpdateTimestamp("")<CR>
+imap <silent> <C-y><C-y> <Esc>:call AddOrUpdateTimestamp("")<CR>a
+nmap <silent> <C-y><C-x> :call RemoveTimestamp("")<CR>
+imap <silent> <C-y><C-x> <Esc>:call RemoveTimestamp("")<CR>a
+nmap <silent> <C-y><C-h> :call AddOrUpdateTimestamp(g:timestamp_annotation)<CR>
+nmap <silent> <C-y><C-n> :call RemoveTimestamp(g:timestamp_annotation)<CR>
 nmap <silent> <Leader>sd :call Timestamp("date")<CR>
 nmap <silent> <Leader>sl :call Timestamp("long")<CR>
 nmap <silent> <Leader>fw :call FoldWrap()<CR>
@@ -307,56 +313,78 @@ endfor
 "}}}
 " FUNCTIONS: {{{
 
-function! JournalEntry() " {{{
-	let l:journaldir = $HOME . "/sandbox/personal/zaurus/zlog/"
-	let l:currentdate = TimestampText('date')
-	let l:entry = l:journaldir . l:currentdate . ".txt"
-	let l:entryexists = filereadable(l:entry)
-	exec "edit " . l:entry
-	exec "lcd " . l:journaldir
-	if l:entryexists
-		normal Go
-		normal o
-		exec "call setline(\".\", \"" . TimestampText('time') . "\")" 
-	else
-		exec "call setline(\".\", \"" . TimestampText('journal') . "\")" 
-		exec "silent !svn add " . l:entry
-	endif
-	normal o
+" Navigation:
+function! EscapeShiftUp(incoming) " {{{
+	return substitute(a:incoming, "\\", "\\\\\\\\", "g")
+endfunction
+" }}}
+function! HeaderLocationIndex() "{{{
+	let l:incoming = input("Go To Header: ")
+	lgetexpr "" " Clear the location list
+	exe "set errorformat=%l:%f:%m"
+	let l:rawcommentstring = '\" '
+	exe "let l:commentstring = " .  EscapeShiftUp("l:rawcommentstring")
+	let l:rawexpression = '\\(.*' . l:incoming . '\\c.*\\) ' . FoldMarkerOpen()
+	" let l:rawexpression = '\\([ [:upper:]]*\\) ' . FoldMarkerOpen() " MAJOR header
+	" let l:rawexpression = '\\([ [:alpha:]]*\\) ' . FoldMarkerOpen() " Minor header
+	let l:expression = l:commentstring . l:rawexpression
+	let l:searchexpression = substitute(l:expression, "\\\\\\{1,}", "\\", "g")
+	let l:matchstring = "substitute(getline(\".\")" . ", \"" . l:expression . "\", \"\\\\1\"" . ", \"\")"
+	let l:line = "line(\".\")"
+	let l:filename = "expand(\"%:f\")"
+	let l:commandword = "laddexpr"
+	" let l:commandword = "echo"
+	let l:gmatch = "g/^" . l:searchexpression . "/" . l:commandword . " " . l:line . " . \":\" . " .  l:filename . " . \":\" ." . l:matchstring
+	" echo "Match string: " . l:gmatch
+	exec l:gmatch
+	nohls
+	let l:locresults = getloclist("0")
+	if len(l:locresults) > 1
+		vert lop | wincmd =
+	end
 endfunction
 
-" }}}
-function! FormFieldArchive() " {{{
-	let l:contents = getbufline("%", 1, "$")
-	let l:filepath = expand("%")
-	let l:filename = expand("%:t:r")
-	let l:formfielddir = $HOME . "/sandbox/personal/forms/"
-	let l:currentdate = TimestampText('date')
-	let l:entry = l:formfielddir . l:currentdate . ".txt"
-	let l:entryexists = filereadable(l:entry)
-	exec "split " . l:entry
-	if l:entryexists
-		normal Go
-		normal o
-		exec "call setline(\".\", \"" . TimestampText('time') . "\")" 
+"}}}
+
+" Text: tools
+function! AppendText(text) "{{{
+	let l:originalline = getline(".")
+	call append(line("."),[a:text])
+	if substitute(l:originalline, "\\s", "", "g") == ""
+		 normal J$
 	else
-		exec "call setline(\".\", \"" . TimestampText('journal') . "\")" 
-		exec "silent !svn add " . l:entry
+		 normal J$
 	endif
-	normal o
-	exec "call setline(\".\", \"" . l:filename . "\")" 
-	normal o
-	exec "call setline(\".\", " . string(l:contents) . ")" 
-	write
-	bd
 endfunction
 
-" }}}
+"}}}
+function! LineIsWhiteSpace(line) "{{{
+	return a:line =~ '^\s*$'
+endfunction
+
+"}}}
+function! Strip(string) "{{{
+	return StripFront(StripEnd(a:string))
+endfunction
+
+"}}}
+function! StripEnd(string) "{{{
+	return substitute(a:string, "[[:space:]]*$", "", "")
+endfunction
+
+"}}}
+function! StripFront(string) "{{{
+	return substitute(a:string, "^[[:space:]]*", "", "")
+endfunction
+
+"}}}
+
+" Folds: manipulation
 function! FindNode(label) "{{{
-	let l:openmarker = CommentedFoldOpenMarker()
+	let l:openmarker = CommentedFoldMarkerOpen()
 	let l:expression = a:label . "\\s*" . l:openmarker
 	let l:matchline = search(l:expression, 'csw')	
-    echo printf("line: %2s had expression: %s", l:matchline, l:expression)
+    "echo printf("line: %2s had expression: %s", l:matchline, l:expression)
 	return l:matchline
 endfunction
 
@@ -395,71 +423,17 @@ endfunction
 function! DateNode() "{{{
 	let l:currentdate = TimestampText('date')
 	if FindNode(l:currentdate) == 0
-		normal gg
-        let l:openmarker = CommentedFoldOpenMarker()
-		call FindNode('[0-9]\{,4}-[0-9]\{,2}-[0-9]\{,2}')
-		call append(line(".") - 1, [""])
+		silent! call TaskstackScratch()
+		silent! call TaskstackMain()
+		normal zj
+		call append(line(".")- 1, [""])
 		normal k
 		call AppendText(l:currentdate)
 		call FoldWrap()
-        normal zM
+		normal zMzo
+		silent! call TaskstackMain()
 	endif
 	call OpenNode(l:currentdate)
-endfunction
-
-"}}}
-function! Timestamp(style) "{{{
-	call AppendText(TimestampText(a:style) . " ")
-endfunction
-
-" }}}
-function! TimestampText(style) "{{{
-	let l:iswindows = has("win16") || has("win32") || has("win64")
-	if l:iswindows
-		if a:style == "long"
-			let l:dateformat = strftime("%#x %H:%M:%S ")
-		elseif a:style == "short"
-			let l:dateformat = strftime("%Y-%m-%d %H:%M:%S ") 
-		endif
-		let l:dateformat .= substitute(strftime("%#z"), '[a-z]\+\($\| \)', '', 'g')
-	else
-		if a:style == "long"
-			let l:dateformat = strftime("%Y %b %d %a %X %Z")
-		elseif a:style == "journal"
-			let l:dateformat = strftime("%A, %B %d, %Y %H:%M:%S %Z")
-		elseif a:style == "short"
-			let l:dateformat = strftime("%Y-%m-%d %H:%M:%S %Z")
-		elseif a:style == "time"
-			let l:dateformat = strftime("%H:%M:%S %Z")
-		endif
-	endif
-	if a:style == "date"
-		let l:dateformat = strftime("%Y-%m-%d")
-	endif
-	return l:dateformat
-endfunction
-
-" }}}
-function! AddOrUpdateTimestamp(annotation) "{{{
-	let l:timestampmatch = substitute(FoldCommentString(), "%s", '[0-9]\\{4}-[0-9]\\{2}-[0-9]\\{2} [0-9:]\\{8} [A-Z]\\{3}' . a:annotation, "")
-	let l:hastimestamp = match(getline("."), l:timestampmatch)
-	let l:newtimestamp = substitute(FoldCommentString(), "%s", TimestampText("short") . a:annotation, "")
-	if (l:hastimestamp < 0)
-		call AppendText(l:newtimestamp)
-	else
-		call setline(".", substitute(getline("."), l:timestampmatch, l:newtimestamp, ""))
-	end
-endfunction
-
-"}}}
-function! AppendText(text) "{{{
-	let l:originalline = getline(".")
-	call append(line("."),[a:text])
-	if substitute(l:originalline, "\\s", "", "g") == ""
-		 normal J$
-	else
-		 normal J$
-	endif
 endfunction
 
 "}}}
@@ -481,63 +455,20 @@ function! InsertItem(text, status) "{{{
 endfunction
 
 "}}}
-function! LineIsWhiteSpace(line) "{{{
-	return a:line =~ '^\s*$'
-endfunction
-
-"}}}
 function! FoldWrap() "{{{
 	" appending closemarker first to prevent ruining current folds
-	call append(line("."), CommentedFoldCloseMarker())
-	call append(line("."), [CommentedFoldOpenMarker(), ""])
+	call append(line("."), CommentedFoldMarkerClose())
+	call append(line("."), [CommentedFoldMarkerOpen(), ""])
 	normal Jj
 endfunction
 
 "}}}
-function! Strip(string) "{{{
-	return FrontStrip(BackStrip(a:string))
-endfunction
-
-"}}}
-function! BackStrip(string) "{{{
-	return substitute(a:string, "[[:space:]]*$", "", "")
-endfunction
-
-"}}}
-function! FrontStrip(string) "{{{
-	return substitute(a:string, "^[[:space:]]*", "", "")
-endfunction
-
-"}}}
-function! ExpandedCommentString() "{{{
-	return FrontStrip(substitute(FoldCommentString(), "%s", "", ""))
-endfunction
-
-"}}}
-function! CommentedFoldOpenMarker() "{{{
-	let fcms = FoldCommentString()
-	return substitute(fcms, '%s', FoldOpenMarker(), 'g')
-endfunction
-
-"}}}
-function! CommentedFoldCloseMarker() "{{{
-	let fcms = FoldCommentString()
-	let rawclosemarker = substitute(fcms, '%s', FoldCloseMarker(), 'g')
-	return FrontStrip(rawclosemarker)
-endfunction
-
-"}}}
-function! FoldCommentString() "{{{
-	return len(&commentstring) > 0 ? &commentstring : " %s"
-endfunction
-
-"}}}
-function! FoldOpenMarker() "{{{
+function! FoldMarkerOpen() "{{{
 	return substitute(&foldmarker, ",.*", "", "")
 endfunction
 
 "}}}
-function! FoldCloseMarker() "{{{
+function! FoldMarkerClose() "{{{
 	return substitute(&foldmarker, ".*,", "", "")
 endfunction
 
@@ -595,6 +526,202 @@ function! FoldNodeIfDefault() "{{{
 endfunction
 
 "}}}
+function! CommentedFoldMarkerOpen() "{{{
+	let fcms = CommentStringFull()
+	return substitute(fcms, '%s', FoldMarkerOpen(), 'g')
+endfunction
+
+"}}}
+function! CommentedFoldMarkerClose() "{{{
+	let fcms = CommentStringFull()
+	let rawclosemarker = substitute(fcms, '%s', FoldMarkerClose(), 'g')
+	return StripFront(rawclosemarker)
+endfunction
+
+"}}}
+
+" Commentmarkers:
+function! CommentStringOpen() "{{{
+	return substitute(CommentStringFull(), "%s.*", "", "")
+endfunction
+
+"}}}
+function! CommentStringClose() "{{{
+	return substitute(CommentStringFull(), ".*%s", "", "")
+endfunction
+
+"}}}
+function! ExpandedCommentString() "{{{
+	return StripFront(substitute(CommentStringFull(), "%s", "", ""))
+endfunction
+
+"}}}
+function! CommentStringFull() "{{{
+	return len(&commentstring) > 0 ? &commentstring : " %s"
+endfunction
+
+"}}}
+
+" Timestamps:
+function! Timestamp(style) "{{{
+	call AppendText(TimestampText(a:style) . " ")
+endfunction
+
+" }}}
+function! TimestampText(style) "{{{
+	let l:iswindows = has("win16") || has("win32") || has("win64")
+	if l:iswindows
+		if a:style == "long"
+			let l:dateformat = strftime("%#x %H:%M:%S ")
+		elseif a:style == "short"
+			let l:dateformat = strftime("%Y-%m-%d %H:%M:%S ") 
+		endif
+		let l:dateformat .= substitute(strftime("%#z"), '[a-z]\+\($\| \)', '', 'g')
+	else
+		if a:style == "long"
+			let l:dateformat = strftime("%Y %b %d %a %X %Z")
+		elseif a:style == "journal"
+			let l:dateformat = strftime("%A, %B %d, %Y %H:%M:%S %Z")
+		elseif a:style == "short"
+			let l:dateformat = strftime("%Y-%m-%d %H:%M:%S %Z")
+		elseif a:style == "time"
+			let l:dateformat = strftime("%H:%M:%S %Z")
+		endif
+	endif
+	if a:style == "date"
+		let l:dateformat = strftime("%Y-%m-%d")
+	endif
+	return l:dateformat
+endfunction
+
+" }}}
+function! AddOrUpdateTimestamp(annotation) "{{{
+	if !exists("g:auto_timestamp_bypass")
+		let l:origpos = getpos(".")
+		let l:timestampmatch = substitute(CommentStringFull(), "%s", g:timestamp_matchstring . a:annotation, "")
+		let l:hastimestamp = match(getline("."), l:timestampmatch)
+		let l:newtimestamp = substitute(CommentStringFull(), "%s", TimestampText("short") . a:annotation, "")
+		silent! undojoin
+		if (l:hastimestamp < 0)
+			call AppendText(l:newtimestamp)
+		else
+			call setline(".", substitute(getline("."), l:timestampmatch, l:newtimestamp, ""))
+		end
+		if len(a:annotation) > 1
+			write
+		end
+		call setpos('.', l:origpos)
+	end
+endfunction
+
+"}}}
+function! AutoTimestampBypass() " {{{
+	let g:auto_timestamp_bypass = ""
+endfunction
+
+" }}}
+function! AutoTimestampEnable() " {{{
+	if exists("g:auto_timestamp_bypass")
+		unlet g:auto_timestamp_bypass
+	end
+endfunction
+
+" }}}
+function! RemoveTimestamp(annotation) "{{{
+	let l:timestampmatch = substitute(CommentStringFull(), "%s", g:timestamp_matchstring . a:annotation, "")
+	call setline(".", substitute(getline("."), l:timestampmatch, "", ""))
+endfunction
+
+"}}}
+
+" Sessions:
+function! FixSession() " {{{
+  exe "vsplit " . v:this_session
+  exe "%s/^edit /buffer /ge"
+  write
+  close
+endfunction
+
+" }}}
+function! CommitSession() " {{{
+	try
+		silent write
+		if exists('g:LAST_SESSION')
+			silent SessionSave
+			silent call FixSession()
+			redraw
+			echo "Saved repaired session: " . v:this_session
+		else
+			echo "No active session."
+		end
+	catch
+		redraw
+		echo "Error committing session: " . v:this_session
+	endtry
+endfunction
+
+" }}}
+
+" Specialized:
+function! AutoTagComplete() " {{{
+	normal aa
+	normal! r>
+	let l:save_position = getpos(".")
+	exe "normal i\<C-g>u"
+	let [l:ignore, l:close_tag_pos] = searchpos("</\\zs\\S\\+", "bnW", line(".")) 
+	let [l:ignore, l:open_tag_pos] = searchpos("<[^/]\\zs[^[:space:]>]\\+", "bcW", line(".")) 
+	if l:open_tag_pos == 0 || l:open_tag_pos < l:close_tag_pos
+		call setpos('.', l:save_position)
+	else
+		normal yiw
+		call setpos('.', l:save_position)
+		normal a</
+		normal p
+		normal aa
+		normal! r>
+		call search("<", "bW", line(".")) 
+	endif
+	if l:save_position[2] == len(getline("."))
+		startinsert!
+	else
+		startinsert
+	endif
+endfunction
+
+" }}}
+function! JournalEntry() " {{{
+	let l:journaldir = $HOME . "/sandbox/personal/zaurus/zlog/"
+	let l:currentdate = TimestampText('date')
+	let l:entry = l:journaldir . l:currentdate . ".txt"
+	let l:entryexists = filereadable(l:entry)
+	exec "edit " . l:entry
+	exec "lcd " . l:journaldir
+	if l:entryexists
+		normal Go
+		normal o
+		exec "call setline(\".\", \"" . TimestampText('time') . "\")" 
+	else
+		exec "call setline(\".\", \"" . TimestampText('journal') . "\")" 
+		exec "silent !svn add " . l:entry
+	endif
+	normal o
+endfunction
+
+" }}}
+function! ScratchBuffer(title) " {{{
+	  exec "tabe " . a:title . " | setlocal buftype=nofile | setlocal bufhidden=hide | setlocal noswapfile"
+endfunction
+
+" }}}
+function! Reset() " {{{
+	silent pclose
+	set completeopt-=menuone
+	set nolist
+	redraw
+	echo "Reset"
+endfunction
+
+" }}}
 function! HandleTS() " {{{
   let l:ticket = matchstr(getline("."), 'TS#[0-9]\+')
   let l:number = matchstr(l:ticket, '[0-9]\+')
@@ -623,11 +750,6 @@ function! HandleURI() " {{{
 endfunction
 
 " }}}
-function! ScratchBuffer(title) " {{{
-	  exec "tabe " . a:title . " | setlocal buftype=nofile | setlocal bufhidden=hide | setlocal noswapfile"
-endfunction
-
-" }}}
 function! FormatSqlStatement() " {{{
   3match Todo /select .*/
   let l:uri = matchstr(getline("."), '\cselect .*')
@@ -646,64 +768,31 @@ function! FormatSqlStatement() " {{{
 endfunction
 
 " }}}
-function! FixSession() " {{{
-  exe "vsplit " . v:this_session
-  exe "%s/^edit /buffer /ge"
-  write
-  close
-endfunction
 
-" }}}
-function! CommitSession() " {{{
-	try
-		silent write
-		if exists('g:LAST_SESSION')
-			silent SessionSave
-			silent call FixSession()
-			redraw
-			echo "Saved repaired session: " . v:this_session
-		else
-			echo "No active session."
-		end
-	catch
-		redraw
-		echo "Error committing session: " . v:this_session
-	endtry
-endfunction
-
-" }}}
-function! Reset() " {{{
-	silent pclose
-	set completeopt-=menuone
-	set nolist
-	redraw
-	echo "Reset"
-endfunction
-
-" }}}
-function! AutoTagComplete() " {{{
-	normal aa
-	normal! r>
-	let l:save_position = getpos(".")
-	exe "normal i\<C-g>u"
-	let [l:ignore, l:close_tag_pos] = searchpos("</\\zs\\S\\+", "bnW", line(".")) 
-	let [l:ignore, l:open_tag_pos] = searchpos("<[^/]\\zs[^[:space:]>]\\+", "bcW", line(".")) 
-	if l:open_tag_pos == 0 || l:open_tag_pos < l:close_tag_pos
-		call setpos('.', l:save_position)
+" Vimperator:
+function! FormFieldArchive() " {{{
+	let l:contents = getbufline("%", 1, "$")
+	let l:filepath = expand("%")
+	let l:filename = expand("%:t:r")
+	let l:formfielddir = $HOME . "/sandbox/personal/forms/"
+	let l:currentdate = TimestampText('date')
+	let l:entry = l:formfielddir . l:currentdate . ".txt"
+	let l:entryexists = filereadable(l:entry)
+	exec "split " . l:entry
+	if l:entryexists
+		normal Go
+		normal o
+		exec "call setline(\".\", \"" . TimestampText('time') . "\")" 
 	else
-		normal yiw
-		call setpos('.', l:save_position)
-		normal a</
-		normal p
-		normal aa
-		normal! r>
-		call search("<", "bW", line(".")) 
+		exec "call setline(\".\", \"" . TimestampText('journal') . "\")" 
+		exec "silent !svn add " . l:entry
 	endif
-	if l:save_position[2] == len(getline("."))
-		startinsert!
-	else
-		startinsert
-	endif
+	normal o
+	exec "call setline(\".\", \"" . l:filename . "\")" 
+	normal o
+	exec "call setline(\".\", " . string(l:contents) . ")" 
+	write
+	bd
 endfunction
 
 " }}}
@@ -727,23 +816,104 @@ augroup END
 "}}}
 " PLUGINS: {{{
 
-" Taskstack:
+" Taskstack: {{{
 augroup TaskStack
 	au! BufRead *.tst.* set indentkeys-=o indentkeys-=0 showbreak=\ \  filetype=_.tst.txt noai fdm=marker cms= ts=2
-	au BufRead *.tst.* nnoremap <buffer> XX :silent! call InsertItem(getline("."), "x")<CR>
-	au BufRead *.tst.* imap <buffer> XX <Esc>XX
-	au BufRead *.tst.* nnoremap <buffer> QQ :silent! call InsertItem(getline("."), "o")<CR>
-	au BufRead *.tst.* imap <buffer> QQ <Esc>QQ
-	au BufRead *.tst.* nnoremap <buffer> NN :silent! wincmd t \| normal ggzoo- <Esc>a
-	au BufRead *.tst.* imap <buffer> NN <Esc>NN
-	au BufRead *.tst.* nnoremap <buffer> ZZ :maca hide:<CR>
-	au BufRead *.tst.* imap <buffer> ZZ <Esc>ZZ
-	au BufRead *.tst.* nmap <buffer> LL :silent! wincmd b \| :silent! call FindNode("SCRATCH")<CR>ztzo]zk
-	au BufRead *.tst.* nmap <buffer> <C-j> ddp
-	au BufRead *.tst.* nmap <buffer> <C-k> ddkP
-	au BufRead *.tst.* nmap <buffer> :w<CR> :exec ":echo 'Taskstack buffers auto save when you switch away. Use ZZ.'" \| silent write<CR>
+	au BufRead *.tst.* nmap <buffer> XX :call TaskstackAbortItem()<CR>
+	au BufRead *.tst.* imap <buffer> XX <C-c>:call TaskstackAbortItem()<CR>
+	au BufRead *.tst.* nmap <buffer> QQ :call TaskstackCompleteItem()<CR>
+	au BufRead *.tst.* imap <buffer> QQ <C-c>:call TaskstackCompleteItem()<CR>
+	au BufRead *.tst.* nmap <buffer> NN :call TaskstackNewItem()<CR>
+	au BufRead *.tst.* imap <buffer> NN <C-c>:call TaskstackNewItem()<CR>
+	au BufRead *.tst.* nmap <buffer> ZZ :call TaskstackHide()<CR>
+	au BufRead *.tst.* imap <buffer> ZZ <C-c>:call TaskstackHide()<CR>
+	au BufRead *.tst.* nmap <buffer> LL :call TaskstackScratch()<CR>
+	au BufRead *.tst.* nmap <buffer> <C-j> :call TaskstackMoveItemDown()<CR>
+	au BufRead *.tst.* nmap <buffer> <C-k> :call TaskstackMoveItemUp()<CR>
+	au BufRead *.tst.* nmap <buffer> :w<CR> :call TaskstackAutosaveReminder()<CR>
+	" Use <C-c> to avoid adding or updating a timestamp after editing.
+	au! InsertLeave *.tst.* :call AddOrUpdateTimestamp("")
     au! FocusLost *.tst.* write
 augroup END
+
+function! TaskstackMain() " {{{
+	silent! wincmd t
+	if FindNode("DOING") == 0
+		exe "normal ggO" . "DOING"
+		call FoldWrap()
+	end
+	call FindNode("DOING")
+	silent! normal zo
+endfunction
+
+" }}}
+function! TaskstackNewItem() " {{{
+	call AutoTimestampBypass()
+	call TaskstackMain()
+	exe "normal o-  "
+	startinsert
+	call AutoTimestampEnable()
+endfunction
+
+" }}}
+function! TaskstackCompleteItem() " {{{
+	call AutoTimestampBypass()
+	silent! call InsertItem(getline("."), "o")
+	call AutoTimestampEnable()
+endfunction
+
+" }}}
+function! TaskstackAbortItem() " {{{
+	call AutoTimestampBypass()
+	silent! call InsertItem(getline("."), "x")
+	call AutoTimestampEnable()
+endfunction
+
+" }}}
+function! TaskstackScratch() " {{{
+	call AutoTimestampBypass()
+	silent! wincmd b
+	if FindNode("SCRATCH") == 0
+		exe "normal Go" . "SCRATCH"
+		call FoldWrap()
+	end
+	call FindNode("SCRATCH")
+	normal zozt]zk
+	call AutoTimestampEnable()
+endfunction
+
+" }}}
+function! TaskstackMoveItemDown() " {{{
+	normal ddp
+endfunction
+
+" }}}
+function! TaskstackMoveItemUp() range " {{{
+	let l:motion = a:lastline - a:firstline
+	if line(".") != 1
+		normal dd
+		if (l:motion > 0)
+			exe "normal " . l:motion . "k"
+		end
+		normal k
+		normal P
+	end
+endfunction
+
+" }}}
+function! TaskstackHide() " {{{
+	macaction hide:
+endfunction
+
+" }}}
+function! TaskstackAutosaveReminder() " {{{
+	exe ":echo 'Taskstack buffers auto save when you switch away. Use ZZ.'"
+	silent write
+endfunction
+
+" }}}
+
+" }}}
 
 
 " Vimperator:

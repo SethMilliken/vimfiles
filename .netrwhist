@@ -1,11 +1,3 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =9
-let g:netrw_dirhist_1='/Users/seth/tex'
-let g:netrw_dirhist_2='/Users/seth'
-let g:netrw_dirhist_3='/Users/seth/Desktop'
-let g:netrw_dirhist_4='/Users/seth'
-let g:netrw_dirhist_5='/Users/seth/araxia'
-let g:netrw_dirhist_6='/Volumes/MMEX/MMEX.app'
-let g:netrw_dirhist_7='/Users/seth/sandbox/code/work/hd/src_core'
-let g:netrw_dirhist_8='/Users/seth/sandbox/personal/todo'
-let g:netrw_dirhist_9='/Applications/Tasks.app'
+let g:netrw_dirhist_cnt =1
+let g:netrw_dirhist_1='/private/var/folders/TD/TDs7pWvfH7uvD7QiYxob0++++TY/-Tmp-/extdiff.SMaKwX/.vim'

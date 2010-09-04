@@ -305,8 +305,8 @@ endif
 set shortmess=aoO
 badd +0 ~/sandbox/personal/todo/research.tst.txt
 silent! argdel *
-set lines=83 columns=137
-winpos 0 1026
+set lines=83 columns=115
+winpos 0 1028
 edit ~/sandbox/personal/todo/research.tst.txt
 set splitbelow splitright
 wincmd _ | wincmd |
