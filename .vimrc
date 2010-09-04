@@ -5,7 +5,7 @@
 " 	Araxia on #vim irc.freenode.net
 
 " Version:
-" 	1.0 " 2010-09-02 17:48:45 EDT
+" 	1.0 " 2010-09-04 08:08:27 EDT
 
 " Notes:
 " 	- I'm deliberately overloading <C-e> and <C-y> for more useful purposes.
@@ -19,9 +19,8 @@
 "	- clean up SETTINGS; provide better descriptions 
 "	- for clarity, replace abbreviated forms of options in all settings
 "	- annotate all line noise, especially statusline
-"	- publish on bitbucket.org
 "	- make .vimrc re-source-able without sideeffects (guards around au, maps, etc.)
-"	- create section navigation mechanism (location window? keybindings? MAJOR/Minor sections?)
+"	- create keybindings for new location list fold header navigation mechanism
 "	- consider: is keeping example .vimrc useful
 "	- consider: add tw setting to .vimrc modeline
 "	- consider: move ft-specific settings to individual files
@@ -97,7 +96,7 @@ if has("autocmd")
 endif " has("autocmd")
 "}}}
 " Seth Milliken additions
-" SETTINGS {{{
+" SETTINGS: {{{
 set winfixheight
 set shortmess+=I 					" don't show intro on start
 set shortmess+=A 					" don't show message on existing swapfile
@@ -116,18 +115,9 @@ set shiftwidth=4					" smaller tab stops
 set tabstop=4						" reasonable tab stop width
 set softtabstop=0					" use only tabs	
 set hlsearch 						" highlight searches
-set tags+=$HOME/sandbox/personal/tags
-									" universal tags file
-set directory=$HOME/.vim/swap//,~/vimfiles/swap//
-									" centralize swap files (with unique names, //)
 									" set noaw
 set nobackup						" don't like ~ files littered about
 									" TODO: can these be stored centrally a la swap?
-" Sessionopts: defaults are blank,buffers,curdir,folds,help,options,tabpages,winsize
-set ssop=folds,help,options,tabpages,winsize
-set ssop+=globals,sesdir,resize,winpos,unix
-" TODO: annotate this status line description
-set statusline=%<\(%n\)\ %m%y%r\ %f\ %=%-14.(%l,%c%V%)\ %P
 set laststatus=2					" always show the status line
 set diffopt+=vertical				" use vertical splits for diff
 set splitright						" open vertical splits to the right
@@ -140,8 +130,21 @@ set foldlevelstart=999   			" don't use a default fold level; all folds open by 
 set fdm=marker						" make the default foldmethod markers
 set foldcolumn=4					" trying out fold indicator column
 
+" Tags: universal location
+set tags+=$HOME/sandbox/personal/tags
+
+" Swap: centralized with unique names via //
+set directory=$HOME/.vim/swap//,~/vimfiles/swap//
+
+" Sessionopts: defaults are blank,buffers,curdir,folds,help,options,tabpages,winsize
+set ssop=folds,help,options,tabpages,winsize
+set ssop+=globals,sesdir,resize,winpos,unix
+
+" Statusline: TODO: annotate this status line
+set statusline=%<\(%n\)\ %m%y%r\ %f\ %=%-14.(%l,%c%V%)\ %P
+
 "}}}
-" MAPPINGS {{{
+" MAPPINGS: {{{
 " Zaurus: <C-Space> (<C-k><C-Space>) to invoke command mode in both insert and normal mode
 imap <Nul> <Esc>:
 nnoremap <Nul> :
@@ -799,19 +802,26 @@ endfunction
 
 "}}}
 " SYNTAX: {{{
-" Java:
+
+" Java: " {{{
 augroup java
 	au BufReadPre *.java setlocal foldmethod=syntax
 	au BufReadPre *.java setlocal foldlevelstart=-1
 augroup END
 
-" SVN:
-au BufNewFile,BufRead  svn-commit.* setf svn	" handle svn commits
+" }}}
+" SVN: " {{{
+augroup svn
+	au BufNewFile,BufRead  svn-commit.* setf svn	" handle svn commits
+augroup END
 
-" Text:
+" }}}
+" Text: " {{{
 augroup txt
 	au BufNewFile *.txt set fdm=marker
 augroup END
+
+" }}}
 
 "}}}
 " PLUGINS: {{{
@@ -914,44 +924,50 @@ endfunction
 " }}}
 
 " }}}
-
-
-" Vimperator:
+" Vimperator: " {{{
 augroup Vimperator
 	au! BufRead vimperator-* nmap <buffer> ZZ :call FormFieldArchive() \| :silent write \| :bd \| :macaction hide:<CR>
 	au BufRead vimperator-* imap <buffer> ZZ <Esc>ZZ
 augroup END
 
-" Crontab:
+" }}}
+" Crontab: " {{{
 augroup crontab
 	au! BufRead crontab.* set nowritebackup
 	au BufRead crontab.* set filetype=crontab
 augroup END
 
-" Cocoa:
+" }}}
+" Cocoa: " {{{
 augroup Cocoa
 	au BufRead *.[mh] nmap <buffer> <d-1> :ListMethods<CR>
 augroup END
 
-" autocomplete tags in html
+" }}}
+" Html: autocomplete tags " {{{
 au! FileType xhtml inoremap <buffer> > <Esc>:call AutoTagComplete()<CR>
 
-" Python Syntax:
+" }}}
+" Python Syntax: " {{{
 let python_highlight_all = 1
 
-" HTML:
+" }}}
+" HTML: " {{{
 let g:no_html_tab_mapping=1
 let g:no_html_toolbar=1
 
-" Minbufexplorer:
+" }}}
+" Minbufexplorer: " {{{
 let g:miniBufExplVSplit=30
 let g:miniBufExplMaxSize = 50
 let g:miniBufExplMapCTabSwitchBufs = 1
 
-" Sessionman:
+" }}}
+" Sessionman: " {{{
 let g:sessionman_save_on_exit = 0
 
-" BufExplorer:
+" }}}
+" BufExplorer: " {{{
 map <silent> <C-Tab> :BufExplorer<CR>j
 map <silent> <C-S-Tab> :BufExplorer<CR>k
 augroup BufExplorerAdd
@@ -966,23 +982,28 @@ augroup BufExplorerAdd
 	endif	
 augroup END
 
-" Pydiction:
+" }}}
+" Pydiction: " {{{
 let g:pydiction_location = '~/.vim/complete-dict'
 
-" Paster:
+" }}}
+" Paster: " {{{
 let g:PASTER_BROWSER_COMMAND = 'open'
 
-" Rope:
+" }}}
+" Rope: " {{{
 "" let $PYTHONPATH .= ":/Library/Python/2.5/site-packages/ropemode:/Library/Python/2.5/site-packages:/Users/seth/sandbox/code/python/"
 "" source ~/sandbox/code/python/ropevim/ropevim.vim
 let $PATH .= ';C:\Python24\'
 let $PYTHONPATH = 'C:\Python24\'
 
-" SnipMate:
+" }}}
+" SnipMate: " {{{
 let g:snips_author = 'Seth Milliken'
 map <silent> <Leader>snip <Esc>:call ResetSnippets() \| call GetSnippets(g:snippets_dir, "_") \| call GetSnippets(g:snippets_dir, &ft)<CR><Esc>:echo "Snippets for format \"" . &ft . "\" updated."<CR>
 
-" Vimwiki:
+" }}}
+" Vimwiki: " {{{
 map <silent> <Leader>w2 <Esc>:w<CR>:VimwikiAll2HTML<CR><Esc>:echo "Saved wiki to HTML."<CR>
 "" let wiki.nested_syntaxes = {'python': 'python'}
 let g:vimwiki_hl_headers = 1 				" hilight header colors
@@ -992,7 +1013,8 @@ let g:vimwiki_folding = 0                   " don't allow outline folding
 let g:vimwiki_fold_lists = 0                " don't allow folding of list subitems
 let g:vimwiki_list = [{'path': '~/sandbox/personal/vimwiki/', 'index': 'PersonalWiki'}, {'path': '~/sandbox/public/wiki', 'index': 'SethMilliken', 'auto_export': 1}, {'path': '~/sandbox/work/wiki/', 'index': 'SethMilliken', 'html_header': '~/sandbox/work/wiki/header.tpl', 'auto_export': 1}]
 
-" TOhtml:
+" }}}
+" TOhtml: " {{{
 let html_dynamic_folds = 1
 let html_use_css = 1
 let html_number_lines = 1
@@ -1001,9 +1023,11 @@ let use_xhtml = 1
 "" unlet html_hover_unfold
 let html_no_pre = 1
 
-" AppleScript:
+" }}}
+" AppleScript: " {{{
 au! BufNewFile,BufRead *.applescript   setf applescript
 
+" }}}
 
 " }}}
 " EXPERIMENT: {{{
