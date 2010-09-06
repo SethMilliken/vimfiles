@@ -51,6 +51,7 @@
 :Tail	tailminusf.txt	/*:Tail*
 :VCSAdd	vcscommand.txt	/*:VCSAdd*
 :VCSAnnotate	vcscommand.txt	/*:VCSAnnotate*
+:VCSBlame	vcscommand.txt	/*:VCSBlame*
 :VCSCommit	vcscommand.txt	/*:VCSCommit*
 :VCSDelete	vcscommand.txt	/*:VCSDelete*
 :VCSDiff	vcscommand.txt	/*:VCSDiff*
@@ -58,6 +59,7 @@
 :VCSInfo	vcscommand.txt	/*:VCSInfo*
 :VCSLock	vcscommand.txt	/*:VCSLock*
 :VCSLog	vcscommand.txt	/*:VCSLog*
+:VCSRemove	vcscommand.txt	/*:VCSRemove*
 :VCSRevert	vcscommand.txt	/*:VCSRevert*
 :VCSReview	vcscommand.txt	/*:VCSReview*
 :VCSStatus	vcscommand.txt	/*:VCSStatus*
@@ -160,10 +162,16 @@ VCSCommandCVSExec	vcscommand.txt	/*VCSCommandCVSExec*
 VCSCommandCommitOnWrite	vcscommand.txt	/*VCSCommandCommitOnWrite*
 VCSCommandDeleteOnHide	vcscommand.txt	/*VCSCommandDeleteOnHide*
 VCSCommandDiffSplit	vcscommand.txt	/*VCSCommandDiffSplit*
+VCSCommandDisableAll	vcscommand.txt	/*VCSCommandDisableAll*
 VCSCommandDisableExtensionMappings	vcscommand.txt	/*VCSCommandDisableExtensionMappings*
 VCSCommandDisableMappings	vcscommand.txt	/*VCSCommandDisableMappings*
+VCSCommandDisableMenu	vcscommand.txt	/*VCSCommandDisableMenu*
 VCSCommandEdit	vcscommand.txt	/*VCSCommandEdit*
 VCSCommandEnableBufferSetup	vcscommand.txt	/*VCSCommandEnableBufferSetup*
+VCSCommandMapPrefix	vcscommand.txt	/*VCSCommandMapPrefix*
+VCSCommandMappings	vcscommand.txt	/*VCSCommandMappings*
+VCSCommandMenuPriority	vcscommand.txt	/*VCSCommandMenuPriority*
+VCSCommandMenuRoot	vcscommand.txt	/*VCSCommandMenuRoot*
 VCSCommandResultBufferNameExtension	vcscommand.txt	/*VCSCommandResultBufferNameExtension*
 VCSCommandResultBufferNameFunction	vcscommand.txt	/*VCSCommandResultBufferNameFunction*
 VCSCommandSVKExec	vcscommand.txt	/*VCSCommandSVKExec*
@@ -171,6 +179,7 @@ VCSCommandSVNDiffExt	vcscommand.txt	/*VCSCommandSVNDiffExt*
 VCSCommandSVNDiffOpt	vcscommand.txt	/*VCSCommandSVNDiffOpt*
 VCSCommandSVNExec	vcscommand.txt	/*VCSCommandSVNExec*
 VCSCommandSplit	vcscommand.txt	/*VCSCommandSplit*
+VCSCommandVCSTypeOverride	vcscommand.txt	/*VCSCommandVCSTypeOverride*
 VimwikiWeblinkHandler	vimwiki.txt	/*VimwikiWeblinkHandler*
 [%	matchit.txt	/*[%*
 ]%	matchit.txt	/*]%*
@@ -214,6 +223,7 @@ cocoa-mappings	cocoa.txt	/*cocoa-mappings*
 cocoa-suggested-plugins	cocoa.txt	/*cocoa-suggested-plugins*
 cocoa.txt	cocoa.txt	/*cocoa.txt*
 cs	surround.txt	/*cs*
+cvscommand-changes	vcscommand.txt	/*cvscommand-changes*
 ds	surround.txt	/*ds*
 g%	matchit.txt	/*g%*
 g:bufExplorerDefaultHelp	bufexplorer.txt	/*g:bufExplorerDefaultHelp*

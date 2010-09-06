@@ -5,15 +5,15 @@
 " 	Araxia on #vim irc.freenode.net
 
 " Version:
-" 1.0 " 2010-09-06 03:53:06 EDT
+" 1.0 " 2010-09-06 05:04:26 EDT
 
 " Notes:
 " 	- I'm deliberately overloading <C-e> and <C-y> for more useful purposes.
 " 	- I try to group distinct features in such a way that I can easily use a simple text-object operation on them (vap, yap, etc.).
 " 	- Folds can be quickly selected simply by closing the fold (za) and yanking
 " 	the folded line (yy).
-"   - #vim conventional wisdom recommends not using real tabs at all, ever (ts=8:sw=4:sts=4). I disagree and find consistent use of real tabs can be very useful.
-"   - /^""/ indicate intentionally disabled options
+" 	- #vim conventional wisdom recommends not using real tabs at all, ever (ts=8:sw=4:sts=4). I disagree and find consistent use of real tabs can be very useful.
+" 	- /^""/ indicate intentionally disabled options
 
 " Todo:
 "	- clean up SETTINGS; provide better descriptions 
@@ -46,8 +46,8 @@ else
 	set backup		" keep a backup file
 endif
 set history=50		" keep 50 lines of command line history
-set ruler		" show the cursor position all the time
-set showcmd		" display incomplete commands
+set ruler			" show the cursor position all the time
+set showcmd			" display incomplete commands
 set incsearch		" do incremental searching
 
 " For Win32 GUI: remove 't' flag from 'guioptions': no tearoff menu entries
@@ -105,7 +105,7 @@ set spellcapcheck=off				" ignore case in spellcheck
 set encoding=UTF-8 					" use UTF-8 encoding
 set fileencoding=UTF-8 				" use UTF-8 encoding as default
 set nolist							" don't show invisibles
-set listchars=tab:>-,trail:-		" ...but make them look nice when they do show 
+set listchars=tab:>-,trail:-		" ...but make them look nice when they do show
 set iskeyword+=-					" usually want - to not divide words
 set lbr								" wrap lines at word breaks 
 set noautoindent					" don't like autoindent
@@ -232,17 +232,17 @@ function! HelpSmart(...)" {{{
 	else
 		let l:commandname = "help "
 	end
-  let l:additional = ""
-  let l:setup = ""
-  let l:topic = input("Requested " . l:commandname . "topic: ", "", "help")
-  tabfirst
-  if expand("%") == ""
-      let l:additional = " | only | normal zt"
-  elseif &buftype != "help"
-      let l:setup = "0tab "
-  endif
-  exec ":" . l:setup . l:commandname . l:topic . l:additional
-endfunction
+	let l:additional = ""
+	let l:setup = ""
+	let l:topic = input("Requested " . l:commandname . "topic: ", "", "help")
+	tabfirst
+	if expand("%") == ""
+		let l:additional = " | only | normal zt"
+	elseif &buftype != "help"
+		let l:setup = "0tab "
+	endif
+	exec ":" . l:setup . l:commandname . l:topic . l:additional
+	endfunction
 
 " }}}
 " }}}
@@ -269,9 +269,9 @@ function! SectionHeadNav(count, mode) " {{{
 		let a:modematch = "[[:upper:]]\\{1,}[^:]*:*"
 	end
 	set nohls
-    exec a:searchdirection . "^" .  ExpandedCommentString() . a:modematch
-    normal zz
-    set hls
+	exec a:searchdirection . "^" .  ExpandedCommentString() . a:modematch
+	normal zz
+	set hls
 endfunction
 
 " }}}
@@ -435,7 +435,7 @@ function! FindNode(label) "{{{
 	let l:openmarker = CommentedFoldMarkerOpen()
 	let l:expression = a:label . "\\s*" . l:openmarker
 	let l:matchline = search(l:expression, 'csw')	
-    "echo printf("line: %2s had expression: %s", l:matchline, l:expression)
+	"echo printf("line: %2s had expression: %s", l:matchline, l:expression)
 	return l:matchline
 endfunction
 
@@ -502,7 +502,7 @@ function! InsertItem(text, status) "{{{
 		call append(line("."), l:toappend)
 	endif
 	call setpos('.', l:origpos)
-    normal zodd
+	normal zodd
 endfunction
 
 "}}}
@@ -939,7 +939,7 @@ augroup TaskStack
 	au BufRead *.tst.* nmap <buffer> :w<CR> :call TaskstackAutosaveReminder()<CR>
 	" Use <C-c> to avoid adding or updating a timestamp after editing.
 	au! InsertLeave *.tst.* :call AddOrUpdateTimestamp("")
-    au! FocusLost *.tst.* write
+	au! FocusLost *.tst.* write
 augroup END
 
 function! TaskstackEOL() " {{{
