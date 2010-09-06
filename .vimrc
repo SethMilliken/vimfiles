@@ -5,7 +5,7 @@
 " 	Araxia on #vim irc.freenode.net
 
 " Version:
-" 	1.0 " 2010-09-04 08:08:27 EDT
+" 1.0 " 2010-09-06 03:53:06 EDT
 
 " Notes:
 " 	- I'm deliberately overloading <C-e> and <C-y> for more useful purposes.
@@ -145,84 +145,111 @@ set statusline=%<\(%n\)\ %m%y%r\ %f\ %=%-14.(%l,%c%V%)\ %P
 
 "}}}
 " MAPPINGS: {{{
-" Zaurus: <C-Space> (<C-k><C-Space>) to invoke command mode in both insert and normal mode
+
+" Zaurus: <C-Space> (<C-k><C-Space>) to invoke command mode in both insert and normal mode " {{{
 imap <Nul> <Esc>:
 nnoremap <Nul> :
 
-"Annoyances: Use my own help function for F1
+" }}}
+" Annoyances: Use my own help function for F1 " {{{
 map <F1> :Help<CR>
-imap <F1> <Esc><F1>
-
-nmap <S-Space> <C-f>
+imap <F1> <Esc>:Help<CR>
 nmap :W :w
+nmap <S-Space> <C-f>
 
-" Reset: restore some default settings and redraw
+" }}}
+" Reset: restore some default settings and redraw " {{{
 nnoremap <silent> <C-L> :call Reset() \| nohls<CR>
 imap <silent> <C-L> <Esc>:call Reset() \| nohls<CR>a
+imap <C-y><C-v> <Esc> :call ReloadVimrc()<CR> \| :echo "Resourced .vimrc."<CR>
+nmap <C-y><C-v> :call ReloadVimrc()<CR> \| :echo "Resourced .vimrc."<CR>
 
-" Utility: word count of current file
-nmap <silent> <Leader>w <Esc>:!wc -w %<CR>
+" }}}
+" Utility: word count of current file " {{{
+nmap <silent> <Leader>w :!wc -w %<CR>
 
-" Clipboard: Copy buffer to clipboard
+" }}}
+" Clipboard: Copy buffer to clipboard " {{{
 " trying 'set clipboard=unnamed' instead; see .gvimrc
-"" map <something>	<Esc>:%y*<CR>
+"" map <something>	:%y*<CR>
 
-" Tail: reload buffer from disk and go to end
+" }}}
+" Tail: reload buffer from disk and go to end " {{{
 " - FIXME: find a non-conflicting binding
 " - TODO: restrict to certain filetypes, e.g. only .log?
-nmap <silent> <S-k> <Esc>:e<CR><Esc>:$<CR>
+nmap <silent> <S-k> :e<CR><Esc>:$<CR>
 
-" Save Session:
-nmap <Leader>\ <Esc>:call CommitSession()<CR>
+" }}}
+" Save Session: " {{{
+nmap <Leader>\ :call CommitSession()<CR>
 
-" Journal:
-nmap \j <Esc>:call JournalEntry()<CR>
+" }}}
+" Journal: " {{{
+nmap \j :call JournalEntry()<CR>
 command! Journal :call JournalEntry()
 
-" Misc:
+" }}}
+" Misc: " {{{
 nmap <silent> <Leader>] :NERDTreeToggle<CR>
 " nmap <silent> <Leader>[ :TMiniBufExplorer<CR>
 
-" Folds:
-nmap <silent> <Leader>= <Esc>:call FoldDefaultNodes()<CR>:normal zvzkzjzt<CR><C-l>
-nmap <silent> <Leader>0 <Esc>:silent normal zvzt<CR><C-l>
+" }}}
+" Folds: " {{{
+nmap <silent> <Leader>= :call FoldDefaultNodes()<CR>:normal zvzkzjzt<CR><C-l>
+nmap <silent> <Leader>0 :silent normal zvzt<CR><C-l>
 
-" Scratch Buffer: close with ZZ
-nmap <silent> <Leader>c <Esc>:call ScratchBuffer("scratch")<CR>
+" }}}
+" Scratch Buffer: close with ZZ " {{{
+nmap <silent> <Leader>c :call ScratchBuffer("scratch")<CR>
 
-" Open URIs:
+" }}}
+" Open URIs: " {{{
 nmap <silent> <Leader>/ :call HandleURI()<CR>
 nmap <silent> <Leader>t :call HandleTS()<CR>
 
-" SQL: grab and format sql statement from current line
-nmap <silent> <Leader>q <Esc>:call FormatSqlStatement()<CR>
+" }}}
+" SQL: grab and format sql statement from current line " {{{
+nmap <silent> <Leader>q :call FormatSqlStatement()<CR>
 
-" Formatting: Wrap current or immediately preceding word in in <em> tag
-nmap <Leader>_ <Esc>Bi<em><Esc>ea</em>
+" }}}
+" Formatting: Wrap current or immediately preceding word in in <em> tag " {{{
+nmap <Leader>_ Bi<em><Esc>ea</em>
 
-" Completion: show completion preview, without actually completing
+" }}}
+" Completion: show completion preview, without actually completing " {{{
 imap <C-p> <Esc>:set completeopt+=menuone<CR>a<C-n><C-p>
 
-" Help: help help help
-nmap <Leader>hw	 	<Esc>:help<CR>:silent call AdjustFont(-4)<CR>:set columns=115 lines=999<CR>:winc _<CR>:winc \|<CR>:help<Space>
-nmap <Leader>pp	 	<Esc>:help<CR><Esc>:winc _<CR><Esc>:winc \|<CR><Esc>:help<Space>
-nmap <Leader>po 	<Esc>:Help<CR>
+" }}}
+" Help: help help help {{{
+nmap <Leader>hw	 	:help<CR>:silent call AdjustFont(-4)<CR>:set columns=115 lines=999<CR>:winc _<CR>:winc \|<CR>:help<Space>
+nmap <Leader>pp	 	:help<CR><Esc>:winc _<CR><Esc>:winc \|<CR><Esc>:help<Space>
+nmap <Leader>hg		:HelpGrep<CR>
 command! Help :call HelpSmart()
-function! HelpSmart() " {{{
-  let a:additional = ""
-  let a:setup = ""
+command! HelpGrep :call HelpSmart("grep")
+function! HelpSmart(...)" {{{
+	if a:0 > 0
+		let l:commandname = "helpgrep "
+	else
+		let l:commandname = "help "
+	end
+  let l:additional = ""
+  let l:setup = ""
+  let l:topic = input("Requested " . l:commandname . "topic: ", "", "help")
+  tabfirst
   if expand("%") == ""
-      let a:additional = " | only | normal zt"
+      let l:additional = " | only | normal zt"
   elseif &buftype != "help"
-      let a:setup = "0tab"
+      let l:setup = "0tab "
   endif
-  let a:command = input("Help topic: ", "", "help")
-  exec ":" . a:setup . " help " . a:command . a:additional
+  exec ":" . l:setup . l:commandname . l:topic . l:additional
 endfunction
 
 " }}}
-
-" Navigation: shortcuts
+" }}}
+" Navigation: shortcuts {{{
+nmap <C-e>/ :call HeaderLocationIndex()<CR>
+nmap <C-e>? :call FunctionLocationIndex()<CR>
+nmap <C-e>c :silent! lclose<CR>
 nmap <C-e>n :call SectionHeadNav(1, 0)<CR>
 nmap <C-e>N :call SectionHeadNav(1, 1)<CR>
 nmap <C-e>p :call SectionHeadNav(-1, 0)<CR>
@@ -248,13 +275,14 @@ function! SectionHeadNav(count, mode) " {{{
 endfunction
 
 " }}}
-
-" Cmdline Window: shortcuts
+" }}}
+" Cmdline Window: shortcuts " {{{
 nnoremap :: q:
 nnoremap // q/
 nnoremap ?? q?
 
-" Cmdline Window:
+" }}}
+" Cmdline Window: " {{{
 augroup cmdline-window
 	au! CmdwinEnter *
 	" Execute the current line in cmndline-window and then reopen it.
@@ -266,13 +294,15 @@ augroup cmdline-window
 	au CmdwinEnter * inoremap <buffer> ZZ <Esc>ZZ
 augroup END
 
-" Learn: hjkl
-nmap <Left> 	<Esc>:echo "You should have typed h instead."<CR>
-nmap <Right> 	<Esc>:echo "You should have typed l instead."<CR>
-nmap <Up> 		<Esc>:echo "You should have typed k instead."<CR>
-nmap <Down> 	<Esc>:echo "You should have typed j instead."<CR>
+" }}}
+" Learn: hjkl " {{{
+nmap <Left> 	:echo "You should have typed h instead."<CR>
+nmap <Right> 	:echo "You should have typed l instead."<CR>
+nmap <Up> 		:echo "You should have typed k instead."<CR>
+nmap <Down> 	:echo "You should have typed j instead."<CR>
 
-" Accordion Mode: accordion style horizontal split navigation mode
+" }}}
+" Accordion Mode: accordion style horizontal split navigation mode {{{
 " yes, kids, I know WTF I'm doing WRT <C-e>
 nmap <silent> <C-e>j <C-w>j:call AccordionMode()<CR><C-l>
 nmap <silent> <C-e>k <C-w>k:call AccordionMode()<CR><C-l>
@@ -285,10 +315,14 @@ function! AccordionMode()
 	set winheight=10 winminheight=10
 endfunction
 
+" }}}
 " Timestamps: {{{
 let g:timestamp_matchstring = '[0-9]\\{4}-[0-9]\\{2}-[0-9]\\{2} [0-9:]\\{8} [A-Z]\\{3}'
 let g:timestamp_annotation = ' MARK'
+" Note: setting g:auto_timestamp_bypass will deactivate autotimestamp in contexts they would normally be active
 " yes, kids, I know WTF I'm doing WRT <C-y>
+nmap <silent> <C-y><C-t> :call TimestampAutoUpdateToggle()<CR>
+imap <silent> <C-y><C-t> <Esc>:call TimestampAutoUpdateToggle()<CR>
 nmap <silent> <C-y><C-y> :call AddOrUpdateTimestamp("")<CR>
 imap <silent> <C-y><C-y> <Esc>:call AddOrUpdateTimestamp("")<CR>a
 nmap <silent> <C-y><C-x> :call RemoveTimestamp("")<CR>
@@ -301,9 +335,8 @@ nmap <silent> <Leader>fw :call FoldWrap()<CR>
 nmap <silent> <Leader>fi :call FoldInsert()<CR>
 nmap <silent> <Leader>ll o<Esc>:call Timestamp("short") \| call FoldWrap()<CR>
 " }}}
-
-" Tabs: switching
-" set Cmd-# and Alt-# to switch tabs {{{
+" Tabs: switching {{{
+" set Cmd-# and Alt-# to switch tabs
 for n in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
 	let k = n == "0" ? "10" : n
 	for m in ["A", "D"]
@@ -313,6 +346,7 @@ for n in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
 endfor
 
 " }}}
+
 "}}}
 " FUNCTIONS: {{{
 
@@ -344,6 +378,20 @@ function! HeaderLocationIndex() "{{{
 	let l:locresults = getloclist("0")
 	if len(l:locresults) > 1
 		vert lop | wincmd =
+	end
+endfunction
+
+"}}}
+function! FunctionLocationIndex() "{{{
+	let l:incoming = input("Go to function: ")
+	lgetexpr "" " Clear the location list
+	exec "silent! lvimgrep /^\\s*function.*" . l:incoming . "\\c.*/ %"
+	let l:locresults = getloclist("0")
+	if len(l:locresults) > 1
+		vert lop | wincmd =
+	end
+	if len(l:locresults) < 1
+		echo "No match for: " . l:incoming
 	end
 endfunction
 
@@ -598,22 +646,55 @@ function! TimestampText(style) "{{{
 endfunction
 
 " }}}
+function! TimestampAutoUpdateToggle() "{{{
+	if !exists("g:auto_timestamp_bypass")
+		call AutoTimestampBypass()
+		echo "Timestamps: auto add/update DISABLED."
+	else
+		call AutoTimestampEnable()
+		echo "Timestamps: auto add/update ENABLED."
+	end
+endfunction
+
+"}}}
 function! AddOrUpdateTimestamp(annotation) "{{{
 	if !exists("g:auto_timestamp_bypass")
-		let l:origpos = getpos(".")
-		let l:timestampmatch = TimestampTag(a:annotation)
-		let l:hastimestamp = match(getline("."), l:timestampmatch)
-		let l:newtimestamp = substitute(CommentStringFull(), "%s", TimestampText("short") . a:annotation, "")
-		silent! undojoin
-		if l:hastimestamp < 0
-			call AppendText(l:newtimestamp)
-		else
-			call setline(".", substitute(getline("."), l:timestampmatch, l:newtimestamp, ""))
+		if IsTimestampUpdateOkay(getline(".")) > 0
+			let l:origpos = getpos(".")
+			let l:timestampmatch = TimestampTag(a:annotation)
+			let l:hastimestamp = match(getline("."), l:timestampmatch)
+			let l:newtimestamp = substitute(CommentStringFull(), "%s", TimestampText("short") . a:annotation, "")
+			silent! undojoin
+			if l:hastimestamp < 0
+				call AppendText(l:newtimestamp)
+			else
+				call setline(".", substitute(getline("."), l:timestampmatch, l:newtimestamp, ""))
+			end
+			if len(a:annotation) > 1
+				write
+			end
+			call setpos('.', l:origpos)
 		end
-		if len(a:annotation) > 1
-			write
-		end
-		call setpos('.', l:origpos)
+	end
+endfunction
+
+"}}}
+function! IsTimestampUpdateOkay(line) "{{{
+	let l:characters = 20
+	if len(a:line) < l:characters
+		echo "No autotimestamp: line shorter than ". l:characters . " characters."
+		return 0
+	elseif match(a:line, FoldMarkerOpen()) > 0
+		echo "No autotimestamp: line already has open foldmarker."
+		return 0
+	elseif match(a:line, FoldMarkerClose()) > 0
+		echo "No autotimestamp: line already has close foldmarker."
+		return 0
+	elseif match(a:line, "^x\\s\\|^o\\s\\|\\sx\\s\\|\\so\\s") > -1
+		echo "No autotimestamp: line contains completed marker."
+		return 
+	else
+		return 1
 	end
 endfunction
 
@@ -671,6 +752,15 @@ endfunction
 " }}}
 
 " Specialized:
+if !exists("g:reloadvim_function_loaded") " {{{
+	function! ReloadVimrc()
+		write
+		source ~/.vimrc
+	endfunction
+	let g:reloadvim_function_loaded = ""
+end
+
+" }}}
 function! AutoTagComplete() " {{{
 	normal aa
 	normal! r>
@@ -856,6 +946,8 @@ function! TaskstackEOL() " {{{
 	let l:timestamp_location = match(getline("."), TimestampTag("") . ".*")
 	if l:timestamp_location > 0
 		call cursor(line("."), l:timestamp_location)
+	else
+		normal g_
 	end
 endfunction
 
