@@ -13,26 +13,79 @@ noremap! <D-Right> <End>
 noremap! <M-Left> <C-Left>
 noremap! <D-Left> <Home>
 inoremap <silent> <S-Tab> =BackwardsSnippet()
+imap <silent> <Plug>IMAP_JumpBack =IMAP_Jumpfunc('b', 0)
+imap <silent> <Plug>IMAP_JumpForward =IMAP_Jumpfunc('', 0)
+inoremap <silent> <Plug>NERDCommenterInInsert  <BS>:call NERDComment(0, "insert")
 imap <F1> 
 imap <Nul> :
 map! <D-v> *
+nnoremap <silent>  
+nmap <silent> - :call AccordionMode()
+nmap <silent> l l:call AccordionMode()
+nmap <silent> h h:call AccordionMode()
+nmap <silent> k k:call AccordionMode()
+nmap <silent> j j:call AccordionMode()
+nmap P :call SectionHeadNav(-1, 1)
+nmap p :call SectionHeadNav(-1, 0)
+nmap N :call SectionHeadNav(1, 1)
+nmap n :call SectionHeadNav(1, 0)
+nmap c :silent! lclose
+nmap ? :call FunctionLocationIndex()
+nmap / :call HeaderLocationIndex()
 nmap <silent>  l:call AccordionMode()
 snoremap <silent> 	 i<Right>=TriggerSnippet()
+vmap <NL> <Plug>IMAP_JumpForward
 nmap <silent> <NL> j:call AccordionMode()
 nmap <silent>  k:call AccordionMode()
 nnoremap <silent>  :call Reset() | nohls
 snoremap  b<BS>
 nmap <silent>  h:call AccordionMode()
+nmap <silent>  :call RemoveTimestamp(g:timestamp_annotation)
+nmap <silent>  :call AddOrUpdateTimestamp(g:timestamp_annotation)
+nmap <silent>  :call RemoveTimestamp("")
+nmap <silent>  :call AddOrUpdateTimestamp("")
+nmap <silent>  :call TimestampAutoUpdateToggle()
+nmap  :call ReloadVimrc() | :echo "Resourced .vimrc."
 snoremap % b<BS>%
 snoremap ' b<BS>'
+nmap ,ca <Plug>NERDCommenterAltDelims
+vmap ,cA <Plug>NERDCommenterAppend
+nmap ,cA <Plug>NERDCommenterAppend
+vmap ,c$ <Plug>NERDCommenterToEOL
+nmap ,c$ <Plug>NERDCommenterToEOL
+vmap ,cu <Plug>NERDCommenterUncomment
+nmap ,cu <Plug>NERDCommenterUncomment
+vmap ,cn <Plug>NERDCommenterNest
+nmap ,cn <Plug>NERDCommenterNest
+vmap ,cb <Plug>NERDCommenterAlignBoth
+nmap ,cb <Plug>NERDCommenterAlignBoth
+vmap ,cl <Plug>NERDCommenterAlignLeft
+nmap ,cl <Plug>NERDCommenterAlignLeft
+vmap ,cy <Plug>NERDCommenterYank
+nmap ,cy <Plug>NERDCommenterYank
+vmap ,ci <Plug>NERDCommenterInvert
+nmap ,ci <Plug>NERDCommenterInvert
+vmap ,cs <Plug>NERDCommenterSexy
+nmap ,cs <Plug>NERDCommenterSexy
+vmap ,cm <Plug>NERDCommenterMinimal
+nmap ,cm <Plug>NERDCommenterMinimal
+vmap ,c  <Plug>NERDCommenterToggle
+nmap ,c  <Plug>NERDCommenterToggle
+vmap ,cc <Plug>NERDCommenterComment
+nmap ,cc <Plug>NERDCommenterComment
+nnoremap // q/
 nnoremap :: q:
+nmap :W :w
 nnoremap <silent> <Leder>fw :call FoldWrap()
+nnoremap ?? q?
 nnoremap <silent> K :e:$
 map Q gq
-xmap S <Plug>VSurround
 nnoremap SS :w:SessionSave:call FixSession():SessionOpenLast:echo "Saved fixed session: " . v:this_session
+xmap S <Plug>VSurround
 snoremap U b<BS>U
 vmap [% [%m'gv``
+nnoremap \p+ :tab help 
+nnoremap <silent> \st :call AddOrUpdateTimestamp()
 snoremap \ b<BS>\
 map <silent> \w\t <Plug>VimwikiTabMakeDiaryNote
 map <silent> \w\w <Plug>VimwikiMakeDiaryNote
@@ -45,15 +98,16 @@ nmap \cU <Plug>VCSUnlock
 nmap \cs <Plug>VCSStatus
 nmap \cr <Plug>VCSReview
 nmap \cq <Plug>VCSRevert
+nmap \cn <Plug>VCSAnnotate
+nmap <silent> \cN <Plug>VCSSplitAnnotate
 nmap \cl <Plug>VCSLog
 nmap \cL <Plug>VCSLock
 nmap \ci <Plug>VCSInfo
 nmap \cg <Plug>VCSGotoOriginal
+nmap \cG <Plug>VCSClearAndGotoOriginal
 nmap \cd <Plug>VCSDiff
 nmap \cD <Plug>VCSDelete
 nmap \cc <Plug>VCSCommit
-nmap \cG <Plug>VCSClearAndGotoOriginal
-nmap \cn <Plug>VCSAnnotate
 nmap \ca <Plug>VCSAdd
 map \dk <Plug>DirDiffPrev
 map \dj <Plug>DirDiffNext
@@ -63,20 +117,22 @@ map <silent> \w2 :w:VimwikiAll2HTML:echo "Saved wiki to HTML."
 map <silent> \snip :call ResetSnippets() | call GetSnippets(g:snippets_dir, "_") | call GetSnippets(g:snippets_dir, &ft):echo "Snippets for format \"" . &ft . "\" updated."
 nnoremap <silent> \ll o:call Timestamp("short") | call FoldWrap()
 nnoremap <silent> \fi :call FoldInsert()
+nmap <silent> \fw :call FoldWrap()
 nnoremap <silent> \sl :call Timestamp("long")
-nnoremap <silent> \st :call AddOrUpdateTimestamp()
 nnoremap <silent> \sd :call Timestamp("date")
-nnoremap \p+ :tab help 
+nmap \hg :HelpGrep
 nnoremap \pp :help:winc _:winc |:help 
+nmap \hw :help:silent call AdjustFont(-4):set columns=115 lines=999:winc _:winc |:help 
 nnoremap \_ Bi<em>ea</em>
 nnoremap <silent> \q :call FormatSqlStatement()
 nnoremap <silent> \t :call HandleTS()
-nnoremap <silent> \\ :call HandleURI()
+nmap <silent> \/ :call HandleURI()
 nnoremap <silent> \c :call ScratchBuffer("scratch")
 nmap <silent> \0 :silent normal zvzt
 nmap <silent> \= :call FoldDefaultNodes():normal zvzkzjzt
 nnoremap <silent> \] :NERDTreeToggle
 nnoremap \j :call JournalEntry()
+nnoremap <silent> \\ :call HandleURI()
 nnoremap <silent> \w :!wc -w %
 vmap ]% ]%m'gv``
 snoremap ^ b<BS>^
@@ -91,6 +147,7 @@ nmap ySs <Plug>YSsurround
 nmap yss <Plug>Yssurround
 nmap yS <Plug>YSurround
 nmap ys <Plug>Ysurround
+nmap <silent> <C--> :call AccordionMode()
 nnoremap <C-Down> :silent! :call AdjustFont(-1)
 nnoremap <C-Up> :silent! :call AdjustFont(1)
 nnoremap <silent> <C-Right> gt
@@ -122,6 +179,7 @@ nnoremap <silent> <Plug>VCSVimDiff :VCSVimDiff
 nnoremap <silent> <Plug>VCSUpdate :VCSUpdate
 nnoremap <silent> <Plug>VCSUnlock :VCSUnlock
 nnoremap <silent> <Plug>VCSStatus :VCSStatus
+nnoremap <silent> <Plug>VCSSplitAnnotate :VCSAnnotate!
 nnoremap <silent> <Plug>VCSReview :VCSReview
 nnoremap <silent> <Plug>VCSRevert :VCSRevert
 nnoremap <silent> <Plug>VCSLog :VCSLog
@@ -134,15 +192,42 @@ nnoremap <silent> <Plug>VCSDelete :VCSDelete
 nnoremap <silent> <Plug>VCSCommit :VCSCommit
 nnoremap <silent> <Plug>VCSAnnotate :VCSAnnotate
 nnoremap <silent> <Plug>VCSAdd :VCSAdd
+vmap <silent> <Plug>IMAP_JumpBack `<i=IMAP_Jumpfunc('b', 0)
+vmap <silent> <Plug>IMAP_JumpForward i=IMAP_Jumpfunc('', 0)
+vmap <silent> <Plug>IMAP_DeleteAndJumpBack "_<Del>i=IMAP_Jumpfunc('b', 0)
+vmap <silent> <Plug>IMAP_DeleteAndJumpForward "_<Del>i=IMAP_Jumpfunc('', 0)
+nmap <silent> <Plug>IMAP_JumpBack i=IMAP_Jumpfunc('b', 0)
+nmap <silent> <Plug>IMAP_JumpForward i=IMAP_Jumpfunc('', 0)
 map <M-F3> :call CSV_clear_all()  
 map <S-F3> :call CSV_toggle_field(CSV_get_field(0))
 map <S-F5> :call CSV_goto_highlighted(-1)
 map <S-F6> :call CSV_goto_highlighted(1)
 map <C-F5> :call CSV_goto_field()
 map <C-F6> :call CSV_get_new_sep()
+nmap <silent> <Plug>NERDCommenterAppend :call NERDComment(0, "append")
+nnoremap <silent> <Plug>NERDCommenterToEOL :call NERDComment(0, "toEOL")
+vnoremap <silent> <Plug>NERDCommenterUncomment :call NERDComment(1, "uncomment")
+nnoremap <silent> <Plug>NERDCommenterUncomment :call NERDComment(0, "uncomment")
+vnoremap <silent> <Plug>NERDCommenterNest :call NERDComment(1, "nested")
+nnoremap <silent> <Plug>NERDCommenterNest :call NERDComment(0, "nested")
+vnoremap <silent> <Plug>NERDCommenterAlignBoth :call NERDComment(1, "alignBoth")
+nnoremap <silent> <Plug>NERDCommenterAlignBoth :call NERDComment(0, "alignBoth")
+vnoremap <silent> <Plug>NERDCommenterAlignLeft :call NERDComment(1, "alignLeft")
+nnoremap <silent> <Plug>NERDCommenterAlignLeft :call NERDComment(0, "alignLeft")
+vmap <silent> <Plug>NERDCommenterYank :call NERDComment(1, "yank")
+nmap <silent> <Plug>NERDCommenterYank :call NERDComment(0, "yank")
+vnoremap <silent> <Plug>NERDCommenterInvert :call NERDComment(1, "invert")
+nnoremap <silent> <Plug>NERDCommenterInvert :call NERDComment(0, "invert")
+vnoremap <silent> <Plug>NERDCommenterSexy :call NERDComment(1, "sexy")
+nnoremap <silent> <Plug>NERDCommenterSexy :call NERDComment(0, "sexy")
+vnoremap <silent> <Plug>NERDCommenterMinimal :call NERDComment(1, "minimal")
+nnoremap <silent> <Plug>NERDCommenterMinimal :call NERDComment(0, "minimal")
+vnoremap <silent> <Plug>NERDCommenterToggle :call NERDComment(1, "toggle")
+nnoremap <silent> <Plug>NERDCommenterToggle :call NERDComment(0, "toggle")
+vnoremap <silent> <Plug>NERDCommenterComment :call NERDComment(1, "norm")
+nnoremap <silent> <Plug>NERDCommenterComment :call NERDComment(0, "norm")
 map <silent> <C-S-Tab> :BufExplorerk
 map <silent> <C-Tab> :BufExplorerj
-nmap <silent> <C--> :call AccordionMode()
 nnoremap <Down> :echo "You should have typed j instead"
 nnoremap <Up> :echo "You should have typed k instead"
 nnoremap <Right> :echo "You should have typed l instead"
@@ -158,33 +243,41 @@ nmap <D-v> "*P
 imap S <Plug>ISurround
 imap s <Plug>Isurround
 inoremap <silent> 	 =TriggerSnippet()
+imap <NL> <Plug>IMAP_JumpForward
 imap <silent>  :call Reset() | nohlsa
 inoremap  :set completeopt+=menuonea
 inoremap <silent> 	 =ShowAvailableSnips()
 imap  <Plug>Isurround
+imap <silent>  :call RemoveTimestamp("")a
+imap <silent>  :call AddOrUpdateTimestamp("")a
+imap <silent>  :call TimestampAutoUpdateToggle()
+imap   :call ReloadVimrc() | :echo "Resourced .vimrc."
 let &cpo=s:cpo_save
 unlet s:cpo_save
-set autoindent
 set autowrite
 set background=dark
 set backspace=indent,eol,start
 set clipboard=unnamed
+set commentstring=
 set diffopt=filler,vertical
 set directory=~/.vim/swap//,~/vimfiles/swap//
 set expandtab
 set fileencodings=ucs-bom,utf-8,default,latin1
+set foldlevelstart=999
 set fuoptions=maxhorz,maxvert
-set guifont=Inconsolata:h11
+set guifont=Inconsolata:h13
 set guioptions=egmrLt
 set guitablabel=%m\ %N\ %t\ %r
 set helplang=en
 set history=10000
 set hlsearch
 set incsearch
+set indentkeys=0{,0},:,0#,!^F,O,e
 set iskeyword=@,48-57,_,192-255,-
 set langmenu=none
 set laststatus=2
 set listchars=tab:>-,trail:-
+set matchpairs=(:),{:},[:],<:>
 set mouse=a
 set operatorfunc=<SNR>27_opfunc
 set printexpr=system('open\ -a\ Preview\ '.v:fname_in)\ +\ v:shell_error
@@ -192,6 +285,7 @@ set ruler
 set sessionoptions=folds,help,options,tabpages,winsize,globals,sesdir,resize,winpos,unix
 set shiftwidth=4
 set shortmess=filnxtToOIA
+set showbreak=\ \ 
 set showcmd
 set spellcapcheck=off
 set splitbelow
@@ -200,13 +294,12 @@ set statusline=%<(%n)\ %m%y%r\ %f\ %=%-14.(%l,%c%V%)\ %P
 set switchbuf=useopen,usetab
 set tabline=%!MyTabLine()
 set tabpagemax=100
-set tabstop=4
+set tabstop=2
 set tags=./tags,tags,~/sandbox/personal/tags
 set termencoding=utf-8
-set transparency=5
 set undolevels=100
 set updatetime=500
-set window=73
+set window=84
 set winheight=10
 set winminheight=10
 set nowritebackup
@@ -216,12 +309,15 @@ let NERDTreeMapPreviewSplit = "gi"
 let NERDTreeMapCloseChildren = "X"
 let NERDTreeShowHidden = "0"
 let TailMinusF_Loaded =  1 
+let NERDSpaceDelims = "0"
 let NERDTreeMapCloseDir = "x"
+let NERDUsePlaceHolders = "1"
 let NERDTreeShowLineNumbers = "0"
 let DirDiffSort =  1 
 let NERDTreeBookmarksFile = "/Users/seth/.NERDTreeBookmarks"
 let NERDTreeMapToggleHidden = "I"
 let NERDTreeWinSize = "31"
+let NERDTreeMapRefreshRoot = "R"
 let DirDiffInteractive =  0 
 let NERDTreeMapPreview = "go"
 let NERDTreeMapActivateNode = "o"
@@ -235,11 +331,12 @@ let NERDTreeMapToggleFilters = "f"
 let NERDTreeMapJumpLastChild = "J"
 let NERDTreeMapJumpPrevSibling = "<C-k>"
 let NERDTreeShowBookmarks = "0"
-let NERDTreeMapOpenExpl = "e"
-let NERDTreeRemoveDirCmd = "rm -rf "
+let NERDMenuMode = "3"
 let CSV_string_delimiter = "\""
 let NERDTreeMouseMode = "1"
+let NERDDefaultNesting = "1"
 let NERDTreeChDirMode = "0"
+let NERDTreeRemoveDirCmd = "rm -rf "
 let NERDTreeAutoCenterThreshold = "3"
 let NERDTreeShowFiles = "1"
 let NERDTreeMapOpenSplit = "i"
@@ -248,39 +345,53 @@ let NERDTreeCaseSensitiveSort = "0"
 let NERDTreeHijackNetrw = "1"
 let NERDTreeMapFilesystemMenu = "m"
 let NERDTreeMapRefresh = "r"
+let CSV_field_list = ""
 let TailMinusF_Height =  10 
 let NERDTreeHighlightCursorline = "1"
-let CSV_field_list = ""
+let NERDDelimiterRequests = "1"
+let NERDLPlace = "[>"
 let NERDTreeMapOpenInTab = "t"
 let CSV_separator = ","
 let DirDiffExcludes = ""
+let NERDCreateDefaultMappings = "1"
 let DirDiffDynamicDiffText =  0 
 let NERDTreeMapPreviewVSplit = "gs"
 let NERDChristmasTree = "1"
 let NERDTreeNotificationThreshold = "100"
+let NERDCommentWholeLinesInVMode = "0"
 let CSV_mono =  0 
 let DirDiffTextDiffer = " differ"
 let BufExplorer_title = "[Buf List]"
 let NERDTreeMapChdir = "cd"
+let NERDRPlace = "<]"
 let DirDiffWindowSize =  14 
 let NERDTreeMapExecute = "!"
-let NERDTreeMapRefreshRoot = "R"
+let NERDRemoveExtraSpaces = "1"
+let NERDRemoveAltComs = "1"
 let NERDTreeAutoCenter = "1"
 let DirDiffTextOnlyIn = "Only in "
 let TailMinusF_Center_Win =  0 
 let DirDiffTextAnd = " and "
+let Imap_Debug =  0 
 let NERDTreeMapOpenVSplit = "s"
 let NERDTreeMapDeleteBookmark = "D"
+let NERDBlockComIgnoreEmpty = "0"
 let AutoHiVersion = "0.2"
 let NERDTreeMapJumpNextSibling = "<C-j>"
 let DirDiffIgnoreCase =  0 
 let NERDTreeMapJumpRoot = "P"
 let NERDTreeCopyCmd = "cp -r "
 let NERDTreeMapQuit = "q"
+let Imap_StickyPlaceHolders =  1 
 let NERDTreeMapChangeRoot = "C"
+let NERDCompactSexyComs = "0"
 let NERDTreeSortDirs = "1"
 let NERDTreeMapToggleFiles = "F"
+let NERDAllowAnyVisualDelims = "1"
+let Imap_DeleteEmptyPlaceHolders =  1 
 let DirDiffIgnore = ""
+let BufExploreAdd =  1 
+let NERDTreeMapOpenExpl = "e"
 let NetrwTopLvlMenu = "Netrw."
 let NERDTreeMapJumpFirstChild = "K"
 let NERDTreeMapOpenRecursively = "O"
@@ -294,14 +405,15 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +2 ~/sandbox/code/3rd/KeyRemap4MacBook/files/prefpane/include/UbiquitousVimBindings.xml
-badd +12 ~/sandbox/code/3rd/KeyRemap4MacBook/files/prefpane/include/UbiquitousVimBindingsDvorak.xml
-badd +11 ~/sandbox/code/3rd/KeyRemap4MacBook/files/prefpane/include/UbiquitousVimBindings.txt
+badd +4 ~/ubiqvim.tst.txt
+badd +2 ~/sandbox/code/3rd/KeyRemap4MacBook-dev/files/prefpane/include/ubiquitous_vim_bindings.xml
+badd +0 ~/sandbox/code/3rd/KeyRemap4MacBook-dev/screen_setup
+badd +1 ~/sandbox/code/3rd/KeyRemap4MacBook-dev/files/prefpane/include/ubiquitous_vim_bindings.txt
 silent! argdel *
-set lines=74 columns=234
+set lines=85 columns=269
 set fullscreen
-winpos 0 0
-edit ~/sandbox/code/3rd/KeyRemap4MacBook/files/prefpane/include/UbiquitousVimBindings.txt
+winpos 0 1178
+edit ~/sandbox/code/3rd/KeyRemap4MacBook-dev/files/prefpane/include/ubiquitous_vim_bindings.xml
 set splitbelow splitright
 wincmd _ | wincmd |
 vsplit
@@ -311,17 +423,27 @@ split
 1wincmd k
 wincmd w
 wincmd w
+wincmd _ | wincmd |
+split
+1wincmd k
+wincmd w
 wincmd t
 set winheight=1 winwidth=1
-exe '1resize ' . ((&lines * 71 + 37) / 74)
-exe 'vert 1resize ' . ((&columns * 164 + 117) / 234)
-exe '2resize ' . ((&lines * 0 + 37) / 74)
-exe 'vert 2resize ' . ((&columns * 164 + 117) / 234)
-exe 'vert 3resize ' . ((&columns * 69 + 117) / 234)
+exe '1resize ' . ((&lines * 82 + 42) / 85)
+exe 'vert 1resize ' . ((&columns * 134 + 134) / 269)
+exe '2resize ' . ((&lines * 0 + 42) / 85)
+exe 'vert 2resize ' . ((&columns * 134 + 134) / 269)
+exe '3resize ' . ((&lines * 39 + 42) / 85)
+exe 'vert 3resize ' . ((&columns * 134 + 134) / 269)
+exe '4resize ' . ((&lines * 43 + 42) / 85)
+exe 'vert 4resize ' . ((&columns * 134 + 134) / 269)
 argglobal
+inoremap <buffer> \> >
+inoremap <buffer> \. >
 setlocal keymap=
 setlocal noarabic
-setlocal autoindent
+setlocal noautoindent
+setlocal balloonexpr=
 setlocal nobinary
 setlocal bufhidden=
 setlocal buflisted
@@ -330,11 +452,133 @@ setlocal nocindent
 setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
 setlocal cinoptions=
 setlocal cinwords=if,else,while,do,for,switch
-setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
-setlocal commentstring=/*%s*/
+setlocal colorcolumn=
+setlocal comments=s:<!--,m:\ \ \ \ \ ,e:-->
+setlocal commentstring=<!--%s-->
 setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
 setlocal completefunc=
 setlocal nocopyindent
+setlocal cryptmethod=
+setlocal nocursorbind
+setlocal nocursorcolumn
+set cursorline
+setlocal cursorline
+setlocal define=
+setlocal dictionary=
+setlocal nodiff
+setlocal equalprg=
+setlocal errorformat=
+setlocal expandtab
+if &filetype != 'xml'
+setlocal filetype=xml
+endif
+set foldcolumn=4
+setlocal foldcolumn=0
+setlocal nofoldenable
+setlocal foldexpr=0
+setlocal foldignore=#
+setlocal foldlevel=0
+setlocal foldmarker={{{,}}}
+set foldmethod=marker
+setlocal foldmethod=manual
+setlocal foldminlines=1
+setlocal foldnestmax=20
+set foldtext=MyFoldText()
+setlocal foldtext=MyFoldText()
+setlocal formatexpr=
+setlocal formatoptions=croql
+setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
+setlocal grepprg=
+setlocal iminsert=2
+setlocal imsearch=2
+setlocal include=
+setlocal includeexpr=
+setlocal indentexpr=XmlIndentGet(v:lnum,1)
+setlocal indentkeys=o,O,*<Return>,<>>,<<>,/,{,}
+setlocal noinfercase
+setlocal iskeyword=@,48-57,_,192-255,-
+setlocal keywordprg=
+set linebreak
+setlocal linebreak
+setlocal nolisp
+setlocal nolist
+setlocal nomacmeta
+setlocal makeprg=
+setlocal matchpairs=(:),{:},[:],<:>
+setlocal modeline
+setlocal modifiable
+setlocal nrformats=octal,hex
+set number
+setlocal number
+setlocal numberwidth=4
+setlocal omnifunc=xmlcomplete#CompleteTags
+setlocal path=
+setlocal nopreserveindent
+setlocal nopreviewwindow
+setlocal quoteescape=\\
+setlocal noreadonly
+setlocal norelativenumber
+setlocal norightleft
+setlocal rightleftcmd=search
+setlocal noscrollbind
+setlocal shiftwidth=4
+setlocal noshortname
+setlocal nosmartindent
+setlocal softtabstop=0
+setlocal nospell
+setlocal spellcapcheck=
+setlocal spellfile=
+setlocal spelllang=en
+setlocal statusline=
+setlocal suffixesadd=
+setlocal swapfile
+setlocal synmaxcol=3000
+if &syntax != 'xml'
+setlocal syntax=xml
+endif
+setlocal tabstop=2
+setlocal tags=
+setlocal textwidth=0
+setlocal thesaurus=
+setlocal noundofile
+setlocal nowinfixheight
+setlocal nowinfixwidth
+setlocal wrap
+setlocal wrapmargin=0
+silent! normal! zE
+let s:l = 90 - ((21 * winheight(0) + 41) / 82)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+90
+normal! 026l
+wincmd w
+argglobal
+edit ~/sandbox/code/3rd/KeyRemap4MacBook-dev/screen_setup
+setlocal keymap=
+setlocal noarabic
+setlocal noautoindent
+setlocal balloonexpr=
+setlocal nobinary
+setlocal bufhidden=
+setlocal buflisted
+setlocal buftype=
+setlocal nocindent
+setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
+setlocal cinoptions=
+setlocal cinwords=if,else,while,do,for,switch
+setlocal colorcolumn=
+setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
+setlocal commentstring=
+setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
+setlocal completefunc=
+setlocal nocopyindent
+setlocal cryptmethod=
+setlocal nocursorbind
 setlocal nocursorcolumn
 set cursorline
 setlocal cursorline
@@ -352,7 +596,7 @@ setlocal foldcolumn=4
 setlocal foldenable
 setlocal foldexpr=0
 setlocal foldignore=#
-setlocal foldlevel=0
+setlocal foldlevel=999
 setlocal foldmarker={{{,}}}
 set foldmethod=marker
 setlocal foldmethod=marker
@@ -369,7 +613,141 @@ setlocal imsearch=2
 setlocal include=
 setlocal includeexpr=
 setlocal indentexpr=
-setlocal indentkeys=0{,0},:,0#,!^F,o,O,e
+setlocal indentkeys=0{,0},:,0#,!^F,O,e
+setlocal noinfercase
+setlocal iskeyword=@,48-57,_,192-255,-
+setlocal keywordprg=
+set linebreak
+setlocal linebreak
+setlocal nolisp
+setlocal nolist
+setlocal nomacmeta
+setlocal makeprg=
+setlocal matchpairs=(:),{:},[:],<:>
+setlocal modeline
+setlocal modifiable
+setlocal nrformats=octal,hex
+set number
+setlocal number
+setlocal numberwidth=4
+setlocal omnifunc=
+setlocal path=
+setlocal nopreserveindent
+setlocal nopreviewwindow
+setlocal quoteescape=\\
+setlocal noreadonly
+setlocal norelativenumber
+setlocal norightleft
+setlocal rightleftcmd=search
+setlocal noscrollbind
+setlocal shiftwidth=4
+setlocal noshortname
+setlocal nosmartindent
+setlocal softtabstop=0
+setlocal nospell
+setlocal spellcapcheck=
+setlocal spellfile=
+setlocal spelllang=en
+setlocal statusline=
+setlocal suffixesadd=
+setlocal swapfile
+setlocal synmaxcol=3000
+if &syntax != 'txt'
+setlocal syntax=txt
+endif
+setlocal tabstop=2
+setlocal tags=
+setlocal textwidth=0
+setlocal thesaurus=
+setlocal noundofile
+setlocal nowinfixheight
+setlocal nowinfixwidth
+setlocal wrap
+setlocal wrapmargin=0
+let s:l = 9 - ((8 * winheight(0) + 0) / 0)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+9
+normal! 087l
+wincmd w
+argglobal
+edit ~/ubiqvim.tst.txt
+let s:cpo_save=&cpo
+set cpo&vim
+nmap <buffer> <NL> :call TaskstackMoveItemDown()
+nmap <buffer>  :call TaskstackMoveItemUp()
+nmap <buffer> $ :call TaskstackEOL()
+nmap <buffer> :w :call TaskstackAutosaveReminder()
+nmap <buffer> LL :call TaskstackScratch()
+nmap <buffer> NN :call TaskstackNewItem()
+nmap <buffer> QQ :call TagstackCompleteItem(g:completed_prefix)
+nmap <buffer> XX :call TagstackCompleteItem(g:aborted_prefix)
+nmap <buffer> ZZ :call TaskstackHide()
+nmap <buffer> <F8> :call TaskstackGroups()
+imap <buffer> NN :call TaskstackNewItem()
+imap <buffer> QQ :call TagstackCompleteItem(g:completed_prefix)
+imap <buffer> XX :call TagstackCompleteItem(g:aborted_prefix)
+imap <buffer> ZZ :call TaskstackHide()
+let &cpo=s:cpo_save
+unlet s:cpo_save
+setlocal keymap=
+setlocal noarabic
+setlocal noautoindent
+setlocal balloonexpr=
+setlocal nobinary
+setlocal bufhidden=
+setlocal buflisted
+setlocal buftype=
+setlocal nocindent
+setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
+setlocal cinoptions=
+setlocal cinwords=if,else,while,do,for,switch
+setlocal colorcolumn=
+setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
+setlocal commentstring=
+setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
+setlocal completefunc=
+setlocal nocopyindent
+setlocal cryptmethod=
+setlocal nocursorbind
+setlocal nocursorcolumn
+set cursorline
+setlocal cursorline
+setlocal define=
+setlocal dictionary=
+setlocal nodiff
+setlocal equalprg=
+setlocal errorformat=
+setlocal expandtab
+if &filetype != '_.txt.tst'
+setlocal filetype=_.txt.tst
+endif
+set foldcolumn=4
+setlocal foldcolumn=4
+setlocal foldenable
+setlocal foldexpr=0
+setlocal foldignore=#
+setlocal foldlevel=3
+setlocal foldmarker={{{,}}}
+set foldmethod=marker
+setlocal foldmethod=marker
+setlocal foldminlines=1
+setlocal foldnestmax=20
+set foldtext=MyFoldText()
+setlocal foldtext=MyFoldText()
+setlocal formatexpr=
+setlocal formatoptions=tcq
+setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
+setlocal grepprg=
+setlocal iminsert=2
+setlocal imsearch=2
+setlocal include=
+setlocal includeexpr=
+setlocal indentexpr=
+setlocal indentkeys=0{,0},:,0#,!^F,O,e
 setlocal noinfercase
 setlocal iskeyword=@,48-57,_,192-255,-
 setlocal keywordprg=
@@ -392,6 +770,7 @@ setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
+setlocal norelativenumber
 setlocal norightleft
 setlocal rightleftcmd=search
 setlocal noscrollbind
@@ -400,7 +779,135 @@ setlocal noshortname
 setlocal nosmartindent
 setlocal softtabstop=0
 setlocal nospell
-setlocal spellcapcheck=off
+setlocal spellcapcheck=
+setlocal spellfile=
+setlocal spelllang=en
+setlocal statusline=
+setlocal suffixesadd=
+setlocal swapfile
+setlocal synmaxcol=3000
+if &syntax != '_.txt.tst'
+setlocal syntax=_.txt.tst
+endif
+setlocal tabstop=2
+setlocal tags=
+setlocal textwidth=0
+setlocal thesaurus=
+setlocal noundofile
+setlocal nowinfixheight
+setlocal nowinfixwidth
+setlocal wrap
+setlocal wrapmargin=0
+10
+normal zo
+10
+normal zc
+15
+normal zc
+28
+normal zo
+29
+normal zc
+28
+normal zo
+let s:l = 1 - ((0 * winheight(0) + 19) / 39)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+1
+normal! 0
+wincmd w
+argglobal
+edit ~/sandbox/code/3rd/KeyRemap4MacBook-dev/files/prefpane/include/ubiquitous_vim_bindings.txt
+setlocal keymap=
+setlocal noarabic
+setlocal noautoindent
+setlocal balloonexpr=
+setlocal nobinary
+setlocal bufhidden=
+setlocal buflisted
+setlocal buftype=
+setlocal nocindent
+setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
+setlocal cinoptions=
+setlocal cinwords=if,else,while,do,for,switch
+setlocal colorcolumn=
+setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
+setlocal commentstring=
+setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
+setlocal completefunc=
+setlocal nocopyindent
+setlocal cryptmethod=
+setlocal nocursorbind
+setlocal nocursorcolumn
+set cursorline
+setlocal cursorline
+setlocal define=
+setlocal dictionary=
+setlocal nodiff
+setlocal equalprg=
+setlocal errorformat=
+setlocal expandtab
+if &filetype != 'txt'
+setlocal filetype=txt
+endif
+set foldcolumn=4
+setlocal foldcolumn=4
+setlocal foldenable
+setlocal foldexpr=0
+setlocal foldignore=#
+setlocal foldlevel=999
+setlocal foldmarker={{{,}}}
+set foldmethod=marker
+setlocal foldmethod=marker
+setlocal foldminlines=1
+setlocal foldnestmax=20
+set foldtext=MyFoldText()
+setlocal foldtext=MyFoldText()
+setlocal formatexpr=
+setlocal formatoptions=tcq
+setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
+setlocal grepprg=
+setlocal iminsert=2
+setlocal imsearch=2
+setlocal include=
+setlocal includeexpr=
+setlocal indentexpr=
+setlocal indentkeys=0{,0},:,0#,!^F,O,e
+setlocal noinfercase
+setlocal iskeyword=@,48-57,_,192-255,-
+setlocal keywordprg=
+set linebreak
+setlocal linebreak
+setlocal nolisp
+setlocal nolist
+setlocal nomacmeta
+setlocal makeprg=
+setlocal matchpairs=(:),{:},[:],<:>
+setlocal modeline
+setlocal modifiable
+setlocal nrformats=octal,hex
+set number
+setlocal number
+setlocal numberwidth=4
+setlocal omnifunc=
+setlocal path=
+setlocal nopreserveindent
+setlocal nopreviewwindow
+setlocal quoteescape=\\
+setlocal noreadonly
+setlocal norelativenumber
+setlocal norightleft
+setlocal rightleftcmd=search
+setlocal noscrollbind
+setlocal shiftwidth=4
+setlocal noshortname
+setlocal nosmartindent
+setlocal softtabstop=0
+setlocal nospell
+setlocal spellcapcheck=
 setlocal spellfile=
 setlocal spelllang=en
 setlocal statusline=
@@ -410,242 +917,30 @@ setlocal synmaxcol=3000
 if &syntax != 'txt'
 setlocal syntax=txt
 endif
-setlocal tabstop=4
+setlocal tabstop=2
 setlocal tags=
 setlocal textwidth=0
 setlocal thesaurus=
+setlocal noundofile
 setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 1 - ((0 * winheight(0) + 35) / 71)
+let s:l = 38 - ((0 * winheight(0) + 21) / 43)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-1
+38
 normal! 0
 wincmd w
-argglobal
-edit ~/sandbox/code/3rd/KeyRemap4MacBook/files/prefpane/include/UbiquitousVimBindings.xml
-setlocal keymap=
-setlocal noarabic
-setlocal autoindent
-setlocal nobinary
-setlocal bufhidden=
-setlocal buflisted
-setlocal buftype=
-setlocal nocindent
-setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
-setlocal cinoptions=
-setlocal cinwords=if,else,while,do,for,switch
-setlocal comments=s:<!--,m:\ \ \ \ \ ,e:-->
-setlocal commentstring=<!--%s-->
-setlocal complete=.,w,b,u,t,i
-setlocal completefunc=
-setlocal nocopyindent
-setlocal nocursorcolumn
-set cursorline
-setlocal cursorline
-setlocal define=
-setlocal dictionary=
-setlocal nodiff
-setlocal equalprg=
-setlocal errorformat=
-setlocal expandtab
-if &filetype != 'xml'
-setlocal filetype=xml
-endif
-set foldcolumn=4
-setlocal foldcolumn=4
-setlocal foldenable
-setlocal foldexpr=0
-setlocal foldignore=#
-setlocal foldlevel=0
-setlocal foldmarker={{{,}}}
-set foldmethod=marker
-setlocal foldmethod=syntax
-setlocal foldminlines=1
-setlocal foldnestmax=20
-set foldtext=MyFoldText()
-setlocal foldtext=MyFoldText()
-setlocal formatexpr=
-setlocal formatoptions=croql
-setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
-setlocal grepprg=
-setlocal iminsert=2
-setlocal imsearch=2
-setlocal include=
-setlocal includeexpr=
-setlocal indentexpr=XmlIndentGet(v:lnum,1)
-setlocal indentkeys=o,O,*<Return>,<>>,<<>,/,{,}
-setlocal noinfercase
-setlocal iskeyword=@,48-57,_,192-255,-
-setlocal keywordprg=
-set linebreak
-setlocal linebreak
-setlocal nolisp
-setlocal nolist
-setlocal nomacmeta
-setlocal makeprg=
-setlocal matchpairs=(:),{:},[:]
-setlocal modeline
-setlocal modifiable
-setlocal nrformats=octal,hex
-set number
-setlocal number
-setlocal numberwidth=4
-setlocal omnifunc=xmlcomplete#CompleteTags
-setlocal path=
-setlocal nopreserveindent
-setlocal nopreviewwindow
-setlocal quoteescape=\\
-setlocal noreadonly
-setlocal norightleft
-setlocal rightleftcmd=search
-setlocal noscrollbind
-setlocal shiftwidth=4
-setlocal noshortname
-setlocal nosmartindent
-setlocal softtabstop=0
-setlocal nospell
-setlocal spellcapcheck=off
-setlocal spellfile=
-setlocal spelllang=en
-setlocal statusline=
-setlocal suffixesadd=
-setlocal swapfile
-setlocal synmaxcol=3000
-if &syntax != 'xml'
-setlocal syntax=xml
-endif
-setlocal tabstop=4
-setlocal tags=
-setlocal textwidth=0
-setlocal thesaurus=
-setlocal nowinfixheight
-setlocal nowinfixwidth
-setlocal wrap
-setlocal wrapmargin=0
-let s:l = 1 - ((0 * winheight(0) + 0) / 0)
-if s:l < 1 | let s:l = 1 | endif
-exe s:l
-normal! zt
-1
-normal! 0
-wincmd w
-argglobal
-edit ~/sandbox/code/3rd/KeyRemap4MacBook/files/prefpane/include/UbiquitousVimBindingsDvorak.xml
-setlocal keymap=
-setlocal noarabic
-setlocal autoindent
-setlocal nobinary
-setlocal bufhidden=
-setlocal buflisted
-setlocal buftype=
-setlocal nocindent
-setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
-setlocal cinoptions=
-setlocal cinwords=if,else,while,do,for,switch
-setlocal comments=s:<!--,m:\ \ \ \ \ ,e:-->
-setlocal commentstring=<!--%s-->
-setlocal complete=.,w,b,u,t,i
-setlocal completefunc=
-setlocal nocopyindent
-setlocal nocursorcolumn
-set cursorline
-setlocal cursorline
-setlocal define=
-setlocal dictionary=
-setlocal nodiff
-setlocal equalprg=
-setlocal errorformat=
-setlocal expandtab
-if &filetype != 'xml'
-setlocal filetype=xml
-endif
-set foldcolumn=4
-setlocal foldcolumn=4
-setlocal foldenable
-setlocal foldexpr=0
-setlocal foldignore=#
-setlocal foldlevel=0
-setlocal foldmarker={{{,}}}
-set foldmethod=marker
-setlocal foldmethod=syntax
-setlocal foldminlines=1
-setlocal foldnestmax=20
-set foldtext=MyFoldText()
-setlocal foldtext=MyFoldText()
-setlocal formatexpr=
-setlocal formatoptions=croql
-setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
-setlocal grepprg=
-setlocal iminsert=2
-setlocal imsearch=2
-setlocal include=
-setlocal includeexpr=
-setlocal indentexpr=XmlIndentGet(v:lnum,1)
-setlocal indentkeys=o,O,*<Return>,<>>,<<>,/,{,}
-setlocal noinfercase
-setlocal iskeyword=@,48-57,_,192-255,-
-setlocal keywordprg=
-set linebreak
-setlocal linebreak
-setlocal nolisp
-setlocal nolist
-setlocal nomacmeta
-setlocal makeprg=
-setlocal matchpairs=(:),{:},[:]
-setlocal modeline
-setlocal modifiable
-setlocal nrformats=octal,hex
-set number
-setlocal number
-setlocal numberwidth=4
-setlocal omnifunc=xmlcomplete#CompleteTags
-setlocal path=
-setlocal nopreserveindent
-setlocal nopreviewwindow
-setlocal quoteescape=\\
-setlocal noreadonly
-setlocal norightleft
-setlocal rightleftcmd=search
-setlocal noscrollbind
-setlocal shiftwidth=4
-setlocal noshortname
-setlocal nosmartindent
-setlocal softtabstop=0
-setlocal nospell
-setlocal spellcapcheck=off
-setlocal spellfile=
-setlocal spelllang=en
-setlocal statusline=
-setlocal suffixesadd=
-setlocal swapfile
-setlocal synmaxcol=3000
-if &syntax != 'xml'
-setlocal syntax=xml
-endif
-setlocal tabstop=4
-setlocal tags=
-setlocal textwidth=0
-setlocal thesaurus=
-setlocal nowinfixheight
-setlocal nowinfixwidth
-setlocal wrap
-setlocal wrapmargin=0
-let s:l = 49 - ((33 * winheight(0) + 36) / 72)
-if s:l < 1 | let s:l = 1 | endif
-exe s:l
-normal! zt
-49
-normal! 0
-wincmd w
-exe '1resize ' . ((&lines * 71 + 37) / 74)
-exe 'vert 1resize ' . ((&columns * 164 + 117) / 234)
-exe '2resize ' . ((&lines * 0 + 37) / 74)
-exe 'vert 2resize ' . ((&columns * 164 + 117) / 234)
-exe 'vert 3resize ' . ((&columns * 69 + 117) / 234)
+exe '1resize ' . ((&lines * 82 + 42) / 85)
+exe 'vert 1resize ' . ((&columns * 134 + 134) / 269)
+exe '2resize ' . ((&lines * 0 + 42) / 85)
+exe 'vert 2resize ' . ((&columns * 134 + 134) / 269)
+exe '3resize ' . ((&lines * 39 + 42) / 85)
+exe 'vert 3resize ' . ((&columns * 134 + 134) / 269)
+exe '4resize ' . ((&lines * 43 + 42) / 85)
+exe 'vert 4resize ' . ((&columns * 134 + 134) / 269)
 tabnext 1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf

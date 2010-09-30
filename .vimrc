@@ -196,6 +196,7 @@ nmap <silent> <Leader>] :NERDTreeToggle<CR>
 " }}}
 " Folds: " {{{
 nmap <silent> <Leader>= :call FoldDefaultNodes()<CR>:normal zvzkzjzt<CR><C-l>
+
 nmap <silent> <Leader>0 :silent normal zvzt<CR><C-l>
 
 " }}}
@@ -354,6 +355,7 @@ endfor
 function! EscapeShiftUp(incoming) " {{{
 	return substitute(a:incoming, "\\", "\\\\\\\\", "g")
 endfunction
+
 " }}}
 function! HeaderLocationIndex() "{{{
 	let l:incoming = input("Go To Header: ")
@@ -471,41 +473,6 @@ function! InsertNode(label) "{{{
 endfunction
 
 "}}}
-function! DateNode() "{{{
-	let l:currentdate = TimestampText('date')
-	if FindNode(l:currentdate) == 0
-		silent! call TaskstackScratch()
-		silent! call TaskstackMain()
-		normal zj
-		call append(line(".")- 1, [""])
-		normal k
-		call AppendText(l:currentdate)
-		call FoldWrap()
-		normal zMzo
-		silent! call TaskstackMain()
-	endif
-	call OpenNode(l:currentdate)
-endfunction
-
-"}}}
-function! InsertItem(text, status) "{{{
-	let l:origpos = getpos(".")
-	call DateNode()
-	normal ]zk
-	let l:itemnostatus = substitute(a:text, '^\s*. ', '', 'g')
-	let l:result = printf("%s [%s] %s", a:status, TimestampText('short'), l:itemnostatus)
-	let l:toappend = [l:result]
-	if LineIsWhiteSpace(getline("."))
-		call append(line(".") - 1, l:toappend)
-	else
-		call insert(l:toappend, "", len(l:toappend))
-		call append(line("."), l:toappend)
-	endif
-	call setpos('.', l:origpos)
-	normal zodd
-endfunction
-
-"}}}
 function! FoldWrap() "{{{
 	" appending closemarker first to prevent ruining current folds
 	call append(line("."), CommentedFoldMarkerClose())
@@ -538,7 +505,6 @@ endfunction
 function! FoldDefaultNodes() "{{{
 	" Save positions
 	let l:origpos = getpos(".")
-	normal H
 	let l:origscroll = getpos(".")
 	" Do work
 	normal gg
@@ -555,6 +521,7 @@ function! FoldDefaultNodes() "{{{
 	normal zt
 	call setpos('.', l:origpos)
 endfunction
+
 "}}}
 function! FoldNodeIfDefault() "{{{
 	let l:isdone = match(getline("."), '^done.* {{') > -1
@@ -921,115 +888,31 @@ augroup END
 "}}}
 " PLUGINS: {{{
 
-" Taskstack: {{{
+" TaskStack: " {{{
+let g:aborted_prefix = "x"
+let g:completed_prefix = "o"
 augroup TaskStack
 	au! BufRead *.tst.* set indentkeys-=o indentkeys-=0 showbreak=\ \  filetype=_.tst.txt noai fdm=marker cms= ts=2
 	au BufRead *.tst.* nmap <buffer> $ :call TaskstackEOL()<CR>
-	au BufRead *.tst.* nmap <buffer> XX :call TaskstackAbortItem()<CR>
-	au BufRead *.tst.* imap <buffer> XX <C-c>:call TaskstackAbortItem()<CR>
-	au BufRead *.tst.* nmap <buffer> QQ :call TaskstackCompleteItem()<CR>
-	au BufRead *.tst.* imap <buffer> QQ <C-c>:call TaskstackCompleteItem()<CR>
+	au BufRead *.tst.* nmap <buffer> XX :call TagstackCompleteItem(g:aborted_prefix)<CR>
+	au BufRead *.tst.* imap <buffer> XX <C-c>:call TagstackCompleteItem(g:aborted_prefix)<CR>
+	au BufRead *.tst.* nmap <buffer> QQ :call TagstackCompleteItem(g:completed_prefix)<CR>
+	au BufRead *.tst.* imap <buffer> QQ <C-c>:call TagstackCompleteItem(g:completed_prefix)<CR>
 	au BufRead *.tst.* nmap <buffer> NN :call TaskstackNewItem()<CR>
 	au BufRead *.tst.* imap <buffer> NN <C-c>:call TaskstackNewItem()<CR>
 	au BufRead *.tst.* nmap <buffer> ZZ :call TaskstackHide()<CR>
 	au BufRead *.tst.* imap <buffer> ZZ <C-c>:call TaskstackHide()<CR>
 	au BufRead *.tst.* nmap <buffer> LL :call TaskstackScratch()<CR>
+	au BufRead *.tst.* nmap <buffer> <F8> :call TaskstackGroups()<CR>
 	au BufRead *.tst.* nmap <buffer> <C-j> :call TaskstackMoveItemDown()<CR>
 	au BufRead *.tst.* nmap <buffer> <C-k> :call TaskstackMoveItemUp()<CR>
 	au BufRead *.tst.* nmap <buffer> :w<CR> :call TaskstackAutosaveReminder()<CR>
 	" Use <C-c> to avoid adding or updating a timestamp after editing.
-	au! InsertLeave *.tst.* :call AddOrUpdateTimestamp("")
+	au! InsertLeave *.tst.* :call AddOrUpdateTimestamp("") " FIXME: External Dependency
 	au! FocusLost *.tst.* write
 augroup END
 
-function! TaskstackEOL() " {{{
-	let l:timestamp_location = match(getline("."), TimestampTag("") . ".*")
-	if l:timestamp_location > 0
-		call cursor(line("."), l:timestamp_location)
-	else
-		normal g_
-	end
-endfunction
-
-" }}}
-function! TaskstackMain() " {{{
-	silent! wincmd t
-	if FindNode("DOING") == 0
-		exe "normal ggO" . "DOING"
-		call FoldWrap()
-	end
-	call FindNode("DOING")
-	silent! normal zo
-endfunction
-
-" }}}
-function! TaskstackNewItem() " {{{
-	call AutoTimestampBypass()
-	call TaskstackMain()
-	exe "normal o-  "
-	startinsert
-	call AutoTimestampEnable()
-endfunction
-
-" }}}
-function! TaskstackCompleteItem() " {{{
-	call AutoTimestampBypass()
-	silent! call InsertItem(getline("."), "o")
-	call AutoTimestampEnable()
-endfunction
-
-" }}}
-function! TaskstackAbortItem() " {{{
-	call AutoTimestampBypass()
-	silent! call InsertItem(getline("."), "x")
-	call AutoTimestampEnable()
-endfunction
-
-" }}}
-function! TaskstackScratch() " {{{
-	call AutoTimestampBypass()
-	silent! wincmd b
-	if FindNode("SCRATCH") == 0
-		exe "normal Go" . "SCRATCH"
-		call FoldWrap()
-	end
-	call FindNode("SCRATCH")
-	normal zozt]zk
-	call AutoTimestampEnable()
-endfunction
-
-" }}}
-function! TaskstackMoveItemDown() " {{{
-	normal ddp
-endfunction
-
-" }}}
-function! TaskstackMoveItemUp() range " {{{
-	let l:motion = a:lastline - a:firstline
-	if line(".") != 1
-		normal dd
-		if (l:motion > 0)
-			exe "normal " . l:motion . "k"
-		end
-		normal k
-		normal P
-	end
-endfunction
-
-" }}}
-function! TaskstackHide() " {{{
-	macaction hide:
-endfunction
-
-" }}}
-function! TaskstackAutosaveReminder() " {{{
-	exe ":echo 'Taskstack buffers auto save when you switch away. Use ZZ.'"
-	silent write
-endfunction
-
-" }}}
-
-" }}}
+"}}}
 " Vimperator: " {{{
 augroup Vimperator
 	au! BufRead vimperator-* nmap <buffer> ZZ :call FormFieldArchive() \| :silent write \| :bd \| :macaction hide:<CR>
@@ -1132,6 +1015,7 @@ let html_no_pre = 1
 " }}}
 " AppleScript: " {{{
 au! BufNewFile,BufRead *.applescript   setf applescript
+au! BufNewFile,BufRead *.tst.* set ft=_.txt.tst
 
 " }}}
 

@@ -13,7 +13,9 @@ noremap! <D-Right> <End>
 noremap! <M-Left> <C-Left>
 noremap! <D-Left> <Home>
 inoremap <silent> <S-Tab> =BackwardsSnippet()
-imap <F1> 
+imap <silent> <Plug>IMAP_JumpBack =IMAP_Jumpfunc('b', 0)
+imap <silent> <Plug>IMAP_JumpForward =IMAP_Jumpfunc('', 0)
+imap <F1> :Help
 imap <Nul> :
 map! <D-v> *
 nnoremap <silent>  
@@ -26,17 +28,27 @@ nmap P :call SectionHeadNav(-1, 1)
 nmap p :call SectionHeadNav(-1, 0)
 nmap N :call SectionHeadNav(1, 1)
 nmap n :call SectionHeadNav(1, 0)
+nmap c :silent! lclose
+nmap ? :call FunctionLocationIndex()
+nmap / :call HeaderLocationIndex()
 snoremap <silent> 	 i<Right>=TriggerSnippet()
+vmap <NL> <Plug>IMAP_JumpForward
+nmap <NL> <Plug>IMAP_JumpForward
 nnoremap <silent>  :call Reset() | nohls
 snoremap  b<BS>
-nmap <silent>  :call AddOrUpdateTimestamp("")
+nmap <silent>  :call RemoveTimestamp(g:timestamp_annotation)
+nmap <silent>  :call AddOrUpdateTimestamp(g:timestamp_annotation)
+nmap <silent>  :call RemoveTimestamp("")
+nmap <silent>  :call AddOrUpdateTimestamp("")
+nmap <silent>  :call TimestampAutoUpdateToggle()
+nmap  :call ReloadVimrc() | :echo "Resourced .vimrc."
 snoremap % b<BS>%
 snoremap ' b<BS>'
 nnoremap // q/
 nnoremap :: q:
 nmap :W :w
 nnoremap ?? q?
-nmap <silent> K :e:$
+nmap <silent> K :e:$
 map Q gq
 xmap S <Plug>VSurround
 snoremap U b<BS>U
@@ -47,22 +59,23 @@ map <silent> \w\w <Plug>VimwikiMakeDiaryNote
 map <silent> \ws <Plug>VimwikiUISelect
 map <silent> \wt <Plug>VimwikiTabGoHome
 map <silent> \ww <Plug>VimwikiGoHome
-nmap \cv <Plug>VCSVimDiff
-nmap \cu <Plug>VCSUpdate
-nmap \cU <Plug>VCSUnlock
-nmap \cs <Plug>VCSStatus
-nmap \cr <Plug>VCSReview
-nmap \cq <Plug>VCSRevert
-nmap \cl <Plug>VCSLog
-nmap \cL <Plug>VCSLock
-nmap \ci <Plug>VCSInfo
-nmap \cg <Plug>VCSGotoOriginal
-nmap \cd <Plug>VCSDiff
-nmap \cD <Plug>VCSDelete
-nmap \cc <Plug>VCSCommit
-nmap \cG <Plug>VCSClearAndGotoOriginal
-nmap \cn <Plug>VCSAnnotate
-nmap \ca <Plug>VCSAdd
+nmap <silent> \cv <Plug>VCSVimDiff
+nmap <silent> \cu <Plug>VCSUpdate
+nmap <silent> \cU <Plug>VCSUnlock
+nmap <silent> \cs <Plug>VCSStatus
+nmap <silent> \cr <Plug>VCSReview
+nmap <silent> \cq <Plug>VCSRevert
+nmap <silent> \cn <Plug>VCSAnnotate
+nmap <silent> \cN <Plug>VCSSplitAnnotate
+nmap <silent> \cl <Plug>VCSLog
+nmap <silent> \cL <Plug>VCSLock
+nmap <silent> \ci <Plug>VCSInfo
+nmap <silent> \cg <Plug>VCSGotoOriginal
+nmap <silent> \cG <Plug>VCSClearAndGotoOriginal
+nmap <silent> \cd <Plug>VCSDiff
+nmap <silent> \cD <Plug>VCSDelete
+nmap <silent> \cc <Plug>VCSCommit
+nmap <silent> \ca <Plug>VCSAdd
 map \dk <Plug>DirDiffPrev
 map \dj <Plug>DirDiffNext
 map \dp <Plug>DirDiffPut
@@ -74,21 +87,20 @@ nmap <silent> \fi :call FoldInsert()
 nmap <silent> \fw :call FoldWrap()
 nmap <silent> \sl :call Timestamp("long")
 nmap <silent> \sd :call Timestamp("date")
-nmap <silent> \st :call AddOrUpdateTimestamp(" MARK")
-nmap \po :Help
-nmap \pp :help:winc _:winc |:help 
-nmap \hw :help:silent call AdjustFont(-4):set columns=115 lines=999:winc _:winc |:help 
-nmap \_ Bi<em>ea</em>
-nmap <silent> \q :call FormatSqlStatement()
+nmap \hg :HelpGrep
+nmap \pp :help:winc _:winc |:help 
+nmap \hw :help:silent call AdjustFont(-4):set columns=115 lines=999:winc _:winc |:help 
+nmap \_ Bi<em>ea</em>
+nmap <silent> \q :call FormatSqlStatement()
 nmap <silent> \t :call HandleTS()
 nmap <silent> \/ :call HandleURI()
-nmap <silent> \c :call ScratchBuffer("scratch")
-nmap <silent> \0 :silent normal zvzt
-nmap <silent> \= :call FoldDefaultNodes():normal zvzkzjzt
+nmap <silent> \c :call ScratchBuffer("scratch")
+nmap <silent> \0 :silent normal zvzt
+nmap <silent> \= :call FoldDefaultNodes()<Co\ foormal zvzkzjzt
 nmap <silent> \] :NERDTreeToggle
-nmap \j :call JournalEntry()
-nmap \\ :call CommitSession()
-nmap <silent> \w :!wc -w %
+nmap \j :call JournalEntry()
+nmap \\ :call CommitSession()
+nmap <silent> \w :!wc -w %
 vmap ]% ]%m'gv``
 snoremap ^ b<BS>^
 snoremap ` b<BS>`
@@ -133,6 +145,7 @@ nnoremap <silent> <Plug>VCSVimDiff :VCSVimDiff
 nnoremap <silent> <Plug>VCSUpdate :VCSUpdate
 nnoremap <silent> <Plug>VCSUnlock :VCSUnlock
 nnoremap <silent> <Plug>VCSStatus :VCSStatus
+nnoremap <silent> <Plug>VCSSplitAnnotate :VCSAnnotate!
 nnoremap <silent> <Plug>VCSReview :VCSReview
 nnoremap <silent> <Plug>VCSRevert :VCSRevert
 nnoremap <silent> <Plug>VCSLog :VCSLog
@@ -145,6 +158,12 @@ nnoremap <silent> <Plug>VCSDelete :VCSDelete
 nnoremap <silent> <Plug>VCSCommit :VCSCommit
 nnoremap <silent> <Plug>VCSAnnotate :VCSAnnotate
 nnoremap <silent> <Plug>VCSAdd :VCSAdd
+vmap <silent> <Plug>IMAP_JumpBack `<i=IMAP_Jumpfunc('b', 0)
+vmap <silent> <Plug>IMAP_JumpForward i=IMAP_Jumpfunc('', 0)
+vmap <silent> <Plug>IMAP_DeleteAndJumpBack "_<Del>i=IMAP_Jumpfunc('b', 0)
+vmap <silent> <Plug>IMAP_DeleteAndJumpForward "_<Del>i=IMAP_Jumpfunc('', 0)
+nmap <silent> <Plug>IMAP_JumpBack i=IMAP_Jumpfunc('b', 0)
+nmap <silent> <Plug>IMAP_JumpForward i=IMAP_Jumpfunc('', 0)
 map <M-F3> :call CSV_clear_all()  
 map <S-F3> :call CSV_toggle_field(CSV_get_field(0))
 map <S-F5> :call CSV_goto_highlighted(-1)
@@ -153,12 +172,12 @@ map <C-F5> :call CSV_goto_field()
 map <C-F6> :call CSV_get_new_sep()
 map <silent> <C-S-Tab> :BufExplorerk
 map <silent> <C-Tab> :BufExplorerj
-nmap <Down> :echo "You should have typed j instead."
-nmap <Up> :echo "You should have typed k instead."
-nmap <Right> :echo "You should have typed l instead."
-nmap <Left> :echo "You should have typed h instead."
+nmap <Down> :echo "You should have typed j instead."
+nmap <Up> :echo "You should have typed k instead."
+nmap <Right> :echo "You should have typed l instead."
+nmap <Left> :echo "You should have typed h instead."
 nmap <S-Space> 
-map <F1> 
+map <F1> :Help
 nnoremap <Nul> :
 xmap <BS> "-d
 vmap <D-x> "*d
@@ -168,14 +187,20 @@ nmap <D-v> "*P
 imap S <Plug>ISurround
 imap s <Plug>Isurround
 inoremap <silent> 	 =TriggerSnippet()
+imap <NL> <Plug>IMAP_JumpForward
 imap <silent>  :call Reset() | nohlsa
 imap  :set completeopt+=menuonea
 inoremap <silent> 	 =ShowAvailableSnips()
 imap  <Plug>Isurround
-inoremap <silent>  
+imap <silent>  :call RemoveTimestamp("")a
+imap <silent>  :call AddOrUpdateTimestamp("")a
+imap <silent>  :call TimestampAutoUpdateToggle()
+imap   :call ReloadVimrc() | :echo "Resourced .vimrc."
+imap -> ->{''}h
 let &cpo=s:cpo_save
 unlet s:cpo_save
 set autowrite
+set autowriteall
 set background=dark
 set backspace=indent,eol,start
 set clipboard=unnamed
@@ -185,7 +210,7 @@ set directory=~/.vim/swap//,~/vimfiles/swap//
 set fileencodings=ucs-bom,utf-8,default,latin1
 set foldlevelstart=999
 set fuoptions=maxhorz,maxvert
-set guifont=Inconsolata:h13
+set guifont=Inconsolata:h15
 set guioptions=egmrLt
 set guitablabel=%m\ %N\ %t\ %r
 set helplang=en
@@ -193,7 +218,7 @@ set history=10000
 set hlsearch
 set incsearch
 set indentkeys=0{,0},:,0#,!^F,O,e
-set iskeyword=@,48-57,_,192-255,-
+set iskeyword=@,48-57,_,192-255,#,-
 set langmenu=none
 set laststatus=2
 set listchars=tab:>-,trail:-
@@ -212,12 +237,12 @@ set statusline=%<(%n)\ %m%y%r\ %f\ %=%-14.(%l,%c%V%)\ %P
 set switchbuf=useopen,usetab
 set tabline=%!MyTabLine()
 set tabpagemax=100
-set tabstop=2
+set tabstop=4
 set tags=./tags,tags,~/sandbox/personal/tags
 set termencoding=utf-8
-set transparency=5
+set textwidth=80
 set undolevels=100
-set winheight=10
+set window=65
 set winminheight=0
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
@@ -229,7 +254,6 @@ let NERDTreeMapCloseDir = "x"
 let NERDTreeShowLineNumbers = "0"
 let DirDiffSort =  1 
 let NERDTreeBookmarksFile = "/Users/seth/.NERDTreeBookmarks"
-let NERDTreeMapToggleHidden = "I"
 let NERDTreeWinSize = "31"
 let DirDiffInteractive =  0 
 let NERDTreeMapPreview = "go"
@@ -244,7 +268,6 @@ let NERDTreeMapToggleFilters = "f"
 let NERDTreeMapJumpLastChild = "J"
 let NERDTreeMapJumpPrevSibling = "<C-k>"
 let NERDTreeShowBookmarks = "0"
-let NERDTreeMapOpenExpl = "e"
 let NERDTreeRemoveDirCmd = "rm -rf "
 let CSV_string_delimiter = "\""
 let NERDTreeMouseMode = "1"
@@ -278,6 +301,7 @@ let NERDTreeAutoCenter = "1"
 let DirDiffTextOnlyIn = "Only in "
 let TailMinusF_Center_Win =  0 
 let DirDiffTextAnd = " and "
+let Imap_Debug =  0 
 let NERDTreeMapOpenVSplit = "s"
 let NERDTreeMapDeleteBookmark = "D"
 let AutoHiVersion = "0.2"
@@ -286,53 +310,52 @@ let DirDiffIgnoreCase =  0
 let NERDTreeMapJumpRoot = "P"
 let NERDTreeCopyCmd = "cp -r "
 let NERDTreeMapQuit = "q"
+let Imap_StickyPlaceHolders =  1 
 let NERDTreeMapChangeRoot = "C"
 let NERDTreeSortDirs = "1"
 let NERDTreeMapToggleFiles = "F"
+let Imap_DeleteEmptyPlaceHolders =  1 
 let DirDiffIgnore = ""
 let BufExploreAdd =  1 
+let NERDTreeMapOpenExpl = "e"
 let NERDTreeMapJumpFirstChild = "K"
 let NERDTreeMapOpenRecursively = "O"
 let NERDTreeMapToggleBookmarks = "B"
 let NERDTreeMapUpdir = "u"
 let NERDTreeMapUpdirKeepOpen = "U"
 let NERDTreeQuitOnOpen = "0"
+let NERDTreeMapToggleHidden = "I"
 silent only
 exe "cd " . escape(expand("<sfile>:p:h"), ' ')
 if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +0 ~/sandbox/personal/todo/personal.tst.txt
-badd +5 ~/dad.tst.txt
+badd +2 ~/sandbox/personal/todo/personal.tst.txt
 silent! argdel *
-set lines=69 columns=137
-winpos 700 1028
-buffer ~/sandbox/personal/todo/personal.tst.txt
+set lines=66 columns=115
+winpos 983 1178
+edit ~/sandbox/personal/todo/personal.tst.txt
 set splitbelow splitright
-wincmd _ | wincmd |
-split
-1wincmd k
-wincmd w
 wincmd t
 set winheight=1 winwidth=1
-exe '1resize ' . ((&lines * 39 + 34) / 69)
-exe '2resize ' . ((&lines * 27 + 34) / 69)
 argglobal
 let s:cpo_save=&cpo
 set cpo&vim
-nmap <buffer> <NL> ddp
-nmap <buffer>  ddkP
-nmap <buffer> :w :exec ":echo 'Taskstack buffers auto save when you switch away. Use ZZ.'" | silent write
-nmap <buffer> LL :silent! wincmd b | :silent! call FindNode("SCRATCH")ztzo]zk
-nnoremap <buffer> NN :silent! wincmd t | normal ggzoo- a
-nnoremap <buffer> QQ :silent! call InsertItem(getline("."), "o")
-nnoremap <buffer> XX :silent! call InsertItem(getline("."), "x")
-nnoremap <buffer> ZZ :maca hide:
-imap <buffer> NN NN
-imap <buffer> QQ QQ
-imap <buffer> XX XX
-imap <buffer> ZZ ZZ
+nmap <buffer> <NL> :call TaskstackMoveItemDown()
+nmap <buffer>  :call TaskstackMoveItemUp()
+nmap <buffer> $ :call TaskstackEOL()
+nmap <buffer> :w :call TaskstackAutosaveReminder()
+nmap <buffer> LL :call TaskstackScratch()
+nmap <buffer> NN :call TaskstackNewItem()
+nmap <buffer> QQ :call TagstackCompleteItem(g:completed_prefix)
+nmap <buffer> XX :call TagstackCompleteItem(g:aborted_prefix)
+nmap <buffer> ZZ :call TaskstackHide()
+nmap <buffer> <F8> :call TaskstackGroups()
+imap <buffer> NN :call TaskstackNewItem()
+imap <buffer> QQ :call TagstackCompleteItem(g:completed_prefix)
+imap <buffer> XX :call TagstackCompleteItem(g:aborted_prefix)
+imap <buffer> ZZ :call TaskstackHide()
 let &cpo=s:cpo_save
 unlet s:cpo_save
 setlocal keymap=
@@ -366,8 +389,8 @@ setlocal nodiff
 setlocal equalprg=
 setlocal errorformat=
 setlocal noexpandtab
-if &filetype != '_.tst.txt'
-setlocal filetype=_.tst.txt
+if &filetype != '_.txt.tst'
+setlocal filetype=_.txt.tst
 endif
 set foldcolumn=4
 setlocal foldcolumn=4
@@ -430,321 +453,35 @@ setlocal statusline=
 setlocal suffixesadd=
 setlocal swapfile
 setlocal synmaxcol=3000
-if &syntax != '_.tst.txt'
-setlocal syntax=_.tst.txt
+if &syntax != '_.txt.tst'
+setlocal syntax=_.txt.tst
 endif
 setlocal tabstop=2
 setlocal tags=
 setlocal textwidth=0
 setlocal thesaurus=
 setlocal noundofile
-setlocal nowinfixheight
+set winfixheight
+setlocal winfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-1
+73
 normal zo
-1
+73
 normal zo
-57
-normal zo
-57
-normal zo
-let s:l = 4 - ((3 * winheight(0) + 19) / 39)
+let s:l = 2 - ((0 * winheight(0) + 15) / 31)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-4
-normal! 060l
-wincmd w
-argglobal
-buffer ~/sandbox/personal/todo/personal.tst.txt
-let s:cpo_save=&cpo
-set cpo&vim
-nmap <buffer> <NL> ddp
-nmap <buffer>  ddkP
-nmap <buffer> :w :exec ":echo 'Taskstack buffers auto save when you switch away. Use ZZ.'" | silent write
-nmap <buffer> LL :silent! wincmd b | :silent! call FindNode("SCRATCH")ztzo]zk
-nnoremap <buffer> NN :silent! wincmd t | normal ggzoo- a
-nnoremap <buffer> QQ :silent! call InsertItem(getline("."), "o")
-nnoremap <buffer> XX :silent! call InsertItem(getline("."), "x")
-nnoremap <buffer> ZZ :maca hide:
-imap <buffer> NN NN
-imap <buffer> QQ QQ
-imap <buffer> XX XX
-imap <buffer> ZZ ZZ
-let &cpo=s:cpo_save
-unlet s:cpo_save
-setlocal keymap=
-setlocal noarabic
-setlocal noautoindent
-setlocal balloonexpr=
-setlocal nobinary
-setlocal bufhidden=
-setlocal buflisted
-setlocal buftype=
-setlocal nocindent
-setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
-setlocal cinoptions=
-setlocal cinwords=if,else,while,do,for,switch
-setlocal colorcolumn=
-setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
-setlocal commentstring=
-setlocal complete=.,w,b,u,t,i
-setlocal concealcursor=
-setlocal conceallevel=0
-setlocal completefunc=
-setlocal nocopyindent
-setlocal cryptmethod=
-setlocal nocursorbind
-setlocal nocursorcolumn
-set cursorline
-setlocal cursorline
-setlocal define=
-setlocal dictionary=
-setlocal nodiff
-setlocal equalprg=
-setlocal errorformat=
-setlocal noexpandtab
-if &filetype != '_.tst.txt'
-setlocal filetype=_.tst.txt
-endif
-set foldcolumn=4
-setlocal foldcolumn=4
-setlocal foldenable
-setlocal foldexpr=0
-setlocal foldignore=#
-setlocal foldlevel=0
-setlocal foldmarker={{{,}}}
-set foldmethod=marker
-setlocal foldmethod=marker
-setlocal foldminlines=1
-setlocal foldnestmax=20
-set foldtext=MyFoldText()
-setlocal foldtext=MyFoldText()
-setlocal formatexpr=
-setlocal formatoptions=tcq
-setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
-setlocal grepprg=
-setlocal iminsert=2
-setlocal imsearch=2
-setlocal include=
-setlocal includeexpr=
-setlocal indentexpr=
-setlocal indentkeys=0{,0},:,0#,!^F,O,e
-setlocal noinfercase
-setlocal iskeyword=@,48-57,_,192-255,-
-setlocal keywordprg=
-set linebreak
-setlocal linebreak
-setlocal nolisp
-setlocal nolist
-setlocal nomacmeta
-setlocal makeprg=
-setlocal matchpairs=(:),{:},[:]
-setlocal modeline
-setlocal modifiable
-setlocal nrformats=octal,hex
-set number
-setlocal number
-setlocal numberwidth=4
-setlocal omnifunc=
-setlocal path=
-setlocal nopreserveindent
-setlocal nopreviewwindow
-setlocal quoteescape=\\
-setlocal noreadonly
-setlocal norelativenumber
-setlocal norightleft
-setlocal rightleftcmd=search
-setlocal noscrollbind
-setlocal shiftwidth=4
-setlocal noshortname
-setlocal nosmartindent
-setlocal softtabstop=0
-setlocal nospell
-setlocal spellcapcheck=off
-setlocal spellfile=
-setlocal spelllang=en
-setlocal statusline=
-setlocal suffixesadd=
-setlocal swapfile
-setlocal synmaxcol=3000
-if &syntax != '_.tst.txt'
-setlocal syntax=_.tst.txt
-endif
-setlocal tabstop=2
-setlocal tags=
-setlocal textwidth=0
-setlocal thesaurus=
-setlocal noundofile
-setlocal nowinfixheight
-setlocal nowinfixwidth
-setlocal wrap
-setlocal wrapmargin=0
-1077
-normal zo
-1330
-normal zc
-1354
-normal zc
-1366
-normal zc
-1384
-normal zc
-1077
-normal zo
-let s:l = 1330 - ((253 * winheight(0) + 13) / 27)
-if s:l < 1 | let s:l = 1 | endif
-exe s:l
-normal! zt
-1330
+2
 normal! 0
-wincmd w
-exe '1resize ' . ((&lines * 39 + 34) / 69)
-exe '2resize ' . ((&lines * 27 + 34) / 69)
-tabedit ~/dad.tst.txt
-set splitbelow splitright
-wincmd t
-set winheight=1 winwidth=1
-argglobal
-let s:cpo_save=&cpo
-set cpo&vim
-nmap <buffer> <NL> ddp
-nmap <buffer>  ddkP
-nmap <buffer> :w :exec ":echo 'Taskstack buffers auto save when you switch away. Use ZZ.'" | silent write
-nmap <buffer> LL :silent! wincmd b | :silent! call FindNode("SCRATCH")ztzo]zk
-nnoremap <buffer> NN :silent! wincmd t | normal ggzoo- a
-nnoremap <buffer> QQ :silent! call InsertItem(getline("."), "o")
-nnoremap <buffer> XX :silent! call InsertItem(getline("."), "x")
-nnoremap <buffer> ZZ :maca hide:
-imap <buffer> NN NN
-imap <buffer> QQ QQ
-imap <buffer> XX XX
-imap <buffer> ZZ ZZ
-let &cpo=s:cpo_save
-unlet s:cpo_save
-setlocal keymap=
-setlocal noarabic
-setlocal noautoindent
-setlocal balloonexpr=
-setlocal nobinary
-setlocal bufhidden=
-setlocal buflisted
-setlocal buftype=
-setlocal nocindent
-setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
-setlocal cinoptions=
-setlocal cinwords=if,else,while,do,for,switch
-setlocal colorcolumn=
-setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
-setlocal commentstring=
-setlocal complete=.,w,b,u,t,i
-setlocal concealcursor=
-setlocal conceallevel=0
-setlocal completefunc=
-setlocal nocopyindent
-setlocal cryptmethod=
-setlocal nocursorbind
-setlocal nocursorcolumn
-set cursorline
-setlocal cursorline
-setlocal define=
-setlocal dictionary=
-setlocal nodiff
-setlocal equalprg=
-setlocal errorformat=
-setlocal noexpandtab
-if &filetype != '_.tst.txt'
-setlocal filetype=_.tst.txt
-endif
-set foldcolumn=4
-setlocal foldcolumn=4
-setlocal foldenable
-setlocal foldexpr=0
-setlocal foldignore=#
-setlocal foldlevel=999
-setlocal foldmarker={{{,}}}
-set foldmethod=marker
-setlocal foldmethod=marker
-setlocal foldminlines=1
-setlocal foldnestmax=20
-set foldtext=MyFoldText()
-setlocal foldtext=MyFoldText()
-setlocal formatexpr=
-setlocal formatoptions=tcq
-setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
-setlocal grepprg=
-setlocal iminsert=2
-setlocal imsearch=2
-setlocal include=
-setlocal includeexpr=
-setlocal indentexpr=
-setlocal indentkeys=0{,0},:,0#,!^F,O,e
-setlocal noinfercase
-setlocal iskeyword=@,48-57,_,192-255,-
-setlocal keywordprg=
-set linebreak
-setlocal linebreak
-setlocal nolisp
-setlocal nolist
-setlocal nomacmeta
-setlocal makeprg=
-setlocal matchpairs=(:),{:},[:]
-setlocal modeline
-setlocal modifiable
-setlocal nrformats=octal,hex
-set number
-setlocal number
-setlocal numberwidth=4
-setlocal omnifunc=
-setlocal path=
-setlocal nopreserveindent
-setlocal nopreviewwindow
-setlocal quoteescape=\\
-setlocal noreadonly
-setlocal norelativenumber
-setlocal norightleft
-setlocal rightleftcmd=search
-setlocal noscrollbind
-setlocal shiftwidth=4
-setlocal noshortname
-setlocal nosmartindent
-setlocal softtabstop=0
-setlocal nospell
-setlocal spellcapcheck=
-setlocal spellfile=
-setlocal spelllang=en
-setlocal statusline=
-setlocal suffixesadd=
-setlocal swapfile
-setlocal synmaxcol=3000
-if &syntax != '_.tst.txt'
-setlocal syntax=_.tst.txt
-endif
-setlocal tabstop=2
-setlocal tags=
-setlocal textwidth=0
-setlocal thesaurus=
-setlocal noundofile
-setlocal nowinfixheight
-setlocal nowinfixwidth
-setlocal wrap
-setlocal wrapmargin=0
-1
-normal zo
-let s:l = 5 - ((4 * winheight(0) + 33) / 67)
-if s:l < 1 | let s:l = 1 | endif
-exe s:l
-normal! zt
-5
-normal! 013l
 tabnext 1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf
 endif
 unlet! s:wipebuf
-set winheight=10 winwidth=20 shortmess=filnxtToOIA
+set winheight=1 winwidth=20 shortmess=filnxtToOIA
 let s:sx = expand("<sfile>:p:r")."x.vim"
 if file_readable(s:sx)
   exe "source " . fnameescape(s:sx)
