@@ -22,7 +22,7 @@ if version >= 700
 		color kellys
 		" max vertical and horizontal columns on resize to full screen
 		set fuopt=maxhorz,maxvert
-		set transparency=5
+		" set transparency=5
 		set antialias
 		set gfn=Inconsolata:h15
 		" set a reasonable window size
