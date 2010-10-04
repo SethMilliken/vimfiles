@@ -289,6 +289,9 @@ augroup cmdline-window
 	" n.b. Deliberately overloading <C-y> here.
 	au CmdwinEnter * map <buffer> <C-y> <C-c><CR>q:
 	au CmdwinEnter * inoremap <buffer> <C-y> <Esc><C-y>
+	" Allow commands that echo to work.
+	au CmdwinEnter * nnoremap <buffer> <CR> 0y$<C-c><C-c>:<C-r>"<CR>
+	au CmdwinEnter * inoremap <buffer> <CR> <Esc>0y$<C-c><C-c>:<C-r>"<CR>
 	" Quickly close cmdline-window
 	au CmdwinEnter * map <buffer> ZZ <C-c><C-c>
 	au CmdwinEnter * inoremap <buffer> ZZ <Esc>ZZ
