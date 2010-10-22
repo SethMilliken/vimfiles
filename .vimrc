@@ -27,6 +27,9 @@
 "	- consider: :: shortcut worth the : pause? (remember that the pause is essentially only percieved; immediately continuing to type the : command works fine)
 
 "}}}
+" Pathogen: " {{{
+call pathogen#runtime_append_all_bundles() 
+" }}}
 " DEFAULTS: from example .vimrc {{{
 " When started as "evim", evim.vim will already have done these settings.
 if v:progname =~? "evim"
@@ -907,6 +910,8 @@ augroup TaskStack
 	au BufRead *.tst.* nmap <buffer> <C-j> :call TaskstackMoveItemDown()<CR>
 	au BufRead *.tst.* nmap <buffer> <C-k> :call TaskstackMoveItemUp()<CR>
 	au BufRead *.tst.* nmap <buffer> :w<CR> :call TaskstackAutosaveReminder()<CR>
+	au BufRead *.tst.* nmap <buffer> <C-p> ?^@.* {{{<CR>:nohls<CR>
+	au BufRead *.tst.* nmap <buffer> <C-n> /^@.* {{{<CR>:nohls<CR>
 	" Use <C-c> to avoid adding or updating a timestamp after editing.
 	au! InsertLeave *.tst.* :call AddOrUpdateTimestamp("") " FIXME: External Dependency
 	au! FocusLost *.tst.* write
@@ -937,9 +942,23 @@ augroup END
 au! FileType xhtml inoremap <buffer> > <Esc>:call AutoTagComplete()<CR>
 
 " }}}
+" Help Files: " {{{
+augroup helpfiles 
+	au! FileType help nnoremap <buffer> <silent> <C-p> ?^[=-]\{1,}$<CR>zt:nohlsearch<CR>
+	au FileType help nnoremap <buffer> <silent> <C-n> /^[=-]\{1,}$<CR>zt:nohlsearch<CR>
+	au FileType help nnoremap <buffer> <silent> <S-Tab> ?\|[^\[:space:]]*\|<CR>zz:nohlsearch<CR>
+	au FileType help nnoremap <buffer> <silent> <Tab> /\|[^\[:space:]]*\|<CR>zz:nohlsearch<CR>
+	au FileType help nnoremap <buffer> <silent> <CR> <C-]>
+	au FileType help nnoremap <buffer> <silent> <BS> <C-o>
+augroup END
+
+" }}}
 " Python Syntax: " {{{
 let python_highlight_all = 1
 
+" }}}
+" PickAColor: " {{{
+let g:pickacolor_use_web_colors = 1
 " }}}
 " HTML: " {{{
 let g:no_html_tab_mapping=1
@@ -995,11 +1014,15 @@ map <silent> <Leader>snip <Esc>:call ResetSnippets() \| call GetSnippets(g:snipp
 " Vimwiki: " {{{
 map <silent> <Leader>w2 <Esc>:w<CR>:VimwikiAll2HTML<CR><Esc>:echo "Saved wiki to HTML."<CR>
 "" let wiki.nested_syntaxes = {'python': 'python'}
+augroup vimwiki
+	au! FileType vimwiki map <buffer> <silent> <C-p> ?=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
+	au FileType vimwiki map <buffer> <silent> <C-n> /=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
+augroup END
 let g:vimwiki_hl_headers = 1 				" hilight header colors
 let g:vimwiki_hl_cb_checked = 1 			" hilight todo item colors
 let g:vimwiki_list_ignore_newline = 0 		" convert newlines to <br /> in list
-let g:vimwiki_folding = 0                   " don't allow outline folding
-let g:vimwiki_fold_lists = 0                " don't allow folding of list subitems
+let g:vimwiki_folding = 1                   " outline folding
+let g:vimwiki_fold_lists = 1                " folding of list subitems
 let g:vimwiki_list = [{'path': '~/sandbox/personal/vimwiki/', 'index': 'PersonalWiki'}, {'path': '~/sandbox/public/wiki', 'index': 'SethMilliken', 'auto_export': 1}, {'path': '~/sandbox/work/wiki/', 'index': 'SethMilliken', 'html_header': '~/sandbox/work/wiki/header.tpl', 'auto_export': 1}]
 
 " }}}
