@@ -118,9 +118,7 @@ set shiftwidth=4					" smaller tab stops
 set tabstop=4						" reasonable tab stop width
 set softtabstop=0					" use only tabs	
 set hlsearch 						" highlight searches
-									" set noaw
-set nobackup						" don't like ~ files littered about
-									" TODO: can these be stored centrally a la swap?
+set nobackup						" don't like ~ files littered about; don't need
 set laststatus=2					" always show the status line
 set diffopt+=vertical				" use vertical splits for diff
 set splitright						" open vertical splits to the right
@@ -132,6 +130,9 @@ set undolevels=100					" keep lots of undo history
 set foldlevelstart=999   			" don't use a default fold level; all folds open by default
 set fdm=marker						" make the default foldmethod markers
 set foldcolumn=4					" trying out fold indicator column
+set display+=lastline				" always show as much of the last line as possible
+set display+=uhex					" show unprintable hex characters as <xx>
+if version > 702 | set rnu | end	" use relative line numbers
 
 " Tags: universal location
 set tags+=$HOME/sandbox/personal/tags
@@ -239,14 +240,16 @@ function! HelpSmart(...)" {{{
 	let l:additional = ""
 	let l:setup = ""
 	let l:topic = input("Requested " . l:commandname . "topic: ", "", "help")
-	tabfirst
-	if expand("%") == ""
-		let l:additional = " | only | normal zt"
-	elseif &buftype != "help"
-		let l:setup = "0tab "
+	if len(l:topic) > 0
+		tabfirst
+		if expand("%") == ""
+			let l:additional = " | only | normal zt"
+		elseif &buftype != "help"
+			let l:setup = "0tab "
+		endif
+		exec ":" . l:setup . l:commandname . l:topic . l:additional
 	endif
-	exec ":" . l:setup . l:commandname . l:topic . l:additional
-	endfunction
+endfunction
 
 " }}}
 " }}}
@@ -321,18 +324,15 @@ endfunction
 
 " }}}
 " Timestamps: {{{
-let g:timestamp_matchstring = '[0-9]\\{4}-[0-9]\\{2}-[0-9]\\{2} [0-9:]\\{8} [A-Z]\\{3}'
-let g:timestamp_annotation = ' MARK'
+let g:timestamp_default_annotation = ""
+let g:timestamp_matchstring = '[0-9]\{4}-[0-9]\{2}-[0-9]\{2} [0-9:]\{8} [A-Z]\{3}'
+let g:timestamp_annotated_matchstring = escape(g:timestamp_matchstring . '\s*\({\(\w\+\s*\)*}\)*', '\')
 " Note: setting g:auto_timestamp_bypass will deactivate autotimestamp in contexts they would normally be active
 " yes, kids, I know WTF I'm doing WRT <C-y>
-nmap <silent> <C-y><C-t> :call TimestampAutoUpdateToggle()<CR>
-imap <silent> <C-y><C-t> <Esc>:call TimestampAutoUpdateToggle()<CR>
+nmap <silent> <C-y><C-u> :call TimestampAutoUpdateToggle()<CR>
 nmap <silent> <C-y><C-y> :call AddOrUpdateTimestamp("")<CR>
-imap <silent> <C-y><C-y> <Esc>:call AddOrUpdateTimestamp("")<CR>a
-nmap <silent> <C-y><C-x> :call RemoveTimestamp("")<CR>
-imap <silent> <C-y><C-x> <Esc>:call RemoveTimestamp("")<CR>a
-nmap <silent> <C-y><C-h> :call AddOrUpdateTimestamp(g:timestamp_annotation)<CR>
-nmap <silent> <C-y><C-n> :call RemoveTimestamp(g:timestamp_annotation)<CR>
+nmap <silent> <C-y><C-t> :call AddOrUpdateTimestampSolicitingAnnotation()<CR>
+nmap <silent> <C-y><C-x> :call RemoveTimestamp()<CR>
 nmap <silent> <Leader>sd :call Timestamp("date")<CR>
 nmap <silent> <Leader>sl :call Timestamp("long")<CR>
 nmap <silent> <Leader>fw :call FoldWrap()<CR>
@@ -387,8 +387,12 @@ function! HeaderLocationIndex() "{{{
 endfunction
 
 "}}}
+function! CompletionFunctionList(A,L,P)
+	return "foo\nbar\nbaz"
+endfunction
+
 function! FunctionLocationIndex() "{{{
-	let l:incoming = input("Go to function: ")
+	let l:incoming = input("Go to function: ", "", "custom,CompletionFunctionList")
 	lgetexpr "" " Clear the location list
 	exec "silent! lvimgrep /^\\s*function.*" . l:incoming . "\\c.*/ %"
 	let l:locresults = getloclist("0")
@@ -399,7 +403,6 @@ function! FunctionLocationIndex() "{{{
 		echo "No match for: " . l:incoming
 	end
 endfunction
-
 "}}}
 
 " Text: tools
@@ -466,13 +469,13 @@ endfunction
 
 "}}}
 function! InsertNode(label) "{{{
-	let l:origpos = getpos(".")
+	let l:origview = winsaveview()
 	call append(line(".") - 1, [""])
 	normal k
 	call AppendText(a:label)
 	call FoldWrap()
 	call OpenNode(a:label)
-	call setpos('.', l:origpos)
+	call winrestview(l:origview)
 endfunction
 
 "}}}
@@ -627,23 +630,48 @@ function! TimestampAutoUpdateToggle() "{{{
 endfunction
 
 "}}}
+function! AddOrUpdateTimestampSolicitingAnnotation() "{{{
+	if !exists("g:auto_timestamp_bypass")
+		if IsTimestampUpdateOkay(getline(".")) > 0
+			let l:default_prompt = g:timestamp_default_annotation
+			let l:matchstring = g:timestamp_matchstring . '\zs\ze\s*\({\zs\(\w\+\s*\)*\ze}\)*$'
+			let l:originalannotations = matchstr(getline("."), l:matchstring)
+			if len(l:originalannotations) > 0
+				let l:default_prompt = l:originalannotations
+			end
+			let l:annotation = input("Annotation: ", Strip(l:default_prompt))
+			if len(l:annotation) > 0
+				call AddOrUpdateTimestamp(Strip(l:annotation))
+			else
+				if len(l:originalannotations) > 0
+					silent! call RemoveTimestamp()
+					silent! call AddOrUpdateTimestamp("")
+					echo "Annotations removed."
+				else
+					echo "Annotation aborted."
+				end
+			end
+		end
+	end
+endfunction
+
+"}}}
 function! AddOrUpdateTimestamp(annotation) "{{{
 	if !exists("g:auto_timestamp_bypass")
 		if IsTimestampUpdateOkay(getline(".")) > 0
+			let l:bufferdirty = &modified
 			let l:origpos = getpos(".")
-			let l:timestampmatch = TimestampTag(a:annotation)
-			let l:hastimestamp = match(getline("."), l:timestampmatch)
-			let l:newtimestamp = substitute(CommentStringFull(), "%s", TimestampText("short") . a:annotation, "")
+			let l:hasbasictimestamp = match(getline("."), TimestampPattern())
+			let l:annotation = len(a:annotation) > 0 ? '{' . a:annotation . '}' : ""
+			let l:newtimestamp = substitute(CommentStringFull(), "%s", TimestampText("short") . " " . l:annotation, "")
 			silent! undojoin
-			if l:hastimestamp < 0
-				call AppendText(l:newtimestamp)
+			if l:hasbasictimestamp > 0
+				call setline(".", substitute(getline("."), TimestampAnnotatedPattern(), l:newtimestamp, ""))
 			else
-				call setline(".", substitute(getline("."), l:timestampmatch, l:newtimestamp, ""))
-			end
-			if len(a:annotation) > 1
-				write
+				call AppendText(l:newtimestamp)
 			end
 			call setpos('.', l:origpos)
+			if !l:bufferdirty | write | end
 		end
 	end
 endfunction
@@ -669,8 +697,13 @@ function! IsTimestampUpdateOkay(line) "{{{
 endfunction
 
 "}}}
-function! TimestampTag(annotation) "{{{
-	return substitute(CommentStringFull(), "%s", g:timestamp_matchstring . a:annotation, "")
+function! TimestampAnnotatedPattern() "{{{
+	return substitute(CommentStringFull(), "%s", g:timestamp_annotated_matchstring, "") . '\s*$'
+endfunction
+
+"}}}
+function! TimestampPattern() "{{{
+	return substitute(CommentStringFull(), "%s", escape(g:timestamp_matchstring, '\'), "")
 endfunction
 
 "}}}
@@ -686,9 +719,10 @@ function! AutoTimestampEnable() " {{{
 endfunction
 
 " }}}
-function! RemoveTimestamp(annotation) "{{{
-	let l:timestampmatch = substitute(CommentStringFull(), "%s", g:timestamp_matchstring . a:annotation, "")
-	call setline(".", substitute(getline("."), l:timestampmatch, "", ""))
+function! RemoveTimestamp() "{{{
+	let l:bufferdirty = &modified
+	call setline(".", substitute(getline("."), '\s*' . TimestampAnnotatedPattern(), "", ""))
+	if !l:bufferdirty | write | end
 endfunction
 
 "}}}
@@ -897,21 +931,23 @@ let g:completed_prefix = "o"
 augroup TaskStack
 	au! BufRead *.tst.* set indentkeys-=o indentkeys-=0 showbreak=\ \  filetype=_.tst.txt noai fdm=marker cms= ts=2
 	au BufRead *.tst.* nmap <buffer> $ :call TaskstackEOL()<CR>
-	au BufRead *.tst.* nmap <buffer> XX :call TagstackCompleteItem(g:aborted_prefix)<CR>
-	au BufRead *.tst.* imap <buffer> XX <C-c>:call TagstackCompleteItem(g:aborted_prefix)<CR>
-	au BufRead *.tst.* nmap <buffer> QQ :call TagstackCompleteItem(g:completed_prefix)<CR>
-	au BufRead *.tst.* imap <buffer> QQ <C-c>:call TagstackCompleteItem(g:completed_prefix)<CR>
+	au BufRead *.tst.* nmap <buffer> XX :call TaskstackCompleteItem(g:aborted_prefix)<CR>
+	au BufRead *.tst.* imap <buffer> XX <C-c>:call TaskstackCompleteItem(g:aborted_prefix)<CR>
+	au BufRead *.tst.* nmap <buffer> QQ :call TaskstackCompleteItem(g:completed_prefix)<CR>
+	au BufRead *.tst.* imap <buffer> QQ <C-c>:call TaskstackCompleteItem(g:completed_prefix)<CR>
 	au BufRead *.tst.* nmap <buffer> NN :call TaskstackNewItem()<CR>
 	au BufRead *.tst.* imap <buffer> NN <C-c>:call TaskstackNewItem()<CR>
 	au BufRead *.tst.* nmap <buffer> ZZ :call TaskstackHide()<CR>
 	au BufRead *.tst.* imap <buffer> ZZ <C-c>:call TaskstackHide()<CR>
 	au BufRead *.tst.* nmap <buffer> LL :call TaskstackScratch()<CR>
-	au BufRead *.tst.* nmap <buffer> <F8> :call TaskstackGroups()<CR>
-	au BufRead *.tst.* nmap <buffer> <C-j> :call TaskstackMoveItemDown()<CR>
-	au BufRead *.tst.* nmap <buffer> <C-k> :call TaskstackMoveItemUp()<CR>
+	au BufRead *.tst.* nmap <buffer> <silent> <C-j> :call TaskstackMoveItemDown()<CR>
+	au BufRead *.tst.* nmap <buffer> <silent> <C-k> :call TaskstackMoveItemUp()<CR>
+	au BufRead *.tst.* nmap <buffer> <silent> <C-p> ?^@.* {\{3\}<CR>:nohls<CR>
+	au BufRead *.tst.* nmap <buffer> <silent> <C-n> /^@.* {\{3\}<CR>:nohls<CR>
+	au BufRead *.tst.* nmap <buffer> <silent> <Tab> /^\([A-Z]\+ \)\{1,\}<CR>:nohls<CR>
+	au BufRead *.tst.* nmap <buffer> <silent> <S-Tab> ?^\([A-Z]\+ \)\{1,\}<CR>:nohls<CR>
 	au BufRead *.tst.* nmap <buffer> :w<CR> :call TaskstackAutosaveReminder()<CR>
-	au BufRead *.tst.* nmap <buffer> <C-p> ?^@.* {{{<CR>:nohls<CR>
-	au BufRead *.tst.* nmap <buffer> <C-n> /^@.* {{{<CR>:nohls<CR>
+	au BufRead *.tst.* nmap <buffer> <F8> :call TaskstackGroups()<CR>
 	" Use <C-c> to avoid adding or updating a timestamp after editing.
 	au! InsertLeave *.tst.* :call AddOrUpdateTimestamp("") " FIXME: External Dependency
 	au! FocusLost *.tst.* write
