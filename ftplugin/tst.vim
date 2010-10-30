@@ -104,23 +104,23 @@ endfunction " }}}
 
 " Navigation:
 function! CreateNodeUnderNodeIfMissing(nodename, previous_node_name) " {{{
-		let l:origpos = getpos(".")
-		if FindNode(a:nodename) == 0
-				if a:previous_node_name != ""
-						if FindNode(a:previous_node_name) == 0
-								call CreateNodeUnderNodeIfMissing(a:previous_node_name, "")
-						end
-						call FoldUnfolded()
-						normal o
-				else
-						normal ggO
-						normal k
-				end
-				exe "normal I" . a:nodename
-				call FoldWrap()
-				call FoldUnfolded()
-		end
-		call setpos('.', l:origpos)
+	let l:origview = winsaveview()
+	if FindNode(a:nodename) == 0
+			if a:previous_node_name != ""
+					if FindNode(a:previous_node_name) == 0
+							call CreateNodeUnderNodeIfMissing(a:previous_node_name, "")
+					end
+					call FoldUnfolded()
+					normal o
+			else
+					normal ggO
+					normal k
+			end
+			exe "normal I" . a:nodename
+			call FoldWrap()
+			call FoldUnfolded()
+	end
+	call winrestview(l:origview)
 endfunction
 
 " }}}
@@ -151,24 +151,24 @@ endfunction
 
 " }}}
 function! TaskstackDate() "{{{
-		let l:currentdate = TimestampText('date')
-		if FindNode(l:currentdate) == 0
-				let l:origpos = getpos(".")
-				if FindNode(s:group_node_name) != 0
-						call TaskstackGroups()
-				else
-						call TaskstackMain()
-				end
-				normal zj
-				call append(line(".")- 1, [""])
-				normal k
-				call AppendText(l:currentdate)
-				call FoldWrap()
-				" normal zMzo
-				" silent! call TaskstackMain()
-				call setpos('.', l:origpos)
-		endif
-		call OpenNode(l:currentdate)
+	let l:currentdate = TimestampText('date')
+	if FindNode(l:currentdate) == 0
+		let l:origview = winsaveview()
+		if FindNode(s:group_node_name) != 0
+				call TaskstackGroups()
+		else
+				call TaskstackMain()
+		end
+		normal zj
+		call append(line(".") - 1, [""])
+		normal k
+		call AppendText(l:currentdate)
+		call FoldWrap()
+		" normal zMzo
+		" silent! call TaskstackMain()
+		call winrestview(l:origview)
+	endif
+	call OpenNode(l:currentdate)
 endfunction
 
 "}}}
@@ -196,15 +196,15 @@ function! TaskstackNewItem() " {{{
 endfunction
 
 " }}}
-function! TagstackCompleteItem(prefix) " {{{
+function! TaskstackCompleteItem(prefix) " {{{
 	call AutoTimestampBypass() " FIXME: External Dependency
-	silent! call InsertItem(getline("."), a:prefix) " FIXME: External Dependency
+	call MoveItemToDateNode(getline("."), a:prefix)
 	call AutoTimestampEnable() " FIXME: External Dependency
 endfunction
 
 " }}}
-function! InsertItem(text, status) "{{{
-	let l:origpos = getpos(".")
+function! MoveItemToDateNode(text, status) "{{{
+	let l:origview = winsaveview()
 	call TaskstackDate()
 	normal ]zk
 	let l:itemnostatus = substitute(a:text, '^\s*. ', '', 'g')
@@ -216,8 +216,9 @@ function! InsertItem(text, status) "{{{
 		call insert(l:toappend, "", len(l:toappend))
 		call append(line("."), l:toappend)
 	endif
-	call setpos('.', l:origpos)
-	normal zodd
+	call winrestview(l:origview)
+	normal dd
+	echo "Item marked as completed and moved."
 endfunction
 
 "}}}
