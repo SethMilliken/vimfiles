@@ -28,11 +28,14 @@ if version >= 700
 		" set a reasonable window size
 		winsize 345 500
 	else
-		" set a reasonable window size
-		winsize 150 200
-		set gfn=Terminal:h6
-		" Presentation mode
-		"set gfn=Bitstream_Vera_Sans_Mono:h11
+		if has("win")
+			set gfn=Terminal:h6
+			" set a reasonable window size
+			winsize 150 200
+		else
+			set gfn=DejaVu\ Sans\ Mono\ 8
+			set guioptons-=m
+		end
 	end
 	" yank to system clipboard
     set clipboard=unnamed
