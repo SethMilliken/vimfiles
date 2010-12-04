@@ -211,6 +211,7 @@ nmap <silent> <Leader>c :call ScratchBuffer("scratch")<CR>
 " Open URIs: " {{{
 nmap <silent> <Leader>/ :call HandleURI()<CR>
 nmap <silent> <Leader>t :call HandleTS()<CR>
+nmap <silent> <Leader>j :call HandleMantis()<CR>
 
 " }}}
 " SQL: grab and format sql statement from current line " {{{
@@ -222,7 +223,7 @@ nmap <Leader>_ Bi<em><Esc>ea</em>
 
 " }}}
 " Completion: show completion preview, without actually completing " {{{
-imap <C-p> <Esc>:set completeopt+=menuone<CR>a<C-n><C-p>
+inoremap <C-p> <Esc>:set completeopt+=menuone<CR>a<C-n><C-p>
 
 " }}}
 " Help: help help help {{{
@@ -824,6 +825,23 @@ function! Reset() " {{{
 endfunction
 
 " }}}
+function! HandleMantis() " {{{
+  let l:ticket = matchstr(getline("."), 'JR#[0-9]\+')
+  let l:number = matchstr(l:ticket, '[0-9]\+')
+  if l:ticket != "<Esc>:"
+	let l:uri = 'https://mantis.janrain.com/view.php?id=' . l:number
+	if has("win32")
+	  exec "silent !start rundll32.exe url.dll,FileProtocolHandler " . l:uri
+	else
+	  exec "silent !open \"" . l:uri . "\""
+	endif
+	echo "Opened Ticket: " . l:number
+  else
+	  echo "No ticket found in line."
+  endif
+endfunction
+
+" }}}
 function! HandleTS() " {{{
   let l:ticket = matchstr(getline("."), 'TS#[0-9]\+')
   let l:number = matchstr(l:ticket, '[0-9]\+')
@@ -930,7 +948,6 @@ let g:aborted_prefix = "x"
 let g:completed_prefix = "o"
 augroup TaskStack
 	au! BufRead *.tst.* set indentkeys-=o indentkeys-=0 showbreak=\ \  filetype=_.tst.txt noai fdm=marker cms= ts=2
-	au BufRead *.tst.* nmap <buffer> $ :call TaskstackEOL()<CR>
 	au BufRead *.tst.* nmap <buffer> XX :call TaskstackCompleteItem(g:aborted_prefix)<CR>
 	au BufRead *.tst.* imap <buffer> XX <C-c>:call TaskstackCompleteItem(g:aborted_prefix)<CR>
 	au BufRead *.tst.* nmap <buffer> QQ :call TaskstackCompleteItem(g:completed_prefix)<CR>
@@ -940,6 +957,7 @@ augroup TaskStack
 	au BufRead *.tst.* nmap <buffer> ZZ :call TaskstackHide()<CR>
 	au BufRead *.tst.* imap <buffer> ZZ <C-c>:call TaskstackHide()<CR>
 	au BufRead *.tst.* nmap <buffer> LL :call TaskstackScratch()<CR>
+	au BufRead *.tst.* nmap <buffer> <silent> $ :call TaskstackEOL()<CR>
 	au BufRead *.tst.* nmap <buffer> <silent> <C-j> :call TaskstackMoveItemDown()<CR>
 	au BufRead *.tst.* nmap <buffer> <silent> <C-k> :call TaskstackMoveItemUp()<CR>
 	au BufRead *.tst.* nmap <buffer> <silent> <C-p> ?^@.* {\{3\}<CR>:nohls<CR>
@@ -1053,6 +1071,8 @@ map <silent> <Leader>w2 <Esc>:w<CR>:VimwikiAll2HTML<CR><Esc>:echo "Saved wiki to
 augroup vimwiki
 	au! FileType vimwiki map <buffer> <silent> <C-p> ?=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
 	au FileType vimwiki map <buffer> <silent> <C-n> /=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
+	au FileType vimwiki imap <buffer> <silent> >> <Esc>>>a
+	au FileType vimwiki imap <buffer> <silent> << <Esc><<a
 augroup END
 let g:vimwiki_hl_headers = 1 				" hilight header colors
 let g:vimwiki_hl_cb_checked = 1 			" hilight todo item colors
@@ -1075,6 +1095,10 @@ let html_no_pre = 1
 " AppleScript: " {{{
 au! BufNewFile,BufRead *.applescript   setf applescript
 au! BufNewFile,BufRead *.tst.* set ft=_.txt.tst
+
+" }}}
+" YAML: " {{{
+	au BufNewFile,BufRead *.yaml,*.yml so ~/.vim/syntax/yaml.vim
 
 " }}}
 
