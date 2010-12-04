@@ -2,6 +2,8 @@ let SessionLoad = 1
 if &cp | set nocp | endif
 let s:cpo_save=&cpo
 set cpo&vim
+imap <silent> <Plug>IMAP_JumpForward =IMAP_Jumpfunc('', 0)
+imap <silent> <Plug>IMAP_JumpBack =IMAP_Jumpfunc('b', 0)
 imap <D-BS> 
 imap <M-BS> 
 imap <M-Down> }
@@ -13,8 +15,6 @@ noremap! <D-Right> <End>
 noremap! <M-Left> <C-Left>
 noremap! <D-Left> <Home>
 inoremap <silent> <S-Tab> =BackwardsSnippet()
-imap <silent> <Plug>IMAP_JumpBack =IMAP_Jumpfunc('b', 0)
-imap <silent> <Plug>IMAP_JumpForward =IMAP_Jumpfunc('', 0)
 inoremap <silent> <Plug>NERDCommenterInInsert  <BS>:call NERDComment(0, "insert")
 imap <F1> :Help
 imap <Nul> :
@@ -33,15 +33,16 @@ nmap c :silent! lclose
 nmap ? :call FunctionLocationIndex()
 nmap / :call HeaderLocationIndex()
 snoremap <silent> 	 i<Right>=TriggerSnippet()
-vmap <NL> <Plug>IMAP_JumpForward
 nmap <NL> <Plug>IMAP_JumpForward
+vmap <NL> <Plug>IMAP_JumpForward
 nnoremap <silent>  :call Reset() | nohls
 snoremap  b<BS>
-nmap <silent>  :call RemoveTimestamp(g:timestamp_annotation)
 nmap <silent>  :call AddOrUpdateTimestamp(g:timestamp_annotation)
-nmap <silent>  :call RemoveTimestamp("")
+nmap <silent>  :call RemoveTimestamp(g:timestamp_annotation)
+nmap <silent>  :call RemoveTimestamp()
+nmap <silent>  :call AddOrUpdateTimestampSolicitingAnnotation()
 nmap <silent>  :call AddOrUpdateTimestamp("")
-nmap <silent>  :call TimestampAutoUpdateToggle()
+nmap <silent>  :call TimestampAutoUpdateToggle()
 nmap  :call ReloadVimrc() | :echo "Resourced .vimrc."
 snoremap % b<BS>%
 snoremap ' b<BS>'
@@ -140,6 +141,12 @@ nmap ySs <Plug>YSsurround
 nmap yss <Plug>Yssurround
 nmap yS <Plug>YSurround
 nmap ys <Plug>Ysurround
+nmap <silent> <Plug>IMAP_JumpForward i=IMAP_Jumpfunc('', 0)
+nmap <silent> <Plug>IMAP_JumpBack i=IMAP_Jumpfunc('b', 0)
+vmap <silent> <Plug>IMAP_DeleteAndJumpForward "_<Del>i=IMAP_Jumpfunc('', 0)
+vmap <silent> <Plug>IMAP_DeleteAndJumpBack "_<Del>i=IMAP_Jumpfunc('b', 0)
+vmap <silent> <Plug>IMAP_JumpForward i=IMAP_Jumpfunc('', 0)
+vmap <silent> <Plug>IMAP_JumpBack `<i=IMAP_Jumpfunc('b', 0)
 nnoremap <C-Down> :silent! :call AdjustFont(-1)
 nnoremap <C-Up> :silent! :call AdjustFont(1)
 nnoremap <silent> <C-Right> gt
@@ -184,12 +191,6 @@ nnoremap <silent> <Plug>VCSDelete :VCSDelete
 nnoremap <silent> <Plug>VCSCommit :VCSCommit
 nnoremap <silent> <Plug>VCSAnnotate :VCSAnnotate
 nnoremap <silent> <Plug>VCSAdd :VCSAdd
-vmap <silent> <Plug>IMAP_JumpBack `<i=IMAP_Jumpfunc('b', 0)
-vmap <silent> <Plug>IMAP_JumpForward i=IMAP_Jumpfunc('', 0)
-vmap <silent> <Plug>IMAP_DeleteAndJumpBack "_<Del>i=IMAP_Jumpfunc('b', 0)
-vmap <silent> <Plug>IMAP_DeleteAndJumpForward "_<Del>i=IMAP_Jumpfunc('', 0)
-nmap <silent> <Plug>IMAP_JumpBack i=IMAP_Jumpfunc('b', 0)
-nmap <silent> <Plug>IMAP_JumpForward i=IMAP_Jumpfunc('', 0)
 map <M-F3> :call CSV_clear_all()  
 map <S-F3> :call CSV_toggle_field(CSV_get_field(0))
 map <S-F5> :call CSV_goto_highlighted(-1)
@@ -237,12 +238,12 @@ imap s <Plug>Isurround
 inoremap <silent> 	 =TriggerSnippet()
 imap <NL> <Plug>IMAP_JumpForward
 imap <silent>  :call Reset() | nohlsa
-imap  :set completeopt+=menuonea
+inoremap  :set completeopt+=menuonea
 inoremap <silent> 	 =ShowAvailableSnips()
 imap  <Plug>Isurround
-imap <silent>  :call RemoveTimestamp("")a
-imap <silent>  :call AddOrUpdateTimestamp("")a
 imap <silent>  :call TimestampAutoUpdateToggle()
+imap <silent>  :call AddOrUpdateTimestamp("")a
+imap <silent>  :call RemoveTimestamp("")a
 imap   :call ReloadVimrc() | :echo "Resourced .vimrc."
 let &cpo=s:cpo_save
 unlet s:cpo_save
@@ -253,6 +254,7 @@ set clipboard=unnamed
 set commentstring=
 set diffopt=filler,vertical
 set directory=~/.vim/swap//,~/vimfiles/swap//
+set display=lastline,uhex
 set fileencodings=ucs-bom,utf-8,default,latin1
 set foldlevelstart=999
 set fuoptions=maxhorz,maxvert
@@ -271,6 +273,7 @@ set listchars=tab:>-,trail:-
 set mouse=a
 set printexpr=system('open\ -a\ Preview\ '.v:fname_in)\ +\ v:shell_error
 set ruler
+set runtimepath=~/.vim,~/.vim/bundle/PickAColor,/Applications/Research.app/Contents/Resources/vim/vimfiles,/Applications/Research.app/Contents/Resources/vim/runtime,/Applications/Research.app/Contents/Resources/vim/vimfiles/after,~/.vim/after
 set sessionoptions=folds,help,options,tabpages,winsize,globals,sesdir,resize,winpos,unix
 set shiftwidth=4
 set shortmess=filnxtToOIA
@@ -283,12 +286,11 @@ set statusline=%<(%n)\ %m%y%r\ %f\ %=%-14.(%l,%c%V%)\ %P
 set switchbuf=useopen,usetab
 set tabline=%!MyTabLine()
 set tabpagemax=100
-set tabstop=2
+set tabstop=4
 set tags=./tags,tags,~/sandbox/personal/tags
 set termencoding=utf-8
-set transparency=5
 set undolevels=100
-set window=70
+set window=69
 set winminheight=0
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
@@ -304,14 +306,13 @@ let ConqueTerm_Version =  120
 let NERDUsePlaceHolders = "1"
 let NERDTreeShowLineNumbers = "0"
 let DirDiffSort =  1 
-let NERDTreeBookmarksFile = "/Users/seth/.NERDTreeBookmarks"
 let NERDTreeMapToggleHidden = "I"
 let NERDTreeWinSize = "31"
 let NERDTreeMapRefreshRoot = "R"
-let NERDDelimiterRequests = "1"
 let DirDiffInteractive =  0 
 let NERDTreeMapPreview = "go"
 let NERDTreeMapActivateNode = "o"
+let Imap_DeleteEmptyPlaceHolders =  1 
 let NERDTreeWinPos = "left"
 let DirDiffAddArgs = ""
 let NERDTreeStatusline = "%{b:NERDTreeRoot.path.strForOS(0)}"
@@ -327,7 +328,6 @@ let NERDTreeMapOpenExpl = "e"
 let CSV_string_delimiter = "\""
 let NERDTreeMouseMode = "1"
 let NERDDefaultNesting = "1"
-let TailMinusF_Height =  10 
 let NERDTreeChDirMode = "0"
 let NERDTreeRemoveDirCmd = "rm -rf "
 let NERDTreeAutoCenterThreshold = "3"
@@ -339,7 +339,9 @@ let NERDTreeHijackNetrw = "1"
 let NERDTreeMapFilesystemMenu = "m"
 let NERDTreeMapRefresh = "r"
 let CSV_field_list = ""
+let TailMinusF_Height =  10 
 let NERDTreeHighlightCursorline = "1"
+let NERDDelimiterRequests = "1"
 let NERDLPlace = "[>"
 let NERDTreeMapOpenInTab = "t"
 let CSV_separator = ","
@@ -386,13 +388,13 @@ let NERDTreeMapToggleFiles = "F"
 let NERDAllowAnyVisualDelims = "1"
 let ConqueTerm_CWInsert =  0 
 let ConqueTerm_Idx =  0 
-let Imap_DeleteEmptyPlaceHolders =  1 
 let DirDiffIgnore = ""
 let ConqueTerm_PromptRegex = "^\\w\\+@[0-9A-Za-z_.-]\\+:[0-9A-Za-z_./\\~,:-]\\+\\$"
 let BufExploreAdd =  1 
 let NERDTreeMapJumpFirstChild = "K"
 let NERDTreeMapOpenRecursively = "O"
 let NERDTreeMapToggleBookmarks = "B"
+let NERDTreeBookmarksFile = "/Users/seth/.NERDTreeBookmarks"
 let ConqueTerm_Loaded =  1 
 let NERDTreeMapUpdir = "u"
 let ConqueTerm_Syntax = "conque_term"
@@ -404,10 +406,10 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +0 ~/sandbox/personal/todo/research.tst.txt
+badd +1 ~/sandbox/personal/todo/research.tst.txt
 silent! argdel *
-set lines=71 columns=117
-winpos 0 1025
+set lines=70 columns=115
+winpos -829 1040
 buffer ~/sandbox/personal/todo/research.tst.txt
 set splitbelow splitright
 wincmd t
@@ -415,16 +417,60 @@ set winheight=1 winwidth=1
 argglobal
 let s:cpo_save=&cpo
 set cpo&vim
+imap <buffer> <silent> <D-9> :tabn 9
+imap <buffer> <silent> <D-8> :tabn 8
+imap <buffer> <silent> <D-7> :tabn 7
+imap <buffer> <silent> <D-6> :tabn 6
+imap <buffer> <silent> <D-5> :tabn 5
+imap <buffer> <silent> <D-4> :tabn 4
+imap <buffer> <silent> <D-3> :tabn 3
+imap <buffer> <silent> <D-2> :tabn 2
+imap <buffer> <silent> <D-1> :tabn 1
+imap <buffer> <silent> <D-0> :tabn 10
+nmap <buffer> <silent> 	 /^\([A-Z]\+ \)\{1,\}:nohls
 nmap <buffer> <NL> :call TaskstackMoveItemDown()
 nmap <buffer>  :call TaskstackMoveItemUp()
+nmap <buffer> <silent>  /^@.* {\{3\}:nohls
+nmap <buffer> <silent>  ?^@.* {\{3\}:nohls
 nmap <buffer> $ :call TaskstackEOL()
 nmap <buffer> :w :call TaskstackAutosaveReminder()
+imap <buffer> <silent> ¹ :tabn 9
+imap <buffer> <silent> ¸ :tabn 8
+imap <buffer> <silent> · :tabn 7
+imap <buffer> <silent> ¶ :tabn 6
+imap <buffer> <silent> µ :tabn 5
+imap <buffer> <silent> ´ :tabn 4
+imap <buffer> <silent> ³ :tabn 3
+imap <buffer> <silent> ² :tabn 2
+imap <buffer> <silent> ± :tabn 1
+imap <buffer> <silent> ° :tabn 10
 nmap <buffer> LL :call TaskstackScratch()
 nmap <buffer> NN :call TaskstackNewItem()
 nmap <buffer> QQ :call TagstackCompleteItem(g:completed_prefix)
 nmap <buffer> XX :call TagstackCompleteItem(g:aborted_prefix)
 nmap <buffer> ZZ :call TaskstackHide()
+nmap <buffer> <silent> <D-9> 9gt
+nmap <buffer> <silent> <D-8> 8gt
+nmap <buffer> <silent> <D-7> 7gt
+nmap <buffer> <silent> <D-6> 6gt
+nmap <buffer> <silent> <D-5> 5gt
+nmap <buffer> <silent> <D-4> 4gt
+nmap <buffer> <silent> <D-3> 3gt
+nmap <buffer> <silent> <D-2> 2gt
+nmap <buffer> <silent> <D-1> 1gt
+nmap <buffer> <silent> <D-0> 10gt
 nmap <buffer> <F8> :call TaskstackGroups()
+nmap <buffer> <silent> <S-Tab> ?^\([A-Z]\+ \)\{1,\}:nohls
+nmap <buffer> <silent> ¹ 9gt
+nmap <buffer> <silent> ¸ 8gt
+nmap <buffer> <silent> · 7gt
+nmap <buffer> <silent> ¶ 6gt
+nmap <buffer> <silent> µ 5gt
+nmap <buffer> <silent> ´ 4gt
+nmap <buffer> <silent> ³ 3gt
+nmap <buffer> <silent> ² 2gt
+nmap <buffer> <silent> ± 1gt
+nmap <buffer> <silent> ° 10gt
 imap <buffer> NN :call TaskstackNewItem()
 imap <buffer> QQ :call TagstackCompleteItem(g:completed_prefix)
 imap <buffer> XX :call TagstackCompleteItem(g:aborted_prefix)
@@ -502,7 +548,7 @@ setlocal modeline
 setlocal modifiable
 setlocal nrformats=octal,hex
 set number
-setlocal number
+setlocal nonumber
 setlocal numberwidth=4
 setlocal omnifunc=
 setlocal path=
@@ -510,7 +556,8 @@ setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
-setlocal norelativenumber
+set relativenumber
+setlocal relativenumber
 setlocal norightleft
 setlocal rightleftcmd=search
 setlocal noscrollbind
@@ -529,7 +576,7 @@ setlocal synmaxcol=3000
 if &syntax != 'tst.txt'
 setlocal syntax=tst.txt
 endif
-setlocal tabstop=2
+setlocal tabstop=4
 setlocal tags=
 setlocal textwidth=0
 setlocal thesaurus=
@@ -543,42 +590,88 @@ setlocal wrapmargin=0
 normal zo
 2
 normal zo
-19
+10
 normal zo
-34
+31
+normal zo
+48
+normal zo
+63
+normal zo
+2
+normal zc
+10
+normal zo
+85
+normal zo
+102
+normal zo
+117
+normal zo
+123
+normal zo
+130
+normal zo
+134
+normal zo
+138
+normal zo
+142
+normal zo
+153
+normal zo
+166
+normal zo
+167
+normal zo
+180
+normal zo
+190
+normal zo
+193
+normal zo
+190
+normal zo
+166
 normal zo
 1
 normal zo
-40
-normal zc
-47
-normal zc
-51
-normal zc
-55
-normal zc
-59
-normal zc
-70
-normal zc
-83
+123
 normal zo
-84
-normal zc
-97
-normal zc
-107
+130
 normal zo
-107
-normal zc
-83
+134
 normal zo
-let s:l = 59 - ((58 * winheight(0) + 34) / 69)
+138
+normal zo
+142
+normal zo
+153
+normal zo
+166
+normal zo
+167
+normal zo
+180
+normal zo
+190
+normal zo
+193
+normal zo
+190
+normal zo
+166
+normal zo
+let s:l = 23 - ((22 * winheight(0) + 34) / 68)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-59
-normal! 013l
+23
+normal! 0114l
+tabnew
+set splitbelow splitright
+wincmd t
+set winheight=1 winwidth=1
 tabnext 1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf

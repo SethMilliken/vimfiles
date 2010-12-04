@@ -2,6 +2,8 @@ let SessionLoad = 1
 if &cp | set nocp | endif
 let s:cpo_save=&cpo
 set cpo&vim
+imap <silent> <Plug>IMAP_JumpForward =IMAP_Jumpfunc('', 0)
+imap <silent> <Plug>IMAP_JumpBack =IMAP_Jumpfunc('b', 0)
 imap <D-BS> 
 imap <M-BS> 
 imap <M-Down> }
@@ -13,8 +15,6 @@ noremap! <D-Right> <End>
 noremap! <M-Left> <C-Left>
 noremap! <D-Left> <Home>
 inoremap <silent> <S-Tab> =BackwardsSnippet()
-imap <silent> <Plug>IMAP_JumpBack =IMAP_Jumpfunc('b', 0)
-imap <silent> <Plug>IMAP_JumpForward =IMAP_Jumpfunc('', 0)
 inoremap <silent> <Plug>NERDCommenterInInsert  <BS>:call NERDComment(0, "insert")
 imap <F1> :Help
 imap <Nul> :
@@ -33,16 +33,17 @@ nmap c :silent! lclose
 nmap ? :call FunctionLocationIndex()
 nmap / :call HeaderLocationIndex()
 snoremap <silent> 	 i<Right>=TriggerSnippet()
-vmap <NL> <Plug>IMAP_JumpForward
 nmap <NL> <Plug>IMAP_JumpForward
+vmap <NL> <Plug>IMAP_JumpForward
 nnoremap <silent>  :call Reset() | nohls
 map  :PickHEX 
 snoremap  b<BS>
+nmap <silent>  :call AddOrUpdateTimestampSolicitingAnnotation()
 nmap <silent>  :call RemoveTimestamp(g:timestamp_annotation)
-nmap <silent>  :call AddOrUpdateTimestamp(g:timestamp_annotation)
-nmap <silent>  :call RemoveTimestamp("")
+nmap <silent>  :call RemoveTimestamp()
+nmap <silent>  :call AddOrUpdateTimestampSolicitingAnnotation()
 nmap <silent>  :call AddOrUpdateTimestamp("")
-nmap <silent>  :call TimestampAutoUpdateToggle()
+nmap <silent>  :call TimestampAutoUpdateToggle()
 nmap  :call ReloadVimrc() | :echo "Resourced .vimrc."
 snoremap % b<BS>%
 snoremap ' b<BS>'
@@ -125,7 +126,7 @@ nmap <silent> \c :call ScratchBuffer("scratch")
 nmap <silent> \0 :silent normal zvzt
 nmap <silent> \= :call FoldDefaultNodes():normal zvzkzjzt
 nmap <silent> \] :NERDTreeToggle
-nmap \j :call JournalEntry()
+nmap <silent> \j :call HandleMantis()
 nmap \\ :call CommitSession()
 nmap <silent> \w :!wc -w %
 vmap ]% ]%m'gv``
@@ -141,6 +142,12 @@ nmap ySs <Plug>YSsurround
 nmap yss <Plug>Yssurround
 nmap yS <Plug>YSurround
 nmap ys <Plug>Ysurround
+nmap <silent> <Plug>IMAP_JumpForward i=IMAP_Jumpfunc('', 0)
+nmap <silent> <Plug>IMAP_JumpBack i=IMAP_Jumpfunc('b', 0)
+vmap <silent> <Plug>IMAP_DeleteAndJumpForward "_<Del>i=IMAP_Jumpfunc('', 0)
+vmap <silent> <Plug>IMAP_DeleteAndJumpBack "_<Del>i=IMAP_Jumpfunc('b', 0)
+vmap <silent> <Plug>IMAP_JumpForward i=IMAP_Jumpfunc('', 0)
+vmap <silent> <Plug>IMAP_JumpBack `<i=IMAP_Jumpfunc('b', 0)
 nnoremap <C-Down> :silent! :call AdjustFont(-1)
 nnoremap <C-Up> :silent! :call AdjustFont(1)
 nnoremap <silent> <C-Right> gt
@@ -185,12 +192,6 @@ nnoremap <silent> <Plug>VCSDelete :VCSDelete
 nnoremap <silent> <Plug>VCSCommit :VCSCommit
 nnoremap <silent> <Plug>VCSAnnotate :VCSAnnotate
 nnoremap <silent> <Plug>VCSAdd :VCSAdd
-vmap <silent> <Plug>IMAP_JumpBack `<i=IMAP_Jumpfunc('b', 0)
-vmap <silent> <Plug>IMAP_JumpForward i=IMAP_Jumpfunc('', 0)
-vmap <silent> <Plug>IMAP_DeleteAndJumpBack "_<Del>i=IMAP_Jumpfunc('b', 0)
-vmap <silent> <Plug>IMAP_DeleteAndJumpForward "_<Del>i=IMAP_Jumpfunc('', 0)
-nmap <silent> <Plug>IMAP_JumpBack i=IMAP_Jumpfunc('b', 0)
-nmap <silent> <Plug>IMAP_JumpForward i=IMAP_Jumpfunc('', 0)
 map <M-F3> :call CSV_clear_all()  
 map <S-F3> :call CSV_toggle_field(CSV_get_field(0))
 map <S-F5> :call CSV_goto_highlighted(-1)
@@ -238,22 +239,24 @@ imap s <Plug>Isurround
 inoremap <silent> 	 =TriggerSnippet()
 imap <NL> <Plug>IMAP_JumpForward
 imap <silent>  :call Reset() | nohlsa
-imap  :set completeopt+=menuonea
+inoremap  :set completeopt+=menuonea
 inoremap <silent> 	 =ShowAvailableSnips()
 imap  <Plug>Isurround
-imap <silent>  :call RemoveTimestamp("")a
-imap <silent>  :call AddOrUpdateTimestamp("")a
 imap <silent>  :call TimestampAutoUpdateToggle()
+imap <silent>  :call AddOrUpdateTimestamp("")a
+imap <silent>  :call RemoveTimestamp("")a
 imap   :call ReloadVimrc() | :echo "Resourced .vimrc."
 let &cpo=s:cpo_save
 unlet s:cpo_save
 set autowrite
 set background=dark
 set backspace=indent,eol,start
+set binary
 set clipboard=unnamed
-set commentstring=\"\ %s
+set commentstring=
 set diffopt=filler,vertical
 set directory=~/.vim/swap//,~/vimfiles/swap//
+set display=lastline,uhex
 set fileencodings=ucs-bom,utf-8,default,latin1
 set foldlevelstart=999
 set fuoptions=maxhorz,maxvert
@@ -270,8 +273,10 @@ set langmenu=none
 set laststatus=2
 set listchars=tab:>-,trail:-
 set mouse=a
+set operatorfunc=<SNR>29_opfunc
 set printexpr=system('open\ -a\ Preview\ '.v:fname_in)\ +\ v:shell_error
 set ruler
+set runtimepath=~/.vim,~/.vim/bundle/PickAColor,/Applications/Tasks.app/Contents/Resources/vim/vimfiles,/Applications/Tasks.app/Contents/Resources/vim/runtime,/Applications/Tasks.app/Contents/Resources/vim/vimfiles/after,~/.vim/after
 set sessionoptions=folds,help,options,tabpages,winsize,globals,sesdir,resize,winpos,unix
 set shiftwidth=4
 set shortmess=filnxtToOIA
@@ -284,13 +289,13 @@ set statusline=%<(%n)\ %m%y%r\ %f\ %=%-14.(%l,%c%V%)\ %P
 set switchbuf=useopen,usetab
 set tabline=%!MyTabLine()
 set tabpagemax=100
-set tabstop=2
+set tabstop=4
 set tags=./tags,tags,~/sandbox/personal/tags
 set termencoding=utf-8
-set transparency=5
 set undolevels=100
-set window=70
+set window=69
 set winminheight=0
+set wrapmargin=120
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
 let NERDTreeMapPreviewSplit = "gi"
@@ -302,17 +307,16 @@ let NERDSpaceDelims = "0"
 let NERDTreeMapCloseDir = "x"
 let ConqueTerm_Color =  1 
 let ConqueTerm_Version =  120 
-let NERDTreeMapRefreshRoot = "R"
 let NERDUsePlaceHolders = "1"
 let NERDTreeShowLineNumbers = "0"
 let DirDiffSort =  1 
-let NERDTreeBookmarksFile = "/Users/seth/.NERDTreeBookmarks"
 let NERDTreeMapToggleHidden = "I"
 let NERDTreeWinSize = "31"
-let NERDDelimiterRequests = "1"
+let NERDTreeMapRefreshRoot = "R"
 let DirDiffInteractive =  0 
 let NERDTreeMapPreview = "go"
 let NERDTreeMapActivateNode = "o"
+let Imap_DeleteEmptyPlaceHolders =  1 
 let NERDTreeWinPos = "left"
 let DirDiffAddArgs = ""
 let NERDTreeStatusline = "%{b:NERDTreeRoot.path.strForOS(0)}"
@@ -325,12 +329,12 @@ let NERDTreeMapJumpPrevSibling = "<C-k>"
 let NERDTreeShowBookmarks = "0"
 let NERDMenuMode = "3"
 let NERDTreeMapOpenExpl = "e"
-let NERDDefaultNesting = "1"
 let CSV_string_delimiter = "\""
 let NERDTreeMouseMode = "1"
-let NERDTreeRemoveDirCmd = "rm -rf "
-let TailMinusF_Height =  10 
+let NERDDefaultNesting = "1"
 let NERDTreeChDirMode = "0"
+let NetrwMenuPriority =  80 
+let NERDTreeRemoveDirCmd = "rm -rf "
 let NERDTreeAutoCenterThreshold = "3"
 let NERDTreeShowFiles = "1"
 let NERDTreeMapOpenSplit = "i"
@@ -340,7 +344,9 @@ let NERDTreeHijackNetrw = "1"
 let NERDTreeMapFilesystemMenu = "m"
 let NERDTreeMapRefresh = "r"
 let CSV_field_list = ""
+let TailMinusF_Height =  10 
 let NERDTreeHighlightCursorline = "1"
+let NERDDelimiterRequests = "1"
 let NERDLPlace = "[>"
 let NERDTreeMapOpenInTab = "t"
 let CSV_separator = ","
@@ -387,7 +393,6 @@ let NERDTreeMapToggleFiles = "F"
 let NERDAllowAnyVisualDelims = "1"
 let ConqueTerm_CWInsert =  0 
 let ConqueTerm_Idx =  0 
-let Imap_DeleteEmptyPlaceHolders =  1 
 let DirDiffIgnore = ""
 let ConqueTerm_PromptRegex = "^\\w\\+@[0-9A-Za-z_.-]\\+:[0-9A-Za-z_./\\~,:-]\\+\\$"
 let BufExploreAdd =  1 
@@ -395,6 +400,7 @@ let NetrwTopLvlMenu = "Netrw."
 let NERDTreeMapJumpFirstChild = "K"
 let NERDTreeMapOpenRecursively = "O"
 let NERDTreeMapToggleBookmarks = "B"
+let NERDTreeBookmarksFile = "/Users/seth/.NERDTreeBookmarks"
 let ConqueTerm_Loaded =  1 
 let NERDTreeMapUpdir = "u"
 let ConqueTerm_Syntax = "conque_term"
@@ -406,10 +412,10 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +32 ~/sandbox/personal/todo/personal.tst.txt
+badd +25 ~/sandbox/personal/todo/personal.tst.txt
 silent! argdel *
-set lines=71 columns=115
-winpos 826 1028
+set lines=70 columns=115
+winpos 840 1028
 buffer ~/sandbox/personal/todo/personal.tst.txt
 set splitbelow splitright
 wincmd t
@@ -417,21 +423,63 @@ set winheight=1 winwidth=1
 argglobal
 let s:cpo_save=&cpo
 set cpo&vim
-nmap <buffer> <NL> :call TaskstackMoveItemDown()
-nmap <buffer>  :call TaskstackMoveItemUp()
-nmap <buffer>  /^@.* {{{:nohls
-nmap <buffer>  ?^@.* {{{:nohls
+imap <buffer> <silent> <D-0> :tabn 10
+imap <buffer> <silent> <D-1> :tabn 1
+imap <buffer> <silent> <D-2> :tabn 2
+imap <buffer> <silent> <D-3> :tabn 3
+imap <buffer> <silent> <D-4> :tabn 4
+imap <buffer> <silent> <D-5> :tabn 5
+imap <buffer> <silent> <D-6> :tabn 6
+imap <buffer> <silent> <D-7> :tabn 7
+imap <buffer> <silent> <D-8> :tabn 8
+imap <buffer> <silent> <D-9> :tabn 9
+nmap <buffer> <silent> 	 /^\([A-Z]\+ \)\{1,\}:nohls
+nmap <buffer> <silent> <NL> :call TaskstackMoveItemDown()
+nmap <buffer> <silent>  :call TaskstackMoveItemUp()
+nmap <buffer> <silent>  /^@.* {\{3\}:nohls
+nmap <buffer> <silent>  ?^@.* {\{3\}:nohls
 nmap <buffer> $ :call TaskstackEOL()
 nmap <buffer> :w :call TaskstackAutosaveReminder()
+imap <buffer> <silent> ° :tabn 10
+imap <buffer> <silent> ± :tabn 1
+imap <buffer> <silent> ² :tabn 2
+imap <buffer> <silent> ³ :tabn 3
+imap <buffer> <silent> ´ :tabn 4
+imap <buffer> <silent> µ :tabn 5
+imap <buffer> <silent> ¶ :tabn 6
+imap <buffer> <silent> · :tabn 7
+imap <buffer> <silent> ¸ :tabn 8
+imap <buffer> <silent> ¹ :tabn 9
 nmap <buffer> LL :call TaskstackScratch()
 nmap <buffer> NN :call TaskstackNewItem()
-nmap <buffer> QQ :call TagstackCompleteItem(g:completed_prefix)
-nmap <buffer> XX :call TagstackCompleteItem(g:aborted_prefix)
+nmap <buffer> QQ :call TaskstackCompleteItem(g:completed_prefix)
+nmap <buffer> XX :call TaskstackCompleteItem(g:aborted_prefix)
 nmap <buffer> ZZ :call TaskstackHide()
+nmap <buffer> <silent> <D-0> 10gt
+nmap <buffer> <silent> <D-1> 1gt
+nmap <buffer> <silent> <D-2> 2gt
+nmap <buffer> <silent> <D-3> 3gt
+nmap <buffer> <silent> <D-4> 4gt
+nmap <buffer> <silent> <D-5> 5gt
+nmap <buffer> <silent> <D-6> 6gt
+nmap <buffer> <silent> <D-7> 7gt
+nmap <buffer> <silent> <D-8> 8gt
+nmap <buffer> <silent> <D-9> 9gt
 nmap <buffer> <F8> :call TaskstackGroups()
+nmap <buffer> <silent> <S-Tab> ?^\([A-Z]\+ \)\{1,\}:nohls
+nmap <buffer> <silent> ° 10gt
+nmap <buffer> <silent> ± 1gt
+nmap <buffer> <silent> ² 2gt
+nmap <buffer> <silent> ³ 3gt
+nmap <buffer> <silent> ´ 4gt
+nmap <buffer> <silent> µ 5gt
+nmap <buffer> <silent> ¶ 6gt
+nmap <buffer> <silent> · 7gt
+nmap <buffer> <silent> ¸ 8gt
+nmap <buffer> <silent> ¹ 9gt
 imap <buffer> NN :call TaskstackNewItem()
-imap <buffer> QQ :call TagstackCompleteItem(g:completed_prefix)
-imap <buffer> XX :call TagstackCompleteItem(g:aborted_prefix)
+imap <buffer> QQ :call TaskstackCompleteItem(g:completed_prefix)
+imap <buffer> XX :call TaskstackCompleteItem(g:aborted_prefix)
 imap <buffer> ZZ :call TaskstackHide()
 let &cpo=s:cpo_save
 unlet s:cpo_save
@@ -474,7 +522,7 @@ setlocal foldcolumn=4
 setlocal foldenable
 setlocal foldexpr=0
 setlocal foldignore=#
-setlocal foldlevel=2
+setlocal foldlevel=3
 setlocal foldmarker={{{,}}}
 set foldmethod=marker
 setlocal foldmethod=marker
@@ -534,7 +582,7 @@ setlocal synmaxcol=3000
 if &syntax != '_.txt.tst'
 setlocal syntax=_.txt.tst
 endif
-setlocal tabstop=2
+setlocal tabstop=4
 setlocal tags=
 setlocal textwidth=0
 setlocal thesaurus=
@@ -546,330 +594,328 @@ setlocal wrap
 setlocal wrapmargin=0
 1
 normal zo
-9
-normal zc
-15
-normal zc
-45
+4
 normal zo
-64
+4
+normal zo
+8
+normal zo
+39
+normal zo
+58
 normal zc
+192
+normal zo
 1
 normal zo
-78
+206
 normal zc
-87
+214
 normal zc
-96
+224
 normal zc
-104
+228
 normal zc
-109
-normal zc
-117
-normal zc
-126
-normal zc
-132
-normal zc
-138
-normal zc
-146
-normal zc
-157
-normal zc
-164
-normal zc
-168
-normal zc
-179
-normal zc
-185
-normal zc
-190
-normal zc
-203
-normal zc
-213
-normal zc
-217
-normal zc
-229
-normal zc
-242
+240
 normal zc
 247
 normal zc
 253
 normal zc
-261
+258
 normal zc
-265
+267
 normal zc
-275
+280
 normal zc
-297
-normal zo
-297
+285
 normal zc
-322
+291
+normal zc
+295
+normal zc
+304
+normal zc
+313
+normal zc
+321
+normal zc
+326
 normal zc
 334
-normal zo
-334
 normal zc
-364
+343
 normal zc
-376
+349
 normal zc
-388
+355
 normal zc
-393
+363
 normal zc
-401
+374
+normal zc
+381
+normal zc
+385
+normal zc
+396
+normal zc
+402
 normal zc
 407
 normal zc
-421
+420
 normal zc
-436
+430
 normal zc
-447
+434
 normal zc
-466
+446
 normal zc
-477
+459
 normal zc
-481
+464
 normal zc
-490
+470
 normal zc
-494
+478
 normal zc
-498
+482
 normal zc
-502
-normal zc
-510
+492
 normal zc
 514
+normal zo
+514
 normal zc
-519
+539
 normal zc
-524
+551
+normal zo
+551
 normal zc
-530
+581
 normal zc
-534
+593
 normal zc
-538
+605
 normal zc
-543
+610
 normal zc
-547
+618
 normal zc
-553
+624
 normal zc
-560
-normal zc
-566
-normal zc
-572
-normal zc
-576
-normal zc
-580
-normal zc
-585
-normal zc
-590
-normal zc
-595
-normal zc
-600
-normal zc
-604
-normal zc
-612
-normal zc
-625
-normal zc
-631
-normal zc
-636
-normal zc
-641
-normal zc
-647
+638
 normal zc
 653
 normal zc
 664
 normal zc
-670
+683
 normal zc
-674
+694
 normal zc
-679
+698
 normal zc
-684
+707
 normal zc
-688
+711
 normal zc
-693
+715
 normal zc
-699
+719
 normal zc
-705
+727
 normal zc
-710
-normal zc
-717
-normal zc
-722
-normal zc
-728
+731
 normal zc
 736
 normal zc
-748
+741
 normal zc
-758
+747
 normal zc
-763
+751
 normal zc
-772
+755
 normal zc
-787
+760
 normal zc
-792
+764
 normal zc
-800
+770
 normal zc
-810
+777
+normal zc
+783
+normal zc
+789
+normal zc
+793
+normal zc
+797
+normal zc
+802
+normal zc
+807
+normal zc
+812
 normal zc
 817
 normal zc
 821
 normal zc
-826
+829
 normal zc
-832
+842
 normal zc
-841
+848
 normal zc
-847
-normal zc
-851
+853
 normal zc
 858
 normal zc
-863
+864
 normal zc
-869
+870
 normal zc
-880
+881
 normal zc
-890
+887
+normal zc
+891
 normal zc
 896
 normal zc
-902
+901
 normal zc
-929
+905
 normal zc
-935
+910
 normal zc
-942
+916
 normal zc
-950
+922
 normal zc
-963
+927
 normal zc
-967
+934
 normal zc
-974
+939
 normal zc
-991
+945
 normal zc
-1013
+953
+normal zc
+965
+normal zc
+975
+normal zc
+980
+normal zc
+989
+normal zc
+1004
+normal zc
+1009
+normal zc
+1017
 normal zc
 1027
 normal zc
-1033
+1034
 normal zc
-1041
+1038
 normal zc
-1050
+1043
 normal zc
-1087
+1049
+normal zc
+1058
+normal zc
+1064
+normal zc
+1068
+normal zc
+1075
+normal zc
+1080
+normal zc
+1086
+normal zc
+1097
+normal zc
+1107
+normal zc
+1113
+normal zc
+1119
+normal zc
+1146
+normal zc
+1152
+normal zc
+1159
+normal zc
+1167
+normal zc
+1180
+normal zc
+1184
+normal zc
+1191
+normal zc
+1208
+normal zc
+1230
+normal zc
+1244
+normal zc
+1250
+normal zc
+1258
+normal zc
+1267
+normal zc
+1304
 normal zo
-1087
+1304
 normal zc
-1331
+1548
 normal zo
-1332
+1666
 normal zc
-1363
+1837
 normal zc
-1368
+1855
 normal zc
-1378
+1922
 normal zc
-1449
+1931
 normal zc
-1459
+1977
 normal zc
-1465
+1987
 normal zc
-1487
+2022
 normal zc
-1511
+2027
 normal zc
-1529
+2039
 normal zc
-1552
+2054
 normal zc
-1555
+2064
 normal zc
-1568
-normal zc
-1575
-normal zc
-1584
-normal zc
-1608
-normal zc
-1620
-normal zc
-1638
-normal zc
-1643
-normal zc
-1662
-normal zc
-1669
-normal zc
-1687
-normal zc
-1705
-normal zc
-1714
-normal zc
-1726
-normal zc
-1730
-normal zc
-1736
-normal zc
-1331
+1548
 normal zo
-let s:l = 1 - ((0 * winheight(0) + 34) / 69)
+let s:l = 24 - ((23 * winheight(0) + 34) / 68)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-1
-normal! 0
+24
+normal! 015l
 tabnext 1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf
