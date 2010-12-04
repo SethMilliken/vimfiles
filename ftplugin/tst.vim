@@ -154,12 +154,12 @@ function! TaskstackDate() "{{{
 	let l:currentdate = TimestampText('date')
 	if FindNode(l:currentdate) == 0
 		let l:origview = winsaveview()
-		if FindNode(s:group_node_name) != 0
-				call TaskstackGroups()
+		if FindNode(s:groups_node_name) != 0
+			call TaskstackGroups()
 		else
-				call TaskstackMain()
+			call TaskstackMain()
 		end
-		normal zj
+		normal ]z
 		call append(line(".") - 1, [""])
 		normal k
 		call AppendText(l:currentdate)
@@ -198,7 +198,12 @@ endfunction
 " }}}
 function! TaskstackCompleteItem(prefix) " {{{
 	call AutoTimestampBypass() " FIXME: External Dependency
-	call MoveItemToDateNode(getline("."), a:prefix)
+	if foldclosed(line(".")) == -1
+		silent call MoveItemToDateNode(getline("."), a:prefix)
+	else
+		echo "Can't yet move a fold."
+		" silent call MoveItemToDateNode(getline(foldclosed(line(".")), foldclosedend(line("."))), a:prefix)
+	end
 	call AutoTimestampEnable() " FIXME: External Dependency
 endfunction
 
@@ -256,7 +261,7 @@ endfunction
 
 " }}}
 function! TaskstackEOL() " {{{
-	let l:timestamp_location = match(getline("."), TimestampTag("") . ".*")
+	let l:timestamp_location = match(getline("."), TimestampPattern() . ".*")
 	if l:timestamp_location > 0
 		call cursor(line("."), l:timestamp_location)
 	else
