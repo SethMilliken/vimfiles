@@ -13,23 +13,23 @@ syntax match url /[a-z]*:\/\/[^ >]*/
 " ( ) ongoing with range
 syntax region duration start="^\s*(.)\|\%(^\|^\s\+\)+" end="\s\|$" oneline
 " TS#<####>, PF#<####>, BUG:, FIXME: 
-syntax region bug start="\%(\%(TS#\|PF#\)[0-9]\+\|BUG:\|FIXME:\|STORY:\)" end="\s\|$" oneline
+syntax region bug start="\%(\%(JR#\|TS#\|PF#\)[0-9]\+\|BUG:\|FIXME:\|STORY:\)" end="\s\|$" oneline
 " SECTION
 syntax match section /^\([A-Z]\+ \)\{1,\}/
 " @context
 syntax match context /^@\([0-9a-z.]\+ \)\{1,\}/me=e-1
 " = statement
-syntax region declaration start="\%(^\|^\s\+\)= " end="$" contains=bug,date,url,eoltimestamp oneline
+syntax region declaration start="\%(^\|^\s\+\)= " end="\n" contains=bug,date,url,eoltimestamp oneline
 " ? question about item
-syntax region undetermined start="\%(^\|^\s\+\)? " end="$" contains=bug,date,url,eoltimestamp oneline
+syntax region undetermined start="\%(^\|^\s\+\)? " end="\n" contains=bug,date,url,eoltimestamp oneline
 " o completed todo item
 " x abandoned todo item
-syntax region done start="\%(^\|^\s\+\)[o] " end="$" contains=bug,date,url oneline
-syntax region abandoned start="\%(^\|^\s\+\)[x] " end="$" contains=bug,date,url oneline
+syntax region done start="\%(^\|^\s\+\)[o] " end="\n" contains=bug,date,url oneline
+syntax region abandoned start="\%(^\|^\s\+\)[x] " end="\n" contains=bug,date,url oneline
 " $ costs money
 syntax match expense /\%(^\|^\s\+\)\$\s\+/
 " modeline
-syntax region modeline start="^vim:" end="$"
+syntax region modeline start="^vim:" end="$" oneline
 " }}}
 " highlights {{{
 highlight default link modeline Ignore
