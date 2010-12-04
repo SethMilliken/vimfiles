@@ -22,17 +22,20 @@ if version >= 700
 		color kellys
 		" max vertical and horizontal columns on resize to full screen
 		set fuopt=maxhorz,maxvert
-		set transparency=5
+		" set transparency=5
 		set antialias
 		set gfn=Inconsolata:h15
 		" set a reasonable window size
 		winsize 345 500
 	else
-		" set a reasonable window size
-		winsize 150 200
-		set gfn=Terminal:h6
-		" Presentation mode
-		"set gfn=Bitstream_Vera_Sans_Mono:h11
+		if has("win")
+			set gfn=Terminal:h6
+			" set a reasonable window size
+			winsize 150 200
+		else
+			set gfn=DejaVu\ Sans\ Mono\ 8
+			set guioptons-=m
+		end
 	end
 	" yank to system clipboard
     set clipboard=unnamed
