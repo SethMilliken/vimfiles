@@ -133,6 +133,7 @@ set foldcolumn=4					" trying out fold indicator column
 set display+=lastline				" always show as much of the last line as possible
 set display+=uhex					" show unprintable hex characters as <xx>
 if version > 702 | set rnu | end	" use relative line numbers
+if version > 702 | set clipboard=unnamed | end " use system clipboard; FIXME: what version is required?
 
 " Tags: universal location
 set tags+=$HOME/sandbox/personal/tags
@@ -487,7 +488,9 @@ function! FoldWrap() "{{{
 	" appending closemarker first to prevent ruining current folds
 	call append(line("."), CommentedFoldMarkerClose())
 	call append(line("."), [CommentedFoldMarkerOpen(), ""])
-	normal Jj
+	" BUG: J on a line above an open comment line destroys subsequent fold states in the document unless there is a closed fold immediately above.
+	" normal Jj
+	normal 0d$"_dd0Pj
 endfunction
 
 "}}}
@@ -968,7 +971,7 @@ augroup TaskStack
 	au BufRead *.tst.* nmap <buffer> <silent> <Tab> /^\([A-Z]\+ \)\{1,\}<CR>:nohls<CR>
 	au BufRead *.tst.* nmap <buffer> <silent> <S-Tab> ?^\([A-Z]\+ \)\{1,\}<CR>:nohls<CR>
 	au BufRead *.tst.* nmap <buffer> :w<CR> :call TaskstackAutosaveReminder()<CR>
-	au BufRead *.tst.* nmap <buffer> <F8> :call TaskstackGroups()<CR>
+	au BufRead *.tst.* nmap <buffer> <silent> <C-x>x :call TaskstackGroups()<CR>
 	" Use <C-c> to avoid adding or updating a timestamp after editing.
 	au! InsertLeave *.tst.* :call AddOrUpdateTimestamp("") " FIXME: External Dependency
 	au! FocusLost *.tst.* write

@@ -127,7 +127,12 @@ endfunction
 function! TaskstackMain() " {{{
 	" silent! wincmd t
 	if FindNode(s:main_node_name) == 0
-		exe "normal ggO" . s:main_node_name
+		normal gg
+		if len(getline(".")) == 0
+			call AppendText(s:main_node_name)
+		else
+			exe "normal O" . s:main_node_name
+		end
 		call FoldWrap()
 	end
 	call FindNode(s:main_node_name)
@@ -160,8 +165,8 @@ function! TaskstackDate() "{{{
 			call TaskstackMain()
 		end
 		normal ]z
-		call append(line(".") - 1, [""])
-		normal k
+		call append(line("."), [""])
+		normal j
 		call AppendText(l:currentdate)
 		call FoldWrap()
 		" normal zMzo
