@@ -200,7 +200,7 @@ nmap <silent> <Leader>] :NERDTreeToggle<CR>
 
 " }}}
 " Folds: " {{{
-nmap <silent> <Leader>= :call FoldDefaultNodes()<CR>:normal zvzkzjzt<CR><C-l>
+nmap <silent> <Leader>= :call FoldDefaultNodes()<CR>:normal zv]z[zzt<CR><C-l>
 
 nmap <silent> <Leader>0 :silent normal zvzt<CR><C-l>
 
@@ -516,9 +516,8 @@ endfunction
 
 " }}}
 function! FoldDefaultNodes() "{{{
-	" Save positions
-	let l:origpos = getpos(".")
-	let l:origscroll = getpos(".")
+	" Save position
+	let l:origview = winsaveview()
 	" Do work
 	normal gg
 	normal zR
@@ -529,10 +528,8 @@ function! FoldDefaultNodes() "{{{
 		silent! normal zj
 		let l:hasnext = l:currentline != line(".")
 	endwhile
-	" Restore positions
-	call setpos('.', l:origscroll)
-	normal zt
-	call setpos('.', l:origpos)
+	" Restore position
+	call winrestview(l:origview)
 endfunction
 
 "}}}
