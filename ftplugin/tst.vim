@@ -259,9 +259,9 @@ function! TaskstackHide() " {{{
 endfunction
 
 " }}}
-function! TaskstackAutosaveReminder() " {{{
-	exe ":echo 'Taskstack buffers auto save when you switch away. Use ZZ.'"
+function! TaskstackSave() " {{{
 	silent write
+	call CommitSession() " FIXME: External Dependency
 endfunction
 
 " }}}

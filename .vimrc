@@ -490,9 +490,9 @@ function! FoldWrap() "{{{
 	call append(line("."), [CommentedFoldMarkerOpen(), ""])
 	" BUG: J on a line above an open comment line destroys subsequent fold states in the document unless there is a closed fold immediately above.
 	" normal Jj
-	normal 0d$"_dd0Pj
+	normal 0"9d$"_dd0"9Pj
 endfunction
-
+ 
 "}}}
 function! FoldMarkerOpen() "{{{
 	return substitute(&foldmarker, ",.*", "", "")
@@ -967,7 +967,7 @@ augroup TaskStack
 	au BufRead *.tst.* nmap <buffer> <silent> <C-n> /^@.* {\{3\}<CR>:nohls<CR>
 	au BufRead *.tst.* nmap <buffer> <silent> <Tab> /^\([A-Z]\+ \)\{1,\}<CR>:nohls<CR>
 	au BufRead *.tst.* nmap <buffer> <silent> <S-Tab> ?^\([A-Z]\+ \)\{1,\}<CR>:nohls<CR>
-	au BufRead *.tst.* nmap <buffer> :w<CR> :call TaskstackAutosaveReminder()<CR>
+	au BufRead *.tst.* nmap <buffer> :w<CR> :call TaskstackSave()<CR>
 	au BufRead *.tst.* nmap <buffer> <silent> <C-x>x :call TaskstackGroups()<CR>
 	" Use <C-c> to avoid adding or updating a timestamp after editing.
 	au! InsertLeave *.tst.* :call AddOrUpdateTimestamp("") " FIXME: External Dependency
