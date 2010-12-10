@@ -490,7 +490,7 @@ function! FoldWrap() "{{{
 	call append(line("."), [CommentedFoldMarkerOpen(), ""])
 	" BUG: J on a line above an open comment line destroys subsequent fold states in the document unless there is a closed fold immediately above.
 	" normal Jj
-	normal 0"9d$"_dd0"9Pj
+	normal 0"td$"_dd0"tPj
 endfunction
  
 "}}}
