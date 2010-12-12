@@ -63,6 +63,8 @@
 :CVSWatchOn	vcscommand.txt	/*:CVSWatchOn*
 :CVSWatchRemove	vcscommand.txt	/*:CVSWatchRemove*
 :CVSWatchers	vcscommand.txt	/*:CVSWatchers*
+:CommandT	command-t.txt	/*:CommandT*
+:CommandTFlush	command-t.txt	/*:CommandTFlush*
 :ListMethods	cocoa.txt	/*:ListMethods*
 :MatchDebug	matchit.txt	/*:MatchDebug*
 :NERDTree	NERD_tree.txt	/*:NERDTree*
