@@ -930,18 +930,6 @@ augroup java
 augroup END
 
 " }}}
-" SVN: " {{{
-augroup svn
-	au BufNewFile,BufRead  svn-commit.* setf svn	" handle svn commits
-augroup END
-
-" }}}
-" Text: " {{{
-augroup txt
-	au BufNewFile *.txt set fdm=marker
-augroup END
-
-" }}}
 
 "}}}
 " PLUGINS: {{{
@@ -1007,6 +995,16 @@ augroup helpfiles
 	au FileType help nnoremap <buffer> <silent> <Tab> /\|[^\[:space:]]*\|<CR>zz:nohlsearch<CR>
 	au FileType help nnoremap <buffer> <silent> <CR> <C-]>
 	au FileType help nnoremap <buffer> <silent> <BS> <C-o>
+augroup END
+
+" }}}
+" Gundo: " {{{
+nnoremap <C-y>g :GundoToggle<CR>
+
+" }}}
+" Git Commit: " {{{
+augroup helpfiles 
+	au! FileType gitcommit nnoremap <buffer> <silent> <C-n> :DiffGitCached<CR>\|:wincmd L<CR>|:au FileType git nnoremap <buffer> <silent> <C-n> :hide<CR>
 augroup END
 
 " }}}
