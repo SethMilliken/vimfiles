@@ -50,6 +50,14 @@ nmap <silent> <D-w>	<Esc>:bd<CR>
 
 """ Figure out correct map directive to prevent commands from having other side effects (like moving the cursor).
 
+" Free Command Key Bindings {{{
+macmenu File.Print key=<nop>
+map <silent> <D-p> :ln <CR>
+map <silent> <D-P> :lp <CR>
+map <silent> <D-e> :cn <CR>
+map <silent> <D-E> :cp <CR>
+
+" }}}
 " Command-T " {{{
 macmenu Edit.Find.Find\.\.\. key=<nop>
 map <D-f> :CommandT<CR>

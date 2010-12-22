@@ -14,12 +14,13 @@ fun objc#method_list#Activate(update)
 	if exists('s:mlist_buffer') && bufexists(s:mlist_buffer)
 		let mlist_win = bufwinnr(s:mlist_buffer)
 		if mlist_win == -1
-			sil exe 'belowright sbuf '.s:mlist_buffer
+			sil exe 'vert sbuf '.s:mlist_buffer
 			if a:update | call s:UpdateMethodList() | endif
 		elseif winbufnr(2) == -1
 			quit " If no other windows are open, close the method list automatically.
 		else     " If method list is out of focus, bring it back into focus.
-			exe mlist_win.'winc w'
+			exe mlist_win.'winc b'
+			call s:UpdateMethodList()
 		endif
 	else " Otherwise, create the method list.
 		call s:CreateMethodList()
@@ -28,7 +29,7 @@ fun objc#method_list#Activate(update)
 endf
 
 fun s:CreateMethodList()
-	botright new
+	vert new
 
 	let s:sortPref = 0
 	let s:mlist_buffer = bufnr('%')
@@ -89,7 +90,7 @@ fun s:UpdateMethodList()
 	endif
 
 	call setline(1, sort(keys(s:methods), 's:SortByLineNum'))
-	exe "norm! \<c-w>".line('$').'_'
+	"" exe "norm! \<c-w>".line('$').'_'
 endf
 
 fun s:SortByLineNum(i1, i2)
@@ -100,7 +101,7 @@ endf
 
 fun s:SelectMethod()
 	let number = s:methods[getline('.')]
-	winc q
+	"" winc q
 	winc p
 	call cursor(number, 1)
 endf
