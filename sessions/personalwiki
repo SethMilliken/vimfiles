@@ -257,6 +257,7 @@ set clipboard=unnamed
 set diffopt=filler,vertical
 set directory=~/.vim/swap//,~/vimfiles/swap//
 set display=lastline,uhex
+set errorformat=%l:%f:%m
 set fileencodings=ucs-bom,utf-8,default,latin1
 set foldlevelstart=999
 set fuoptions=maxhorz,maxvert
@@ -291,6 +292,7 @@ set tags=./tags,tags,~/sandbox/personal/tags
 set termencoding=utf-8
 set transparency=5
 set undolevels=100
+set window=70
 set winminheight=0
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
@@ -406,13 +408,12 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +8 ~/sandbox/personal/vimwiki/PersonalWiki.wiki
-badd +6 ~/sandbox/work/wiki/SethMilliken.wiki
+badd +5 ~/sandbox/personal/vimwiki/PersonalProjects.wiki
+badd +2 ~/sandbox/personal/vimwiki/OrganizationNotes.wiki
 silent! argdel *
-set lines=74 columns=235
-set fullscreen
-winpos 0 1050
-buffer ~/sandbox/work/wiki/SethMilliken.wiki
+set lines=71 columns=235
+winpos 0 1028
+buffer ~/sandbox/personal/vimwiki/PersonalProjects.wiki
 set splitbelow splitright
 wincmd _ | wincmd |
 vsplit
@@ -571,49 +572,23 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-1
-normal zo
-1
-normal zo
-let s:l = 7 - ((6 * winheight(0) + 36) / 72)
+let s:l = 5 - ((4 * winheight(0) + 34) / 69)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-7
-normal! 0
+5
+normal! 043l
 wincmd w
 argglobal
-buffer ~/sandbox/personal/vimwiki/PersonalWiki.wiki
+buffer ~/sandbox/personal/vimwiki/OrganizationNotes.wiki
 let s:cpo_save=&cpo
 set cpo&vim
-imap <buffer> <silent> <D-9> :tabn 9
-imap <buffer> <silent> <D-8> :tabn 8
-imap <buffer> <silent> <D-7> :tabn 7
-imap <buffer> <silent> <D-6> :tabn 6
-imap <buffer> <silent> <D-5> :tabn 5
-imap <buffer> <silent> <D-4> :tabn 4
-imap <buffer> <silent> <D-3> :tabn 3
-imap <buffer> <silent> <D-2> :tabn 2
-imap <buffer> <silent> <D-1> :tabn 1
-imap <buffer> <silent> <D-0> :tabn 10
 inoremap <buffer> <S-CR> <br />
 inoremap <buffer> <expr> <S-Tab> vimwiki_tbl#kbd_shift_tab()
 nmap <buffer> <silent> 	 <Plug>VimwikiNextWord
 nmap <buffer> <silent>  <Plug>VimwikiFollowWord
-map <buffer> <silent>  /=\{1,} \(.*\) =\{1,}zt:nohlsearch
-map <buffer> <silent>  ?=\{1,} \(.*\) =\{1,}zt:nohlsearch
 noremap <buffer> <silent> - :call vimwiki#RemoveHeaderLevel()
 noremap <buffer> <silent> = :call vimwiki#AddHeaderLevel()
-imap <buffer> <silent> ¹ :tabn 9
-imap <buffer> <silent> ¸ :tabn 8
-imap <buffer> <silent> · :tabn 7
-imap <buffer> <silent> ¶ :tabn 6
-imap <buffer> <silent> µ :tabn 5
-imap <buffer> <silent> ´ :tabn 4
-imap <buffer> <silent> ³ :tabn 3
-imap <buffer> <silent> ² :tabn 2
-imap <buffer> <silent> ± :tabn 1
-imap <buffer> <silent> ° :tabn 10
 nnoremap <buffer> O :call vimwiki_lst#insertOo('O')a
 nmap <buffer> <silent> \wr <Plug>VimwikiRenameWord
 nmap <buffer> <silent> \wd <Plug>VimwikiDeleteWord
@@ -632,16 +607,6 @@ onoremap <buffer> <silent> i\ :call vimwiki#TO_table_cell(1, 0)
 vnoremap <buffer> <silent> ih :call vimwiki#TO_header(1, 1)
 onoremap <buffer> <silent> ih :call vimwiki#TO_header(1, 0)
 nnoremap <buffer> o :call vimwiki_lst#insertOo('o')a
-nmap <buffer> <silent> <D-9> 9gt
-nmap <buffer> <silent> <D-8> 8gt
-nmap <buffer> <silent> <D-7> 7gt
-nmap <buffer> <silent> <D-6> 6gt
-nmap <buffer> <silent> <D-5> 5gt
-nmap <buffer> <silent> <D-4> 4gt
-nmap <buffer> <silent> <D-3> 3gt
-nmap <buffer> <silent> <D-2> 2gt
-nmap <buffer> <silent> <D-1> 1gt
-nmap <buffer> <silent> <D-0> 10gt
 nnoremap <buffer> <M-Right> :VimwikiTableMoveColumnRight
 nnoremap <buffer> <M-Left> :VimwikiTableMoveColumnLeft
 nmap <buffer> <silent> <Nul> <Plug>VimwikiToggleListItem
@@ -653,16 +618,6 @@ nmap <buffer> <silent> <C-CR> <Plug>VimwikiVSplitWord
 nmap <buffer> <silent> <S-CR> <Plug>VimwikiSplitWord
 inoremap <buffer> <expr> 	 vimwiki_tbl#kbd_tab()
 inoremap <buffer> <expr>  vimwiki_tbl#kbd_cr()
-nmap <buffer> <silent> ¹ 9gt
-nmap <buffer> <silent> ¸ 8gt
-nmap <buffer> <silent> · 7gt
-nmap <buffer> <silent> ¶ 6gt
-nmap <buffer> <silent> µ 5gt
-nmap <buffer> <silent> ´ 4gt
-nmap <buffer> <silent> ³ 3gt
-nmap <buffer> <silent> ² 2gt
-nmap <buffer> <silent> ± 1gt
-nmap <buffer> <silent> ° 10gt
 let &cpo=s:cpo_save
 unlet s:cpo_save
 setlocal keymap=
@@ -754,7 +709,7 @@ setlocal noshortname
 setlocal nosmartindent
 setlocal softtabstop=0
 setlocal nospell
-setlocal spellcapcheck=off
+setlocal spellcapcheck=
 setlocal spellfile=
 setlocal spelllang=en
 setlocal statusline=
@@ -773,12 +728,18 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 8 - ((7 * winheight(0) + 36) / 72)
+1
+normal zo
+6
+normal zo
+1
+normal zo
+let s:l = 34 - ((33 * winheight(0) + 34) / 69)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-8
-normal! 014l
+34
+normal! 0227l
 wincmd w
 exe 'vert 1resize ' . ((&columns * 117 + 117) / 235)
 exe 'vert 2resize ' . ((&columns * 117 + 117) / 235)

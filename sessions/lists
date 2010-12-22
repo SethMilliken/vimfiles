@@ -13,8 +13,6 @@ noremap! <D-Right> <End>
 noremap! <M-Left> <C-Left>
 noremap! <D-Left> <Home>
 inoremap <silent> <S-Tab> =BackwardsSnippet()
-imap <silent> <Plug>IMAP_JumpBack =IMAP_Jumpfunc('b', 0)
-imap <silent> <Plug>IMAP_JumpForward =IMAP_Jumpfunc('', 0)
 inoremap <silent> <Plug>NERDCommenterInInsert  <BS>:call NERDComment(0, "insert")
 imap <F1> :Help
 imap <Nul> :
@@ -33,15 +31,12 @@ nmap c :silent! lclose
 nmap ? :call FunctionLocationIndex()
 nmap / :call HeaderLocationIndex()
 snoremap <silent> 	 i<Right>=TriggerSnippet()
-vmap <NL> <Plug>IMAP_JumpForward
-nmap <NL> <Plug>IMAP_JumpForward
 nnoremap <silent>  :call Reset() | nohls
 snoremap  b<BS>
-nmap <silent>  :call RemoveTimestamp(g:timestamp_annotation)
-nmap <silent>  :call AddOrUpdateTimestamp(g:timestamp_annotation)
-nmap <silent>  :call RemoveTimestamp("")
+nmap <silent>  :call RemoveTimestamp()
+nmap <silent>  :call AddOrUpdateTimestampSolicitingAnnotation()
 nmap <silent>  :call AddOrUpdateTimestamp("")
-nmap <silent>  :call TimestampAutoUpdateToggle()
+nmap <silent>  :call TimestampAutoUpdateToggle()
 nmap  :call ReloadVimrc() | :echo "Resourced .vimrc."
 snoremap % b<BS>%
 snoremap ' b<BS>'
@@ -124,7 +119,7 @@ nmap <silent> \c :call ScratchBuffer("scratch")
 nmap <silent> \0 :silent normal zvzt
 nmap <silent> \= :call FoldDefaultNodes():normal zvzkzjzt
 nmap <silent> \] :NERDTreeToggle
-nmap \j :call JournalEntry()
+nmap <silent> \j :call HandleMantis()
 nmap \\ :call CommitSession()
 nmap <silent> \w :!wc -w %
 vmap ]% ]%m'gv``
@@ -184,12 +179,6 @@ nnoremap <silent> <Plug>VCSDelete :VCSDelete
 nnoremap <silent> <Plug>VCSCommit :VCSCommit
 nnoremap <silent> <Plug>VCSAnnotate :VCSAnnotate
 nnoremap <silent> <Plug>VCSAdd :VCSAdd
-vmap <silent> <Plug>IMAP_JumpBack `<i=IMAP_Jumpfunc('b', 0)
-vmap <silent> <Plug>IMAP_JumpForward i=IMAP_Jumpfunc('', 0)
-vmap <silent> <Plug>IMAP_DeleteAndJumpBack "_<Del>i=IMAP_Jumpfunc('b', 0)
-vmap <silent> <Plug>IMAP_DeleteAndJumpForward "_<Del>i=IMAP_Jumpfunc('', 0)
-nmap <silent> <Plug>IMAP_JumpBack i=IMAP_Jumpfunc('b', 0)
-nmap <silent> <Plug>IMAP_JumpForward i=IMAP_Jumpfunc('', 0)
 map <M-F3> :call CSV_clear_all()  
 map <S-F3> :call CSV_toggle_field(CSV_get_field(0))
 map <S-F5> :call CSV_goto_highlighted(-1)
@@ -235,14 +224,10 @@ nmap <D-v> "*P
 imap S <Plug>ISurround
 imap s <Plug>Isurround
 inoremap <silent> 	 =TriggerSnippet()
-imap <NL> <Plug>IMAP_JumpForward
 imap <silent>  :call Reset() | nohlsa
-imap  :set completeopt+=menuonea
+inoremap  :set completeopt+=menuonea
 inoremap <silent> 	 =ShowAvailableSnips()
 imap  <Plug>Isurround
-imap <silent>  :call RemoveTimestamp("")a
-imap <silent>  :call AddOrUpdateTimestamp("")a
-imap <silent>  :call TimestampAutoUpdateToggle()
 imap   :call ReloadVimrc() | :echo "Resourced .vimrc."
 let &cpo=s:cpo_save
 unlet s:cpo_save
@@ -253,10 +238,11 @@ set clipboard=unnamed
 set commentstring=
 set diffopt=filler,vertical
 set directory=~/.vim/swap//,~/vimfiles/swap//
+set display=lastline,uhex
 set fileencodings=ucs-bom,utf-8,default,latin1
 set foldlevelstart=999
 set fuoptions=maxhorz,maxvert
-set guifont=Inconsolata:h13
+set guifont=Inconsolata:h11
 set guioptions=egmrLt
 set guitablabel=%m\ %N\ %t\ %r
 set helplang=en
@@ -271,6 +257,7 @@ set listchars=tab:>-,trail:-
 set mouse=a
 set printexpr=system('open\ -a\ Preview\ '.v:fname_in)\ +\ v:shell_error
 set ruler
+set runtimepath=~/.vim,~/.vim/bundle/PickAColor,/Applications/MacVim.app/Contents/Resources/vim/vimfiles,/Applications/MacVim.app/Contents/Resources/vim/runtime,/Applications/MacVim.app/Contents/Resources/vim/vimfiles/after,~/.vim/after
 set sessionoptions=folds,help,options,tabpages,winsize,globals,sesdir,resize,winpos,unix
 set shiftwidth=4
 set shortmess=filnxtToOIA
@@ -283,31 +270,26 @@ set statusline=%<(%n)\ %m%y%r\ %f\ %=%-14.(%l,%c%V%)\ %P
 set switchbuf=useopen,usetab
 set tabline=%!MyTabLine()
 set tabpagemax=100
-set tabstop=4
+set tabstop=2
 set tags=./tags,tags,~/sandbox/personal/tags
 set termencoding=utf-8
 set undolevels=100
-set window=72
+set window=86
 set winminheight=0
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
 let NERDTreeMapPreviewSplit = "gi"
 let NERDTreeMapCloseChildren = "X"
 let NERDTreeShowHidden = "0"
-let ConqueTerm_EscKey = "<Esc>"
 let TailMinusF_Loaded =  1 
 let NERDSpaceDelims = "0"
 let NERDTreeMapCloseDir = "x"
-let ConqueTerm_Color =  1 
-let ConqueTerm_Version =  120 
 let NERDUsePlaceHolders = "1"
 let NERDTreeShowLineNumbers = "0"
 let DirDiffSort =  1 
-let NERDTreeBookmarksFile = "/Users/seth/.NERDTreeBookmarks"
 let NERDTreeMapToggleHidden = "I"
 let NERDTreeWinSize = "31"
 let NERDTreeMapRefreshRoot = "R"
-let NERDDelimiterRequests = "1"
 let DirDiffInteractive =  0 
 let NERDTreeMapPreview = "go"
 let NERDTreeMapActivateNode = "o"
@@ -326,7 +308,6 @@ let NERDTreeMapOpenExpl = "e"
 let CSV_string_delimiter = "\""
 let NERDTreeMouseMode = "1"
 let NERDDefaultNesting = "1"
-let TailMinusF_Height =  10 
 let NERDTreeChDirMode = "0"
 let NERDTreeRemoveDirCmd = "rm -rf "
 let NERDTreeAutoCenterThreshold = "3"
@@ -338,14 +319,14 @@ let NERDTreeHijackNetrw = "1"
 let NERDTreeMapFilesystemMenu = "m"
 let NERDTreeMapRefresh = "r"
 let CSV_field_list = ""
+let TailMinusF_Height =  10 
 let NERDTreeHighlightCursorline = "1"
+let NERDDelimiterRequests = "1"
 let NERDLPlace = "[>"
 let NERDTreeMapOpenInTab = "t"
 let CSV_separator = ","
 let DirDiffExcludes = ""
-let ConqueTerm_CloseOnEnd =  0 
 let NERDCreateDefaultMappings = "1"
-let ConqueTerm_InsertOnEnter =  0 
 let DirDiffDynamicDiffText =  0 
 let NERDTreeMapPreviewVSplit = "gs"
 let NERDChristmasTree = "1"
@@ -364,9 +345,7 @@ let NERDTreeAutoCenter = "1"
 let DirDiffTextOnlyIn = "Only in "
 let TailMinusF_Center_Win =  0 
 let DirDiffTextAnd = " and "
-let Imap_Debug =  0 
 let NERDTreeMapOpenVSplit = "s"
-let ConqueTerm_ReadUnfocused =  0 
 let NERDTreeMapDeleteBookmark = "D"
 let NERDBlockComIgnoreEmpty = "0"
 let AutoHiVersion = "0.2"
@@ -374,27 +353,19 @@ let NERDTreeMapJumpNextSibling = "<C-j>"
 let DirDiffIgnoreCase =  0 
 let NERDTreeMapJumpRoot = "P"
 let NERDTreeCopyCmd = "cp -r "
-let ConqueTerm_SendVisKey = "<F9>"
 let NERDTreeMapQuit = "q"
-let Imap_StickyPlaceHolders =  1 
 let NERDTreeMapChangeRoot = "C"
 let NERDCompactSexyComs = "0"
 let NERDTreeSortDirs = "1"
-let ConqueTerm_TERM = "vt100"
 let NERDTreeMapToggleFiles = "F"
 let NERDAllowAnyVisualDelims = "1"
-let ConqueTerm_CWInsert =  0 
-let ConqueTerm_Idx =  0 
-let Imap_DeleteEmptyPlaceHolders =  1 
 let DirDiffIgnore = ""
-let ConqueTerm_PromptRegex = "^\\w\\+@[0-9A-Za-z_.-]\\+:[0-9A-Za-z_./\\~,:-]\\+\\$"
 let BufExploreAdd =  1 
 let NERDTreeMapJumpFirstChild = "K"
 let NERDTreeMapOpenRecursively = "O"
 let NERDTreeMapToggleBookmarks = "B"
-let ConqueTerm_Loaded =  1 
+let NERDTreeBookmarksFile = "/Users/seth/.NERDTreeBookmarks"
 let NERDTreeMapUpdir = "u"
-let ConqueTerm_Syntax = "conque_term"
 let NERDTreeMapUpdirKeepOpen = "U"
 let NERDTreeQuitOnOpen = "0"
 silent only
@@ -404,312 +375,41 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
 endif
 set shortmess=aoO
 badd +1 ~/sandbox/personal/lists/readinglist.txt
-badd +13 ~/sandbox/personal/lists/videolist.txt
-badd +0 ~/sandbox/personal/sync/cloudstack.tst.txt
+badd +0 ~/sandbox/personal/lists/videolist.txt
 silent! argdel *
-set lines=73 columns=235
+set lines=87 columns=274
+set fullscreen
 winpos 0 1028
 buffer ~/sandbox/personal/lists/readinglist.txt
 set splitbelow splitright
 wincmd _ | wincmd |
-split
-1wincmd k
-wincmd _ | wincmd |
 vsplit
 1wincmd h
 wincmd w
-wincmd w
 wincmd t
 set winheight=1 winwidth=1
-exe '1resize ' . ((&lines * 35 + 36) / 73)
-exe 'vert 1resize ' . ((&columns * 117 + 117) / 235)
-exe '2resize ' . ((&lines * 35 + 36) / 73)
-exe 'vert 2resize ' . ((&columns * 117 + 117) / 235)
-exe '3resize ' . ((&lines * 35 + 36) / 73)
+exe 'vert 1resize ' . ((&columns * 136 + 137) / 274)
+exe 'vert 2resize ' . ((&columns * 137 + 137) / 274)
 argglobal
-nmap <buffer>  /^@.* {{{:nohls
-nmap <buffer>  ?^@.* {{{:nohls
-setlocal keymap=
-setlocal noarabic
-setlocal noautoindent
-setlocal balloonexpr=
-setlocal nobinary
-setlocal bufhidden=
-setlocal buflisted
-setlocal buftype=
-setlocal nocindent
-setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
-setlocal cinoptions=
-setlocal cinwords=if,else,while,do,for,switch
-setlocal colorcolumn=
-setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
-setlocal commentstring=
-setlocal complete=.,w,b,u,t,i
-setlocal concealcursor=
-setlocal conceallevel=0
-setlocal completefunc=
-setlocal nocopyindent
-setlocal cryptmethod=
-setlocal nocursorbind
-setlocal nocursorcolumn
-set cursorline
-setlocal cursorline
-setlocal define=
-setlocal dictionary=
-setlocal nodiff
-setlocal equalprg=
-setlocal errorformat=
-setlocal noexpandtab
-if &filetype != 'txt'
-setlocal filetype=txt
-endif
-set foldcolumn=4
-setlocal foldcolumn=4
-setlocal foldenable
-setlocal foldexpr=0
-setlocal foldignore=#
-setlocal foldlevel=999
-setlocal foldmarker={{{,}}}
-set foldmethod=marker
-setlocal foldmethod=marker
-setlocal foldminlines=1
-setlocal foldnestmax=20
-set foldtext=MyFoldText()
-setlocal foldtext=MyFoldText()
-setlocal formatexpr=
-setlocal formatoptions=tcq
-setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
-setlocal grepprg=
-setlocal iminsert=2
-setlocal imsearch=2
-setlocal include=
-setlocal includeexpr=
-setlocal indentexpr=
-setlocal indentkeys=0{,0},:,0#,!^F,O,e
-setlocal noinfercase
-setlocal iskeyword=@,48-57,_,192-255,-
-setlocal keywordprg=
-set linebreak
-setlocal linebreak
-setlocal nolisp
-setlocal nolist
-setlocal nomacmeta
-setlocal makeprg=
-setlocal matchpairs=(:),{:},[:]
-setlocal modeline
-setlocal modifiable
-setlocal nrformats=octal,hex
-set number
-setlocal number
-setlocal numberwidth=4
-setlocal omnifunc=
-setlocal path=
-setlocal nopreserveindent
-setlocal nopreviewwindow
-setlocal quoteescape=\\
-setlocal noreadonly
-setlocal norelativenumber
-setlocal norightleft
-setlocal rightleftcmd=search
-setlocal noscrollbind
-setlocal shiftwidth=4
-setlocal noshortname
-setlocal nosmartindent
-setlocal softtabstop=0
-setlocal nospell
-setlocal spellcapcheck=
-setlocal spellfile=
-setlocal spelllang=en
-setlocal statusline=
-setlocal suffixesadd=
-setlocal swapfile
-setlocal synmaxcol=3000
-if &syntax != 'txt'
-setlocal syntax=txt
-endif
-setlocal tabstop=4
-setlocal tags=
-setlocal textwidth=0
-setlocal thesaurus=
-setlocal noundofile
-setlocal nowinfixheight
-setlocal nowinfixwidth
-setlocal wrap
-setlocal wrapmargin=0
-1
-normal zo
-3
-normal zo
-1
-normal zo
-13
-normal zo
-24
-normal zo
-13
-normal zo
-let s:l = 34 - ((16 * winheight(0) + 17) / 35)
-if s:l < 1 | let s:l = 1 | endif
-exe s:l
-normal! zt
-34
-normal! 088l
-wincmd w
-argglobal
-buffer ~/sandbox/personal/lists/videolist.txt
-setlocal keymap=
-setlocal noarabic
-setlocal noautoindent
-setlocal balloonexpr=
-setlocal nobinary
-setlocal bufhidden=
-setlocal buflisted
-setlocal buftype=
-setlocal nocindent
-setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
-setlocal cinoptions=
-setlocal cinwords=if,else,while,do,for,switch
-setlocal colorcolumn=
-setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
-setlocal commentstring=
-setlocal complete=.,w,b,u,t,i
-setlocal concealcursor=
-setlocal conceallevel=0
-setlocal completefunc=
-setlocal nocopyindent
-setlocal cryptmethod=
-setlocal nocursorbind
-setlocal nocursorcolumn
-set cursorline
-setlocal cursorline
-setlocal define=
-setlocal dictionary=
-setlocal nodiff
-setlocal equalprg=
-setlocal errorformat=
-setlocal noexpandtab
-if &filetype != 'txt'
-setlocal filetype=txt
-endif
-set foldcolumn=4
-setlocal foldcolumn=4
-setlocal foldenable
-setlocal foldexpr=0
-setlocal foldignore=#
-setlocal foldlevel=999
-setlocal foldmarker={{{,}}}
-set foldmethod=marker
-setlocal foldmethod=marker
-setlocal foldminlines=1
-setlocal foldnestmax=20
-set foldtext=MyFoldText()
-setlocal foldtext=MyFoldText()
-setlocal formatexpr=
-setlocal formatoptions=tcq
-setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
-setlocal grepprg=
-setlocal iminsert=2
-setlocal imsearch=2
-setlocal include=
-setlocal includeexpr=
-setlocal indentexpr=
-setlocal indentkeys=0{,0},:,0#,!^F,o,O,e
-setlocal noinfercase
-setlocal iskeyword=@,48-57,_,192-255,-
-setlocal keywordprg=
-set linebreak
-setlocal linebreak
-setlocal nolisp
-setlocal nolist
-setlocal nomacmeta
-setlocal makeprg=
-setlocal matchpairs=(:),{:},[:]
-setlocal modeline
-setlocal modifiable
-setlocal nrformats=octal,hex
-set number
-setlocal number
-setlocal numberwidth=4
-setlocal omnifunc=
-setlocal path=
-setlocal nopreserveindent
-setlocal nopreviewwindow
-setlocal quoteescape=\\
-setlocal noreadonly
-setlocal norelativenumber
-setlocal norightleft
-setlocal rightleftcmd=search
-setlocal noscrollbind
-setlocal shiftwidth=4
-setlocal noshortname
-setlocal nosmartindent
-setlocal softtabstop=0
-setlocal nospell
-setlocal spellcapcheck=
-setlocal spellfile=
-setlocal spelllang=en
-setlocal statusline=
-setlocal suffixesadd=
-setlocal swapfile
-setlocal synmaxcol=3000
-if &syntax != 'txt'
-setlocal syntax=txt
-endif
-setlocal tabstop=4
-setlocal tags=
-setlocal textwidth=0
-setlocal thesaurus=
-setlocal noundofile
-setlocal nowinfixheight
-setlocal nowinfixwidth
-setlocal wrap
-setlocal wrapmargin=0
-1
-normal zo
-4
-normal zc
-1
-normal zo
-13
-normal zo
-14
-normal zo
-24
-normal zo
-35
-normal zo
-81
-normal zo
-88
-normal zo
-177
-normal zc
-13
-normal zo
-let s:l = 4 - ((1 * winheight(0) + 17) / 35)
-if s:l < 1 | let s:l = 1 | endif
-exe s:l
-normal! zt
-4
-normal! 0
-wincmd w
-argglobal
-buffer ~/sandbox/personal/sync/cloudstack.tst.txt
+nmap <buffer> <silent> 	 /^\([A-Z]\+ \)\{1,\}:nohls
 let s:cpo_save=&cpo
 set cpo&vim
-nmap <buffer> <NL> :call TaskstackMoveItemDown()
-nmap <buffer>  :call TaskstackMoveItemUp()
-nmap <buffer> $ :call TaskstackEOL()
+nmap <buffer> <silent> <NL> :call TaskstackMoveItemDown()
+nmap <buffer> <silent>  :call TaskstackMoveItemUp()
+nmap <buffer> <silent>  /^@.* {\{3\}:nohls
+nmap <buffer> <silent>  ?^@.* {\{3\}:nohls
+nmap <buffer> <silent> $ :call TaskstackEOL()
 nmap <buffer> :w :call TaskstackAutosaveReminder()
 nmap <buffer> LL :call TaskstackScratch()
 nmap <buffer> NN :call TaskstackNewItem()
-nmap <buffer> QQ :call TagstackCompleteItem(g:completed_prefix)
-nmap <buffer> XX :call TagstackCompleteItem(g:aborted_prefix)
+nmap <buffer> QQ :call TaskstackCompleteItem(g:completed_prefix)
+nmap <buffer> XX :call TaskstackCompleteItem(g:aborted_prefix)
 nmap <buffer> ZZ :call TaskstackHide()
 nmap <buffer> <F8> :call TaskstackGroups()
+nmap <buffer> <silent> <S-Tab> ?^\([A-Z]\+ \)\{1,\}:nohls
 imap <buffer> NN :call TaskstackNewItem()
-imap <buffer> QQ :call TagstackCompleteItem(g:completed_prefix)
-imap <buffer> XX :call TagstackCompleteItem(g:aborted_prefix)
+imap <buffer> QQ :call TaskstackCompleteItem(g:completed_prefix)
+imap <buffer> XX :call TaskstackCompleteItem(g:aborted_prefix)
 imap <buffer> ZZ :call TaskstackHide()
 let &cpo=s:cpo_save
 unlet s:cpo_save
@@ -744,15 +444,15 @@ setlocal nodiff
 setlocal equalprg=
 setlocal errorformat=
 setlocal noexpandtab
-if &filetype != '_.txt.tst'
-setlocal filetype=_.txt.tst
+if &filetype != '_tst.txt'
+setlocal filetype=_tst.txt
 endif
 set foldcolumn=4
 setlocal foldcolumn=4
 setlocal foldenable
 setlocal foldexpr=0
 setlocal foldignore=#
-setlocal foldlevel=999
+setlocal foldlevel=3
 setlocal foldmarker={{{,}}}
 set foldmethod=marker
 setlocal foldmethod=marker
@@ -784,7 +484,7 @@ setlocal modeline
 setlocal modifiable
 setlocal nrformats=octal,hex
 set number
-setlocal number
+setlocal nonumber
 setlocal numberwidth=4
 setlocal omnifunc=
 setlocal path=
@@ -792,7 +492,182 @@ setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
-setlocal norelativenumber
+set relativenumber
+setlocal relativenumber
+setlocal norightleft
+setlocal rightleftcmd=search
+setlocal noscrollbind
+setlocal shiftwidth=4
+setlocal noshortname
+setlocal nosmartindent
+setlocal softtabstop=0
+setlocal nospell
+setlocal spellcapcheck=off
+setlocal spellfile=
+setlocal spelllang=en
+setlocal statusline=
+setlocal suffixesadd=
+setlocal swapfile
+setlocal synmaxcol=3000
+if &syntax != '_tst.txt'
+setlocal syntax=_tst.txt
+endif
+setlocal tabstop=2
+setlocal tags=
+setlocal textwidth=0
+setlocal thesaurus=
+setlocal noundofile
+set winfixheight
+setlocal winfixheight
+setlocal nowinfixwidth
+setlocal wrap
+setlocal wrapmargin=0
+1
+normal zo
+3
+normal zc
+1
+normal zo
+13
+normal zo
+14
+normal zo
+24
+normal zo
+38
+normal zo
+46
+normal zo
+56
+normal zc
+46
+normal zo
+13
+normal zo
+77
+normal zo
+111
+normal zc
+77
+normal zo
+132
+normal zo
+212
+normal zc
+132
+normal zo
+let s:l = 27 - ((14 * winheight(0) + 42) / 85)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+27
+normal! 026l
+wincmd w
+argglobal
+buffer ~/sandbox/personal/lists/videolist.txt
+nmap <buffer> <silent> 	 /^\([A-Z]\+ \)\{1,\}:nohls
+let s:cpo_save=&cpo
+set cpo&vim
+nmap <buffer> <silent> <NL> :call TaskstackMoveItemDown()
+nmap <buffer> <silent>  :call TaskstackMoveItemUp()
+nmap <buffer> <silent>  /^@.* {\{3\}:nohls
+nmap <buffer> <silent>  ?^@.* {\{3\}:nohls
+nmap <buffer> <silent> $ :call TaskstackEOL()
+nmap <buffer> :w :call TaskstackAutosaveReminder()
+nmap <buffer> LL :call TaskstackScratch()
+nmap <buffer> NN :call TaskstackNewItem()
+nmap <buffer> QQ :call TaskstackCompleteItem(g:completed_prefix)
+nmap <buffer> XX :call TaskstackCompleteItem(g:aborted_prefix)
+nmap <buffer> ZZ :call TaskstackHide()
+nmap <buffer> <F8> :call TaskstackGroups()
+nmap <buffer> <silent> <S-Tab> ?^\([A-Z]\+ \)\{1,\}:nohls
+imap <buffer> NN :call TaskstackNewItem()
+imap <buffer> QQ :call TaskstackCompleteItem(g:completed_prefix)
+imap <buffer> XX :call TaskstackCompleteItem(g:aborted_prefix)
+imap <buffer> ZZ :call TaskstackHide()
+let &cpo=s:cpo_save
+unlet s:cpo_save
+setlocal keymap=
+setlocal noarabic
+setlocal noautoindent
+setlocal balloonexpr=
+setlocal nobinary
+setlocal bufhidden=
+setlocal buflisted
+setlocal buftype=
+setlocal nocindent
+setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
+setlocal cinoptions=
+setlocal cinwords=if,else,while,do,for,switch
+setlocal colorcolumn=
+setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
+setlocal commentstring=
+setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
+setlocal completefunc=
+setlocal nocopyindent
+setlocal cryptmethod=
+setlocal nocursorbind
+setlocal nocursorcolumn
+set cursorline
+setlocal cursorline
+setlocal define=
+setlocal dictionary=
+setlocal nodiff
+setlocal equalprg=
+setlocal errorformat=
+setlocal noexpandtab
+if &filetype != '_tst.txt'
+setlocal filetype=_tst.txt
+endif
+set foldcolumn=4
+setlocal foldcolumn=4
+setlocal foldenable
+setlocal foldexpr=0
+setlocal foldignore=#
+setlocal foldlevel=2
+setlocal foldmarker={{{,}}}
+set foldmethod=marker
+setlocal foldmethod=marker
+setlocal foldminlines=1
+setlocal foldnestmax=20
+set foldtext=MyFoldText()
+setlocal foldtext=MyFoldText()
+setlocal formatexpr=
+setlocal formatoptions=tcq
+setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
+setlocal grepprg=
+setlocal iminsert=2
+setlocal imsearch=2
+setlocal include=
+setlocal includeexpr=
+setlocal indentexpr=
+setlocal indentkeys=0{,0},:,0#,!^F,O,e
+setlocal noinfercase
+setlocal iskeyword=@,48-57,_,192-255,-
+setlocal keywordprg=
+set linebreak
+setlocal linebreak
+setlocal nolisp
+setlocal nolist
+setlocal nomacmeta
+setlocal makeprg=
+setlocal matchpairs=(:),{:},[:]
+setlocal modeline
+setlocal modifiable
+setlocal nrformats=octal,hex
+set number
+setlocal nonumber
+setlocal numberwidth=4
+setlocal omnifunc=
+setlocal path=
+setlocal nopreserveindent
+setlocal nopreviewwindow
+setlocal quoteescape=\\
+setlocal noreadonly
+set relativenumber
+setlocal relativenumber
 setlocal norightleft
 setlocal rightleftcmd=search
 setlocal noscrollbind
@@ -808,8 +683,8 @@ setlocal statusline=
 setlocal suffixesadd=
 setlocal swapfile
 setlocal synmaxcol=3000
-if &syntax != '_.txt.tst'
-setlocal syntax=_.txt.tst
+if &syntax != '_tst.txt'
+setlocal syntax=_tst.txt
 endif
 setlocal tabstop=2
 setlocal tags=
@@ -822,18 +697,26 @@ setlocal wrap
 setlocal wrapmargin=0
 1
 normal zo
-let s:l = 26 - ((24 * winheight(0) + 17) / 35)
+4
+normal zc
+1
+normal zo
+13
+normal zo
+180
+normal zc
+13
+normal zo
+let s:l = 13 - ((0 * winheight(0) + 42) / 85)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-26
+13
 normal! 0
 wincmd w
-exe '1resize ' . ((&lines * 35 + 36) / 73)
-exe 'vert 1resize ' . ((&columns * 117 + 117) / 235)
-exe '2resize ' . ((&lines * 35 + 36) / 73)
-exe 'vert 2resize ' . ((&columns * 117 + 117) / 235)
-exe '3resize ' . ((&lines * 35 + 36) / 73)
+2wincmd w
+exe 'vert 1resize ' . ((&columns * 136 + 137) / 274)
+exe 'vert 2resize ' . ((&columns * 137 + 137) / 274)
 tabnext 1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf

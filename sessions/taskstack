@@ -2,8 +2,6 @@ let SessionLoad = 1
 if &cp | set nocp | endif
 let s:cpo_save=&cpo
 set cpo&vim
-imap <silent> <Plug>IMAP_JumpForward =IMAP_Jumpfunc('', 0)
-imap <silent> <Plug>IMAP_JumpBack =IMAP_Jumpfunc('b', 0)
 imap <D-BS> 
 imap <M-BS> 
 imap <M-Down> }
@@ -33,13 +31,8 @@ nmap c :silent! lclose
 nmap ? :call FunctionLocationIndex()
 nmap / :call HeaderLocationIndex()
 snoremap <silent> 	 i<Right>=TriggerSnippet()
-nmap <NL> <Plug>IMAP_JumpForward
-vmap <NL> <Plug>IMAP_JumpForward
 nnoremap <silent>  :call Reset() | nohls
-map  :PickHEX 
 snoremap  b<BS>
-nmap <silent>  :call AddOrUpdateTimestampSolicitingAnnotation()
-nmap <silent>  :call RemoveTimestamp(g:timestamp_annotation)
 nmap <silent>  :call RemoveTimestamp()
 nmap <silent>  :call AddOrUpdateTimestampSolicitingAnnotation()
 nmap <silent>  :call AddOrUpdateTimestamp("")
@@ -124,7 +117,7 @@ nmap <silent> \t :call HandleTS()
 nmap <silent> \/ :call HandleURI()
 nmap <silent> \c :call ScratchBuffer("scratch")
 nmap <silent> \0 :silent normal zvzt
-nmap <silent> \= :call FoldDefaultNodes():normal zvzkzjzt
+nmap <silent> \= :call FoldDefaultNodes():normal zv]z[zzt
 nmap <silent> \] :NERDTreeToggle
 nmap <silent> \j :call HandleMantis()
 nmap \\ :call CommitSession()
@@ -142,12 +135,6 @@ nmap ySs <Plug>YSsurround
 nmap yss <Plug>Yssurround
 nmap yS <Plug>YSurround
 nmap ys <Plug>Ysurround
-nmap <silent> <Plug>IMAP_JumpForward i=IMAP_Jumpfunc('', 0)
-nmap <silent> <Plug>IMAP_JumpBack i=IMAP_Jumpfunc('b', 0)
-vmap <silent> <Plug>IMAP_DeleteAndJumpForward "_<Del>i=IMAP_Jumpfunc('', 0)
-vmap <silent> <Plug>IMAP_DeleteAndJumpBack "_<Del>i=IMAP_Jumpfunc('b', 0)
-vmap <silent> <Plug>IMAP_JumpForward i=IMAP_Jumpfunc('', 0)
-vmap <silent> <Plug>IMAP_JumpBack `<i=IMAP_Jumpfunc('b', 0)
 nnoremap <C-Down> :silent! :call AdjustFont(-1)
 nnoremap <C-Up> :silent! :call AdjustFont(1)
 nnoremap <silent> <C-Right> gt
@@ -237,21 +224,16 @@ nmap <D-v> "*P
 imap S <Plug>ISurround
 imap s <Plug>Isurround
 inoremap <silent> 	 =TriggerSnippet()
-imap <NL> <Plug>IMAP_JumpForward
 imap <silent>  :call Reset() | nohlsa
 inoremap  :set completeopt+=menuonea
 inoremap <silent> 	 =ShowAvailableSnips()
 imap  <Plug>Isurround
-imap <silent>  :call TimestampAutoUpdateToggle()
-imap <silent>  :call AddOrUpdateTimestamp("")a
-imap <silent>  :call RemoveTimestamp("")a
 imap   :call ReloadVimrc() | :echo "Resourced .vimrc."
 let &cpo=s:cpo_save
 unlet s:cpo_save
 set autowrite
 set background=dark
 set backspace=indent,eol,start
-set binary
 set clipboard=unnamed
 set commentstring=
 set diffopt=filler,vertical
@@ -260,7 +242,7 @@ set display=lastline,uhex
 set fileencodings=ucs-bom,utf-8,default,latin1
 set foldlevelstart=999
 set fuoptions=maxhorz,maxvert
-set guifont=Inconsolata:h13
+set guifont=Inconsolata:h11
 set guioptions=egmrLt
 set guitablabel=%m\ %N\ %t\ %r
 set helplang=en
@@ -273,7 +255,6 @@ set langmenu=none
 set laststatus=2
 set listchars=tab:>-,trail:-
 set mouse=a
-set operatorfunc=<SNR>29_opfunc
 set printexpr=system('open\ -a\ Preview\ '.v:fname_in)\ +\ v:shell_error
 set ruler
 set runtimepath=~/.vim,~/.vim/bundle/PickAColor,/Applications/Tasks.app/Contents/Resources/vim/vimfiles,/Applications/Tasks.app/Contents/Resources/vim/runtime,/Applications/Tasks.app/Contents/Resources/vim/vimfiles/after,~/.vim/after
@@ -289,24 +270,20 @@ set statusline=%<(%n)\ %m%y%r\ %f\ %=%-14.(%l,%c%V%)\ %P
 set switchbuf=useopen,usetab
 set tabline=%!MyTabLine()
 set tabpagemax=100
-set tabstop=4
+set tabstop=2
 set tags=./tags,tags,~/sandbox/personal/tags
 set termencoding=utf-8
 set undolevels=100
-set window=69
+set window=82
 set winminheight=0
-set wrapmargin=120
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
 let NERDTreeMapPreviewSplit = "gi"
 let NERDTreeMapCloseChildren = "X"
 let NERDTreeShowHidden = "0"
-let ConqueTerm_EscKey = "<Esc>"
 let TailMinusF_Loaded =  1 
 let NERDSpaceDelims = "0"
 let NERDTreeMapCloseDir = "x"
-let ConqueTerm_Color =  1 
-let ConqueTerm_Version =  120 
 let NERDUsePlaceHolders = "1"
 let NERDTreeShowLineNumbers = "0"
 let DirDiffSort =  1 
@@ -316,7 +293,6 @@ let NERDTreeMapRefreshRoot = "R"
 let DirDiffInteractive =  0 
 let NERDTreeMapPreview = "go"
 let NERDTreeMapActivateNode = "o"
-let Imap_DeleteEmptyPlaceHolders =  1 
 let NERDTreeWinPos = "left"
 let DirDiffAddArgs = ""
 let NERDTreeStatusline = "%{b:NERDTreeRoot.path.strForOS(0)}"
@@ -333,7 +309,6 @@ let CSV_string_delimiter = "\""
 let NERDTreeMouseMode = "1"
 let NERDDefaultNesting = "1"
 let NERDTreeChDirMode = "0"
-let NetrwMenuPriority =  80 
 let NERDTreeRemoveDirCmd = "rm -rf "
 let NERDTreeAutoCenterThreshold = "3"
 let NERDTreeShowFiles = "1"
@@ -351,9 +326,7 @@ let NERDLPlace = "[>"
 let NERDTreeMapOpenInTab = "t"
 let CSV_separator = ","
 let DirDiffExcludes = ""
-let ConqueTerm_CloseOnEnd =  0 
 let NERDCreateDefaultMappings = "1"
-let ConqueTerm_InsertOnEnter =  0 
 let DirDiffDynamicDiffText =  0 
 let NERDTreeMapPreviewVSplit = "gs"
 let NERDChristmasTree = "1"
@@ -372,9 +345,7 @@ let NERDTreeAutoCenter = "1"
 let DirDiffTextOnlyIn = "Only in "
 let TailMinusF_Center_Win =  0 
 let DirDiffTextAnd = " and "
-let Imap_Debug =  0 
 let NERDTreeMapOpenVSplit = "s"
-let ConqueTerm_ReadUnfocused =  0 
 let NERDTreeMapDeleteBookmark = "D"
 let NERDBlockComIgnoreEmpty = "0"
 let AutoHiVersion = "0.2"
@@ -382,28 +353,19 @@ let NERDTreeMapJumpNextSibling = "<C-j>"
 let DirDiffIgnoreCase =  0 
 let NERDTreeMapJumpRoot = "P"
 let NERDTreeCopyCmd = "cp -r "
-let ConqueTerm_SendVisKey = "<F9>"
 let NERDTreeMapQuit = "q"
-let Imap_StickyPlaceHolders =  1 
 let NERDTreeMapChangeRoot = "C"
 let NERDCompactSexyComs = "0"
 let NERDTreeSortDirs = "1"
-let ConqueTerm_TERM = "vt100"
 let NERDTreeMapToggleFiles = "F"
 let NERDAllowAnyVisualDelims = "1"
-let ConqueTerm_CWInsert =  0 
-let ConqueTerm_Idx =  0 
 let DirDiffIgnore = ""
-let ConqueTerm_PromptRegex = "^\\w\\+@[0-9A-Za-z_.-]\\+:[0-9A-Za-z_./\\~,:-]\\+\\$"
 let BufExploreAdd =  1 
-let NetrwTopLvlMenu = "Netrw."
 let NERDTreeMapJumpFirstChild = "K"
 let NERDTreeMapOpenRecursively = "O"
 let NERDTreeMapToggleBookmarks = "B"
 let NERDTreeBookmarksFile = "/Users/seth/.NERDTreeBookmarks"
-let ConqueTerm_Loaded =  1 
 let NERDTreeMapUpdir = "u"
-let ConqueTerm_Syntax = "conque_term"
 let NERDTreeMapUpdirKeepOpen = "U"
 let NERDTreeQuitOnOpen = "0"
 silent only
@@ -412,9 +374,9 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +25 ~/sandbox/personal/todo/personal.tst.txt
+badd +1 ~/sandbox/personal/todo/personal.tst.txt
 silent! argdel *
-set lines=70 columns=115
+set lines=83 columns=137
 winpos 840 1028
 buffer ~/sandbox/personal/todo/personal.tst.txt
 set splitbelow splitright
@@ -423,60 +385,60 @@ set winheight=1 winwidth=1
 argglobal
 let s:cpo_save=&cpo
 set cpo&vim
-imap <buffer> <silent> <D-0> :tabn 10
-imap <buffer> <silent> <D-1> :tabn 1
-imap <buffer> <silent> <D-2> :tabn 2
-imap <buffer> <silent> <D-3> :tabn 3
-imap <buffer> <silent> <D-4> :tabn 4
-imap <buffer> <silent> <D-5> :tabn 5
-imap <buffer> <silent> <D-6> :tabn 6
-imap <buffer> <silent> <D-7> :tabn 7
-imap <buffer> <silent> <D-8> :tabn 8
 imap <buffer> <silent> <D-9> :tabn 9
+imap <buffer> <silent> <D-8> :tabn 8
+imap <buffer> <silent> <D-7> :tabn 7
+imap <buffer> <silent> <D-6> :tabn 6
+imap <buffer> <silent> <D-5> :tabn 5
+imap <buffer> <silent> <D-4> :tabn 4
+imap <buffer> <silent> <D-3> :tabn 3
+imap <buffer> <silent> <D-2> :tabn 2
+imap <buffer> <silent> <D-1> :tabn 1
+imap <buffer> <silent> <D-0> :tabn 10
 nmap <buffer> <silent> 	 /^\([A-Z]\+ \)\{1,\}:nohls
 nmap <buffer> <silent> <NL> :call TaskstackMoveItemDown()
 nmap <buffer> <silent>  :call TaskstackMoveItemUp()
 nmap <buffer> <silent>  /^@.* {\{3\}:nohls
 nmap <buffer> <silent>  ?^@.* {\{3\}:nohls
-nmap <buffer> $ :call TaskstackEOL()
+nmap <buffer> <silent> x :call TaskstackGroups()
+nmap <buffer> <silent> $ :call TaskstackEOL()
 nmap <buffer> :w :call TaskstackAutosaveReminder()
-imap <buffer> <silent> ° :tabn 10
-imap <buffer> <silent> ± :tabn 1
-imap <buffer> <silent> ² :tabn 2
-imap <buffer> <silent> ³ :tabn 3
-imap <buffer> <silent> ´ :tabn 4
-imap <buffer> <silent> µ :tabn 5
-imap <buffer> <silent> ¶ :tabn 6
-imap <buffer> <silent> · :tabn 7
-imap <buffer> <silent> ¸ :tabn 8
 imap <buffer> <silent> ¹ :tabn 9
+imap <buffer> <silent> ¸ :tabn 8
+imap <buffer> <silent> · :tabn 7
+imap <buffer> <silent> ¶ :tabn 6
+imap <buffer> <silent> µ :tabn 5
+imap <buffer> <silent> ´ :tabn 4
+imap <buffer> <silent> ³ :tabn 3
+imap <buffer> <silent> ² :tabn 2
+imap <buffer> <silent> ± :tabn 1
+imap <buffer> <silent> ° :tabn 10
 nmap <buffer> LL :call TaskstackScratch()
 nmap <buffer> NN :call TaskstackNewItem()
 nmap <buffer> QQ :call TaskstackCompleteItem(g:completed_prefix)
 nmap <buffer> XX :call TaskstackCompleteItem(g:aborted_prefix)
 nmap <buffer> ZZ :call TaskstackHide()
-nmap <buffer> <silent> <D-0> 10gt
-nmap <buffer> <silent> <D-1> 1gt
-nmap <buffer> <silent> <D-2> 2gt
-nmap <buffer> <silent> <D-3> 3gt
-nmap <buffer> <silent> <D-4> 4gt
-nmap <buffer> <silent> <D-5> 5gt
-nmap <buffer> <silent> <D-6> 6gt
-nmap <buffer> <silent> <D-7> 7gt
-nmap <buffer> <silent> <D-8> 8gt
 nmap <buffer> <silent> <D-9> 9gt
-nmap <buffer> <F8> :call TaskstackGroups()
+nmap <buffer> <silent> <D-8> 8gt
+nmap <buffer> <silent> <D-7> 7gt
+nmap <buffer> <silent> <D-6> 6gt
+nmap <buffer> <silent> <D-5> 5gt
+nmap <buffer> <silent> <D-4> 4gt
+nmap <buffer> <silent> <D-3> 3gt
+nmap <buffer> <silent> <D-2> 2gt
+nmap <buffer> <silent> <D-1> 1gt
+nmap <buffer> <silent> <D-0> 10gt
 nmap <buffer> <silent> <S-Tab> ?^\([A-Z]\+ \)\{1,\}:nohls
-nmap <buffer> <silent> ° 10gt
-nmap <buffer> <silent> ± 1gt
-nmap <buffer> <silent> ² 2gt
-nmap <buffer> <silent> ³ 3gt
-nmap <buffer> <silent> ´ 4gt
-nmap <buffer> <silent> µ 5gt
-nmap <buffer> <silent> ¶ 6gt
-nmap <buffer> <silent> · 7gt
-nmap <buffer> <silent> ¸ 8gt
 nmap <buffer> <silent> ¹ 9gt
+nmap <buffer> <silent> ¸ 8gt
+nmap <buffer> <silent> · 7gt
+nmap <buffer> <silent> ¶ 6gt
+nmap <buffer> <silent> µ 5gt
+nmap <buffer> <silent> ´ 4gt
+nmap <buffer> <silent> ³ 3gt
+nmap <buffer> <silent> ² 2gt
+nmap <buffer> <silent> ± 1gt
+nmap <buffer> <silent> ° 10gt
 imap <buffer> NN :call TaskstackNewItem()
 imap <buffer> QQ :call TaskstackCompleteItem(g:completed_prefix)
 imap <buffer> XX :call TaskstackCompleteItem(g:aborted_prefix)
@@ -522,7 +484,7 @@ setlocal foldcolumn=4
 setlocal foldenable
 setlocal foldexpr=0
 setlocal foldignore=#
-setlocal foldlevel=3
+setlocal foldlevel=4
 setlocal foldmarker={{{,}}}
 set foldmethod=marker
 setlocal foldmethod=marker
@@ -582,7 +544,7 @@ setlocal synmaxcol=3000
 if &syntax != '_.txt.tst'
 setlocal syntax=_.txt.tst
 endif
-setlocal tabstop=4
+setlocal tabstop=2
 setlocal tags=
 setlocal textwidth=0
 setlocal thesaurus=
@@ -592,330 +554,430 @@ setlocal winfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-1
-normal zo
-4
-normal zo
-4
-normal zo
 8
 normal zo
-39
+49
 normal zo
-58
+49
 normal zc
-192
+114
 normal zo
-1
+114
+normal zc
+140
 normal zo
-206
+140
 normal zc
-214
+162
 normal zc
-224
+176
 normal zc
-228
+180
 normal zc
-240
+185
 normal zc
-247
+8
+normal zo
+28
+normal zo
+43
+normal zo
+49
+normal zo
+50
+normal zo
+66
+normal zo
+89
+normal zo
+108
+normal zo
+49
+normal zo
+114
+normal zo
+115
+normal zo
+121
+normal zo
+127
+normal zo
+114
+normal zo
+140
+normal zo
+141
+normal zo
+148
+normal zo
+153
+normal zo
+158
+normal zo
+140
+normal zo
+162
+normal zo
+176
+normal zo
+180
+normal zo
+185
+normal zo
+201
+normal zo
+209
+normal zo
+219
 normal zc
-253
+225
 normal zc
-258
+230
 normal zc
-267
+238
 normal zc
-280
+251
+normal zc
+259
+normal zc
+269
+normal zc
+273
 normal zc
 285
 normal zc
-291
+292
 normal zc
-295
+298
 normal zc
-304
+303
 normal zc
-313
+312
 normal zc
-321
+325
 normal zc
-326
+330
 normal zc
-334
+336
 normal zc
-343
+340
 normal zc
 349
 normal zc
-355
+358
 normal zc
-363
+366
 normal zc
-374
+371
 normal zc
-381
+379
 normal zc
-385
+388
 normal zc
-396
+394
 normal zc
-402
+400
 normal zc
-407
+408
 normal zc
-420
+419
+normal zc
+426
 normal zc
 430
 normal zc
-434
+441
 normal zc
-446
+447
 normal zc
-459
+452
 normal zc
-464
+465
 normal zc
-470
+475
 normal zc
-478
+479
 normal zc
-482
+491
 normal zc
-492
+504
 normal zc
-514
+509
+normal zc
+515
+normal zc
+523
+normal zc
+527
+normal zc
+537
+normal zc
+559
 normal zo
-514
+559
 normal zc
-539
+584
 normal zc
-551
+596
 normal zo
-551
+596
 normal zc
-581
-normal zc
-593
-normal zc
-605
-normal zc
-610
-normal zc
-618
-normal zc
-624
+626
 normal zc
 638
 normal zc
-653
+650
 normal zc
-664
+655
+normal zc
+663
+normal zc
+669
 normal zc
 683
 normal zc
-694
-normal zc
 698
 normal zc
-707
+709
 normal zc
-711
+728
 normal zc
-715
+739
 normal zc
-719
+743
 normal zc
-727
+752
 normal zc
-731
-normal zc
-736
-normal zc
-741
-normal zc
-747
-normal zc
-751
-normal zc
-755
+756
 normal zc
 760
 normal zc
 764
 normal zc
-770
+772
 normal zc
-777
+776
 normal zc
-783
+781
 normal zc
-789
+786
 normal zc
-793
+792
 normal zc
-797
+796
 normal zc
-802
+800
 normal zc
-807
+805
 normal zc
-812
+809
 normal zc
-817
+815
 normal zc
-821
+822
 normal zc
-829
+828
+normal zc
+834
+normal zc
+838
 normal zc
 842
 normal zc
-848
+847
 normal zc
-853
+852
 normal zc
-858
+857
 normal zc
-864
+862
 normal zc
-870
+866
 normal zc
-881
+874
 normal zc
 887
 normal zc
-891
+893
 normal zc
-896
+898
 normal zc
-901
+903
 normal zc
-905
+909
 normal zc
-910
+915
 normal zc
-916
+926
 normal zc
-922
+932
 normal zc
-927
+936
 normal zc
-934
+941
 normal zc
-939
+946
 normal zc
-945
+950
 normal zc
-953
+955
 normal zc
-965
+961
 normal zc
-975
+967
 normal zc
-980
+972
 normal zc
-989
+979
 normal zc
-1004
+984
 normal zc
-1009
+990
 normal zc
-1017
+998
 normal zc
-1027
+1010
+normal zc
+1020
+normal zc
+1025
 normal zc
 1034
 normal zc
-1038
-normal zc
-1043
-normal zc
 1049
 normal zc
-1058
+1054
 normal zc
-1064
+1062
 normal zc
-1068
+1072
 normal zc
-1075
+1079
 normal zc
-1080
+1083
 normal zc
-1086
+1088
 normal zc
-1097
+1094
 normal zc
-1107
+1103
+normal zc
+1109
 normal zc
 1113
 normal zc
-1119
+1120
 normal zc
-1146
+1125
+normal zc
+1131
+normal zc
+1142
 normal zc
 1152
 normal zc
-1159
+1158
 normal zc
-1167
-normal zc
-1180
-normal zc
-1184
+1164
 normal zc
 1191
 normal zc
-1208
+1197
 normal zc
-1230
+1204
 normal zc
-1244
+1212
 normal zc
-1250
+1225
 normal zc
-1258
+1229
 normal zc
-1267
+1236
 normal zc
-1304
+1253
+normal zc
+1275
+normal zc
+1289
+normal zc
+1295
+normal zc
+1303
+normal zc
+1312
+normal zc
+1349
 normal zo
-1304
+1349
 normal zc
-1548
+1593
 normal zo
-1666
+1594
 normal zc
-1837
+1625
 normal zc
-1855
+1630
 normal zc
-1922
+1640
 normal zc
-1931
+1711
 normal zc
-1977
+1721
 normal zc
-1987
+1727
 normal zc
-2022
+1749
 normal zc
-2027
+1773
 normal zc
-2039
+1791
 normal zc
-2054
+1814
 normal zc
-2064
+1817
 normal zc
-1548
+1824
 normal zo
-let s:l = 24 - ((23 * winheight(0) + 34) / 68)
+1824
+normal zc
+1937
+normal zc
+1956
+normal zc
+1965
+normal zc
+1986
+normal zc
+2021
+normal zc
+2025
+normal zc
+2030
+normal zc
+2035
+normal zo
+2071
+normal zo
+2071
+normal zo
+2035
+normal zo
+2120
+normal zc
+2128
+normal zo
+2128
+normal zc
+2165
+normal zc
+1593
+normal zo
+let s:l = 2 - ((1 * winheight(0) + 40) / 81)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-24
-normal! 015l
+2
+normal! 045l
 tabnext 1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf
