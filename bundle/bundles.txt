@@ -1,0 +1,2 @@
+git clone git://github.com/wincent/Command-T.git command-t
+git clone git://github.com/tpope/vim-rails.git vim-rails
