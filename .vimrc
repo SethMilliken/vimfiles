@@ -5,7 +5,7 @@
 " 	Araxia on #vim irc.freenode.net
 
 " Version:
-" 1.0 " 2010-09-06 05:04:26 EDT
+" 1.0 " 2010-12-21 17:24:29 PST 
 
 " Notes:
 " 	- I'm deliberately overloading <C-e> and <C-y> for more useful purposes.
@@ -132,8 +132,12 @@ set fdm=marker						" make the default foldmethod markers
 set foldcolumn=4					" trying out fold indicator column
 set display+=lastline				" always show as much of the last line as possible
 set display+=uhex					" show unprintable hex characters as <xx>
-if version > 702 | set rnu | end	" use relative line numbers
+if version > 702
+	set rnu
+	au BufReadPost * set rnu
+end	" use relative line numbers
 if version > 702 | set clipboard=unnamed | end " use system clipboard; FIXME: what version is required?
+set wildignore+=*.o,*.sw?,*.git,*.svn,*.hg,**/build,*.?ib,*.png,*.jpg,*.jpeg,*.mov,*.gif,*.bom,*.azw,*.lpr,*.mbp,*.mode1v3,*.gz,*.vmwarevm,*.rtf,*.pkg,*.developerprofile,*.xcodeproj,*.pdf,*.dmg,*.db,*.otf,*.bz2,*.tiff,*.iso,*.jar,*.dat,**/Cache,*.cache,*.sqlite*,*.collection,*.qsindex,*.qsplugin,*.growlTicket,*.part,*.ics,*.ico,**/iPhone\ Simulator,*.lock*,*.webbookmark
 
 " Tags: universal location
 set tags+=$HOME/sandbox/personal/tags
@@ -156,11 +160,15 @@ imap <Nul> <Esc>:
 nnoremap <Nul> :
 
 " }}}
-" Annoyances: Use my own help function for F1 " {{{
+" Annoyances: " {{{
+" Use my own help function for F1
 map <F1> :Help<CR>
 imap <F1> <Esc>:Help<CR>
 nmap :W :w
 nmap <S-Space> <C-f>
+
+" saneitize Y
+map Y y$
 
 " }}}
 " Reset: restore some default settings and redraw " {{{
@@ -308,10 +316,14 @@ augroup END
 
 " }}}
 " Learn: hjkl " {{{
-nmap <Left> 	:echo "You should have typed h instead."<CR>
-nmap <Right> 	:echo "You should have typed l instead."<CR>
-nmap <Up> 		:echo "You should have typed k instead."<CR>
-nmap <Down> 	:echo "You should have typed j instead."<CR>
+" nmap <Left> 	:echo "You should have typed h instead."<CR>
+" nmap <Right> 	:echo "You should have typed l instead."<CR>
+" nmap <Up> 		:echo "You should have typed k instead."<CR>
+" nmap <Down> 	:echo "You should have typed j instead."<CR>
+nmap <Left> 	:<Up>
+nmap <Right> 	:<Down>
+nmap <Up> 		:<Up>
+nmap <Down> 	:<Down>
 
 " }}}
 " Accordion Mode: accordion style horizontal split navigation mode {{{
@@ -1171,6 +1183,13 @@ au! BufNewFile,BufRead *.tst.* set ft=_.txt.tst
 " }}}
 " YAML: " {{{
 	au BufNewFile,BufRead *.yaml,*.yml so ~/.vim/syntax/yaml.vim
+
+" }}}
+" Command-T: " {{{
+" See .gvimrc for map
+let g:CommandTMatchWindowAtTop=1
+" let g:CommandTSelectNextMap = ['<C-n>', '<C-j>', 'j']
+
 
 " }}}
 

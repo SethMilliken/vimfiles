@@ -50,6 +50,11 @@ nmap <silent> <D-w>	<Esc>:bd<CR>
 
 """ Figure out correct map directive to prevent commands from having other side effects (like moving the cursor).
 
+" Command-T " {{{
+macmenu Edit.Find.Find\.\.\. key=<nop>
+map <D-f> :CommandT<CR>
+" }}}
+
 " Ctrl-Left to previous tab
 nnoremap <silent> <C-Left>	<Esc>gT<CR>
 " Ctrl-Right to next tab
