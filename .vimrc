@@ -5,7 +5,7 @@
 " 	Araxia on #vim irc.freenode.net
 
 " Version:
-" 1.0 " 2010-09-06 05:04:26 EDT
+" 1.0 " 2010-12-21 17:24:29 PST 
 
 " Notes:
 " 	- I'm deliberately overloading <C-e> and <C-y> for more useful purposes.
@@ -132,8 +132,12 @@ set fdm=marker						" make the default foldmethod markers
 set foldcolumn=4					" trying out fold indicator column
 set display+=lastline				" always show as much of the last line as possible
 set display+=uhex					" show unprintable hex characters as <xx>
-if version > 702 | set rnu | end	" use relative line numbers
+if version > 702
+	set rnu
+	au BufReadPost * set rnu
+end	" use relative line numbers
 if version > 702 | set clipboard=unnamed | end " use system clipboard; FIXME: what version is required?
+set wildignore+=*.o,*.sw?,*.git,*.svn,*.hg,**/build,*.?ib,*.png,*.jpg,*.jpeg,*.mov,*.gif,*.bom,*.azw,*.lpr,*.mbp,*.mode1v3,*.gz,*.vmwarevm,*.rtf,*.pkg,*.developerprofile,*.xcodeproj,*.pdf,*.dmg,*.db,*.otf,*.bz2,*.tiff,*.iso,*.jar,*.dat,**/Cache,*.cache,*.sqlite*,*.collection,*.qsindex,*.qsplugin,*.growlTicket,*.part,*.ics,*.ico,**/iPhone\ Simulator,*.lock*,*.webbookmark
 
 " Tags: universal location
 set tags+=$HOME/sandbox/personal/tags
@@ -156,11 +160,15 @@ imap <Nul> <Esc>:
 nnoremap <Nul> :
 
 " }}}
-" Annoyances: Use my own help function for F1 " {{{
+" Annoyances: " {{{
+" Use my own help function for F1
 map <F1> :Help<CR>
 imap <F1> <Esc>:Help<CR>
 nmap :W :w
 nmap <S-Space> <C-f>
+
+" saneitize Y
+map Y y$
 
 " }}}
 " Reset: restore some default settings and redraw " {{{
@@ -308,10 +316,14 @@ augroup END
 
 " }}}
 " Learn: hjkl " {{{
-nmap <Left> 	:echo "You should have typed h instead."<CR>
-nmap <Right> 	:echo "You should have typed l instead."<CR>
-nmap <Up> 		:echo "You should have typed k instead."<CR>
-nmap <Down> 	:echo "You should have typed j instead."<CR>
+" nmap <Left> 	:echo "You should have typed h instead."<CR>
+" nmap <Right> 	:echo "You should have typed l instead."<CR>
+" nmap <Up> 		:echo "You should have typed k instead."<CR>
+" nmap <Down> 	:echo "You should have typed j instead."<CR>
+nmap <Left> 	:<Up>
+nmap <Right> 	:<Down>
+nmap <Up> 		:<Up>
+nmap <Down> 	:<Down>
 
 " }}}
 " Accordion Mode: accordion style horizontal split navigation mode {{{
@@ -413,12 +425,21 @@ endfunction
 " Text: tools
 function! AppendText(text) "{{{
 	let l:originalline = getline(".")
-	call append(line("."),[a:text])
-	if substitute(l:originalline, "\\s", "", "g") == ""
-		 normal J$
+	if LineIsWhiteSpace(getline("."))
+		call InsertLine(a:text)
 	else
-		 normal J$
+		call append(line("."),[a:text])
+		normal J$
 	endif
+endfunction
+
+"}}}
+function! InsertLine(text) "{{{
+	if LineIsWhiteSpace(getline("."))
+		call setline(line("."),[a:text])
+	else
+		call append(line(".") - 1,[a:text])
+	end
 endfunction
 
 "}}}
@@ -447,7 +468,7 @@ endfunction
 function! FindNode(label) "{{{
 	let l:openmarker = CommentedFoldMarkerOpen()
 	let l:expression = a:label . "\\s*" . l:openmarker
-	let l:matchline = search(l:expression, 'csw')	
+	let l:matchline = search(l:expression, 'csw')
 	"echo printf("line: %2s had expression: %s", l:matchline, l:expression)
 	return l:matchline
 endfunction
@@ -963,11 +984,73 @@ augroup TaskStack
 augroup END
 
 "}}}
+" Scratch: " {{{
+let g:volatile_scratch_columns = 90
+let g:volatile_scratch_lines = 20
+
+function! EmailAddressList(ArgLead, CmdLine, CursorPos)
+		return system("~/bin/addresses")
+endfunction
+
+function! EmitEmailAddress(Header, First, Last, Address)
+	let Result = "\"" . a:First . " " . a:Last . "\" " . a:Address
+  call InsertLine(a:Header . l:Result)
+endfunction
+
+function! SmallWindow()
+	setlocal guioptions+=c
+	setlocal guioptions-=L
+	setlocal guioptions-=r
+	setlocal foldcolumn=0
+	setlocal guifont=Inconsolata:h9
+	exec "set columns=" . g:volatile_scratch_columns . " lines=" . g:volatile_scratch_lines
+	call SetColorColumnBorder()
+	if exists('g:gundo_target_n')
+		exec "GundoClose"
+	end
+endfunction
+
+function! SetColorColumnBorder()
+	let l:admin_columns = &numberwidth + &foldcolumn
+	exec "setlocal colorcolumn=" . (&columns - l:admin_columns)
+endfunction
+
+function! ScratchCopy()
+	if &modified == 1
+		silent write
+		exec "normal :0,$y"
+	endif
+endfunction
+
+command! -nargs=* -complete=custom,EmailAddressList To call EmitEmailAddress("To: ", <f-args>)
+command! -nargs=* -complete=custom,EmailAddressList Cc call EmitEmailAddress("Cc: ", <f-args>)
+command! -nargs=* Sub call InsertLine("Subject: " . <q-args>)
+
+augroup VolatileScratch
+	au! BufRead *.scratch call SmallWindow()
+	au BufRead *.scratch nmap <buffer> <silent> <C-m> :call SmallWindow()<CR>
+	au BufRead *.scratch nmap <buffer> <silent> <C-y>g :exec "set lines=999 columns=" . (g:gundo_width + &columns) \| :GundoToggle<CR>
+	au BufRead *.scratch nmap <buffer> <silent> ZZ :call ScratchCopy()<CR> \| :macaction hide:<CR>
+	au BufRead *.scratch nmap <buffer> <silent> :w :call ScratchCopy()<CR>
+	au BufRead *.scratch imap <buffer> <silent> ZZ <Esc>ZZ
+	au BufRead *.scratch vmap <buffer> <silent> ZZ <Esc>ZZ
+	au! FocusGained *.scratch normal ggVGpG$
+	au! FocusLost *.scratch normal ZZ
+	au! VimResized *.scratch call SetColorColumnBorder() | :normal zz
+augroup END
+
+"}}}
 " Vimperator: " {{{
 augroup Vimperator
-	au! BufRead vimperator-* nmap <buffer> ZZ :call FormFieldArchive() \| :silent write \| :bd \| :macaction hide:<CR>
-	au BufRead vimperator-* imap <buffer> ZZ <Esc>ZZ
+	au! BufRead vimperator-* nmap <buffer> <silent> ZZ :call FormFieldArchive() \| :silent write \| :bd \| :macaction hide:<CR>
+	au BufRead vimperator-* imap <buffer> <silent> ZZ <Esc>ZZ
 augroup END
+
+" }}}
+" Gundo: " {{{
+let g:gundo_width = 55
+let g:gundo_preview_height = 25
+let g:gundo_help = 0
 
 " }}}
 " Crontab: " {{{
@@ -1100,6 +1183,13 @@ au! BufNewFile,BufRead *.tst.* set ft=_.txt.tst
 " }}}
 " YAML: " {{{
 	au BufNewFile,BufRead *.yaml,*.yml so ~/.vim/syntax/yaml.vim
+
+" }}}
+" Command-T: " {{{
+" See .gvimrc for map
+let g:CommandTMatchWindowAtTop=1
+" let g:CommandTSelectNextMap = ['<C-n>', '<C-j>', 'j']
+
 
 " }}}
 
