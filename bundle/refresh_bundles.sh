@@ -22,19 +22,22 @@ function refresh_bundle {
 	fi
 }
 
-
-refresh_bundle vimwiki git://github.com/vim-scripts/vimwiki.git
-refresh_bundle vcscommand git://github.com/vim-scripts/vcscommand.vim.git
-refresh_bundle paster git://github.com/weierophinney/paster.vim.git
-refresh_bundle nerdcommenter git://github.com/scrooloose/nerdcommenter.git
+refresh_bundle abolish git://github.com/tpope/vim-abolish.git
 refresh_bundle cocoa git://github.com/msanders/cocoa.vim.git
-refresh_bundle nerdtree git://github.com/scrooloose/nerdtree.git
-refresh_bundle sessionman git://github.com/vim-scripts/sessionman.vim.git
-refresh_bundle surround git://github.com/vim-scripts/surround.vim.git
-refresh_bundle snipmate git://github.com/spf13/snipmate.vim.git
-refresh_bundle rails git://github.com/tpope/vim-rails.git
-refresh_bundle gundo git://github.com/sjl/gundo.vim.git
-refresh_bundle fugitive git://github.com/tpope/vim-fugitive.git
-refresh_bundle conque git://github.com/rson/vim-conque.git
-refresh_bundle pickacolor git://github.com/Raimondi/PickAColor.git
 refresh_bundle command-t git://github.com/wincent/Command-T.git 'Remember to rebuild if necessary:\n\tpushd command-t/ruby/command-t/; ruby extconf.rb; make && popd'
+refresh_bundle conque git://github.com/rson/vim-conque.git
+refresh_bundle dbext git://github.com/vim-scripts/dbext.vim.git
+refresh_bundle fugitive git://github.com/tpope/vim-fugitive.git
+refresh_bundle gundo git://github.com/sjl/gundo.vim.git
+refresh_bundle nerdcommenter git://github.com/scrooloose/nerdcommenter.git
+refresh_bundle nerdtree git://github.com/scrooloose/nerdtree.git
+refresh_bundle paster git://github.com/weierophinney/paster.vim.git
+refresh_bundle pickacolor git://github.com/Raimondi/PickAColor.git
+refresh_bundle project git://github.com/shemerey/vim-project.git
+refresh_bundle rails git://github.com/tpope/vim-rails.git
+refresh_bundle sessionman git://github.com/vim-scripts/sessionman.vim.git
+refresh_bundle snipmate git://github.com/spf13/snipmate.vim.git
+refresh_bundle surround git://github.com/vim-scripts/surround.vim.git
+refresh_bundle vcscommand git://github.com/vim-scripts/vcscommand.vim.git
+refresh_bundle vim-ruby git://github.com/vim-ruby/vim-ruby.git
+refresh_bundle vimwiki git://github.com/vim-scripts/vimwiki.git
