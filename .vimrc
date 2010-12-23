@@ -404,10 +404,10 @@ function! HeaderLocationIndex() "{{{
 endfunction
 
 "}}}
-function! CompletionFunctionList(A,L,P)
+function! CompletionFunctionList(A,L,P) " {{{
 	return "foo\nbar\nbaz"
 endfunction
-
+" }}}
 function! FunctionLocationIndex() "{{{
 	let l:incoming = input("Go to function: ", "", "custom,CompletionFunctionList")
 	lgetexpr "" " Clear the location list

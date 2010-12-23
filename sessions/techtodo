@@ -2,6 +2,8 @@ let SessionLoad = 1
 if &cp | set nocp | endif
 let s:cpo_save=&cpo
 set cpo&vim
+imap <silent> <Plug>IMAP_JumpForward =IMAP_Jumpfunc('', 0)
+imap <silent> <Plug>IMAP_JumpBack =IMAP_Jumpfunc('b', 0)
 imap <D-BS> 
 imap <M-BS> 
 imap <M-Down> }
@@ -13,8 +15,6 @@ noremap! <D-Right> <End>
 noremap! <M-Left> <C-Left>
 noremap! <D-Left> <Home>
 inoremap <silent> <S-Tab> =BackwardsSnippet()
-imap <silent> <Plug>IMAP_JumpBack =IMAP_Jumpfunc('b', 0)
-imap <silent> <Plug>IMAP_JumpForward =IMAP_Jumpfunc('', 0)
 inoremap <silent> <Plug>NERDCommenterInInsert  <BS>:call NERDComment(0, "insert")
 imap <F1> :Help
 imap <Nul> :
@@ -33,15 +33,16 @@ nmap c :silent! lclose
 nmap ? :call FunctionLocationIndex()
 nmap / :call HeaderLocationIndex()
 snoremap <silent> 	 i<Right>=TriggerSnippet()
-vmap <NL> <Plug>IMAP_JumpForward
 nmap <NL> <Plug>IMAP_JumpForward
+vmap <NL> <Plug>IMAP_JumpForward
 nnoremap <silent>  :call Reset() | nohls
 snoremap  b<BS>
-nmap <silent>  :call RemoveTimestamp(g:timestamp_annotation)
 nmap <silent>  :call AddOrUpdateTimestamp(g:timestamp_annotation)
+nmap <silent>  :call RemoveTimestamp(g:timestamp_annotation)
 nmap <silent>  :call RemoveTimestamp("")
-nmap <silent>  :call AddOrUpdateTimestamp("")
 nmap <silent>  :call TimestampAutoUpdateToggle()
+nmap <silent>  :call AddOrUpdateTimestamp("")
+nmap <silent>  :call TimestampAutoUpdateToggle()
 nmap  :call ReloadVimrc() | :echo "Resourced .vimrc."
 snoremap % b<BS>%
 snoremap ' b<BS>'
@@ -140,6 +141,12 @@ nmap ySs <Plug>YSsurround
 nmap yss <Plug>Yssurround
 nmap yS <Plug>YSurround
 nmap ys <Plug>Ysurround
+nmap <silent> <Plug>IMAP_JumpForward i=IMAP_Jumpfunc('', 0)
+nmap <silent> <Plug>IMAP_JumpBack i=IMAP_Jumpfunc('b', 0)
+vmap <silent> <Plug>IMAP_DeleteAndJumpForward "_<Del>i=IMAP_Jumpfunc('', 0)
+vmap <silent> <Plug>IMAP_DeleteAndJumpBack "_<Del>i=IMAP_Jumpfunc('b', 0)
+vmap <silent> <Plug>IMAP_JumpForward i=IMAP_Jumpfunc('', 0)
+vmap <silent> <Plug>IMAP_JumpBack `<i=IMAP_Jumpfunc('b', 0)
 nnoremap <C-Down> :silent! :call AdjustFont(-1)
 nnoremap <C-Up> :silent! :call AdjustFont(1)
 nnoremap <silent> <C-Right> gt
@@ -184,12 +191,6 @@ nnoremap <silent> <Plug>VCSDelete :VCSDelete
 nnoremap <silent> <Plug>VCSCommit :VCSCommit
 nnoremap <silent> <Plug>VCSAnnotate :VCSAnnotate
 nnoremap <silent> <Plug>VCSAdd :VCSAdd
-vmap <silent> <Plug>IMAP_JumpBack `<i=IMAP_Jumpfunc('b', 0)
-vmap <silent> <Plug>IMAP_JumpForward i=IMAP_Jumpfunc('', 0)
-vmap <silent> <Plug>IMAP_DeleteAndJumpBack "_<Del>i=IMAP_Jumpfunc('b', 0)
-vmap <silent> <Plug>IMAP_DeleteAndJumpForward "_<Del>i=IMAP_Jumpfunc('', 0)
-nmap <silent> <Plug>IMAP_JumpBack i=IMAP_Jumpfunc('b', 0)
-nmap <silent> <Plug>IMAP_JumpForward i=IMAP_Jumpfunc('', 0)
 map <M-F3> :call CSV_clear_all()  
 map <S-F3> :call CSV_toggle_field(CSV_get_field(0))
 map <S-F5> :call CSV_goto_highlighted(-1)
@@ -240,9 +241,9 @@ imap <silent>  :call Reset() | nohlsa
 imap  :set completeopt+=menuonea
 inoremap <silent> 	 =ShowAvailableSnips()
 imap  <Plug>Isurround
-imap <silent>  :call RemoveTimestamp("")a
-imap <silent>  :call AddOrUpdateTimestamp("")a
 imap <silent>  :call TimestampAutoUpdateToggle()
+imap <silent>  :call AddOrUpdateTimestamp("")a
+imap <silent>  :call RemoveTimestamp("")a
 imap   :call ReloadVimrc() | :echo "Resourced .vimrc."
 let &cpo=s:cpo_save
 unlet s:cpo_save
@@ -252,6 +253,7 @@ set backspace=indent,eol,start
 set clipboard=unnamed
 set diffopt=filler,vertical
 set directory=~/.vim/swap//,~/vimfiles/swap//
+set display=lastline,uhex
 set fileencodings=ucs-bom,utf-8,default,latin1
 set foldlevelstart=999
 set fuoptions=maxhorz,maxvert
@@ -269,6 +271,7 @@ set listchars=tab:>-,trail:-
 set mouse=a
 set printexpr=system('open\ -a\ Preview\ '.v:fname_in)\ +\ v:shell_error
 set ruler
+set runtimepath=~/.vim,~/.vim/bundle/PickAColor,/Applications/Todo.app/Contents/Resources/vim/vimfiles,/Applications/Todo.app/Contents/Resources/vim/runtime,/Applications/Todo.app/Contents/Resources/vim/vimfiles/after,~/.vim/after
 set sessionoptions=folds,help,options,tabpages,winsize,globals,sesdir,resize,winpos,unix
 set shiftwidth=4
 set shortmess=filnxtToOIA
@@ -285,7 +288,6 @@ set tags=./tags,tags,~/sandbox/personal/tags
 set termencoding=utf-8
 set transparency=5
 set undolevels=100
-set window=73
 set winminheight=0
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
@@ -301,14 +303,13 @@ let ConqueTerm_Version =  120
 let NERDUsePlaceHolders = "1"
 let NERDTreeShowLineNumbers = "0"
 let DirDiffSort =  1 
-let NERDTreeBookmarksFile = "/Users/seth/.NERDTreeBookmarks"
 let NERDTreeMapToggleHidden = "I"
 let NERDTreeWinSize = "31"
 let NERDTreeMapRefreshRoot = "R"
-let NERDDelimiterRequests = "1"
 let DirDiffInteractive =  0 
 let NERDTreeMapPreview = "go"
 let NERDTreeMapActivateNode = "o"
+let Imap_DeleteEmptyPlaceHolders =  1 
 let NERDTreeWinPos = "left"
 let DirDiffAddArgs = ""
 let NERDTreeStatusline = "%{b:NERDTreeRoot.path.strForOS(0)}"
@@ -324,7 +325,6 @@ let NERDTreeMapOpenExpl = "e"
 let CSV_string_delimiter = "\""
 let NERDTreeMouseMode = "1"
 let NERDDefaultNesting = "1"
-let TailMinusF_Height =  10 
 let NERDTreeChDirMode = "0"
 let NERDTreeRemoveDirCmd = "rm -rf "
 let NERDTreeAutoCenterThreshold = "3"
@@ -336,7 +336,9 @@ let NERDTreeHijackNetrw = "1"
 let NERDTreeMapFilesystemMenu = "m"
 let NERDTreeMapRefresh = "r"
 let CSV_field_list = ""
+let TailMinusF_Height =  10 
 let NERDTreeHighlightCursorline = "1"
+let NERDDelimiterRequests = "1"
 let NERDLPlace = "[>"
 let NERDTreeMapOpenInTab = "t"
 let CSV_separator = ","
@@ -383,13 +385,13 @@ let NERDTreeMapToggleFiles = "F"
 let NERDAllowAnyVisualDelims = "1"
 let ConqueTerm_CWInsert =  0 
 let ConqueTerm_Idx =  0 
-let Imap_DeleteEmptyPlaceHolders =  1 
 let DirDiffIgnore = ""
 let ConqueTerm_PromptRegex = "^\\w\\+@[0-9A-Za-z_.-]\\+:[0-9A-Za-z_./\\~,:-]\\+\\$"
 let BufExploreAdd =  1 
 let NERDTreeMapJumpFirstChild = "K"
 let NERDTreeMapOpenRecursively = "O"
 let NERDTreeMapToggleBookmarks = "B"
+let NERDTreeBookmarksFile = "/Users/seth/.NERDTreeBookmarks"
 let ConqueTerm_Loaded =  1 
 let NERDTreeMapUpdir = "u"
 let ConqueTerm_Syntax = "conque_term"
@@ -401,11 +403,11 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +0 ~/sandbox/personal/todo/techtodo.txt
+badd +1 ~/sandbox/personal/todo/techtodo.txt
 silent! argdel *
 set lines=74 columns=235
 set fullscreen
-winpos 0 1028
+winpos -21 1028
 buffer ~/sandbox/personal/todo/techtodo.txt
 set splitbelow splitright
 wincmd _ | wincmd |
@@ -500,6 +502,7 @@ setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
+set relativenumber
 setlocal norelativenumber
 setlocal norightleft
 setlocal rightleftcmd=search
@@ -601,52 +604,34 @@ normal zc
 normal zo
 341
 normal zo
-401
-normal zc
 341
 normal zo
-406
+407
 normal zo
 407
+normal zo
+429
+normal zo
+429
+normal zo
+435
+normal zo
+435
+normal zo
+470
+normal zo
+470
 normal zc
-413
+489
+normal zo
+489
 normal zc
-420
-normal zc
-406
-normal zo
-428
-normal zo
-430
-normal zc
-428
-normal zo
-434
-normal zo
-444
-normal zc
-434
-normal zo
-469
-normal zo
-484
-normal zc
-469
-normal zo
-488
-normal zo
-488
-normal zc
-508
-normal zo
-508
-normal zc
-let s:l = 21 - ((0 * winheight(0) + 36) / 72)
+let s:l = 49 - ((28 * winheight(0) + 36) / 72)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-21
-normal! 0
+49
+normal! 046l
 wincmd w
 argglobal
 buffer ~/sandbox/personal/todo/techtodo.txt
@@ -729,6 +714,7 @@ setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
+set relativenumber
 setlocal norelativenumber
 setlocal norightleft
 setlocal rightleftcmd=search
@@ -829,47 +815,29 @@ normal zc
 normal zo
 341
 normal zo
-401
-normal zc
 341
 normal zo
-406
+407
 normal zo
 407
+normal zo
+429
+normal zo
+429
+normal zo
+435
+normal zo
+435
+normal zo
+470
+normal zo
+470
 normal zc
-413
+489
+normal zo
+489
 normal zc
-420
-normal zc
-406
-normal zo
-428
-normal zo
-430
-normal zc
-428
-normal zo
-434
-normal zo
-444
-normal zc
-434
-normal zo
-469
-normal zo
-484
-normal zc
-469
-normal zo
-488
-normal zo
-488
-normal zc
-508
-normal zo
-508
-normal zc
-let s:l = 194 - ((10 * winheight(0) + 36) / 72)
+let s:l = 194 - ((0 * winheight(0) + 36) / 72)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -957,6 +925,7 @@ setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
 setlocal noreadonly
+set relativenumber
 setlocal norelativenumber
 setlocal norightleft
 setlocal rightleftcmd=search
@@ -1055,52 +1024,34 @@ normal zc
 normal zo
 341
 normal zo
-401
-normal zc
 341
 normal zo
-406
+407
 normal zo
 407
+normal zo
+429
+normal zo
+429
+normal zo
+435
+normal zo
+435
+normal zo
+470
+normal zo
+470
 normal zc
-413
+489
+normal zo
+489
 normal zc
-420
-normal zc
-406
-normal zo
-428
-normal zo
-430
-normal zc
-428
-normal zo
-434
-normal zo
-444
-normal zc
-434
-normal zo
-469
-normal zo
-484
-normal zc
-469
-normal zo
-488
-normal zo
-488
-normal zc
-508
-normal zo
-508
-normal zc
-let s:l = 369 - ((28 * winheight(0) + 36) / 72)
+let s:l = 406 - ((37 * winheight(0) + 36) / 72)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-369
-normal! 0
+406
+normal! 02l
 wincmd w
 exe 'vert 1resize ' . ((&columns * 78 + 117) / 235)
 exe 'vert 2resize ' . ((&columns * 78 + 117) / 235)

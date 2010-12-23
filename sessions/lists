@@ -524,44 +524,18 @@ setlocal wrap
 setlocal wrapmargin=0
 1
 normal zo
-3
-normal zc
 1
-normal zo
-13
+normal zc
+14
 normal zo
 14
 normal zo
-24
-normal zo
-38
-normal zo
-46
-normal zo
-56
-normal zc
-46
-normal zo
-13
-normal zo
-77
-normal zo
-111
-normal zc
-77
-normal zo
-132
-normal zo
-212
-normal zc
-132
-normal zo
-let s:l = 27 - ((14 * winheight(0) + 42) / 85)
+let s:l = 55 - ((54 * winheight(0) + 42) / 85)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-27
-normal! 026l
+55
+normal! 032l
 wincmd w
 argglobal
 buffer ~/sandbox/personal/lists/videolist.txt
@@ -698,23 +672,36 @@ setlocal wrapmargin=0
 1
 normal zo
 4
-normal zc
+normal zo
 1
-normal zo
-13
-normal zo
-180
 normal zc
-13
+15
 normal zo
-let s:l = 13 - ((0 * winheight(0) + 42) / 85)
+37
+normal zo
+94
+normal zo
+109
+normal zc
+127
+normal zo
+128
+normal zo
+196
+normal zo
+127
+normal zo
+196
+normal zo
+15
+normal zo
+let s:l = 66 - ((51 * winheight(0) + 42) / 85)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-13
+66
 normal! 0
 wincmd w
-2wincmd w
 exe 'vert 1resize ' . ((&columns * 136 + 137) / 274)
 exe 'vert 2resize ' . ((&columns * 137 + 137) / 274)
 tabnext 1
