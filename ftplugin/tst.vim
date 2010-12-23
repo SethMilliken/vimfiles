@@ -254,6 +254,25 @@ endfunction
 " }}}
 
 " Miscellaneous:
+function! TaskstackDetectProjectName() " {{{
+	let projectName = matchstr(getline("."),'^. \zs\(\<\w*\>\s*\)\{,3}\ze')
+	return projectName	
+endfunction
+
+" }}}
+function! TaskstackMoveItemToNode(item,node) " {{{
+	let nodeline = FindNode(a:node)
+	echo 'normal :' . a:item . 'm' . nodeline
+	exe 'normal :' . a:item . 'm' . nodeline
+endfunction
+
+" }}}
+function! TaskstackMoveToProject() " {{{
+	let projectName = TaskstackDetectProjectName()
+	call TaskstackMoveItemToNode(line("."),projectName)
+endfunction
+
+" }}}
 function! TaskstackHide() " {{{
 	macaction hide:
 endfunction

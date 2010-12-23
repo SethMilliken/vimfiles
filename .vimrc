@@ -129,7 +129,7 @@ set history=10000					" keep craploads of command history
 set undolevels=100					" keep lots of undo history
 set foldlevelstart=999   			" don't use a default fold level; all folds open by default
 set fdm=marker						" make the default foldmethod markers
-set foldcolumn=4					" trying out fold indicator column
+" set foldcolumn=4					" trying out fold indicator column
 set display+=lastline				" always show as much of the last line as possible
 set display+=uhex					" show unprintable hex characters as <xx>
 if version > 702
@@ -1185,11 +1185,23 @@ au! BufNewFile,BufRead *.tst.* set ft=_.txt.tst
 	au BufNewFile,BufRead *.yaml,*.yml so ~/.vim/syntax/yaml.vim
 
 " }}}
+
 " Command-T: " {{{
 " See .gvimrc for map
 let g:CommandTMatchWindowAtTop=1
 " let g:CommandTSelectNextMap = ['<C-n>', '<C-j>', 'j']
 
+
+" }}}
+" Maintenance: " {{{
+" Put any calls to occasional housekeeping scripts in here.
+command DoMaintenance call DoMaintenance()
+function DoMaintenance()
+	" ~/.vim/bundle/refresh_bundles.sh
+	call pathogen#helptags()
+	" save all sessions
+	" hg addremove and ci ~/.vim/sessions/*
+endfunction
 
 " }}}
 
