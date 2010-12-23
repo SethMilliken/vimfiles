@@ -136,7 +136,7 @@ if version > 702
 	set rnu
 	au BufReadPost * set rnu
 end	" use relative line numbers
-if version > 702 | set clipboard=unnamed | end " use system clipboard; FIXME: what version is required?
+if version > 702 | set clipboard=unnamed | end " use system clipboard; FIXME: what version is actually required?
 set wildignore+=*.o,*.sw?,*.git,*.svn,*.hg,**/build,*.?ib,*.png,*.jpg,*.jpeg,*.mov,*.gif,*.bom,*.azw,*.lpr,*.mbp,*.mode1v3,*.gz,*.vmwarevm,*.rtf,*.pkg,*.developerprofile,*.xcodeproj,*.pdf,*.dmg,*.db,*.otf,*.bz2,*.tiff,*.iso,*.jar,*.dat,**/Cache,*.cache,*.sqlite*,*.collection,*.qsindex,*.qsplugin,*.growlTicket,*.part,*.ics,*.ico,**/iPhone\ Simulator,*.lock*,*.webbookmark
 
 " Tags: universal location
@@ -176,6 +176,7 @@ nnoremap <silent> <C-L> :call Reset() \| nohls<CR>
 imap <silent> <C-L> <Esc>:call Reset() \| nohls<CR>a
 imap <C-y><C-v> <Esc> :call ReloadVimrc()<CR> \| :echo "Resourced .vimrc."<CR>
 nmap <C-y><C-v> :call ReloadVimrc()<CR> \| :echo "Resourced .vimrc."<CR>
+nmap <C-y><C-s> :SnipUp<CR>
 
 " }}}
 " Utility: word count of current file " {{{
@@ -190,7 +191,7 @@ nmap <silent> <Leader>w :!wc -w %<CR>
 " Tail: reload buffer from disk and go to end " {{{
 " - FIXME: find a non-conflicting binding
 " - TODO: restrict to certain filetypes, e.g. only .log?
-nmap <silent> <S-k> :e<CR><Esc>:$<CR>
+" nmap <silent> <S-k> :e<CR><Esc>:$<CR>
 
 " }}}
 " Save Session: " {{{
@@ -361,8 +362,8 @@ nmap <silent> <Leader>ll o<Esc>:call Timestamp("short") \| call FoldWrap()<CR>
 for n in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
 	let k = n == "0" ? "10" : n
 	for m in ["A", "D"]
-		exec printf("imap <buffer> <silent> <%s-%s> <Esc>:tabn %s<CR>", m, n, k)
-		exec printf("nmap <buffer> <silent> <%s-%s> %sgt<CR>", m, n, k)
+		exec printf("imap <silent> <%s-%s> <Esc>:tabn %s<CR>", m, n, k)
+		exec printf("nmap <silent> <%s-%s> %sgt<CR>", m, n, k)
 	endfor
 endfor
 
@@ -1006,8 +1007,8 @@ function! SmallWindow()
 	exec "set columns=" . g:volatile_scratch_columns . " lines=" . g:volatile_scratch_lines
 	call SetColorColumnBorder()
 	if exists('g:gundo_target_n')
-		exec "GundoClose"
-	end
+		if exists("GundoClose") | exec "GundoClose" | endif
+	endif
 endfunction
 
 function! SetColorColumnBorder()
@@ -1018,7 +1019,7 @@ endfunction
 function! ScratchCopy()
 	if &modified == 1
 		silent write
-		exec "normal :0,$y"
+		exec ":0,$y"
 	endif
 endfunction
 
@@ -1034,7 +1035,7 @@ augroup VolatileScratch
 	au BufRead *.scratch nmap <buffer> <silent> :w :call ScratchCopy()<CR>
 	au BufRead *.scratch imap <buffer> <silent> ZZ <Esc>ZZ
 	au BufRead *.scratch vmap <buffer> <silent> ZZ <Esc>ZZ
-	au! FocusGained *.scratch normal ggVGpG$
+	" au! FocusGained *.scratch normal ggVGpG$
 	au! FocusLost *.scratch normal ZZ
 	au! VimResized *.scratch call SetColorColumnBorder() | :normal zz
 augroup END
@@ -1146,7 +1147,13 @@ let $PYTHONPATH = 'C:\Python24\'
 " }}}
 " SnipMate: " {{{
 let g:snips_author = 'Seth Milliken'
-map <silent> <Leader>snip <Esc>:call ResetSnippets() \| call GetSnippets(g:snippets_dir, "_") \| call GetSnippets(g:snippets_dir, &ft)<CR><Esc>:echo "Snippets for format \"" . &ft . "\" updated."<CR>
+command! SnipUp call UpdateSnippetsForBuffer()
+function! UpdateSnippetsForBuffer()
+	call ResetAllSnippets()
+	call GetSnippets(g:snippets_dir, "_")
+	call GetSnippets(g:snippets_dir, &ft)
+	echo "Snippets for format \"" . &ft . "\" updated."
+endfunction
 
 " }}}
 " Vimwiki: " {{{
