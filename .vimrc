@@ -129,7 +129,7 @@ set history=10000					" keep craploads of command history
 set undolevels=100					" keep lots of undo history
 set foldlevelstart=999   			" don't use a default fold level; all folds open by default
 set fdm=marker						" make the default foldmethod markers
-set foldcolumn=4					" trying out fold indicator column
+" set foldcolumn=4					" trying out fold indicator column
 set display+=lastline				" always show as much of the last line as possible
 set display+=uhex					" show unprintable hex characters as <xx>
 if version > 702
@@ -404,10 +404,10 @@ function! HeaderLocationIndex() "{{{
 endfunction
 
 "}}}
-function! CompletionFunctionList(A,L,P)
+function! CompletionFunctionList(A,L,P) " {{{
 	return "foo\nbar\nbaz"
 endfunction
-
+" }}}
 function! FunctionLocationIndex() "{{{
 	let l:incoming = input("Go to function: ", "", "custom,CompletionFunctionList")
 	lgetexpr "" " Clear the location list
