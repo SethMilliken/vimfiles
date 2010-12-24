@@ -16,6 +16,7 @@
 " 	- /^""/ indicate intentionally disabled options
 
 " Todo:
+"	- redo \snip snippet reloader as a command
 "	- clean up SETTINGS; provide better descriptions 
 "	- for clarity, replace abbreviated forms of options in all settings
 "	- annotate all line noise, especially statusline
@@ -100,6 +101,8 @@ endif " has("autocmd")
 "}}}
 " Seth Milliken additions
 " SETTINGS: {{{
+" au! VimEnter * source ~/.vim/after/plugin/foo.vim " Way to set the latest
+" file that will always be sourced for any file opened.
 set winfixheight
 set shortmess+=I 					" don't show intro on start
 set shortmess+=A 					" don't show message on existing swapfile
