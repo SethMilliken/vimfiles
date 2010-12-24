@@ -382,7 +382,7 @@ function! HeaderLocationIndex() "{{{
 	let l:incoming = input("Go To Header: ")
 	lgetexpr "" " Clear the location list
 	exe "set errorformat=%l:%f:%m"
-	let l:rawcommentstring = '\" '
+	let l:rawcommentstring = escape((StripFront(CommentStringOpen() . CommentStringClose())), "\"")
 	exe "let l:commentstring = " .  EscapeShiftUp("l:rawcommentstring")
 	let l:rawexpression = '\\(.*' . l:incoming . '\\c.*\\) ' . FoldMarkerOpen()
 	" let l:rawexpression = '\\([ [:upper:]]*\\) ' . FoldMarkerOpen() " MAJOR header
@@ -467,11 +467,14 @@ endfunction
 
 " Folds: manipulation
 function! FindNode(label) "{{{
-	let l:openmarker = CommentedFoldMarkerOpen()
-	let l:expression = a:label . "\\s*" . l:openmarker
-	let l:matchline = search(l:expression, 'csw')
-	"echo printf("line: %2s had expression: %s", l:matchline, l:expression)
-	return l:matchline
+		if a:label == ""
+				return 0
+		end
+		let l:openmarker = CommentedFoldMarkerOpen()
+		let l:expression = a:label . "\\s*" . l:openmarker
+		let l:matchline = search(l:expression, 'csw')
+		" echo printf("line: %2s had expression: %s", l:matchline, l:expression)
+		return l:matchline
 endfunction
 
 " }}}
@@ -689,7 +692,7 @@ function! AddOrUpdateTimestamp(annotation) "{{{
 			let l:origpos = getpos(".")
 			let l:hasbasictimestamp = match(getline("."), TimestampPattern())
 			let l:annotation = len(a:annotation) > 0 ? '{' . a:annotation . '}' : ""
-			let l:newtimestamp = substitute(CommentStringFull(), "%s", TimestampText("short") . " " . l:annotation, "")
+			let l:newtimestamp = StripEnd(substitute(CommentStringFull(), "%s", TimestampText("short") . " " . l:annotation, ""))
 			silent! undojoin
 			if l:hasbasictimestamp > 0
 				call setline(".", substitute(getline("."), TimestampAnnotatedPattern(), l:newtimestamp, ""))
@@ -1202,8 +1205,8 @@ let g:CommandTMatchWindowAtTop=1
 " }}}
 " Maintenance: " {{{
 " Put any calls to occasional housekeeping scripts in here.
-command DoMaintenance call DoMaintenance()
-function DoMaintenance()
+command! DoMaintenance call DoMaintenance()
+function! DoMaintenance()
 	" ~/.vim/bundle/refresh_bundles.sh
 	call pathogen#helptags()
 	" save all sessions

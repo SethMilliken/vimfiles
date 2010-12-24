@@ -33,6 +33,7 @@ nmap / :call HeaderLocationIndex()
 snoremap <silent> 	 i<Right>=TriggerSnippet()
 nnoremap <silent>  :call Reset() | nohls
 snoremap  b<BS>
+nnoremap g :GundoToggle
 nmap <silent>  :call RemoveTimestamp()
 nmap <silent>  :call AddOrUpdateTimestampSolicitingAnnotation()
 nmap <silent>  :call AddOrUpdateTimestamp("")
@@ -40,63 +41,91 @@ nmap <silent>  :call TimestampAutoUpdateToggle()
 nmap  :call ReloadVimrc() | :echo "Resourced .vimrc."
 snoremap % b<BS>%
 snoremap ' b<BS>'
-nmap ,ca <Plug>NERDCommenterAltDelims
-vmap ,cA <Plug>NERDCommenterAppend
-nmap ,cA <Plug>NERDCommenterAppend
-vmap ,c$ <Plug>NERDCommenterToEOL
-nmap ,c$ <Plug>NERDCommenterToEOL
-vmap ,cu <Plug>NERDCommenterUncomment
-nmap ,cu <Plug>NERDCommenterUncomment
-vmap ,cn <Plug>NERDCommenterNest
-nmap ,cn <Plug>NERDCommenterNest
-vmap ,cb <Plug>NERDCommenterAlignBoth
-nmap ,cb <Plug>NERDCommenterAlignBoth
-vmap ,cl <Plug>NERDCommenterAlignLeft
-nmap ,cl <Plug>NERDCommenterAlignLeft
-vmap ,cy <Plug>NERDCommenterYank
-nmap ,cy <Plug>NERDCommenterYank
-vmap ,ci <Plug>NERDCommenterInvert
-nmap ,ci <Plug>NERDCommenterInvert
-vmap ,cs <Plug>NERDCommenterSexy
-nmap ,cs <Plug>NERDCommenterSexy
-vmap ,cm <Plug>NERDCommenterMinimal
-nmap ,cm <Plug>NERDCommenterMinimal
-vmap ,c  <Plug>NERDCommenterToggle
-nmap ,c  <Plug>NERDCommenterToggle
-vmap ,cc <Plug>NERDCommenterComment
-nmap ,cc <Plug>NERDCommenterComment
 nnoremap // q/
 nnoremap :: q:
 nmap :W :w
 nnoremap ?? q?
-nmap <silent> K :e:$
+map K :echo TaskstackMoveToProject()
 map Q gq
 xmap S <Plug>VSurround
 snoremap U b<BS>U
+map Y y$
 vmap [% [%m'gv``
 snoremap \ b<BS>\
 map <silent> \w\t <Plug>VimwikiTabMakeDiaryNote
 map <silent> \w\w <Plug>VimwikiMakeDiaryNote
 map <silent> \ws <Plug>VimwikiUISelect
-map <silent> \wt <Plug>VimwikiTabGoHome
-map <silent> \ww <Plug>VimwikiGoHome
+map <silent> \wt <Plug>VimwikiTabIndex
+map <silent> \ww <Plug>VimwikiIndex
 nmap <silent> \cv <Plug>VCSVimDiff
-nmap <silent> \cu <Plug>VCSUpdate
 nmap <silent> \cU <Plug>VCSUnlock
-nmap <silent> \cs <Plug>VCSStatus
 nmap <silent> \cr <Plug>VCSReview
 nmap <silent> \cq <Plug>VCSRevert
-nmap <silent> \cn <Plug>VCSAnnotate
 nmap <silent> \cN <Plug>VCSSplitAnnotate
-nmap <silent> \cl <Plug>VCSLog
 nmap <silent> \cL <Plug>VCSLock
-nmap <silent> \ci <Plug>VCSInfo
 nmap <silent> \cg <Plug>VCSGotoOriginal
 nmap <silent> \cG <Plug>VCSClearAndGotoOriginal
 nmap <silent> \cd <Plug>VCSDiff
 nmap <silent> \cD <Plug>VCSDelete
-nmap <silent> \cc <Plug>VCSCommit
-nmap <silent> \ca <Plug>VCSAdd
+nmap \ca <Plug>NERDCommenterAltDelims
+vmap \cA <Plug>NERDCommenterAppend
+nmap \cA <Plug>NERDCommenterAppend
+vmap \c$ <Plug>NERDCommenterToEOL
+nmap \c$ <Plug>NERDCommenterToEOL
+vmap \cu <Plug>NERDCommenterUncomment
+nmap \cu <Plug>NERDCommenterUncomment
+vmap \cn <Plug>NERDCommenterNest
+nmap \cn <Plug>NERDCommenterNest
+vmap \cb <Plug>NERDCommenterAlignBoth
+nmap \cb <Plug>NERDCommenterAlignBoth
+vmap \cl <Plug>NERDCommenterAlignLeft
+nmap \cl <Plug>NERDCommenterAlignLeft
+vmap \cy <Plug>NERDCommenterYank
+nmap \cy <Plug>NERDCommenterYank
+vmap \ci <Plug>NERDCommenterInvert
+nmap \ci <Plug>NERDCommenterInvert
+vmap \cs <Plug>NERDCommenterSexy
+nmap \cs <Plug>NERDCommenterSexy
+vmap \cm <Plug>NERDCommenterMinimal
+nmap \cm <Plug>NERDCommenterMinimal
+vmap \c  <Plug>NERDCommenterToggle
+nmap \c  <Plug>NERDCommenterToggle
+vmap \cc <Plug>NERDCommenterComment
+nmap \cc <Plug>NERDCommenterComment
+nmap <silent> \slr :DBListVar
+xmap <silent> \sa :DBVarRangeAssign
+nmap <silent> \sap :'<,'>DBVarRangeAssign
+nmap <silent> \sal :.,.DBVarRangeAssign
+nmap <silent> \sas :1,$DBVarRangeAssign
+nmap \so <Plug>DBOrientationToggle
+nmap \sh <Plug>DBHistory
+nmap \slv <Plug>DBListView
+nmap \slp <Plug>DBListProcedure
+nmap \slt <Plug>DBListTable
+xmap <silent> \slc :exec 'DBListColumn "'.DB_getVisualBlock().'"'
+nmap \slc <Plug>DBListColumn
+nmap \sbp <Plug>DBPromptForBufferParameters
+nmap \sdpa <Plug>DBDescribeProcedureAskName
+xmap <silent> \sdp :exec 'DBDescribeProcedure "'.DB_getVisualBlock().'"'
+nmap \sdp <Plug>DBDescribeProcedure
+nmap \sdta <Plug>DBDescribeTableAskName
+xmap <silent> \sdt :exec 'DBDescribeTable "'.DB_getVisualBlock().'"'
+nmap \sdt <Plug>DBDescribeTable
+xmap <silent> \sT :exec 'DBSelectFromTableTopX "'.DB_getVisualBlock().'"'
+nmap \sT <Plug>DBSelectFromTopXTable
+nmap \sta <Plug>DBSelectFromTableAskName
+nmap \stw <Plug>DBSelectFromTableWithWhere
+xmap <silent> \st :exec 'DBSelectFromTable "'.DB_getVisualBlock().'"'
+nmap \st <Plug>DBSelectFromTable
+nmap <silent> \sep :'<,'>DBExecRangeSQL
+nmap <silent> \sel :.,.DBExecRangeSQL
+nmap <silent> \sea :1,$DBExecRangeSQL
+nmap \sE <Plug>DBExecSQLUnderTopXCursor
+nmap \se <Plug>DBExecSQLUnderCursor
+xmap \sE <Plug>DBExecVisualTopXSQL
+xmap \se <Plug>DBExecVisualSQL
+map \rwp <Plug>RestoreWinPosn
+map \swp <Plug>SaveWinPosn
 map \dk <Plug>DirDiffPrev
 map \dj <Plug>DirDiffNext
 map \dp <Plug>DirDiffPut
@@ -127,8 +156,10 @@ snoremap ^ b<BS>^
 snoremap ` b<BS>`
 vmap a% [%v]%
 nmap cs <Plug>Csurround
+nmap cr <Plug>Coerce
 nmap ds <Plug>Dsurround
 nmap gx <Plug>NetrwBrowseX
+xmap gS <Plug>VgSurround
 xmap s <Plug>Vsurround
 nmap ySS <Plug>YSsurround
 nmap ySs <Plug>YSsurround
@@ -139,6 +170,11 @@ nnoremap <C-Down> :silent! :call AdjustFont(-1)
 nnoremap <C-Up> :silent! :call AdjustFont(1)
 nnoremap <silent> <C-Right> gt
 nnoremap <silent> <C-Left> gT
+map <D-f> :CommandT
+map <silent> <D-E> :cp 
+map <silent> <D-e> :cn 
+map <silent> <D-P> :lp 
+map <silent> <D-p> :ln 
 nmap <silent> <D-w> :bd
 nmap <silent> <D-t> :101tabnew
 map <M-Down> }
@@ -179,12 +215,6 @@ nnoremap <silent> <Plug>VCSDelete :VCSDelete
 nnoremap <silent> <Plug>VCSCommit :VCSCommit
 nnoremap <silent> <Plug>VCSAnnotate :VCSAnnotate
 nnoremap <silent> <Plug>VCSAdd :VCSAdd
-map <M-F3> :call CSV_clear_all()  
-map <S-F3> :call CSV_toggle_field(CSV_get_field(0))
-map <S-F5> :call CSV_goto_highlighted(-1)
-map <S-F6> :call CSV_goto_highlighted(1)
-map <C-F5> :call CSV_goto_field()
-map <C-F6> :call CSV_get_new_sep()
 nmap <silent> <Plug>NERDCommenterAppend :call NERDComment(0, "append")
 nnoremap <silent> <Plug>NERDCommenterToEOL :call NERDComment(0, "toEOL")
 vnoremap <silent> <Plug>NERDCommenterUncomment :call NERDComment(1, "uncomment")
@@ -207,12 +237,20 @@ vnoremap <silent> <Plug>NERDCommenterToggle :call NERDComment(1, "toggle")
 nnoremap <silent> <Plug>NERDCommenterToggle :call NERDComment(0, "toggle")
 vnoremap <silent> <Plug>NERDCommenterComment :call NERDComment(1, "norm")
 nnoremap <silent> <Plug>NERDCommenterComment :call NERDComment(0, "norm")
+map <M-F3> :call CSV_clear_all()  
+map <S-F3> :call CSV_toggle_field(CSV_get_field(0))
+map <S-F5> :call CSV_goto_highlighted(-1)
+map <S-F6> :call CSV_goto_highlighted(1)
+map <C-F5> :call CSV_goto_field()
+map <C-F6> :call CSV_get_new_sep()
+nmap <silent> <Plug>RestoreWinPosn :call RestoreWinPosn()
+nmap <silent> <Plug>SaveWinPosn :call SaveWinPosn()
 map <silent> <C-S-Tab> :BufExplorerk
 map <silent> <C-Tab> :BufExplorerj
-nmap <Down> :echo "You should have typed j instead."
-nmap <Up> :echo "You should have typed k instead."
-nmap <Right> :echo "You should have typed l instead."
-nmap <Left> :echo "You should have typed h instead."
+nmap <Down> :<Down>
+nmap <Up> :<Up>
+nmap <Right> :<Down>
+nmap <Left> :<Up>
 nmap <S-Space> 
 map <F1> :Help
 nnoremap <Nul> :
@@ -242,7 +280,7 @@ set display=lastline,uhex
 set fileencodings=ucs-bom,utf-8,default,latin1
 set foldlevelstart=999
 set fuoptions=maxhorz,maxvert
-set guifont=Inconsolata:h11
+set guifont=Inconsolata:h13
 set guioptions=egmrLt
 set guitablabel=%m\ %N\ %t\ %r
 set helplang=en
@@ -257,7 +295,7 @@ set listchars=tab:>-,trail:-
 set mouse=a
 set printexpr=system('open\ -a\ Preview\ '.v:fname_in)\ +\ v:shell_error
 set ruler
-set runtimepath=~/.vim,~/.vim/bundle/PickAColor,/Applications/Tasks.app/Contents/Resources/vim/vimfiles,/Applications/Tasks.app/Contents/Resources/vim/runtime,/Applications/Tasks.app/Contents/Resources/vim/vimfiles/after,~/.vim/after
+set runtimepath=~/.vim,~/.vim/bundle/abolish,~/.vim/bundle/cocoa,~/.vim/bundle/command-t,~/.vim/bundle/conque,~/.vim/bundle/dbext,~/.vim/bundle/fugitive,~/.vim/bundle/gundo,~/.vim/bundle/nerdcommenter,~/.vim/bundle/nerdtree,~/.vim/bundle/paster,~/.vim/bundle/pickacolor,~/.vim/bundle/project,~/.vim/bundle/rails,~/.vim/bundle/sessionman,~/.vim/bundle/snipmate,~/.vim/bundle/surround,~/.vim/bundle/vcscommand,~/.vim/bundle/vim-ruby,~/.vim/bundle/vimwiki,/Applications/Tasks.app/Contents/Resources/vim/vimfiles,/Applications/Tasks.app/Contents/Resources/vim/runtime,/Applications/Tasks.app/Contents/Resources/vim/vimfiles/after,~/.vim/bundle/cocoa/after,~/.vim/bundle/snipmate/after,~/.vim/after
 set sessionoptions=folds,help,options,tabpages,winsize,globals,sesdir,resize,winpos,unix
 set shiftwidth=4
 set shortmess=filnxtToOIA
@@ -274,59 +312,68 @@ set tabstop=2
 set tags=./tags,tags,~/sandbox/personal/tags
 set termencoding=utf-8
 set undolevels=100
-set window=82
+set wildignore=*.o,*.sw?,*.git,*.svn,*.hg,**/build,*.?ib,*.png,*.jpg,*.jpeg,*.mov,*.gif,*.bom,*.azw,*.lpr,*.mbp,*.mode1v3,*.gz,*.vmwarevm,*.rtf,*.pkg,*.developerprofile,*.xcodeproj,*.pdf,*.dmg,*.db,*.otf,*.bz2,*.tiff,*.iso,*.jar,*.dat,**/Cache,*.cache,*.sqlite*,*.collection,*.qsindex,*.qsplugin,*.growlTicket,*.part,*.ics,*.ico,**/iPhone\ Simulator,*.lock*,*.webbookmark
+set window=70
 set winminheight=0
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
 let NERDTreeMapPreviewSplit = "gi"
 let NERDTreeMapCloseChildren = "X"
 let NERDTreeShowHidden = "0"
+let ConqueTerm_EscKey = "<Esc>"
 let TailMinusF_Loaded =  1 
-let NERDSpaceDelims = "0"
 let NERDTreeMapCloseDir = "x"
+let ConqueTerm_Color =  1 
+let ConqueTerm_Version =  200 
 let NERDUsePlaceHolders = "1"
 let NERDTreeShowLineNumbers = "0"
 let DirDiffSort =  1 
-let NERDTreeMapToggleHidden = "I"
+let ConqueTerm_SendFunctionKeys =  0 
+let NERDTreeBookmarksFile = "/Users/seth/.NERDTreeBookmarks"
 let NERDTreeWinSize = "31"
+let NERDTreeMapJumpParent = "p"
 let NERDTreeMapRefreshRoot = "R"
 let DirDiffInteractive =  0 
 let NERDTreeMapPreview = "go"
+let ConqueTerm_PyExe = ""
 let NERDTreeMapActivateNode = "o"
 let NERDTreeWinPos = "left"
 let DirDiffAddArgs = ""
-let NERDTreeStatusline = "%{b:NERDTreeRoot.path.strForOS(0)}"
+let NERDTreeMapMenu = "m"
+let NERDTreeStatusline = "%{exists('b:NERDTreeRoot')?b:NERDTreeRoot.path.str():''}"
 let NERDTreeMapOpenInTabSilent = "T"
 let NERDTreeMapHelp = "?"
-let NERDTreeMapJumpParent = "p"
 let NERDTreeMapToggleFilters = "f"
 let NERDTreeMapJumpLastChild = "J"
 let NERDTreeMapJumpPrevSibling = "<C-k>"
 let NERDTreeShowBookmarks = "0"
 let NERDMenuMode = "3"
-let NERDTreeMapOpenExpl = "e"
+let NERDDefaultNesting = "1"
 let CSV_string_delimiter = "\""
 let NERDTreeMouseMode = "1"
-let NERDDefaultNesting = "1"
-let NERDTreeChDirMode = "0"
 let NERDTreeRemoveDirCmd = "rm -rf "
+let NERDTreeChDirMode = "0"
 let NERDTreeAutoCenterThreshold = "3"
 let NERDTreeShowFiles = "1"
 let NERDTreeMapOpenSplit = "i"
+let CommandTMatchWindowAtTop =  1 
 let DirDiffTextFiles = "Files "
 let NERDTreeCaseSensitiveSort = "0"
+let ConqueTerm_PyVersion =  2 
 let NERDTreeHijackNetrw = "1"
-let NERDTreeMapFilesystemMenu = "m"
+let NERDSpaceDelims = "0"
+let DrChipTopLvlMenu = "DrChip."
 let NERDTreeMapRefresh = "r"
-let CSV_field_list = ""
 let TailMinusF_Height =  10 
 let NERDTreeHighlightCursorline = "1"
 let NERDDelimiterRequests = "1"
-let NERDLPlace = "[>"
+let CSV_field_list = ""
 let NERDTreeMapOpenInTab = "t"
 let CSV_separator = ","
 let DirDiffExcludes = ""
+let ConqueTerm_CloseOnEnd =  0 
 let NERDCreateDefaultMappings = "1"
+let ConqueTerm_InsertOnEnter =  0 
 let DirDiffDynamicDiffText =  0 
 let NERDTreeMapPreviewVSplit = "gs"
 let NERDChristmasTree = "1"
@@ -337,15 +384,18 @@ let DirDiffTextDiffer = " differ"
 let BufExplorer_title = "[Buf List]"
 let NERDTreeMapChdir = "cd"
 let NERDRPlace = "<]"
+let NERDTreeMapToggleZoom = "A"
 let DirDiffWindowSize =  14 
-let NERDTreeMapExecute = "!"
 let NERDRemoveExtraSpaces = "1"
+let DirDiffIgnore = ""
 let NERDRemoveAltComs = "1"
 let NERDTreeAutoCenter = "1"
+let ConqueTerm_ToggleKey = "<F8>"
 let DirDiffTextOnlyIn = "Only in "
 let TailMinusF_Center_Win =  0 
 let DirDiffTextAnd = " and "
 let NERDTreeMapOpenVSplit = "s"
+let ConqueTerm_ReadUnfocused =  0 
 let NERDTreeMapDeleteBookmark = "D"
 let NERDBlockComIgnoreEmpty = "0"
 let AutoHiVersion = "0.2"
@@ -353,31 +403,40 @@ let NERDTreeMapJumpNextSibling = "<C-j>"
 let DirDiffIgnoreCase =  0 
 let NERDTreeMapJumpRoot = "P"
 let NERDTreeCopyCmd = "cp -r "
+let ConqueTerm_SendVisKey = "<F9>"
 let NERDTreeMapQuit = "q"
 let NERDTreeMapChangeRoot = "C"
+let ConqueTerm_SessionSupport =  0 
 let NERDCompactSexyComs = "0"
 let NERDTreeSortDirs = "1"
+let ConqueTerm_TERM = "vt100"
 let NERDTreeMapToggleFiles = "F"
 let NERDAllowAnyVisualDelims = "1"
-let DirDiffIgnore = ""
+let ConqueTerm_CWInsert =  0 
+let ConqueTerm_Idx =  0 
+let ConqueTerm_PromptRegex = "^\\w\\+@[0-9A-Za-z_.-]\\+:[0-9A-Za-z_./\\~,:-]\\+\\$"
 let BufExploreAdd =  1 
+let NERDTreeMapOpenExpl = "e"
 let NERDTreeMapJumpFirstChild = "K"
+let NERDLPlace = "[>"
 let NERDTreeMapOpenRecursively = "O"
 let NERDTreeMapToggleBookmarks = "B"
-let NERDTreeBookmarksFile = "/Users/seth/.NERDTreeBookmarks"
+let ConqueTerm_Loaded =  1 
 let NERDTreeMapUpdir = "u"
+let ConqueTerm_Syntax = "conque_term"
 let NERDTreeMapUpdirKeepOpen = "U"
 let NERDTreeQuitOnOpen = "0"
+let NERDTreeMapToggleHidden = "I"
 silent only
 exe "cd " . escape(expand("<sfile>:p:h"), ' ')
 if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +1 ~/sandbox/personal/todo/personal.tst.txt
+badd +0 ~/sandbox/personal/todo/personal.tst.txt
 silent! argdel *
-set lines=83 columns=137
-winpos 840 1028
+set lines=71 columns=137
+winpos 0 1028
 buffer ~/sandbox/personal/todo/personal.tst.txt
 set splitbelow splitright
 wincmd t
@@ -402,7 +461,7 @@ nmap <buffer> <silent>  /^@.* {\{3\}:nohls
 nmap <buffer> <silent>  ?^@.* {\{3\}:nohls
 nmap <buffer> <silent> x :call TaskstackGroups()
 nmap <buffer> <silent> $ :call TaskstackEOL()
-nmap <buffer> :w :call TaskstackAutosaveReminder()
+nmap <buffer> :w :call TaskstackSave()
 imap <buffer> <silent> ¹ :tabn 9
 imap <buffer> <silent> ¸ :tabn 8
 imap <buffer> <silent> · :tabn 7
@@ -479,8 +538,7 @@ setlocal noexpandtab
 if &filetype != '_.txt.tst'
 setlocal filetype=_.txt.tst
 endif
-set foldcolumn=4
-setlocal foldcolumn=4
+setlocal foldcolumn=0
 setlocal foldenable
 setlocal foldexpr=0
 setlocal foldignore=#
@@ -554,430 +612,12 @@ setlocal winfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-8
-normal zo
-49
-normal zo
-49
-normal zc
-114
-normal zo
-114
-normal zc
-140
-normal zo
-140
-normal zc
-162
-normal zc
-176
-normal zc
-180
-normal zc
-185
-normal zc
-8
-normal zo
-28
-normal zo
-43
-normal zo
-49
-normal zo
-50
-normal zo
-66
-normal zo
-89
-normal zo
-108
-normal zo
-49
-normal zo
-114
-normal zo
-115
-normal zo
-121
-normal zo
-127
-normal zo
-114
-normal zo
-140
-normal zo
-141
-normal zo
-148
-normal zo
-153
-normal zo
-158
-normal zo
-140
-normal zo
-162
-normal zo
-176
-normal zo
-180
-normal zo
-185
-normal zo
-201
-normal zo
-209
-normal zo
-219
-normal zc
-225
-normal zc
-230
-normal zc
-238
-normal zc
-251
-normal zc
-259
-normal zc
-269
-normal zc
-273
-normal zc
-285
-normal zc
-292
-normal zc
-298
-normal zc
-303
-normal zc
-312
-normal zc
-325
-normal zc
-330
-normal zc
-336
-normal zc
-340
-normal zc
-349
-normal zc
-358
-normal zc
-366
-normal zc
-371
-normal zc
-379
-normal zc
-388
-normal zc
-394
-normal zc
-400
-normal zc
-408
-normal zc
-419
-normal zc
-426
-normal zc
-430
-normal zc
-441
-normal zc
-447
-normal zc
-452
-normal zc
-465
-normal zc
-475
-normal zc
-479
-normal zc
-491
-normal zc
-504
-normal zc
-509
-normal zc
-515
-normal zc
-523
-normal zc
-527
-normal zc
-537
-normal zc
-559
-normal zo
-559
-normal zc
-584
-normal zc
-596
-normal zo
-596
-normal zc
-626
-normal zc
-638
-normal zc
-650
-normal zc
-655
-normal zc
-663
-normal zc
-669
-normal zc
-683
-normal zc
-698
-normal zc
-709
-normal zc
-728
-normal zc
-739
-normal zc
-743
-normal zc
-752
-normal zc
-756
-normal zc
-760
-normal zc
-764
-normal zc
-772
-normal zc
-776
-normal zc
-781
-normal zc
-786
-normal zc
-792
-normal zc
-796
-normal zc
-800
-normal zc
-805
-normal zc
-809
-normal zc
-815
-normal zc
-822
-normal zc
-828
-normal zc
-834
-normal zc
-838
-normal zc
-842
-normal zc
-847
-normal zc
-852
-normal zc
-857
-normal zc
-862
-normal zc
-866
-normal zc
-874
-normal zc
-887
-normal zc
-893
-normal zc
-898
-normal zc
-903
-normal zc
-909
-normal zc
-915
-normal zc
-926
-normal zc
-932
-normal zc
-936
-normal zc
-941
-normal zc
-946
-normal zc
-950
-normal zc
-955
-normal zc
-961
-normal zc
-967
-normal zc
-972
-normal zc
-979
-normal zc
-984
-normal zc
-990
-normal zc
-998
-normal zc
-1010
-normal zc
-1020
-normal zc
-1025
-normal zc
-1034
-normal zc
-1049
-normal zc
-1054
-normal zc
-1062
-normal zc
-1072
-normal zc
-1079
-normal zc
-1083
-normal zc
-1088
-normal zc
-1094
-normal zc
-1103
-normal zc
-1109
-normal zc
-1113
-normal zc
-1120
-normal zc
-1125
-normal zc
-1131
-normal zc
-1142
-normal zc
-1152
-normal zc
-1158
-normal zc
-1164
-normal zc
-1191
-normal zc
-1197
-normal zc
-1204
-normal zc
-1212
-normal zc
-1225
-normal zc
-1229
-normal zc
-1236
-normal zc
-1253
-normal zc
-1275
-normal zc
-1289
-normal zc
-1295
-normal zc
-1303
-normal zc
-1312
-normal zc
-1349
-normal zo
-1349
-normal zc
-1593
-normal zo
-1594
-normal zc
-1625
-normal zc
-1630
-normal zc
-1640
-normal zc
-1711
-normal zc
-1721
-normal zc
-1727
-normal zc
-1749
-normal zc
-1773
-normal zc
-1791
-normal zc
-1814
-normal zc
-1817
-normal zc
-1824
-normal zo
-1824
-normal zc
-1937
-normal zc
-1956
-normal zc
-1965
-normal zc
-1986
-normal zc
-2021
-normal zc
-2025
-normal zc
-2030
-normal zc
-2035
-normal zo
-2071
-normal zo
-2071
-normal zo
-2035
-normal zo
-2120
-normal zc
-2128
-normal zo
-2128
-normal zc
-2165
-normal zc
-1593
-normal zo
-let s:l = 2 - ((1 * winheight(0) + 40) / 81)
+let s:l = 2 - ((1 * winheight(0) + 34) / 69)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 2
-normal! 045l
+normal! 0
 tabnext 1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf

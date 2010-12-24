@@ -210,6 +210,7 @@ function! TaskstackCompleteItem(prefix) " {{{
 		" silent call MoveItemToDateNode(getline(foldclosed(line(".")), foldclosedend(line("."))), a:prefix)
 	end
 	call AutoTimestampEnable() " FIXME: External Dependency
+	echo ""
 endfunction
 
 " }}}
@@ -255,21 +256,85 @@ endfunction
 
 " Miscellaneous:
 function! TaskstackDetectProjectName() " {{{
-	let projectName = matchstr(getline("."),'^. \zs\(\<\w*\>\s*\)\{,3}\ze')
-	return projectName	
+		let l:project_name = matchstr(getline("."),'^. \zs\(\<\w*\>\s*\)\{,3}\ze:')
+	return l:project_name	
 endfunction
 
 " }}}
 function! TaskstackMoveItemToNode(item,node) " {{{
-	let nodeline = FindNode(a:node)
-	echo 'normal :' . a:item . 'm' . nodeline
-	exe 'normal :' . a:item . 'm' . nodeline
+	let l:nodeline = FindNode(a:node)
+	let l:result = ""
+	if l:nodeline != 0
+		let l:result = ':' . a:item . 'm' . nodeline
+		exe l:result
+	end
+	return l:result
 endfunction
 
 " }}}
+map K :echo TaskstackMoveToProject()<CR>
+" map K :call TaskstackFindGroup()<CR>
 function! TaskstackMoveToProject() " {{{
-	let projectName = TaskstackDetectProjectName()
-	call TaskstackMoveItemToNode(line("."),projectName)
+	let l:origview = winsaveview()
+	let l:project_name = TaskstackDetectProjectName()
+	if l:project_name == ""
+		return "No project specified."
+	end
+	let l:group_lines = TaskstackFindGroup()
+	let l:result_message = ""
+	if l:group_lines != 0
+			let l:move_result = TaskstackMoveItemToNode(l:group_lines,l:project_name)
+			if l:move_result == ""
+				let l:result_message = "Project \"@" . l:project_name . "\" not found."
+			else
+					let l:result_message = "Moved item to project \"@" . l:project_name . "\"."
+			endif
+	else
+			let l:result_message = "Can't move unrecognized item."
+	endif
+	call winrestview(l:origview)
+	return l:result_message
+endfunction
+
+" }}}
+function! TaskstackFindGroup() "{{{
+		if IsAntiItem()
+			return 0
+	end
+	let l:max_lines_without_warning = 5
+	let l:origview = winsaveview()
+	let l:begin_line = line(".")
+	let l:end_line = line(".")
+	while l:end_line < line("$")
+		normal j
+		if IsItem() || IsAntiItem()
+				break
+		endif
+		let l:end_line = line(".")
+	endwhile
+
+	let l:lines_to_move = l:end_line - l:begin_line
+	if l:lines_to_move > l:max_lines_without_warning
+			let l:continue = input("About to move " . l:lines_to_move . " lines. Proceed? ")
+			if l:continue != "y"
+				return 0
+			endif
+	endif
+	return l:begin_line . "," . l:end_line
+	call winrestview(l:origview)
+endfunction
+
+" }}}
+function! IsItem() " {{{
+	let l:itemMatches = "^\[-ox?+@]\\s*"
+	let l:match_result = match(getline("."), l:itemMatches)
+	return l:match_result + 1
+endfunction
+
+" }}}
+function! IsAntiItem() " {{{
+	let boundaryMatches = "^" . Strip(CommentStringOpen()) . "\\s*\[}{]"
+	return match(getline("."), boundaryMatches . "\\|" . "^$") + 1
 endfunction
 
 " }}}
