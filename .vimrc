@@ -267,7 +267,7 @@ endfunction
 " Navigation: shortcuts {{{
 nmap <C-e>/ :call HeaderLocationIndex()<CR>
 nmap <C-e>? :call FunctionLocationIndex()<CR>
-nmap <C-e>c :silent! lclose<CR>
+nmap <C-e>d :silent! lclose<CR>
 nmap <C-e>n :call SectionHeadNav(1, 0)<CR>
 nmap <C-e>N :call SectionHeadNav(1, 1)<CR>
 nmap <C-e>p :call SectionHeadNav(-1, 0)<CR>

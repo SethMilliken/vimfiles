@@ -277,6 +277,7 @@ set commentstring=
 set diffopt=filler,vertical
 set directory=~/.vim/swap//,~/vimfiles/swap//
 set display=lastline,uhex
+set errorformat=%l:%f:%m
 set fileencodings=ucs-bom,utf-8,default,latin1
 set foldlevelstart=999
 set fuoptions=maxhorz,maxvert
@@ -313,7 +314,6 @@ set tags=./tags,tags,~/sandbox/personal/tags
 set termencoding=utf-8
 set undolevels=100
 set wildignore=*.o,*.sw?,*.git,*.svn,*.hg,**/build,*.?ib,*.png,*.jpg,*.jpeg,*.mov,*.gif,*.bom,*.azw,*.lpr,*.mbp,*.mode1v3,*.gz,*.vmwarevm,*.rtf,*.pkg,*.developerprofile,*.xcodeproj,*.pdf,*.dmg,*.db,*.otf,*.bz2,*.tiff,*.iso,*.jar,*.dat,**/Cache,*.cache,*.sqlite*,*.collection,*.qsindex,*.qsplugin,*.growlTicket,*.part,*.ics,*.ico,**/iPhone\ Simulator,*.lock*,*.webbookmark
-set window=70
 set winminheight=0
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
@@ -433,10 +433,10 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +0 ~/sandbox/personal/todo/personal.tst.txt
+badd +148 ~/sandbox/personal/todo/personal.tst.txt
 silent! argdel *
-set lines=71 columns=137
-winpos 0 1028
+set lines=83 columns=135
+winpos 1680 1050
 buffer ~/sandbox/personal/todo/personal.tst.txt
 set splitbelow splitright
 wincmd t
@@ -612,12 +612,402 @@ setlocal winfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 2 - ((1 * winheight(0) + 34) / 69)
+1
+normal zo
+46
+normal zo
+52
+normal zo
+76
+normal zo
+76
+normal zc
+146
+normal zo
+146
+normal zc
+186
+normal zo
+186
+normal zc
+222
+normal zc
+236
+normal zc
+240
+normal zc
+244
+normal zc
+1
+normal zo
+278
+normal zo
+283
+normal zc
+292
+normal zc
+301
+normal zc
+306
+normal zc
+310
+normal zc
+314
+normal zc
+319
+normal zc
+329
+normal zc
+335
+normal zc
+340
+normal zc
+348
+normal zc
+361
+normal zc
+369
+normal zc
+379
+normal zc
+391
+normal zc
+395
+normal zc
+402
+normal zc
+408
+normal zc
+413
+normal zc
+422
+normal zc
+435
+normal zc
+440
+normal zc
+446
+normal zc
+450
+normal zc
+459
+normal zc
+468
+normal zc
+476
+normal zc
+481
+normal zc
+489
+normal zc
+498
+normal zc
+504
+normal zc
+510
+normal zc
+518
+normal zc
+529
+normal zc
+536
+normal zc
+540
+normal zc
+551
+normal zc
+557
+normal zc
+562
+normal zc
+575
+normal zc
+585
+normal zc
+589
+normal zc
+601
+normal zc
+614
+normal zc
+619
+normal zc
+625
+normal zc
+633
+normal zc
+637
+normal zc
+647
+normal zc
+669
+normal zo
+669
+normal zc
+694
+normal zc
+706
+normal zo
+706
+normal zc
+736
+normal zc
+748
+normal zc
+760
+normal zc
+765
+normal zc
+773
+normal zc
+779
+normal zc
+793
+normal zc
+808
+normal zc
+819
+normal zc
+838
+normal zc
+849
+normal zc
+853
+normal zc
+862
+normal zc
+866
+normal zc
+870
+normal zc
+874
+normal zc
+882
+normal zc
+886
+normal zc
+891
+normal zc
+896
+normal zc
+902
+normal zc
+906
+normal zc
+910
+normal zc
+915
+normal zc
+919
+normal zc
+925
+normal zc
+932
+normal zc
+938
+normal zc
+944
+normal zc
+948
+normal zc
+952
+normal zc
+957
+normal zc
+962
+normal zc
+967
+normal zc
+972
+normal zc
+976
+normal zc
+984
+normal zc
+997
+normal zc
+1003
+normal zc
+1008
+normal zc
+1013
+normal zc
+1019
+normal zc
+1025
+normal zc
+1036
+normal zc
+1042
+normal zc
+1046
+normal zc
+1051
+normal zc
+1056
+normal zc
+1060
+normal zc
+1065
+normal zc
+1071
+normal zc
+1077
+normal zc
+1082
+normal zc
+1089
+normal zc
+1094
+normal zc
+1100
+normal zc
+1108
+normal zc
+1120
+normal zc
+1130
+normal zc
+1135
+normal zc
+1144
+normal zc
+1159
+normal zc
+1164
+normal zc
+1172
+normal zc
+1182
+normal zc
+1189
+normal zc
+1193
+normal zc
+1198
+normal zc
+1204
+normal zc
+1213
+normal zc
+1219
+normal zc
+1223
+normal zc
+1230
+normal zc
+1235
+normal zc
+1241
+normal zc
+1252
+normal zc
+1262
+normal zc
+1268
+normal zc
+1274
+normal zc
+1301
+normal zc
+1307
+normal zc
+1314
+normal zc
+1322
+normal zc
+1335
+normal zc
+1339
+normal zc
+1346
+normal zc
+1363
+normal zc
+1385
+normal zc
+1399
+normal zc
+1405
+normal zc
+1413
+normal zc
+1422
+normal zc
+1459
+normal zo
+1459
+normal zc
+1703
+normal zo
+1704
+normal zc
+1735
+normal zc
+1740
+normal zc
+1750
+normal zc
+1821
+normal zc
+1831
+normal zc
+1837
+normal zc
+1859
+normal zc
+1883
+normal zc
+1901
+normal zc
+1924
+normal zc
+1927
+normal zc
+1934
+normal zo
+1946
+normal zo
+1934
+normal zo
+2047
+normal zc
+2066
+normal zc
+2075
+normal zc
+2096
+normal zc
+2131
+normal zc
+2135
+normal zc
+2140
+normal zc
+2145
+normal zo
+2145
+normal zc
+2230
+normal zc
+2239
+normal zo
+2239
+normal zc
+2276
+normal zc
+2280
+normal zc
+2306
+normal zc
+1703
+normal zo
+let s:l = 49 - ((48 * winheight(0) + 40) / 81)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-2
-normal! 0
+49
+normal! 037l
 tabnext 1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf
