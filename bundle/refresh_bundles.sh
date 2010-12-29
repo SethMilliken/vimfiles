@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Clone or update vim bundles
 DEBUG=
 #DEBUG=echo
