@@ -314,6 +314,7 @@ set tags=./tags,tags,~/sandbox/personal/tags
 set termencoding=utf-8
 set undolevels=100
 set wildignore=*.o,*.sw?,*.git,*.svn,*.hg,**/build,*.?ib,*.png,*.jpg,*.jpeg,*.mov,*.gif,*.bom,*.azw,*.lpr,*.mbp,*.mode1v3,*.gz,*.vmwarevm,*.rtf,*.pkg,*.developerprofile,*.xcodeproj,*.pdf,*.dmg,*.db,*.otf,*.bz2,*.tiff,*.iso,*.jar,*.dat,**/Cache,*.cache,*.sqlite*,*.collection,*.qsindex,*.qsplugin,*.growlTicket,*.part,*.ics,*.ico,**/iPhone\ Simulator,*.lock*,*.webbookmark
+set window=68
 set winminheight=0
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
@@ -433,10 +434,11 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +148 ~/sandbox/personal/todo/personal.tst.txt
+badd +44 ~/sandbox/personal/todo/personal.tst.txt
+badd +0 /Applications/Tasks.app/Contents/Resources/vim/runtime/vimrc_example.vim
 silent! argdel *
-set lines=83 columns=135
-winpos 1680 1050
+set lines=69 columns=135
+winpos 460 1028
 buffer ~/sandbox/personal/todo/personal.tst.txt
 set splitbelow splitright
 wincmd t
@@ -614,400 +616,508 @@ setlocal wrap
 setlocal wrapmargin=0
 1
 normal zo
-46
-normal zo
-52
-normal zo
-76
-normal zo
-76
-normal zc
-146
-normal zo
-146
-normal zc
-186
-normal zo
-186
-normal zc
-222
-normal zc
-236
-normal zc
-240
-normal zc
-244
-normal zc
 1
 normal zo
-278
+285
 normal zo
-283
+289
+normal zo
+294
 normal zc
-292
+303
 normal zc
-301
+312
 normal zc
-306
+317
 normal zc
-310
+321
 normal zc
-314
+325
 normal zc
-319
-normal zc
-329
-normal zc
-335
+330
 normal zc
 340
 normal zc
-348
+346
 normal zc
-361
+351
 normal zc
-369
+359
 normal zc
-379
+372
 normal zc
-391
+380
 normal zc
-395
+390
 normal zc
 402
 normal zc
-408
+406
 normal zc
 413
 normal zc
-422
+419
 normal zc
-435
+424
 normal zc
-440
+433
 normal zc
 446
 normal zc
-450
+451
 normal zc
-459
+457
 normal zc
-468
+461
 normal zc
-476
+470
 normal zc
-481
+479
 normal zc
-489
+487
 normal zc
-498
+492
 normal zc
-504
+500
 normal zc
-510
+509
 normal zc
-518
+515
+normal zc
+521
 normal zc
 529
 normal zc
-536
-normal zc
 540
+normal zc
+547
 normal zc
 551
 normal zc
-557
-normal zc
 562
 normal zc
-575
+568
 normal zc
-585
+573
 normal zc
-589
+586
 normal zc
-601
+596
 normal zc
-614
+600
 normal zc
-619
+612
 normal zc
 625
 normal zc
-633
+630
 normal zc
-637
+636
 normal zc
-647
+644
 normal zc
-669
+648
+normal zc
+658
+normal zc
+680
 normal zo
-669
+680
 normal zc
-694
+705
 normal zc
-706
+717
 normal zo
-706
+717
 normal zc
-736
+747
 normal zc
-748
+759
 normal zc
-760
+771
 normal zc
-765
+776
 normal zc
-773
+784
 normal zc
-779
+790
 normal zc
-793
-normal zc
-808
+804
 normal zc
 819
 normal zc
-838
+830
 normal zc
 849
 normal zc
-853
+860
 normal zc
-862
+864
 normal zc
-866
+873
 normal zc
-870
+877
 normal zc
-874
+881
 normal zc
-882
+885
 normal zc
-886
+893
 normal zc
-891
-normal zc
-896
+897
 normal zc
 902
 normal zc
-906
+907
 normal zc
-910
+913
 normal zc
-915
+917
 normal zc
-919
+921
 normal zc
-925
+926
 normal zc
-932
+930
 normal zc
-938
+936
 normal zc
-944
+943
 normal zc
-948
+949
 normal zc
-952
+955
 normal zc
-957
+959
 normal zc
-962
+963
 normal zc
-967
+968
 normal zc
-972
+973
 normal zc
-976
+978
 normal zc
-984
+983
 normal zc
-997
+987
 normal zc
-1003
+995
 normal zc
 1008
 normal zc
-1013
+1014
 normal zc
 1019
 normal zc
-1025
+1024
+normal zc
+1030
 normal zc
 1036
 normal zc
-1042
+1047
 normal zc
-1046
+1053
 normal zc
-1051
+1057
 normal zc
-1056
+1062
 normal zc
-1060
-normal zc
-1065
+1067
 normal zc
 1071
 normal zc
-1077
+1076
 normal zc
 1082
 normal zc
-1089
+1088
 normal zc
-1094
+1093
 normal zc
 1100
 normal zc
-1108
+1105
 normal zc
-1120
+1111
 normal zc
-1130
+1119
 normal zc
-1135
+1131
 normal zc
-1144
+1141
 normal zc
-1159
+1146
 normal zc
-1164
+1155
 normal zc
-1172
+1170
 normal zc
-1182
+1175
 normal zc
-1189
+1183
 normal zc
 1193
 normal zc
-1198
+1200
 normal zc
 1204
 normal zc
-1213
+1209
 normal zc
-1219
+1215
 normal zc
-1223
+1224
 normal zc
 1230
 normal zc
-1235
+1234
 normal zc
 1241
 normal zc
+1246
+normal zc
 1252
 normal zc
-1262
+1263
 normal zc
-1268
+1273
 normal zc
-1274
+1279
 normal zc
-1301
+1285
 normal zc
-1307
+1312
 normal zc
-1314
+1318
 normal zc
-1322
+1325
 normal zc
-1335
-normal zc
-1339
+1333
 normal zc
 1346
 normal zc
-1363
+1350
 normal zc
-1385
+1357
 normal zc
-1399
+1374
 normal zc
-1405
+1396
 normal zc
-1413
+1410
 normal zc
-1422
+1416
 normal zc
-1459
+1424
+normal zc
+1433
+normal zc
+1470
 normal zo
-1459
+1470
 normal zc
-1703
+1714
 normal zo
-1704
+1715
 normal zc
-1735
+1746
 normal zc
-1740
+1751
 normal zc
-1750
+1761
 normal zc
-1821
+1832
 normal zc
-1831
+1842
 normal zc
-1837
+1848
 normal zc
-1859
+1870
 normal zc
-1883
+1894
 normal zc
-1901
+1912
 normal zc
-1924
+1935
 normal zc
-1927
+1938
 normal zc
-1934
+1945
 normal zo
-1946
+1957
 normal zo
-1934
+1945
 normal zo
-2047
+2058
 normal zc
-2066
+2077
 normal zc
-2075
+2086
 normal zc
-2096
+2107
 normal zc
-2131
+2142
 normal zc
-2135
+2146
 normal zc
-2140
+2151
 normal zc
-2145
+2156
 normal zo
-2145
+2156
 normal zc
-2230
+2241
 normal zc
-2239
+2250
 normal zo
-2239
+2250
 normal zc
-2276
+2287
 normal zc
-2280
+2291
 normal zc
-2306
+2317
 normal zc
-1703
+1714
 normal zo
-let s:l = 49 - ((48 * winheight(0) + 40) / 81)
+let s:l = 2 - ((1 * winheight(0) + 33) / 67)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-49
-normal! 037l
+2
+normal! 017l
+tabedit /Applications/Tasks.app/Contents/Resources/vim/runtime/vimrc_example.vim
+set splitbelow splitright
+wincmd t
+set winheight=1 winwidth=1
+argglobal
+vnoremap <buffer> <silent> [" :exe "normal! gv"|call search('\%(^\s*".*\n\)\%(^\s*"\)\@!', "bW")
+nnoremap <buffer> <silent> [" :call search('\%(^\s*".*\n\)\%(^\s*"\)\@!', "bW")
+vnoremap <buffer> <silent> [] m':exe "normal! gv"|call search('^\s*endf*\%[unction]\>', "bW")
+nnoremap <buffer> <silent> [] m':call search('^\s*endf*\%[unction]\>', "bW")
+vnoremap <buffer> <silent> [[ m':exe "normal! gv"|call search('^\s*fu\%[nction]\>', "bW")
+nnoremap <buffer> <silent> [[ m':call search('^\s*fu\%[nction]\>', "bW")
+vnoremap <buffer> <silent> ]" :exe "normal! gv"|call search('^\(\s*".*\n\)\@<!\(\s*"\)', "W")
+nnoremap <buffer> <silent> ]" :call search('^\(\s*".*\n\)\@<!\(\s*"\)', "W")
+vnoremap <buffer> <silent> ][ m':exe "normal! gv"|call search('^\s*endf*\%[unction]\>', "W")
+nnoremap <buffer> <silent> ][ m':call search('^\s*endf*\%[unction]\>', "W")
+vnoremap <buffer> <silent> ]] m':exe "normal! gv"|call search('^\s*fu\%[nction]\>', "W")
+nnoremap <buffer> <silent> ]] m':call search('^\s*fu\%[nction]\>', "W")
+setlocal keymap=
+setlocal noarabic
+setlocal noautoindent
+setlocal balloonexpr=
+setlocal nobinary
+setlocal bufhidden=
+setlocal buflisted
+setlocal buftype=
+setlocal nocindent
+setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
+setlocal cinoptions=
+setlocal cinwords=if,else,while,do,for,switch
+setlocal colorcolumn=
+setlocal comments=sO:\"\ -,mO:\"\ \ ,eO:\"\",:\"
+setlocal commentstring=\"%s
+setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
+setlocal completefunc=
+setlocal nocopyindent
+setlocal cryptmethod=
+setlocal nocursorbind
+setlocal nocursorcolumn
+set cursorline
+setlocal cursorline
+setlocal define=
+setlocal dictionary=
+setlocal nodiff
+setlocal equalprg=
+setlocal errorformat=
+setlocal noexpandtab
+if &filetype != 'vim'
+setlocal filetype=vim
+endif
+setlocal foldcolumn=0
+setlocal foldenable
+setlocal foldexpr=0
+setlocal foldignore=#
+setlocal foldlevel=999
+setlocal foldmarker={{{,}}}
+set foldmethod=marker
+setlocal foldmethod=marker
+setlocal foldminlines=1
+setlocal foldnestmax=20
+set foldtext=MyFoldText()
+setlocal foldtext=MyFoldText()
+setlocal formatexpr=
+setlocal formatoptions=croql
+setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
+setlocal grepprg=
+setlocal iminsert=2
+setlocal imsearch=2
+setlocal include=
+setlocal includeexpr=
+setlocal indentexpr=GetVimIndent()
+setlocal indentkeys=0{,0},:,0#,!^F,O,e,=end,=else,=cat,=fina,=END,0\\
+setlocal noinfercase
+setlocal iskeyword=@,48-57,_,192-255,-,#
+setlocal keywordprg=
+set linebreak
+setlocal linebreak
+setlocal nolisp
+setlocal nolist
+setlocal nomacmeta
+setlocal makeprg=
+setlocal matchpairs=(:),{:},[:]
+setlocal modeline
+setlocal modifiable
+setlocal nrformats=octal,hex
+set number
+setlocal nonumber
+setlocal numberwidth=4
+setlocal omnifunc=
+setlocal path=
+setlocal nopreserveindent
+setlocal nopreviewwindow
+setlocal quoteescape=\\
+setlocal noreadonly
+set relativenumber
+setlocal relativenumber
+setlocal norightleft
+setlocal rightleftcmd=search
+setlocal noscrollbind
+setlocal shiftwidth=4
+setlocal noshortname
+setlocal nosmartindent
+setlocal softtabstop=0
+setlocal nospell
+setlocal spellcapcheck=off
+setlocal spellfile=
+setlocal spelllang=en
+setlocal statusline=
+setlocal suffixesadd=
+setlocal swapfile
+setlocal synmaxcol=3000
+if &syntax != 'vim'
+setlocal syntax=vim
+endif
+setlocal tabstop=2
+setlocal tags=
+setlocal textwidth=78
+setlocal thesaurus=
+setlocal noundofile
+setlocal nowinfixheight
+setlocal nowinfixwidth
+setlocal wrap
+setlocal wrapmargin=0
+let s:l = 1 - ((0 * winheight(0) + 33) / 67)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+1
+normal! 0
 tabnext 1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf
