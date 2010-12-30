@@ -917,7 +917,7 @@ endfunction
 
 " }}}
 
-" Vimperator:
+" Vimperator Y Pentadactyl:
 function! FormFieldArchive() " {{{
 	let l:contents = getbufline("%", 1, "$")
 	let l:filepath = expand("%")
@@ -1006,7 +1006,7 @@ function! SmallWindow()
 	setlocal guioptions-=L
 	setlocal guioptions-=r
 	setlocal foldcolumn=0
-	setlocal guifont=Inconsolata:h9
+	setlocal guifont=Inconsolata:h11
 	exec "set columns=" . g:volatile_scratch_columns . " lines=" . g:volatile_scratch_lines
 	call SetColorColumnBorder()
 	if exists('g:gundo_target_n')
@@ -1020,9 +1020,12 @@ function! SetColorColumnBorder()
 endfunction
 
 function! ScratchCopy()
-	if &modified == 1
-		silent write
-		exec ":0,$y"
+	exec ":0,$y"
+endfunction
+
+function! ScratchPaste()
+	if &modified != 1
+		normal ggVGpG$
 	endif
 endfunction
 
@@ -1031,23 +1034,23 @@ command! -nargs=* -complete=custom,EmailAddressList Cc call EmitEmailAddress("Cc
 command! -nargs=* Sub call InsertLine("Subject: " . <q-args>)
 
 augroup VolatileScratch
-	au! BufRead *.scratch call SmallWindow()
-	au BufRead *.scratch nmap <buffer> <silent> <C-m> :call SmallWindow()<CR>
+	" au! BufRead *.scratch call SmallWindow()
+	au! BufRead *.scratch nmap <buffer> <silent> <C-m> :call SmallWindow()<CR>ZZ
 	au BufRead *.scratch nmap <buffer> <silent> <C-y>g :exec "set lines=999 columns=" . (g:gundo_width + &columns) \| :GundoToggle<CR>
-	au BufRead *.scratch nmap <buffer> <silent> ZZ :call ScratchCopy()<CR> \| :macaction hide:<CR>
-	au BufRead *.scratch nmap <buffer> <silent> :w :call ScratchCopy()<CR>
+	au BufRead *.scratch nmap <buffer> <silent> ZZ :wa \| :call ScratchCopy()<CR> \| :macaction hide:<CR>
+	au BufRead *.scratch nmap <buffer> <silent> :w<CR> :write \| :silent call ScratchCopy()<CR>
 	au BufRead *.scratch imap <buffer> <silent> ZZ <Esc>ZZ
 	au BufRead *.scratch vmap <buffer> <silent> ZZ <Esc>ZZ
-	" au! FocusGained *.scratch normal ggVGpG$
-	au! FocusLost *.scratch normal ZZ
+	au! FocusGained *.scratch call ScratchPaste()
+	au! FocusLost *.scratch call ScratchCopy()
 	au! VimResized *.scratch call SetColorColumnBorder() | :normal zz
 augroup END
 
 "}}}
-" Vimperator: " {{{
-augroup Vimperator
-	au! BufRead vimperator-* nmap <buffer> <silent> ZZ :call FormFieldArchive() \| :silent write \| :bd \| :macaction hide:<CR>
-	au BufRead vimperator-* imap <buffer> <silent> ZZ <Esc>ZZ
+" Vimperator Y Pentadactyl: " {{{
+augroup VimperatorYPentadactyl
+	au! BufRead vimperator-*\|pentadactyl-* nmap <buffer> <silent> ZZ :call FormFieldArchive() \| :silent write \| :bd \| :macaction hide:<CR>
+	au BufRead vimperator-*\|pentadactyl-* imap <buffer> <silent> ZZ <Esc>ZZ
 augroup END
 
 " }}}
