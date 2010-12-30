@@ -5,7 +5,7 @@
 "   Araxia on #vim irc.freenode.net
 
 " Version:
-" 1.0 " 2010-12-21 17:24:29 PST 
+" 1.0 " 2010-12-21 17:24:29 PST
 
 " Notes:
 "   - I'm deliberately overloading <C-e> and <C-y> for more useful purposes.
@@ -15,7 +15,7 @@
 "   - /^""/ indicate intentionally disabled options
 
 " Todo:
-"   - clean up SETTINGS; provide better descriptions 
+"   - clean up SETTINGS; provide better descriptions
 "   - for clarity, replace abbreviated forms of options in all settings
 "   - annotate all line noise, especially statusline
 "   - make .vimrc re-source-able without sideeffects (guards around au, maps, etc.)
@@ -27,7 +27,7 @@
 
 "}}}
 " Pathogen: " {{{
-call pathogen#runtime_append_all_bundles() 
+call pathogen#runtime_append_all_bundles()
 " }}}
 " DEFAULTS: from example .vimrc {{{
 " When started as "evim", evim.vim will already have done these settings.
@@ -926,7 +926,7 @@ endfunction
 
 " }}}
 
-" Vimperator:
+" Vimperator Y Pentadactyl:
 function! FormFieldArchive() " {{{
     let l:contents = getbufline("%", 1, "$")
     let l:filepath = expand("%")
@@ -1035,28 +1035,36 @@ function! ScratchCopy()
     endif
 endfunction
 
+function! ScratchPaste()
+    if &modified != 1
+        normal ggVGpG$
+    endif
+endfunction
+
 command! -nargs=* -complete=custom,EmailAddressList To call EmitEmailAddress("To: ", <f-args>)
 command! -nargs=* -complete=custom,EmailAddressList Cc call EmitEmailAddress("Cc: ", <f-args>)
 command! -nargs=* Sub call InsertLine("Subject: " . <q-args>)
 
 augroup VolatileScratch
-    au! BufRead *.scratch call SmallWindow()
-    au BufRead *.scratch nmap <buffer> <silent> <C-m> :call SmallWindow()<CR>
+    " au! BufRead *.scratch call SmallWindow()
+    au! BufRead *.scratch nmap <buffer> <silent> <C-m> :call SmallWindow()<CR>ZZ
     au BufRead *.scratch nmap <buffer> <silent> <C-y>g :exec "set lines=999 columns=" . (g:gundo_width + &columns) \| :GundoToggle<CR>
+    au BufRead *.scratch nmap <buffer> <silent> ZZ :wa \| :call ScratchCopy()<CR> \| :macaction hide:<CR>
     au BufRead *.scratch nmap <buffer> <silent> ZZ :call ScratchCopy()<CR> \| :macaction hide:<CR>
-    au BufRead *.scratch nmap <buffer> <silent> :w :call ScratchCopy()<CR>
+    au BufRead *.scratch nmap <buffer> <silent> :w<CR> :write \| :silent call ScratchCopy()<CR>
     au BufRead *.scratch imap <buffer> <silent> ZZ <Esc>ZZ
     au BufRead *.scratch vmap <buffer> <silent> ZZ <Esc>ZZ
     " au! FocusGained *.scratch normal ggVGpG$
-    au! FocusLost *.scratch normal ZZ
+    au! FocusLost *.scratch call ScratchCopy()
+    au! FocusGained *.scratch call ScratchPaste()
     au! VimResized *.scratch call SetColorColumnBorder() | :normal zz
 augroup END
 
 "}}}
-" Vimperator: " {{{
-augroup Vimperator
-    au! BufRead vimperator-* nmap <buffer> <silent> ZZ :call FormFieldArchive() \| :silent write \| :bd \| :macaction hide:<CR>
-    au BufRead vimperator-* imap <buffer> <silent> ZZ <Esc>ZZ
+" Vimperator Y Pentadactyl: " {{{
+augroup VimperatorYPentadactyl
+    au! BufRead vimperator-*\|pentadactyl-* nmap <buffer> <silent> ZZ :call FormFieldArchive() \| :silent write \| :bd \| :macaction hide:<CR>
+    au BufRead vimperator-*\|pentadactyl-* imap <buffer> <silent> ZZ <Esc>ZZ
 augroup END
 
 " }}}
