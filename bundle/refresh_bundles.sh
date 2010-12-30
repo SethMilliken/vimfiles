@@ -28,7 +28,8 @@ refresh_bundle command-t git://github.com/wincent/Command-T.git 'Remember to reb
 refresh_bundle conque git://github.com/rson/vim-conque.git
 refresh_bundle dbext git://github.com/vim-scripts/dbext.vim.git
 refresh_bundle fugitive git://github.com/tpope/vim-fugitive.git
-refresh_bundle gundo git://github.com/sjl/gundo.vim.git
+# refresh_bundle gundo git://github.com/sjl/gundo.vim.git
+refresh_bundle gundo git@github.com:SethMilliken/gundo.vim.git
 refresh_bundle nerdcommenter git://github.com/scrooloose/nerdcommenter.git
 refresh_bundle nerdtree git://github.com/scrooloose/nerdtree.git
 refresh_bundle paster git://github.com/weierophinney/paster.vim.git
