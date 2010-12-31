@@ -277,6 +277,7 @@ set commentstring=
 set diffopt=filler,vertical
 set directory=~/.vim/swap//,~/vimfiles/swap//
 set display=lastline,uhex
+set errorformat=%l:%f:%m
 set fileencodings=ucs-bom,utf-8,default,latin1
 set foldlevelstart=999
 set fuoptions=maxhorz,maxvert
@@ -313,7 +314,7 @@ set tags=./tags,tags,~/sandbox/personal/tags
 set termencoding=utf-8
 set undolevels=100
 set wildignore=*.o,*.sw?,*.git,*.svn,*.hg,**/build,*.?ib,*.png,*.jpg,*.jpeg,*.mov,*.gif,*.bom,*.azw,*.lpr,*.mbp,*.mode1v3,*.gz,*.vmwarevm,*.rtf,*.pkg,*.developerprofile,*.xcodeproj,*.pdf,*.dmg,*.db,*.otf,*.bz2,*.tiff,*.iso,*.jar,*.dat,**/Cache,*.cache,*.sqlite*,*.collection,*.qsindex,*.qsplugin,*.growlTicket,*.part,*.ics,*.ico,**/iPhone\ Simulator,*.lock*,*.webbookmark
-set window=70
+set window=68
 set winminheight=0
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
@@ -433,10 +434,11 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +0 ~/sandbox/personal/todo/personal.tst.txt
+badd +44 ~/sandbox/personal/todo/personal.tst.txt
+badd +0 /Applications/Tasks.app/Contents/Resources/vim/runtime/vimrc_example.vim
 silent! argdel *
-set lines=71 columns=137
-winpos 0 1028
+set lines=69 columns=135
+winpos 460 1028
 buffer ~/sandbox/personal/todo/personal.tst.txt
 set splitbelow splitright
 wincmd t
@@ -612,11 +614,509 @@ setlocal winfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 2 - ((1 * winheight(0) + 34) / 69)
+1
+normal zo
+1
+normal zo
+285
+normal zo
+289
+normal zo
+294
+normal zc
+303
+normal zc
+312
+normal zc
+317
+normal zc
+321
+normal zc
+325
+normal zc
+330
+normal zc
+340
+normal zc
+346
+normal zc
+351
+normal zc
+359
+normal zc
+372
+normal zc
+380
+normal zc
+390
+normal zc
+402
+normal zc
+406
+normal zc
+413
+normal zc
+419
+normal zc
+424
+normal zc
+433
+normal zc
+446
+normal zc
+451
+normal zc
+457
+normal zc
+461
+normal zc
+470
+normal zc
+479
+normal zc
+487
+normal zc
+492
+normal zc
+500
+normal zc
+509
+normal zc
+515
+normal zc
+521
+normal zc
+529
+normal zc
+540
+normal zc
+547
+normal zc
+551
+normal zc
+562
+normal zc
+568
+normal zc
+573
+normal zc
+586
+normal zc
+596
+normal zc
+600
+normal zc
+612
+normal zc
+625
+normal zc
+630
+normal zc
+636
+normal zc
+644
+normal zc
+648
+normal zc
+658
+normal zc
+680
+normal zo
+680
+normal zc
+705
+normal zc
+717
+normal zo
+717
+normal zc
+747
+normal zc
+759
+normal zc
+771
+normal zc
+776
+normal zc
+784
+normal zc
+790
+normal zc
+804
+normal zc
+819
+normal zc
+830
+normal zc
+849
+normal zc
+860
+normal zc
+864
+normal zc
+873
+normal zc
+877
+normal zc
+881
+normal zc
+885
+normal zc
+893
+normal zc
+897
+normal zc
+902
+normal zc
+907
+normal zc
+913
+normal zc
+917
+normal zc
+921
+normal zc
+926
+normal zc
+930
+normal zc
+936
+normal zc
+943
+normal zc
+949
+normal zc
+955
+normal zc
+959
+normal zc
+963
+normal zc
+968
+normal zc
+973
+normal zc
+978
+normal zc
+983
+normal zc
+987
+normal zc
+995
+normal zc
+1008
+normal zc
+1014
+normal zc
+1019
+normal zc
+1024
+normal zc
+1030
+normal zc
+1036
+normal zc
+1047
+normal zc
+1053
+normal zc
+1057
+normal zc
+1062
+normal zc
+1067
+normal zc
+1071
+normal zc
+1076
+normal zc
+1082
+normal zc
+1088
+normal zc
+1093
+normal zc
+1100
+normal zc
+1105
+normal zc
+1111
+normal zc
+1119
+normal zc
+1131
+normal zc
+1141
+normal zc
+1146
+normal zc
+1155
+normal zc
+1170
+normal zc
+1175
+normal zc
+1183
+normal zc
+1193
+normal zc
+1200
+normal zc
+1204
+normal zc
+1209
+normal zc
+1215
+normal zc
+1224
+normal zc
+1230
+normal zc
+1234
+normal zc
+1241
+normal zc
+1246
+normal zc
+1252
+normal zc
+1263
+normal zc
+1273
+normal zc
+1279
+normal zc
+1285
+normal zc
+1312
+normal zc
+1318
+normal zc
+1325
+normal zc
+1333
+normal zc
+1346
+normal zc
+1350
+normal zc
+1357
+normal zc
+1374
+normal zc
+1396
+normal zc
+1410
+normal zc
+1416
+normal zc
+1424
+normal zc
+1433
+normal zc
+1470
+normal zo
+1470
+normal zc
+1714
+normal zo
+1715
+normal zc
+1746
+normal zc
+1751
+normal zc
+1761
+normal zc
+1832
+normal zc
+1842
+normal zc
+1848
+normal zc
+1870
+normal zc
+1894
+normal zc
+1912
+normal zc
+1935
+normal zc
+1938
+normal zc
+1945
+normal zo
+1957
+normal zo
+1945
+normal zo
+2058
+normal zc
+2077
+normal zc
+2086
+normal zc
+2107
+normal zc
+2142
+normal zc
+2146
+normal zc
+2151
+normal zc
+2156
+normal zo
+2156
+normal zc
+2241
+normal zc
+2250
+normal zo
+2250
+normal zc
+2287
+normal zc
+2291
+normal zc
+2317
+normal zc
+1714
+normal zo
+let s:l = 2 - ((1 * winheight(0) + 33) / 67)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 2
+normal! 017l
+tabedit /Applications/Tasks.app/Contents/Resources/vim/runtime/vimrc_example.vim
+set splitbelow splitright
+wincmd t
+set winheight=1 winwidth=1
+argglobal
+vnoremap <buffer> <silent> [" :exe "normal! gv"|call search('\%(^\s*".*\n\)\%(^\s*"\)\@!', "bW")
+nnoremap <buffer> <silent> [" :call search('\%(^\s*".*\n\)\%(^\s*"\)\@!', "bW")
+vnoremap <buffer> <silent> [] m':exe "normal! gv"|call search('^\s*endf*\%[unction]\>', "bW")
+nnoremap <buffer> <silent> [] m':call search('^\s*endf*\%[unction]\>', "bW")
+vnoremap <buffer> <silent> [[ m':exe "normal! gv"|call search('^\s*fu\%[nction]\>', "bW")
+nnoremap <buffer> <silent> [[ m':call search('^\s*fu\%[nction]\>', "bW")
+vnoremap <buffer> <silent> ]" :exe "normal! gv"|call search('^\(\s*".*\n\)\@<!\(\s*"\)', "W")
+nnoremap <buffer> <silent> ]" :call search('^\(\s*".*\n\)\@<!\(\s*"\)', "W")
+vnoremap <buffer> <silent> ][ m':exe "normal! gv"|call search('^\s*endf*\%[unction]\>', "W")
+nnoremap <buffer> <silent> ][ m':call search('^\s*endf*\%[unction]\>', "W")
+vnoremap <buffer> <silent> ]] m':exe "normal! gv"|call search('^\s*fu\%[nction]\>', "W")
+nnoremap <buffer> <silent> ]] m':call search('^\s*fu\%[nction]\>', "W")
+setlocal keymap=
+setlocal noarabic
+setlocal noautoindent
+setlocal balloonexpr=
+setlocal nobinary
+setlocal bufhidden=
+setlocal buflisted
+setlocal buftype=
+setlocal nocindent
+setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
+setlocal cinoptions=
+setlocal cinwords=if,else,while,do,for,switch
+setlocal colorcolumn=
+setlocal comments=sO:\"\ -,mO:\"\ \ ,eO:\"\",:\"
+setlocal commentstring=\"%s
+setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
+setlocal completefunc=
+setlocal nocopyindent
+setlocal cryptmethod=
+setlocal nocursorbind
+setlocal nocursorcolumn
+set cursorline
+setlocal cursorline
+setlocal define=
+setlocal dictionary=
+setlocal nodiff
+setlocal equalprg=
+setlocal errorformat=
+setlocal noexpandtab
+if &filetype != 'vim'
+setlocal filetype=vim
+endif
+setlocal foldcolumn=0
+setlocal foldenable
+setlocal foldexpr=0
+setlocal foldignore=#
+setlocal foldlevel=999
+setlocal foldmarker={{{,}}}
+set foldmethod=marker
+setlocal foldmethod=marker
+setlocal foldminlines=1
+setlocal foldnestmax=20
+set foldtext=MyFoldText()
+setlocal foldtext=MyFoldText()
+setlocal formatexpr=
+setlocal formatoptions=croql
+setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
+setlocal grepprg=
+setlocal iminsert=2
+setlocal imsearch=2
+setlocal include=
+setlocal includeexpr=
+setlocal indentexpr=GetVimIndent()
+setlocal indentkeys=0{,0},:,0#,!^F,O,e,=end,=else,=cat,=fina,=END,0\\
+setlocal noinfercase
+setlocal iskeyword=@,48-57,_,192-255,-,#
+setlocal keywordprg=
+set linebreak
+setlocal linebreak
+setlocal nolisp
+setlocal nolist
+setlocal nomacmeta
+setlocal makeprg=
+setlocal matchpairs=(:),{:},[:]
+setlocal modeline
+setlocal modifiable
+setlocal nrformats=octal,hex
+set number
+setlocal nonumber
+setlocal numberwidth=4
+setlocal omnifunc=
+setlocal path=
+setlocal nopreserveindent
+setlocal nopreviewwindow
+setlocal quoteescape=\\
+setlocal noreadonly
+set relativenumber
+setlocal relativenumber
+setlocal norightleft
+setlocal rightleftcmd=search
+setlocal noscrollbind
+setlocal shiftwidth=4
+setlocal noshortname
+setlocal nosmartindent
+setlocal softtabstop=0
+setlocal nospell
+setlocal spellcapcheck=off
+setlocal spellfile=
+setlocal spelllang=en
+setlocal statusline=
+setlocal suffixesadd=
+setlocal swapfile
+setlocal synmaxcol=3000
+if &syntax != 'vim'
+setlocal syntax=vim
+endif
+setlocal tabstop=2
+setlocal tags=
+setlocal textwidth=78
+setlocal thesaurus=
+setlocal noundofile
+setlocal nowinfixheight
+setlocal nowinfixwidth
+setlocal wrap
+setlocal wrapmargin=0
+let s:l = 1 - ((0 * winheight(0) + 33) / 67)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+1
 normal! 0
 tabnext 1
 if exists('s:wipebuf')
