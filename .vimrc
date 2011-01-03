@@ -99,6 +99,8 @@ endif " has("autocmd")
 "}}}
 " Seth Milliken additions
 " SETTINGS: {{{
+" au! VimEnter * source ~/.vim/after/plugin/foo.vim " Way to set the latest
+" file that will always be sourced for any file opened.
 set winfixheight
 set shortmess+=I                    " don't show intro on start
 set shortmess+=A                    " don't show message on existing swapfile
