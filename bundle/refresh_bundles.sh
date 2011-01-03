@@ -7,7 +7,7 @@ function refresh_bundle {
 	NAME=$1
 	URL=$2
 	COMMENT=$3
-	printf "===============================================     %15s   =====\n" ${NAME}
+	printf "===============================================[     %15s   ]=====\n" ${NAME}
 	if [ -d ${NAME} ]
 	then
 		pushd ${NAME} &> /dev/null
