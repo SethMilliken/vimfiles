@@ -31,6 +31,7 @@ refresh_bundle dbext git://github.com/vim-scripts/dbext.vim.git
 refresh_bundle fugitive git://github.com/tpope/vim-fugitive.git
 refresh_bundle fuzzyfinder git://github.com/vim-scripts/FuzzyFinder.git
 refresh_bundle gundo git@github.com:SethMilliken/gundo.vim.git
+refresh_bundle l9 git://github.com/slack/vim-l9.git
 refresh_bundle nerdcommenter git://github.com/scrooloose/nerdcommenter.git
 refresh_bundle nerdtree git://github.com/scrooloose/nerdtree.git
 refresh_bundle paster git://github.com/weierophinney/paster.vim.git
@@ -40,6 +41,8 @@ refresh_bundle rails git://github.com/tpope/vim-rails.git
 refresh_bundle sessionman git://github.com/vim-scripts/sessionman.vim.git
 refresh_bundle snipmate git://github.com/spf13/snipmate.vim.git
 refresh_bundle surround git://github.com/vim-scripts/surround.vim.git
+refresh_bundle textobj-rubyblock git://github.com/nelstrom/vim-textobj-rubyblock.git
+refresh_bundle textobj-user git://github.com/kana/vim-textobj-user.git
 refresh_bundle vcscommand git://github.com/vim-scripts/vcscommand.vim.git
 refresh_bundle vim-ruby git://github.com/vim-ruby/vim-ruby.git
 refresh_bundle vimwiki git://github.com/vim-scripts/vimwiki.git

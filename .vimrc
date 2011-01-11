@@ -1058,7 +1058,7 @@ augroup VolatileScratch
     au BufRead *.scratch vmap <buffer> <silent> ZZ <Esc>ZZ
     " au! FocusGained *.scratch normal ggVGpG$
     au! FocusLost *.scratch call ScratchCopy()
-    au! FocusGained *.scratch call ScratchPaste()
+    " au! FocusGained *.scratch call ScratchPaste()
     au! VimResized *.scratch call SetColorColumnBorder() | :normal zz
 augroup END
 
@@ -1233,6 +1233,10 @@ function! DoMaintenance()
 endfunction
 
 " }}}
+
+" }}}
+" Janrain:  " {{{
+map <D-j> <Esc>:cd ~/sandbox/work/vm/rpx/ruby/rails/<CR>
 
 " }}}
 " EXPERIMENT: {{{
