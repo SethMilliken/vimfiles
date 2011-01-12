@@ -528,7 +528,7 @@ function! FoldWrap() "{{{
     " normal Jj
     normal 0"td$"_dd0"tPj
 endfunction
- 
+
 "}}}
 function! FoldMarkerOpen() "{{{
     return substitute(&foldmarker, ",.*", "", "")
@@ -1147,8 +1147,8 @@ augroup BufExplorerAdd
         " Navigate to the file under the cursor when you let go of Tab
         "au BufWinEnter \[BufExplorer\] set updatetime=1000
         " o is the BufExplorer command to select a file
-        "au! CursorHold \[BufExplorer\] normal o 
-    endif   
+        "au! CursorHold \[BufExplorer\] normal o
+    endif
 augroup END
 
 " }}}
@@ -1191,6 +1191,7 @@ let g:vimwiki_hl_headers = 1                " hilight header colors
 let g:vimwiki_hl_cb_checked = 1             " hilight todo item colors
 let g:vimwiki_list_ignore_newline = 0       " convert newlines to <br /> in list
 let g:vimwiki_folding = 1                   " outline folding
+let g:vimwiki_table_auto_fmt = 0            " don't use and conflicts with snipMate
 let g:vimwiki_fold_lists = 1                " folding of list subitems
 let g:vimwiki_list = [{'path': '~/sandbox/personal/vimwiki/', 'index': 'PersonalWiki', 'html_header': '~/sandbox/personal/vimwiki/header.tpl'}, {'path': '~/sandbox/public/wiki', 'index': 'SethMilliken', 'auto_export': 1}, {'path': '~/sandbox/work/wiki/', 'index': 'SethMilliken', 'html_header': '~/sandbox/work/wiki/header.tpl', 'auto_export': 1}]
 
