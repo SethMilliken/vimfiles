@@ -1,5 +1,6 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =3
+let g:netrw_dirhist_cnt =4
 let g:netrw_dirhist_1='/private/var/folders/TD/TDs7pWvfH7uvD7QiYxob0++++TY/-Tmp-/extdiff.SMaKwX/.vim'
 let g:netrw_dirhist_2='/Users/seth/sandbox/personal/sync'
 let g:netrw_dirhist_3='/Users/seth/staging/puppet'
+let g:netrw_dirhist_4='/Users/seth/Library/QuickLook/QLColorCode.qlgenerator/Contents/Resources/highlight/share/highlight/themes'
