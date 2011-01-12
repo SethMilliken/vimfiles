@@ -31,6 +31,7 @@ refresh_bundle dbext git://github.com/vim-scripts/dbext.vim.git
 refresh_bundle fugitive git://github.com/tpope/vim-fugitive.git
 refresh_bundle fuzzyfinder git://github.com/vim-scripts/FuzzyFinder.git
 refresh_bundle gundo git@github.com:SethMilliken/gundo.vim.git
+refresh_bundle hexhighlight git://github.com/yurifury/hexHighlight.git
 refresh_bundle l9 git://github.com/slack/vim-l9.git
 refresh_bundle nerdcommenter git://github.com/scrooloose/nerdcommenter.git
 refresh_bundle nerdtree git://github.com/scrooloose/nerdtree.git
