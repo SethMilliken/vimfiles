@@ -1194,6 +1194,9 @@ let g:vimwiki_folding = 1                   " outline folding
 let g:vimwiki_table_auto_fmt = 0            " don't use and conflicts with snipMate
 let g:vimwiki_fold_lists = 1                " folding of list subitems
 let g:vimwiki_list = [{'path': '~/sandbox/personal/vimwiki/', 'index': 'PersonalWiki', 'html_header': '~/sandbox/personal/vimwiki/header.tpl'}, {'path': '~/sandbox/public/wiki', 'index': 'SethMilliken', 'auto_export': 1}, {'path': '~/sandbox/work/wiki/', 'index': 'SethMilliken', 'html_header': '~/sandbox/work/wiki/header.tpl', 'auto_export': 1}]
+function! VimwikiExpandedPageName()
+    return substitute(substitute(expand('%:t'), "[a-z]\\zs\\([A-Z]\\)", " \\1", "g"), "\\..*", "", "")
+endfunction
 
 " }}}
 " TOhtml: " {{{
