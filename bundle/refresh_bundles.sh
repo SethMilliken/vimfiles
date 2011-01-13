@@ -1,23 +1,32 @@
 #!/bin/bash
+#
 # Clone or update vim bundles
+#
+# -n only clones new additions, no updates.
+#
 DEBUG=
 #DEBUG=echo
+ARG=$1
 
 function refresh_bundle {
     NAME=$1
     URL=$2
     COMMENT=$3
-    printf "===============================================[     %15s   ]=====\n" ${NAME}
-    if [ -d ${NAME} ]
-    then
-        pushd ${NAME} &> /dev/null
-        ${DEBUG} git upbase
-        popd &> /dev/null
+    printf "===============================================[     %18s   ]=====" ${NAME}
+    if [ -d ${NAME} ]; then
+        if [[ $ARG == "-n" ]]; then
+            COMMENT='  update skipped'
+        else
+            echo ""
+            pushd ${NAME} &> /dev/null
+            ${DEBUG} git upbase
+            popd &> /dev/null
+        fi
     else
+        echo ""
         ${DEBUG} git clone ${URL} ${NAME}
     fi
-    if [ "$COMMENT" ]
-    then
+    if ! [[ "${COMMENT}" == ""  ]]; then
         echo "${COMMENT}"
     fi
 }
@@ -40,6 +49,7 @@ refresh_bundle paster git://github.com/weierophinney/paster.vim.git
 refresh_bundle pickacolor git://github.com/Raimondi/PickAColor.git
 refresh_bundle project git://github.com/shemerey/vim-project.git
 refresh_bundle rails git://github.com/tpope/vim-rails.git
+refresh_bundle screenshot git://github.com/vim-scripts/ScreenShot.git
 refresh_bundle sessionman git://github.com/vim-scripts/sessionman.vim.git
 refresh_bundle snipmate git://github.com/spf13/snipmate.vim.git
 refresh_bundle surround git://github.com/vim-scripts/surround.vim.git
