@@ -19,3 +19,11 @@ snippet presh
 	<pre class="brush: ${1:brush}; auto-links: true; toolbar: false; first-line: 10; highlight: [2, 4, 6]; class-name: none; collapse: false; gutter: true; html-script: false; light: false; smart-tabs: true; tab-size: 2; ruler: false; wrap-lines: true">
 	${2:contents}
 	</pre>
+snippet vimtest
+	function! ${1:TestFunction}()
+	   echo "hello world"
+	endfunction
+
+	map <buffer> K <Esc>:w<CR>:so %<CR>:call $1()<CR>
+
+	" vim: ft=vim
