@@ -1,4 +1,4 @@
 include .vimrc
 rename .vimrc vim/.vimrc
 include bundle/refresh_bundles.sh
-rename refresh_bundles.sh vim/bundle/refresh_bundles.sh
+rename bundle/refresh_bundles.sh vim/bundle/refresh_bundles.sh

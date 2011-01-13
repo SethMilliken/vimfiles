@@ -61,3 +61,4 @@ refresh_bundle vcscommand git://github.com/vim-scripts/vcscommand.vim.git
 refresh_bundle vim-ruby git://github.com/vim-ruby/vim-ruby.git
 refresh_bundle vimwiki git://github.com/vim-scripts/vimwiki.git
 
+
