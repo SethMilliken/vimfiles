@@ -1245,6 +1245,9 @@ map <D-j> <Esc>:cd ~/sandbox/work/vm/rpx/ruby/rails/<CR>
 " }}}
 " EXPERIMENT: {{{
 
+if !exists(":DiffOrig")
+  command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p | diffthis
+endif
 " type number then : to get relative range prepopulated in cmdline
 " new vocab word "idem" to get relative range prepopulated in cmdline
 " . as range, e.g. :.w >> foo
