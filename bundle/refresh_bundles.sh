@@ -34,6 +34,7 @@ function refresh_bundle {
 # refresh_bundle gundo git://github.com/sjl/gundo.vim.git
 refresh_bundle abolish git://github.com/tpope/vim-abolish.git
 refresh_bundle autotag git://github.com/vim-scripts/AutoTag.git
+refresh_bundle bufexplorer git://github.com/vim-scripts/bufexplorer.zip.git
 refresh_bundle cocoa git://github.com/msanders/cocoa.vim.git
 refresh_bundle command-t git://github.com/wincent/Command-T.git 'Remember to rebuild if necessary:\n\tpushd command-t/ruby/command-t/; ruby extconf.rb; make && popd'
 refresh_bundle conque git://github.com/rson/vim-conque.git
@@ -43,6 +44,7 @@ refresh_bundle fuzzyfinder git://github.com/vim-scripts/FuzzyFinder.git
 refresh_bundle gundo git@github.com:SethMilliken/gundo.vim.git
 refresh_bundle hexhighlight git://github.com/yurifury/hexHighlight.git
 refresh_bundle l9 git://github.com/slack/vim-l9.git
+refresh_bundle matrix git://github.com/vim-scripts/matrix.vim--Yang.git
 refresh_bundle nerdcommenter git://github.com/scrooloose/nerdcommenter.git
 refresh_bundle nerdtree git://github.com/scrooloose/nerdtree.git
 refresh_bundle paster git://github.com/weierophinney/paster.vim.git
