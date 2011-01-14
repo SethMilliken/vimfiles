@@ -16,7 +16,7 @@ function! s:DefaultSettings.New()
         set t_AB=[48;5;%dm
         set t_AF=[38;5;%dm
         set cursorline                                  " highlight current line
-        color kellys
+        color araxia
         "" No toolbar, please.
         set guioptions-=T
         "" Simple, informative gui tabs (dirty, number, name without path)
