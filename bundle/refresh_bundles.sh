@@ -31,7 +31,10 @@ function refresh_bundle {
     fi
 }
 
+
+
 # refresh_bundle gundo git://github.com/sjl/gundo.vim.git
+# refresh_bundle viki git://github.com/tomtom/viki_vim.git
 refresh_bundle abolish git://github.com/tpope/vim-abolish.git
 refresh_bundle autotag git://github.com/vim-scripts/AutoTag.git
 refresh_bundle bufexplorer git://github.com/vim-scripts/bufexplorer.zip.git
@@ -60,5 +63,3 @@ refresh_bundle textobj-user git://github.com/kana/vim-textobj-user.git
 refresh_bundle vcscommand git://github.com/vim-scripts/vcscommand.vim.git
 refresh_bundle vim-ruby git://github.com/vim-ruby/vim-ruby.git
 refresh_bundle vimwiki git://github.com/vim-scripts/vimwiki.git
-
-
