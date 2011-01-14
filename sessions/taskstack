@@ -316,7 +316,7 @@ set clipboard=unnamed
 set commentstring=
 set diffopt=filler,vertical
 set directory=~/.vim/swap//,~/vimfiles/swap//
-set display=lastline,uhex
+set display=lastline
 set expandtab
 set fileencodings=ucs-bom,utf-8,default,latin1
 set foldlevelstart=999
@@ -356,7 +356,6 @@ set termencoding=utf-8
 set undolevels=100
 set visualbell
 set wildignore=*.o,*.sw?,*.git,*.svn,*.hg,**/build,*.?ib,*.png,*.jpg,*.jpeg,*.mov,*.gif,*.bom,*.azw,*.lpr,*.mbp,*.mode1v3,*.gz,*.vmwarevm,*.rtf,*.pkg,*.developerprofile,*.xcodeproj,*.pdf,*.dmg,*.db,*.otf,*.bz2,*.tiff,*.iso,*.jar,*.dat,**/Cache,*.cache,*.sqlite*,*.collection,*.qsindex,*.qsplugin,*.growlTicket,*.part,*.ics,*.ico,**/iPhone\ Simulator,*.lock*,*.webbookmark
-set window=56
 set winminheight=0
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
@@ -476,10 +475,10 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +2 ~/sandbox/personal/todo/personal.tst.txt
+badd +1 ~/sandbox/personal/todo/personal.tst.txt
 silent! argdel *
-set lines=57 columns=103
-winpos 832 1028
+set lines=58 columns=103
+winpos 838 1028
 buffer ~/sandbox/personal/todo/personal.tst.txt
 set splitbelow splitright
 wincmd t
@@ -610,63 +609,20 @@ setlocal tags=
 setlocal textwidth=0
 setlocal thesaurus=
 setlocal noundofile
-set winfixheight
-setlocal winfixheight
+setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 1
 normal zo
-33
-normal zo
-62
-normal zo
-71
-normal zc
-78
-normal zc
-317
-normal zo
 1
 normal zo
-351
-normal zo
-360
-normal zo
-369
-normal zo
-474
-normal zo
-487
-normal zo
-495
-normal zo
-521
-normal zo
-561
-normal zo
-594
-normal zo
-773
-normal zo
-820
-normal zo
-1139
-normal zo
-1829
-normal zo
-2435
-normal zc
-2453
-normal zc
-1829
-normal zo
-let s:l = 2 - ((1 * winheight(0) + 27) / 55)
+let s:l = 2 - ((1 * winheight(0) + 28) / 56)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 2
-normal! 054l
+normal! 059l
 tabnext 1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf
