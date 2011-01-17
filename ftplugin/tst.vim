@@ -256,7 +256,7 @@ endfunction
 
 " Miscellaneous:
 function! TaskstackDetectProjectName() " {{{
-		let l:project_name = matchstr(getline("."),'^. \zs\(\<\w*\>\s*\)\{,3}\ze:')
+	let l:project_name = matchstr(getline("."),'^. \zs\(\<\w*\>\s*\)\{,3}\ze:')
 	return l:project_name	
 endfunction
 
@@ -272,37 +272,93 @@ function! TaskstackMoveItemToNode(item,node) " {{{
 endfunction
 
 " }}}
-map K :echo TaskstackMoveToProject()<CR>
-" map K :call TaskstackFindGroup()<CR>
-function! TaskstackMoveToProject() " {{{
+
+map K :echo TaskstackMoveToProjectPrompt()<CR>
+map <C-y>k :echo TaskstackMoveToProjectAutoDetect()<CR>
+
+function! ProjectRawMatchPattern() " {{{
+    return '^@\zs\(\<\w*\>\s*\)\{,3}\ze\s' 
+endfunction
+
+"}}}
+function! TaskstackProjectNameCompletion(A,L,P) " {{{
+	  let l:origview = winsaveview()
+    let l:results = ""
+    g/^@/let l:results .= matchstr(getline("."), ProjectRawMatchPattern()) . "\n"
+    call winrestview(l:origview)
+    return l:results
+endfunction
+
+" }}}
+function! TaskstackPromptProjectName()
+    if !exists("s:last_selection")
+        let s:last_selection = ""
+    endif
+    let l:project_name = input("Project name: ", s:last_selection, "custom,TaskstackProjectNameCompletion")
+    let s:last_selection = l:project_name
+    return l:project_name
+endfunction
+
+" }}}
+function! TaskstackMoveToProjectPrompt() " {{{
 	let l:origview = winsaveview()
+    let l:item_validity = TaskstackValidateItemForMove()
+    if l:item_validity != ""
+      return l:item_validity
+    endif
+	let l:project_name = TaskstackPromptProjectName()
+	call winrestview(l:origview)
+  return TaskstackMoveItemToProject(l:project_name)
+endfunction
+
+" }}}
+function! TaskstackMoveToProjectAutoDetect() " {{{
+	let l:origview = winsaveview()
+    let l:item_validity = TaskstackValidateItemForMove()
+    if l:item_validity != ""
+      return l:item_validity
+    endif
 	let l:project_name = TaskstackDetectProjectName()
-	if l:project_name == ""
+	call winrestview(l:origview)
+  return TaskstackMoveItemToProject(l:project_name)
+endfunction
+
+" }}}
+function! TaskstackValidateItemForMove() " {{{
+    if TaskstackFindItemGroup() == 0
+			return "Can't move non-item."
+    endif
+    return ""
+endfunction
+
+" }}}
+function! TaskstackMoveItemToProject(project_name) "{{{
+	let l:origview = winsaveview()
+	if a:project_name == ""
 		return "No project specified."
 	end
-	let l:group_lines = TaskstackFindGroup()
+	let l:group_lines = TaskstackFindItemGroup()
 	let l:result_message = ""
 	if l:group_lines != 0
-			let l:move_result = TaskstackMoveItemToNode(l:group_lines,l:project_name)
+			let l:move_result = TaskstackMoveItemToNode(l:group_lines,a:project_name)
 			if l:move_result == ""
-				let l:result_message = "Project \"@" . l:project_name . "\" not found."
+				let l:result_message = "Project \"@" . a:project_name . "\" not found."
 			else
-					let l:result_message = "Moved item to project \"@" . l:project_name . "\"."
+					let l:result_message = "Moved item to project \"@" . a:project_name . "\". (" . l:move_result . ")"
 			endif
 	else
-			let l:result_message = "Can't move unrecognized item."
+			let l:result_message = "Can't move non-item."
 	endif
 	call winrestview(l:origview)
 	return l:result_message
 endfunction
 
 " }}}
-function! TaskstackFindGroup() "{{{
-		if IsAntiItem()
+function! TaskstackFindItemGroup() "{{{
+	if IsAntiItem()
 			return 0
 	end
 	let l:max_lines_without_warning = 5
-	let l:origview = winsaveview()
 	let l:begin_line = line(".")
 	let l:end_line = line(".")
 	while l:end_line < line("$")
@@ -314,6 +370,8 @@ function! TaskstackFindGroup() "{{{
 	endwhile
 
 	let l:lines_to_move = l:end_line - l:begin_line
+  " TODO: this clause should be in calling function, so this function could be
+  " generalized.
 	if l:lines_to_move > l:max_lines_without_warning
 			let l:continue = input("About to move " . l:lines_to_move . " lines. Proceed? ")
 			if l:continue != "y"
@@ -321,7 +379,6 @@ function! TaskstackFindGroup() "{{{
 			endif
 	endif
 	return l:begin_line . "," . l:end_line
-	call winrestview(l:origview)
 endfunction
 
 " }}}
@@ -333,7 +390,7 @@ endfunction
 
 " }}}
 function! IsAntiItem() " {{{
-	let boundaryMatches = "^" . Strip(CommentStringOpen()) . "\\s*\[}{]"
+	let boundaryMatches = "^" . Strip(CommentStringOpen()) . "\\s*\\w*\\s*\[}{]"
 	return match(getline("."), boundaryMatches . "\\|" . "^$") + 1
 endfunction
 
