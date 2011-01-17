@@ -43,6 +43,7 @@ nmap / :call HeaderLocationIndex()
 snoremap <silent> 	 i<Right>=TriggerSnippet()
 nnoremap <silent>  :call Reset() | nohls
 snoremap  b<BS>
+map k :echo TaskstackMoveToProjectAutoDetect()
 nnoremap g :GundoToggle
 nmap <silent>  :call RemoveTimestamp()
 nmap <silent>  :call AddOrUpdateTimestampSolicitingAnnotation()
@@ -66,7 +67,7 @@ imap <silent> ³ :tabn 3
 imap <silent> ² :tabn 2
 imap <silent> ± :tabn 1
 imap <silent> ° :tabn 10
-map K :echo TaskstackMoveToProject()
+map K :echo TaskstackMoveToProjectPrompt()
 map Q gq
 xmap S <Plug>VSurround
 snoremap U b<BS>U
@@ -356,6 +357,7 @@ set termencoding=utf-8
 set undolevels=100
 set visualbell
 set wildignore=*.o,*.sw?,*.git,*.svn,*.hg,**/build,*.?ib,*.png,*.jpg,*.jpeg,*.mov,*.gif,*.bom,*.azw,*.lpr,*.mbp,*.mode1v3,*.gz,*.vmwarevm,*.rtf,*.pkg,*.developerprofile,*.xcodeproj,*.pdf,*.dmg,*.db,*.otf,*.bz2,*.tiff,*.iso,*.jar,*.dat,**/Cache,*.cache,*.sqlite*,*.collection,*.qsindex,*.qsplugin,*.growlTicket,*.part,*.ics,*.ico,**/iPhone\ Simulator,*.lock*,*.webbookmark
+set window=56
 set winminheight=0
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
@@ -477,8 +479,8 @@ endif
 set shortmess=aoO
 badd +1 ~/sandbox/personal/todo/personal.tst.txt
 silent! argdel *
-set lines=58 columns=103
-winpos 838 1028
+set lines=57 columns=137
+winpos 560 1028
 buffer ~/sandbox/personal/todo/personal.tst.txt
 set splitbelow splitright
 wincmd t
@@ -544,7 +546,7 @@ setlocal foldcolumn=0
 setlocal foldenable
 setlocal foldexpr=0
 setlocal foldignore=#
-setlocal foldlevel=999
+setlocal foldlevel=4
 setlocal foldmarker={{{,}}}
 set foldmethod=marker
 setlocal foldmethod=marker
@@ -615,14 +617,22 @@ setlocal wrap
 setlocal wrapmargin=0
 1
 normal zo
+201
+normal zo
+201
+normal zo
 1
 normal zo
-let s:l = 2 - ((1 * winheight(0) + 28) / 56)
+let s:l = 248 - ((25 * winheight(0) + 27) / 55)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-2
-normal! 059l
+248
+normal! 0
+tabnew
+set splitbelow splitright
+wincmd t
+set winheight=1 winwidth=1
 tabnext 1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf
