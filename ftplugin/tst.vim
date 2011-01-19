@@ -274,6 +274,7 @@ endfunction
 " }}}
 
 map K :echo TaskstackMoveToProjectPrompt()<CR>
+map <C-e>/ :call TaskstackNavigateToProjectPrompted()<CR>
 map <C-y>k :echo TaskstackMoveToProjectAutoDetect()<CR>
 
 function! ProjectRawMatchPattern() " {{{
@@ -300,6 +301,12 @@ function! TaskstackPromptProjectName()
 endfunction
 
 " }}}
+function! TaskstackNavigateToProjectPrompted() " {{{
+    let l:incoming = input("Navigate to: ", "", "custom,TaskstackProjectNameCompletion")
+    call FindNode("@" . l:incoming)
+endfunction
+
+"}}}
 function! TaskstackMoveToProjectPrompt() " {{{
 	let l:origview = winsaveview()
     let l:item_validity = TaskstackValidateItemForMove()

@@ -39,7 +39,7 @@ nmap N :call SectionHeadNav(1, 1)
 nmap n :call SectionHeadNav(1, 0)
 nmap d :silent! lclose
 nmap ? :call FunctionLocationIndex()
-nmap / :call HeaderLocationIndex()
+map / :call TaskstackNavigateToProjectPrompted()
 snoremap <silent> 	 i<Right>=TriggerSnippet()
 nnoremap <silent>  :call Reset() | nohls
 snoremap  b<BS>
@@ -318,11 +318,12 @@ set commentstring=
 set diffopt=filler,vertical
 set directory=~/.vim/swap//,~/vimfiles/swap//
 set display=lastline
+set errorformat=%l:%f:%m
 set expandtab
 set fileencodings=ucs-bom,utf-8,default,latin1
 set foldlevelstart=999
 set fuoptions=maxhorz,maxvert
-set guifont=Inconsolata:h15
+set guifont=Inconsolata:h13
 set guioptions=egmrLtc
 set guitablabel=%m\ %N\ %t\ %r
 set helplang=en
@@ -357,7 +358,7 @@ set termencoding=utf-8
 set undolevels=100
 set visualbell
 set wildignore=*.o,*.sw?,*.git,*.svn,*.hg,**/build,*.?ib,*.png,*.jpg,*.jpeg,*.mov,*.gif,*.bom,*.azw,*.lpr,*.mbp,*.mode1v3,*.gz,*.vmwarevm,*.rtf,*.pkg,*.developerprofile,*.xcodeproj,*.pdf,*.dmg,*.db,*.otf,*.bz2,*.tiff,*.iso,*.jar,*.dat,**/Cache,*.cache,*.sqlite*,*.collection,*.qsindex,*.qsplugin,*.growlTicket,*.part,*.ics,*.ico,**/iPhone\ Simulator,*.lock*,*.webbookmark
-set window=56
+set window=68
 set winminheight=0
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
@@ -479,8 +480,8 @@ endif
 set shortmess=aoO
 badd +1 ~/sandbox/personal/todo/personal.tst.txt
 silent! argdel *
-set lines=57 columns=137
-winpos 560 1028
+set lines=69 columns=137
+winpos 686 1028
 buffer ~/sandbox/personal/todo/personal.tst.txt
 set splitbelow splitright
 wincmd t
@@ -617,19 +618,15 @@ setlocal wrap
 setlocal wrapmargin=0
 1
 normal zo
-203
-normal zo
-203
-normal zo
 1
 normal zo
 363
 normal zo
-let s:l = 30 - ((29 * winheight(0) + 27) / 55)
+let s:l = 2 - ((1 * winheight(0) + 33) / 67)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-30
+2
 normal! 0
 tabnew
 set splitbelow splitright
