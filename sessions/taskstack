@@ -617,17 +617,19 @@ setlocal wrap
 setlocal wrapmargin=0
 1
 normal zo
-201
+203
 normal zo
-201
+203
 normal zo
 1
 normal zo
-let s:l = 248 - ((25 * winheight(0) + 27) / 55)
+363
+normal zo
+let s:l = 30 - ((29 * winheight(0) + 27) / 55)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-248
+30
 normal! 0
 tabnew
 set splitbelow splitright
