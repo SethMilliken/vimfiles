@@ -59,6 +59,7 @@ refresh_bundle snipmate git://github.com/spf13/snipmate.vim.git
 refresh_bundle surround git://github.com/vim-scripts/surround.vim.git
 refresh_bundle textobj-rubyblock git://github.com/nelstrom/vim-textobj-rubyblock.git
 refresh_bundle textobj-user git://github.com/kana/vim-textobj-user.git
+refresh_bundle twitvim git://github.com/vim-scripts/TwitVim.git
 refresh_bundle vcscommand git://github.com/vim-scripts/vcscommand.vim.git
 refresh_bundle vim-ruby git://github.com/vim-ruby/vim-ruby.git
 refresh_bundle vimple git://github.com/dahu/vimple.git
