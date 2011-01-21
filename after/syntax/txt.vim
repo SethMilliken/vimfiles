@@ -21,7 +21,7 @@ syntax match section /^\([A-Z]\+ \)\{1,\}/
 " @context
 syntax match context /\s\+\zs@\([0-9a-z.]\+\)\{1,\}/
 " @context header
-syntax match context-header /^@\([0-9a-z.]\+ \)\{1,\}/me=e-1
+syntax match contextheader /^@\([0-9a-z.]\+ \)\{1,\}/me=e-1
 " = statement
 syntax region declaration start="\%(^\|^\s\+\)= " end="\n" contains=bug,date,quotation,context,url,eoltimestamp oneline
 " ? question about item
@@ -43,7 +43,7 @@ highlight default link foldmarkend Ignore
 highlight default link bug SpecialKey
 highlight default link done NonText
 highlight default link abandoned Ignore
-highlight default link context-header DiffText
+highlight default link contextheader DiffText
 highlight default link context Statement
 highlight default link section Directory
 highlight default link declaration Constant
