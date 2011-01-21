@@ -24,6 +24,15 @@ let s:completed_prefix = "o"
 " SYNTAX: {{{
 
 "}}}
+" MAPPINGS: {{{
+nmap <buffer> K :echo TaskstackMoveToProjectPrompt()<CR>
+nmap <buffer> <C-e>/ :call TaskstackNavigateToProjectPrompted()<CR>
+nmap <buffer> <C-y>k :echo TaskstackMoveToProjectAutoDetect()<CR>
+nmap <buffer> <silent> <Tab> :call search("@.*\\\\|^[A-Z]\\+")<CR>
+nmap <buffer> <silent> <S-Tab> :call search("@.*\\\\|^[A-Z]\\+", 'b')<CR>
+nmap <buffer> <silent> <CR> yiW/<C-r>"<CR>
+
+" }}}
 " FUNCTIONS: {{{
 
 " Fold prototype " {{{
@@ -273,10 +282,6 @@ endfunction
 
 " }}}
 
-map K :echo TaskstackMoveToProjectPrompt()<CR>
-map <C-e>/ :call TaskstackNavigateToProjectPrompted()<CR>
-map <C-y>k :echo TaskstackMoveToProjectAutoDetect()<CR>
-
 function! ProjectRawMatchPattern() " {{{
     return '^@\zs\(\<\w*\>\s*\)\{,3}\ze\s' 
 endfunction
@@ -291,7 +296,7 @@ function! TaskstackProjectNameCompletion(A,L,P) " {{{
 endfunction
 
 " }}}
-function! TaskstackPromptProjectName()
+function! TaskstackPromptProjectName() " {{{
     if !exists("s:last_selection")
         let s:last_selection = ""
     endif
