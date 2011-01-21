@@ -172,7 +172,7 @@ nnoremap <Nul> :
 map <F1> :Help<CR>
 imap <F1> <Esc>:Help<CR>
 " I frequently hold shift too long...
-nmap :W :w
+command! W :w
 " Handy but doesn't work in terminal
 nmap <S-Space> <C-f>
 
@@ -190,9 +190,13 @@ imap <silent> <C-L> <Esc>:call Reset() \| nohls<CR>a
 
 " }}}
 " Custom: <C-y> prefixed custom commands " {{{
+" Reload .vimrc
 imap <C-y>v <Esc> :call ReloadVimrc()<CR> \| :echo "Resourced .vimrc."<CR>
 nmap <C-y>v :call ReloadVimrc()<CR> \| :echo "Resourced .vimrc."<CR>
+" Reload snippets
 nmap <C-y>s :SnipUp<CR>
+" Execute current line as ex command
+map <C-e>x :call feedkeys("yyq:p\r", "n")<CR>
 
 " }}}
 " Utility: word count of current file " {{{
@@ -1250,7 +1254,8 @@ endfunction
 
 " }}}
 " Janrain:  " {{{
-map <D-j> <Esc>:cd ~/sandbox/work/vm/rpx/ruby/rails/<CR>
+map <D-j>w <Esc>:cd ~/sandbox/work/vm/rpx/ruby/rails/<CR>
+map <D-j>p <Esc>:cd ~/sandbox/personal/<CR>
 
 " }}}
 " EXPERIMENT: {{{

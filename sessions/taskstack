@@ -323,7 +323,7 @@ set expandtab
 set fileencodings=ucs-bom,utf-8,default,latin1
 set foldlevelstart=999
 set fuoptions=maxhorz,maxvert
-set guifont=Inconsolata:h13
+set guifont=Inconsolata:h15
 set guioptions=egmrLtc
 set guitablabel=%m\ %N\ %t\ %r
 set helplang=en
@@ -358,7 +358,7 @@ set termencoding=utf-8
 set undolevels=100
 set visualbell
 set wildignore=*.o,*.sw?,*.git,*.svn,*.hg,**/build,*.?ib,*.png,*.jpg,*.jpeg,*.mov,*.gif,*.bom,*.azw,*.lpr,*.mbp,*.mode1v3,*.gz,*.vmwarevm,*.rtf,*.pkg,*.developerprofile,*.xcodeproj,*.pdf,*.dmg,*.db,*.otf,*.bz2,*.tiff,*.iso,*.jar,*.dat,**/Cache,*.cache,*.sqlite*,*.collection,*.qsindex,*.qsplugin,*.growlTicket,*.part,*.ics,*.ico,**/iPhone\ Simulator,*.lock*,*.webbookmark
-set window=68
+set window=56
 set winminheight=0
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
@@ -478,10 +478,10 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +1 ~/sandbox/personal/todo/personal.tst.txt
+badd +2516 ~/sandbox/personal/todo/personal.tst.txt
 silent! argdel *
-set lines=69 columns=137
-winpos 686 1028
+set lines=57 columns=103
+winpos 832 1028
 buffer ~/sandbox/personal/todo/personal.tst.txt
 set splitbelow splitright
 wincmd t
@@ -547,7 +547,7 @@ setlocal foldcolumn=0
 setlocal foldenable
 setlocal foldexpr=0
 setlocal foldignore=#
-setlocal foldlevel=4
+setlocal foldlevel=999
 setlocal foldmarker={{{,}}}
 set foldmethod=marker
 setlocal foldmethod=marker
@@ -620,18 +620,22 @@ setlocal wrapmargin=0
 normal zo
 1
 normal zo
-363
+366
 normal zo
-let s:l = 2 - ((1 * winheight(0) + 33) / 67)
+1663
+normal zc
+1886
+normal zo
+2527
+normal zo
+1886
+normal zo
+let s:l = 2 - ((1 * winheight(0) + 27) / 55)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
 2
-normal! 0
-tabnew
-set splitbelow splitright
-wincmd t
-set winheight=1 winwidth=1
+normal! 034l
 tabnext 1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf
