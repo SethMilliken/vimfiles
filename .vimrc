@@ -1067,6 +1067,12 @@ augroup VolatileScratch
 augroup END
 
 "}}}
+" VCS Commit: " {{{
+augroup VCSCommit
+    au! BufRead hg-editor-* nmap <buffer> <silent> <C-e>d :set filetype=diff \| :r !hg diff<CR>gg
+augroup END
+
+" }}}
 " Vimperator Y Pentadactyl: " {{{
 augroup VimperatorYPentadactyl
     au! BufRead vimperator-*\|pentadactyl-* nmap <buffer> <silent> ZZ :call FormFieldArchive() \| :silent write \| :bd \| :macaction hide:<CR>
