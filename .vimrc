@@ -1254,7 +1254,8 @@ endfunction
 
 " }}}
 " Janrain:  " {{{
-map <D-j> <Esc>:cd ~/sandbox/work/vm/rpx/ruby/rails/<CR>
+map <D-j>w <Esc>:cd ~/sandbox/work/vm/rpx/ruby/rails/<CR>
+map <D-j>p <Esc>:cd ~/sandbox/personal/<CR>
 
 " }}}
 " EXPERIMENT: {{{
