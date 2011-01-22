@@ -1256,13 +1256,39 @@ endfunction
 " Janrain:  " {{{
 map <D-j>w <Esc>:cd ~/sandbox/work/vm/rpx/ruby/rails/<CR>
 map <D-j>p <Esc>:cd ~/sandbox/personal/<CR>
+map <D-j>g <Esc>:GrepEngage 
+command! -nargs=1 GrepEngage call GrepEngage(<f-args>)
+function! GrepEngage(string)
+    echo "Searching Engage codebase for \"" . a:string . "\"...."
+    let l:engage_path = "~/sandbox/work/vm/rpx/ruby/rails/**/*.rb"
+    exec ":vimgrep /" . a:string . "/ " . l:engage_path
+    copen
+endfunction
 
 " }}}
-" EXPERIMENT: {{{
+" EXPERIMENTAL: {{{
 
+" Toggle number column: {{{
+" <A-1> to toggle between nu and rnu
+if exists('+relativenumber')
+  nnoremap <expr> ¡ ToggleNumberDisplay()
+  xnoremap <expr> ¡ ToggleNumberDisplay()
+  onoremap <expr> ¡ ToggleNumberDisplay()
+
+  function! ToggleNumberDisplay()
+      if &l:nu | setlocal rnu | else | setlocal nu | endif | redraw
+  endfunction
+
+endif
+
+" }}}
+" Diff of changes since opening file {{{
 if !exists(":DiffOrig")
   command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p | diffthis
 endif
+
+" }}}
+
 " type number then : to get relative range prepopulated in cmdline
 " new vocab word "idem" to get relative range prepopulated in cmdline
 " . as range, e.g. :.w >> foo
