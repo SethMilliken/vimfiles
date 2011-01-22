@@ -12,7 +12,7 @@ syntax match url /[a-z]*:\/\/[^ >]*/
 " + ongoing todo item
 " ( ) ongoing with range
 syntax region duration start="^\s*(.)\|\%(^\|^\s\+\)+" end="\s\|$" oneline
-" TS#<####>, PF#<####>, BUG:, FIXME: 
+" TS#<####>, PF#<####>, BUG:, FIXME:
 syntax region bug start="\%(\%(JR#\|TS#\|PF#\)[0-9]\+\|BUG:\|FIXME:\|STORY:\)" end="\s\|$" oneline
 " `quote`
 syntax match quotation /`.*`/
@@ -37,7 +37,7 @@ syntax region modeline start="^vim:" end="$" oneline
 " }}}
 " highlights {{{
 highlight default link modeline Ignore
-highlight default link foldtitle Specialfoo
+highlight default link foldtitle Special
 highlight default link foldmarkbegin Ignore
 highlight default link foldmarkend Ignore
 highlight default link bug SpecialKey
