@@ -2,19 +2,113 @@
 python << END
 """
 " }}}
+" Settings {{{
+let twitvim_api_root = "https://api.twitter.com/1"
+let twitvim_enable_python = 1
 let twitvim_count = 25
+let twitvim_count = 200
+40wincmd  |
+" }}}
+
 FriendsTwitter
-UserTwitter stevelosh
+SearchTwitter stevelosh
+SearchTwitter b4winckler
+UserTwitter SethMilliken
+ListTwitter barista
 VimSearch
+SearchTwitter #pentadactyl
+SearchTwitter #MacVim
+SearchTwitter #aspergers
 NextSearchPage
 
-UserTwitter SethMilliken
-BitLy http://pqrs.org/macosx/keyremap4macbook/
+ProfileTwitter SethMilliken
+ProfileTwitter stevelosh
+
+FollowTwitter b4winckler
+FollowingTwitter
+FollowersTwitter
+
+
+" url shortners
+Trim
+BitLy
+
+" New Tweet Buffer
+new | set bt=nofile | wincmd J | 2wincmd _ | set colorcolumn=140 | map <buffer> <CR> :BPosttoTwitter
+
+PosttoTwitter
+" CPosttoTwitter
+" BPosttoTwitter
+
+" Keybindings {{{
+" long version of url
+" \e
+" profile info
+" \p
+" timeline of user
+" \g
+" delete tweet
+" \X
+" add tweet to favorites
+" \f
+" remove tweet from favorites
+" \<C-f>
+" previous timeline
+" <C-o>
+" next timeline
+" <C-i>
+" refresh timeline
+" \\
+" }}}
+" Command Listing {{{
+RateLimitTwitter
+SendDMTwitter
+UserTwitter
+twitvim_count
+FriendsTwitter
+MentionsTwitter
+RepliesTwitter
+PublicTwitter
+DMTwitter
+DMSentTwitter
+ListTwitter
+RetweetedToMeTwitter
+RetweetedByMeTwitter
+FavTwitter
+FollowingTwitter
+FollowersTwitter
+MembersOfListTwitter
+SubsOfListTwitter
+OwnedListsTwitter
+MemberListsTwitter
+SubsListsTwitter
+FollowListTwitter
+UnfollowListTwitter
+BackTwitter
+BackInfoTwitter
+ForwardTwitter
+ForwardInfoTwitter
+RefreshTwitter
+RefreshInfoTwitter
+NextTwitter
+NextInfoTwitter
+PreviousTwitter
+PreviousInfoTwitter
+SetLoginTwitter
+ResetLoginTwitter
+FollowTwitter
+UnfollowTwitter
+BlockTwitter
+UnblockTwitter
+ReportSpamTwitter
+AddToListTwitter
+RemoveFromListTwitter
+" }}}
 " End Commands {{{
 """
 END
 " }}}
-" Twitter Commands {{{
+" TwitVim Commands {{{
 map <buffer> <CR> yyq:p<CR> \| :wincmd h<CR>
 map <buffer> <D-j>t :wincmd h \| :call NextSearchPage() \| :wincmd h<CR>
 map <buffer> <D-j>v :wincmd h \| :call TwitVimVimSearch() \| :wincmd h<CR>
@@ -46,6 +140,8 @@ function! s:BlackList()
                \ "#teamfollowback",
                \ "☆",
                \ "#follow",
+               \ "#Follow",
+               \ "#FOLLOW",
                \ "followers",
                \ "NERDYCHiiCK",
                \ "NeRdYChiiCk",
