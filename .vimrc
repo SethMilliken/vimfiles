@@ -134,7 +134,7 @@ set foldlevelstart=999              " don't use a default fold level; all folds 
 set fdm=marker                      " make the default foldmethod markers
 " set foldcolumn=4                  " trying out fold indicator column
 set display+=lastline               " always show as much of the last line as possible
-set display+=uhex                   " show unprintable hex characters as <xx>
+"set display+=uhex                   " show unprintable hex characters as <xx>
 set guioptions+=c                   " always use console dialogs (faster)
 set noerrorbells                    " don't need to hear if i hit esc twice
 set visualbell | set t_vb=          " nor see it
