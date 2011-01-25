@@ -981,29 +981,36 @@ augroup END
 " TaskStack: " {{{
 let g:aborted_prefix = "x"
 let g:completed_prefix = "o"
-augroup TaskStack
-    au! BufRead *.tst.* set indentkeys-=o indentkeys-=0 showbreak=\ \  filetype=_.tst.txt noai fdm=marker cms= ts=2
-    au BufRead *.tst.* nmap <buffer> XX :call TaskstackCompleteItem(g:aborted_prefix)<CR>
-    au BufRead *.tst.* imap <buffer> XX <C-c>:call TaskstackCompleteItem(g:aborted_prefix)<CR>
-    au BufRead *.tst.* nmap <buffer> QQ :call TaskstackCompleteItem(g:completed_prefix)<CR>
-    au BufRead *.tst.* imap <buffer> QQ <C-c>:call TaskstackCompleteItem(g:completed_prefix)<CR>
-    au BufRead *.tst.* nmap <buffer> NN :call TaskstackNewItem()<CR>
-    au BufRead *.tst.* imap <buffer> NN <C-c>:call TaskstackNewItem()<CR>
-    au BufRead *.tst.* nmap <buffer> ZZ :call TaskstackHide()<CR>
-    au BufRead *.tst.* imap <buffer> ZZ <C-c>:call TaskstackHide()<CR>
-    au BufRead *.tst.* nmap <buffer> LL :call TaskstackScratch()<CR>
-    au BufRead *.tst.* nmap <buffer> <silent> $ :call TaskstackEOL()<CR>
-    au BufRead *.tst.* nmap <buffer> <silent> <C-j> :call TaskstackMoveItemDown()<CR>
-    au BufRead *.tst.* nmap <buffer> <silent> <C-k> :call TaskstackMoveItemUp()<CR>
-    au BufRead *.tst.* nmap <buffer> <silent> <C-p> ?^@.* {\{3\}<CR>:nohls<CR>
-    au BufRead *.tst.* nmap <buffer> <silent> <C-n> /^@.* {\{3\}<CR>:nohls<CR>
-    au BufRead *.tst.* nmap <buffer> <silent> <Tab> /^\([A-Z]\+ \)\{1,\}<CR>:nohls<CR>
-    au BufRead *.tst.* nmap <buffer> <silent> <S-Tab> ?^\([A-Z]\+ \)\{1,\}<CR>:nohls<CR>
-    au BufRead *.tst.* nmap <buffer> :w<CR> :call TaskstackSave()<CR>
-    au BufRead *.tst.* nmap <buffer> <silent> <C-x>x :call TaskstackGroups()<CR>
+augroup! TaskStack
+    au! BufRead *.tst.* set filetype=tst.txt
+    au! FileType *tst* set indentkeys-=o indentkeys-=0 showbreak=\ \  noai fdm=marker cms= ts=2
+    au FileType *tst* nmap <buffer> XX :call TaskstackCompleteItem(g:aborted_prefix)<CR>
+    au FileType *tst* imap <buffer> XX <C-c>:call TaskstackCompleteItem(g:aborted_prefix)<CR>
+    au FileType *tst* nmap <buffer> QQ :call TaskstackCompleteItem(g:completed_prefix)<CR>
+    au FileType *tst* imap <buffer> QQ <C-c>:call TaskstackCompleteItem(g:completed_prefix)<CR>
+    au FileType *tst* nmap <buffer> NN :call TaskstackNewItem()<CR>
+    au FileType *tst* imap <buffer> NN <C-c>:call TaskstackNewItem()<CR>
+    au FileType *tst* nmap <buffer> ZZ :call TaskstackHide()<CR>
+    au FileType *tst* imap <buffer> ZZ <C-c>:call TaskstackHide()<CR>
+    au FileType *tst* nmap <buffer> LL :call TaskstackScratch()<CR>
+    au FileType *tst* nmap <buffer> <silent> $ :call TaskstackEOL()<CR>
+    au FileType *tst* nmap <buffer> <silent> <C-j> :call TaskstackMoveItemDown()<CR>
+    au FileType *tst* nmap <buffer> <silent> <C-k> :call TaskstackMoveItemUp()<CR>
+    au FileType *tst* nmap <buffer> <silent> <C-p> ?^@.* {\{3\}<CR>:nohls<CR>
+    au FileType *tst* nmap <buffer> <silent> <C-n> /^@.* {\{3\}<CR>:nohls<CR>
+    au FileType *tst* nmap <buffer> <silent> <Tab> /^\([A-Z]\+ \)\{1,\}<CR>:nohls<CR>
+    au FileType *tst* nmap <buffer> <silent> <S-Tab> ?^\([A-Z]\+ \)\{1,\}<CR>:nohls<CR>
+    au FileType *tst* nmap <buffer> :w<CR> :call TaskstackSave()<CR>
+    au FileType *tst* nmap <buffer> <silent> <C-x>x :call TaskstackGroups()<CR>
+    au FileType *tst* nmap <buffer> K :echo TaskstackMoveToProjectPrompt()<CR>
+    au FileType *tst* nmap <buffer> <C-e>/ :call TaskstackNavigateToProjectPrompted()<CR>
+    au FileType *tst* nmap <buffer> <C-y>k :echo TaskstackMoveToProjectAutoDetect()<CR>
+    au FileType *tst* nmap <buffer> <silent> <Tab> :call search("@.*\\\\|^[A-Z]\\+")<CR>
+    au FileType *tst* nmap <buffer> <silent> <S-Tab> :call search("@.*\\\\|^[A-Z]\\+", 'b')<CR>
+    au FileType tst nmap <buffer> <silent> <CR> yiW/<C-r>"<CR>
     " Use <C-c> to avoid adding or updating a timestamp after editing.
     au! InsertLeave *.tst.* :call AddOrUpdateTimestamp("") " FIXME: External Dependency
-    au! FocusLost *.tst.* write
+    au! FocusLost *.tst.* nested write
 augroup END
 
 "}}}
@@ -1193,13 +1200,17 @@ endfunction
 
 " }}}
 " Vimwiki: " {{{
-map <silent> <Leader>w2 <Esc>:w<CR>:VimwikiAll2HTML<CR><Esc>:echo "Saved wiki to HTML."<CR>
 "" let wiki.nested_syntaxes = {'python': 'python'}
-augroup vimwiki
-    au! FileType vimwiki map <buffer> <silent> <C-p> ?=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
+augroup! vimwiki
+    " au! BufReadPre *.wiki doau FileType txt
+    au! BufReadPost,FileReadPost *.wiki doau FileType tst
+    au FileType vimwiki set syntax=txt.vimwiki
+    au FileType vimwiki map <buffer> <silent> <C-p> ?=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
     au FileType vimwiki map <buffer> <silent> <C-n> /=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
     au FileType vimwiki imap <buffer> <silent> >> <Esc>>>a
     au FileType vimwiki imap <buffer> <silent> << <Esc><<a
+    au FileType vimwiki nmap <buffer> <silent> <CR> :call VimwikiFollowLinkMod()<CR>
+    au FileType vimwiki nested map <buffer> <silent> <Leader>w2 <Esc>:w<CR>:VimwikiAll2HTML<CR><Esc>:echo "Saved wiki to HTML."<CR>
 augroup END
 let g:vimwiki_hl_headers = 1                " hilight header colors
 let g:vimwiki_hl_cb_checked = 1             " hilight todo item colors
@@ -1211,8 +1222,30 @@ let g:vimwiki_list = [{'path': '~/sandbox/personal/vimwiki/', 'index': 'Personal
 function! VimwikiExpandedPageName()
     return substitute(substitute(expand('%:t'), "[a-z]\\zs\\([A-Z]\\)", " \\1", "g"), "\\..*", "", "")
 endfunction
+function! VimwikiFollowLinkMod()
+    if GetLetterAtCurrentPosition() != "@"
+        normal B
+    end
+    if GetLetterAtCurrentPosition() == "@"
+        exe "normal yiW/\<C-r>\"\<CR>"
+    else
+        call vimwiki#follow_link('nosplit')
+    endif
+endfunction
+
+function! GetLetterAtCurrentPosition()
+    let l:position = getpos(".")
+    let l:column = get(l:position, 2)
+    let l:letter = strpart(getline("."), l:column - 1, 1)
+    return l:letter
+endfunction
 
 " }}}
+
+augroup VimSheet
+    au! BufRead /tmp/*.vim nmap <buffer> <CR> yyq:p<CR>
+augroup END
+
 " TOhtml: " {{{
 let html_dynamic_folds = 1
 let html_use_css = 1
@@ -1256,7 +1289,7 @@ endfunction
 " Janrain:  " {{{
 map <D-j>w <Esc>:cd ~/sandbox/work/vm/rpx/ruby/rails/<CR>
 map <D-j>p <Esc>:cd ~/sandbox/personal/<CR>
-map <D-j>g <Esc>:GrepEngage 
+map <D-j>e <Esc>:GrepEngage 
 command! -nargs=1 GrepEngage call GrepEngage(<f-args>)
 function! GrepEngage(string)
     echo "Searching Engage codebase for \"" . a:string . "\"...."

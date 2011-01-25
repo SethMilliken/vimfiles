@@ -24,15 +24,6 @@ let s:completed_prefix = "o"
 " SYNTAX: {{{
 
 "}}}
-" MAPPINGS: {{{
-nmap <buffer> K :echo TaskstackMoveToProjectPrompt()<CR>
-nmap <buffer> <C-e>/ :call TaskstackNavigateToProjectPrompted()<CR>
-nmap <buffer> <C-y>k :echo TaskstackMoveToProjectAutoDetect()<CR>
-nmap <buffer> <silent> <Tab> :call search("@.*\\\\|^[A-Z]\\+")<CR>
-nmap <buffer> <silent> <S-Tab> :call search("@.*\\\\|^[A-Z]\\+", 'b')<CR>
-nmap <buffer> <silent> <CR> yiW/<C-r>"<CR>
-
-" }}}
 " FUNCTIONS: {{{
 
 " Fold prototype " {{{
