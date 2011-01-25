@@ -13,6 +13,7 @@ let twitvim_count = 200
 FriendsTwitter
 SearchTwitter stevelosh
 SearchTwitter b4winckler
+SearchTwitter #rails
 UserTwitter SethMilliken
 ListTwitter barista
 VimSearch
@@ -149,6 +150,7 @@ function! s:BlackList()
                \ "NiCCiisNeechee",
                \ "VERSATHEISSUE",
                \ "#ff",
+               \ "CouchMoneySweet",
                \ "BlakMuzick",
                \ ]
    return join(l, "\\\|")
