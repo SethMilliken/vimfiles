@@ -28,8 +28,9 @@
 "}}}
 " Pathogen: " {{{
 call pathogen#runtime_append_all_bundles()
+call pathogen#helptags()
 " }}}
-" DEFAULTS: from example .vimrc {{{
+" DEFAULTS: from example .vimrc " {{{
 " When started as "evim", evim.vim will already have done these settings.
 if v:progname =~? "evim"
     finish
@@ -98,7 +99,7 @@ if has("autocmd")
 endif " has("autocmd")
 "}}}
 " Seth Milliken additions
-" SETTINGS: {{{
+" SETTINGS: " {{{
 " au! VimEnter * source ~/.vim/after/plugin/foo.vim " Way to set the latest
 " file that will always be sourced for any file opened.
 set winfixheight
@@ -139,6 +140,8 @@ set guioptions+=c                   " always use console dialogs (faster)
 set noerrorbells                    " don't need to hear if i hit esc twice
 set visualbell | set t_vb=          " nor see it
 
+let mapleader=" "                   " experiment with using <Space> as <Leader>
+
 if version > 702
     set rnu
     au BufReadPost * set rnu
@@ -160,7 +163,7 @@ set ssop+=globals,sesdir,resize,winpos,unix
 set statusline=%<\(%n\)\ %m%y%r\ %f\ %=%-14.(%l,%c%V%)\ %P
 
 "}}}
-" MAPPINGS: {{{
+" MAPPINGS: " {{{
 
 " Zaurus: <C-Space> (<C-k><C-Space>) to invoke command mode in both insert and normal mode " {{{
 imap <Nul> <Esc>:
@@ -389,7 +392,7 @@ endfor
 " }}}
 
 "}}}
-" FUNCTIONS: {{{
+" FUNCTIONS: " {{{
 
 " Navigation:
 function! EscapeShiftUp(incoming) " {{{
@@ -965,7 +968,12 @@ endfunction
 " }}}
 
 "}}}
-" SYNTAX: {{{
+" FILETYPES: " {{{
+
+au BufNewFile,BufRead *.applescript   setf applescript
+au BufNewFile,BufRead *.tst.* set ft=_.txt.tst
+au BufNewFile,BufRead *.yaml,*.yml so ~/.vim/syntax/yaml.vim
+au FileType ruby set fdm=syntax
 
 " Java: " {{{
 augroup java
@@ -976,13 +984,25 @@ augroup END
 " }}}
 
 "}}}
-" PLUGINS: {{{
+" PLUGINS: " {{{
 
+" Debug:  " {{{
+if &verbose > 0
+    echo "Using Debug Mode..."
+    if exists("#vimwiki")
+        au! vimwiki
+    endif
+    if exists("#TaskStack")
+        au! TaskStack
+    end
+endif
+
+" }}}
 " TaskStack: " {{{
 let g:aborted_prefix = "x"
 let g:completed_prefix = "o"
-augroup! TaskStack
-    au! BufRead *.tst.* set filetype=tst.txt
+augroup TaskStack
+    au! BufRead *.tst.* set filetype=tst syntax=txt
     au! FileType *tst* set indentkeys-=o indentkeys-=0 showbreak=\ \  noai fdm=marker cms= ts=2
     au FileType *tst* nmap <buffer> XX :call TaskstackCompleteItem(g:aborted_prefix)<CR>
     au FileType *tst* imap <buffer> XX <C-c>:call TaskstackCompleteItem(g:aborted_prefix)<CR>
@@ -1007,7 +1027,7 @@ augroup! TaskStack
     au FileType *tst* nmap <buffer> <C-y>k :echo TaskstackMoveToProjectAutoDetect()<CR>
     au FileType *tst* nmap <buffer> <silent> <Tab> :call search("@.*\\\\|^[A-Z]\\+")<CR>
     au FileType *tst* nmap <buffer> <silent> <S-Tab> :call search("@.*\\\\|^[A-Z]\\+", 'b')<CR>
-    au FileType tst nmap <buffer> <silent> <CR> yiW/<C-r>"<CR>
+    au FileType tst nmap <buffer> <silent> <CR> yiW/<C-r>"<CR>zzzv<C-l>
     " Use <C-c> to avoid adding or updating a timestamp after editing.
     au! InsertLeave *.tst.* :call AddOrUpdateTimestamp("") " FIXME: External Dependency
     au! FocusLost *.tst.* nested write
@@ -1201,15 +1221,15 @@ endfunction
 " }}}
 " Vimwiki: " {{{
 "" let wiki.nested_syntaxes = {'python': 'python'}
-augroup! vimwiki
+augroup vimwiki
     " au! BufReadPre *.wiki doau FileType txt
     au! BufReadPost,FileReadPost *.wiki doau FileType tst
     au FileType vimwiki set syntax=txt.vimwiki
     au FileType vimwiki map <buffer> <silent> <C-p> ?=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
     au FileType vimwiki map <buffer> <silent> <C-n> /=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
-    au FileType vimwiki imap <buffer> <silent> >> <Esc>>>a
-    au FileType vimwiki imap <buffer> <silent> << <Esc><<a
-    au FileType vimwiki nmap <buffer> <silent> <CR> :call VimwikiFollowLinkMod()<CR>
+    au FileType *vimwiki* imap <buffer> <silent> >> <Esc>>>a
+    au FileType *vimwiki* imap <buffer> <silent> << <Esc><<a
+    au FileType *vimwiki* nmap <buffer> <silent> <CR> :call VimwikiFollowLinkMod()<CR>
     au FileType vimwiki nested map <buffer> <silent> <Leader>w2 <Esc>:w<CR>:VimwikiAll2HTML<CR><Esc>:echo "Saved wiki to HTML."<CR>
 augroup END
 let g:vimwiki_hl_headers = 1                " hilight header colors
@@ -1223,13 +1243,14 @@ function! VimwikiExpandedPageName()
     return substitute(substitute(expand('%:t'), "[a-z]\\zs\\([A-Z]\\)", " \\1", "g"), "\\..*", "", "")
 endfunction
 function! VimwikiFollowLinkMod()
-    if GetLetterAtCurrentPosition() != "@"
+    if GetLetterAtCurrentPosition() == " "
         normal B
     end
+    normal "tyiW
     if GetLetterAtCurrentPosition() == "@"
-        exe "normal yiW/\<C-r>\"\<CR>"
+        exe "normal /\<C-r>\t\<CR>"
     else
-        call vimwiki#follow_link('nosplit')
+        exe ":VimwikiFollowLink"
     endif
 endfunction
 
@@ -1239,6 +1260,10 @@ function! GetLetterAtCurrentPosition()
     let l:letter = strpart(getline("."), l:column - 1, 1)
     return l:letter
 endfunction
+
+" }}}
+" Xptemplate: " {{{
+let g:xptemplate_brace_complete = 0
 
 " }}}
 
@@ -1256,13 +1281,7 @@ let use_xhtml = 1
 let html_no_pre = 1
 
 " }}}
-" AppleScript: " {{{
-au! BufNewFile,BufRead *.applescript   setf applescript
-au! BufNewFile,BufRead *.tst.* set ft=_.txt.tst
-
-" }}}
-" YAML: " {{{
-    au BufNewFile,BufRead *.yaml,*.yml so ~/.vim/syntax/yaml.vim
+" Miscellanous Filetype Settings: " {{{
 
 " }}}
 
@@ -1270,7 +1289,6 @@ au! BufNewFile,BufRead *.tst.* set ft=_.txt.tst
 " See .gvimrc for map
 let g:CommandTMatchWindowAtTop=1
 " let g:CommandTSelectNextMap = ['<C-n>', '<C-j>', 'j']
-
 
 " }}}
 " Maintenance: " {{{
@@ -1299,9 +1317,49 @@ function! GrepEngage(string)
 endfunction
 
 " }}}
-" EXPERIMENTAL: {{{
+" Folding: " {{{
+function! CleanFoldText() "{{{
+    let indentation = winwidth(0) - (winwidth(0) / 4)
+    let fullline = getline(v:foldstart)
+    let commentmatch = "\\s*" . substitute(CommentStringOpen(), "\\s\\+", "\\\\s*", "g")
+    let g:replacestring = commentmatch . FoldMarkerOpen() . '.*'
+    let line = substitute(fullline, g:replacestring, '', 'g')
+    let linecount = v:foldend - v:foldstart - 2
+    let linewidth = indentation - v:foldlevel - strlen(line)
+    let decoratedline = printf("%s %*s <%s>", line, linewidth, linecount.' lines', v:foldlevel)
+    let decoratedline = substitute(decoratedline, '^+\(.*\)done', 'o\1DONE', 'g')
+    return decoratedline
+endfunction "}}}
+set foldtext=CleanFoldText()
 
-" Toggle number column: {{{
+" }}}
+" EXPERIMENTAL: " {{{
+
+function! SnippetFilesForCurrentBuffer(A,L,P) " {{{
+   let snipfiles = []
+   for current_dir in split(g:snippets_dir, ',')
+       for current_ft in split(&ft . "._", '\.')
+           call add(snipfiles, glob(current_dir . current_ft ."/*.snippet"))
+           call add(snipfiles, glob(current_dir . current_ft . "*.snippets"))
+       endfor
+   endfor
+   return join(snipfiles, "\n")
+endfunction
+
+" }}}
+map <Leader>so :call OpenRelatedSnippetFileInVsplit()<CR>
+function! OpenRelatedSnippetFileInVsplit() " {{{
+    let snippetfile = input("Which related snippet file do you wish to edit, sir? ", "", "custom,SnippetFilesForCurrentBuffer")
+    if filereadable(snippetfile) == 1
+        exe ":vsplit " . snippetfile
+    endif
+endfunction
+
+" }}}
+
+map <Leader><CR> 0"ty$:<C-r>t<CR>:echo "Executed: " . @t<CR>
+
+" Toggle number column: " {{{
 " <A-1> to toggle between nu and rnu
 if exists('+relativenumber')
   nnoremap <expr> ¡ ToggleNumberDisplay()
@@ -1315,7 +1373,7 @@ if exists('+relativenumber')
 endif
 
 " }}}
-" Diff of changes since opening file {{{
+" Diff of changes since opening file " {{{
 if !exists(":DiffOrig")
   command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p | diffthis
 endif
@@ -1337,6 +1395,7 @@ endif
 " :set ff=unix
 " :let string="!echo 'bar' | ls"
 " :let mapleader=","
+" :let mapleader=" "
 
 " }}}
 " vim: set ft=vim fdm=marker cms=\ \"\ %s  :
