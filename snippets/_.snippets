@@ -22,22 +22,22 @@ snippet presh
 	${2:contents}
 	</pre>
 snippet vimtest
+	" 0Y:<C-r>"<CR> the following line to activate this function creation sandbox:
+	exec "map <buffer> <CR> 0y$:<C-r>\"<CR> \| :1,2d \| w " . tempname() . ".vimtest" | so %
 	function! ${1:TestFunction}()
 	   echo "hello world"
 	endfunction
 
 	map <buffer> K <Esc>:w<CR>:so %<CR>:call $1()<CR>
 
-	" Commands (<CR> to execute): {{{
-	python << END
+	" Commands (<CR> to execute): " {{{
+	python << BLOCKCOMMENT
 	"""
-	Add to your .vimrc to enable:
-	au! * map <buffer> <CR> yyq:p<CR>
 	" }}}
 	echo "test"
 	call TestFunction()
-	" End Commands {{{
+	" End Commands " {{{
 	"""
-	END
+	BLOCKCOMMENT
 	" }}}
 	" vim: ft=vim fdl=0
