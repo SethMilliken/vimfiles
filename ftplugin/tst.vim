@@ -1,4 +1,4 @@
-" INFO: {{{
+" INFO: " {{{
 
 " Maintainer:
 " 	Seth Milliken <seth_vim@araxia.net>
@@ -12,20 +12,99 @@
 " Todo:
 
 "}}}
-" VARIABLES: {{{
+" VARIABLES: " {{{
 let s:main_node_name = "DOING"
 let s:groups_node_name = "PROJECTS"
+let s:completed_node_name = "COMPLETED"
+let s:dates_node_name = "DATES"
 let s:notes_node_name = "SCRATCH"
 
 let s:aborted_prefix = "x"
 let s:completed_prefix = "o"
 
 "}}}
-" SYNTAX: {{{
+" SYNTAX: " {{{
 
 "}}}
-" FUNCTIONS: {{{
+" FUNCTIONS: " {{{
 
+" STATEINFO OBJECT: v0.2 " {{{
+let g:stateinfo = {
+                \ 'view':'myviewhere',
+                \ 'winsaveview': {},
+                \ 'getpos': []
+                \ }
+function stateinfo.New(...) dict " {{{
+    let l:new = copy(self)
+    if len(a:000) == 1
+        let initial_funct = a:000[0]
+        exec "call l:new." . initial_funct . "()"
+    endif
+    return l:new
+endfunction
+
+" }}}
+function stateinfo.value() dict " {{{
+    return string(self)
+endfunction
+
+" }}}
+function stateinfo.foldsave() dict " {{{
+    let b:original_vop = &vop
+    exec "let b:viewfile = " . "\"" . &viewdir . "/foldsave.vim" . "\""
+    echo b:viewfile
+    set vop=folds,cursor
+    " ,options,cursor
+    exec "mkview! " . b:viewfile
+    call self._fixview()
+endfunction
+
+" }}}
+function stateinfo.foldrest() dict " {{{
+    if exists("b:original_vop") && exists("b:viewfile")
+        exec "source " . b:viewfile
+        exec "set vop=" . b:original_vop
+        unlet b:original_vop
+        "unlet b:viewfile
+    endif
+endfunction
+
+" }}}
+function stateinfo._fixview() dict " {{{
+  exe "vsplit " . b:viewfile
+  exe "%s/^edit /buffer /ge"
+  exe "g/SessionLoadPost/d"
+  silent write
+  close
+endfunction
+
+" }}}
+function stateinfo.winsave() dict " {{{
+    let self['winsaveview'] = winsaveview()
+endfunction
+
+" }}}
+function stateinfo.winrest() dict " {{{
+    if !empty(self['winsaveview']) && type(self['winsaveview']) == type({})
+        exec "call winrestview(" . string(self['winsaveview']) . ")"
+    endif
+endfunction
+
+" }}}
+function stateinfo.possave() dict " {{{
+    if !empty(self['getpos'])
+        exec "set setpos(\".\"" . self['getpos'] . ")"
+    endif
+endfunction
+
+" }}}
+function stateinfo.posrest() dict " {{{
+    let self['getpos'] = getpos(line("."))
+endfunction
+
+" }}}
+
+" }}}
 " Fold prototype " {{{
 let s:Fold = {}
 " functions 
@@ -155,16 +234,41 @@ function! TaskstackGroups() " {{{
 endfunction
 
 " }}}
+function! TaskstackCompleted() " {{{
+	call AutoTimestampBypass() " FIXME: External Dependency
+	" silent! wincmd t
+	if FindNode(s:completed_node_name) == 0
+		call TaskstackMain()
+		normal zc
+		exe "normal o" . s:completed_node_name
+		call FoldWrap()
+	end
+	call FindNode(s:completed_node_name)
+	silent! normal zo
+	call AutoTimestampEnable() " FIXME: External Dependency
+endfunction
+
+" }}}
+function! TaskstackDates() " {{{
+	call AutoTimestampBypass() " FIXME: External Dependency
+	" silent! wincmd t
+	if FindNode(s:dates_node_name) == 0
+		call TaskstackCompleted()
+		normal zo
+		exe "normal o" . s:dates_node_name
+		call FoldWrap()
+	end
+	call FindNode(s:dates_node_name)
+	silent! normal zo
+	call AutoTimestampEnable() " FIXME: External Dependency
+endfunction
+
+" }}}
 function! TaskstackDate() "{{{
 	let l:currentdate = TimestampText('date')
 	if FindNode(l:currentdate) == 0
 		let l:origview = winsaveview()
-		if FindNode(s:groups_node_name) != 0
-			call TaskstackGroups()
-		else
-			call TaskstackMain()
-		end
-		normal ]z
+                call TaskstackDates()
 		call append(line("."), [""])
 		normal j
 		call AppendText(l:currentdate)
@@ -195,31 +299,107 @@ endfunction
 function! TaskstackNewItem() " {{{
 	call AutoTimestampBypass() " FIXME: External Dependency
 	call TaskstackMain()
-	exe "normal o-  "
-	startinsert
+	exe "normal o- "
+	startinsert!
 	call AutoTimestampEnable() " FIXME: External Dependency
 endfunction
 
 " }}}
 function! TaskstackCompleteItem(prefix) " {{{
 	call AutoTimestampBypass() " FIXME: External Dependency
-	if foldclosed(line(".")) == -1
+
+	if empty(TaskstackFoldbounds())
 		silent call MoveItemToDateNode(getline("."), a:prefix)
 	else
-		echo "Can't yet move a fold."
-		" silent call MoveItemToDateNode(getline(foldclosed(line(".")), foldclosedend(line("."))), a:prefix)
+		silent call MoveFoldToDateNode(TaskstackFoldbounds(), a:prefix)
 	end
 	call AutoTimestampEnable() " FIXME: External Dependency
 	echo ""
 endfunction
 
 " }}}
+function! DetectEnclosingProjectName(line) " {{{
+    let l:origview = winsaveview()
+    exec "normal " a:line . "G"
+    let result = ""
+    let iterations = foldlevel(line("."))
+    let currentiteration = 0
+    let initial_fold_was_opened = 0
+    if foldclosed(line(".")) == -1 | let initial_fold_was_opened = 1 | end
+    while currentiteration < iterations
+        exec "normal zc"
+        let projectname = TaskstackDetectProjectName(foldclosed(line(".")))
+        if projectname != ""
+            let result = projectname
+            break
+        end
+        let currentiteration += 1
+    endwhile
+    while currentiteration > -1
+        exec "normal zo"
+        let currentiteration -= 1
+    endwhile
+    if initial_fold_was_opened == 1 | exec "normal zo" | end
+    call winrestview(l:origview)
+    return result
+endfunction
+
+"}}}
+function! TaskstackFoldbounds() " {{{
+    let result = []
+    if foldlevel(line(".")) > 0
+        let fold_was_open = 0
+        if foldclosed(line(".")) == -1 | let fold_was_open = 1 | exec "normal zc" | end
+        let original_line = line(".")
+        if foldclosed(line(".")) == original_line
+            let result = [foldclosed(line(".")),foldclosedend(line("."))]
+        endif
+        if fold_was_open == 1 | exec "normal zo" | end
+    endif
+    return result
+endfunction
+
+" }}}
+function! CompleteFoldedItems(foldbounds, status) "{{{
+    let start = a:foldbounds[0] + 1
+    let end = a:foldbounds[1] - 1
+    let lines = getline(start, end)
+    let linenumber = start
+    for line in lines
+	let l:itemnostatus = substitute(line, '^\s*. ', '', 'g')
+	let l:result = printf("%s %s", a:status, l:itemnostatus)
+        call setline(linenumber, l:result)
+        let linenumber += 1
+    endfor
+endfunction
+    
+" }}}
+function! MoveFoldToDateNode(foldbounds, status) "{{{
+        let l:state = g:stateinfo.New('foldsave')
+        echo "bounds: " . string(a:foldbounds) . " status: " . a:status
+	call TaskstackDate()
+        let moveto_line = line(".")
+        let mytext = getline(a:foldbounds[0])
+	let l:itemnostatus = substitute(mytext, '^\s*. ', '', 'g')
+        let l:enclosing_project = DetectEnclosingProjectName(a:foldbounds[0])
+        if l:enclosing_project != "" | let l:enclosing_project .= ": " | end
+	let l:result = printf("%s [%s] %s%s", a:status, TimestampText('short'), l:enclosing_project, l:itemnostatus)
+        call CompleteFoldedItems(a:foldbounds, a:status)
+        call setline(a:foldbounds[0], l:result)
+        exec ":" . a:foldbounds[0] . "," . a:foldbounds[1] . "m" . moveto_line
+        call l:state.foldrest()
+	echo "Item marked as completed and moved."
+endfunction
+
+"}}}
 function! MoveItemToDateNode(text, status) "{{{
-	let l:origview = winsaveview()
+        let l:state = g:stateinfo.New('foldsave')
+        let l:enclosing_project = "" " DetectEnclosingProjectName()
 	call TaskstackDate()
 	normal ]zk
+        if l:enclosing_project != "" | let l:enclosing_project .= ": " | end
 	let l:itemnostatus = substitute(a:text, '^\s*. ', '', 'g')
-	let l:result = printf("%s [%s] %s", a:status, TimestampText('short'), l:itemnostatus)
+	let l:result = printf("%s [%s] %s%s", a:status, TimestampText('short'), l:enclosing_project, l:itemnostatus)
 	let l:toappend = [l:result]
 	if LineIsWhiteSpace(getline("."))
 		call append(line(".") - 1, l:toappend)
@@ -227,8 +407,8 @@ function! MoveItemToDateNode(text, status) "{{{
 		call insert(l:toappend, "", len(l:toappend))
 		call append(line("."), l:toappend)
 	endif
-	call winrestview(l:origview)
-	normal dd
+        call l:state.foldrest()
+	normal zodd
 	echo "Item marked as completed and moved."
 endfunction
 
@@ -255,8 +435,8 @@ endfunction
 " }}}
 
 " Miscellaneous:
-function! TaskstackDetectProjectName() " {{{
-	let l:project_name = matchstr(getline("."),'^. \zs\(\<\w*\>\s*\)\{,3}\ze:')
+function! TaskstackDetectProjectName(line) " {{{
+	let l:project_name = matchstr(getline(a:line),'^\(. \|@\)\zs\(\<\w*\>\s*\)\{,3}\ze:*')
 	return l:project_name	
 endfunction
 
@@ -321,7 +501,7 @@ function! TaskstackMoveToProjectAutoDetect() " {{{
     if l:item_validity != ""
       return l:item_validity
     endif
-	let l:project_name = TaskstackDetectProjectName()
+	let l:project_name = TaskstackDetectProjectName(line("."))
 	call winrestview(l:origview)
   return TaskstackMoveItemToProject(l:project_name)
 endfunction
