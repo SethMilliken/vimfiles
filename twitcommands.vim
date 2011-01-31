@@ -20,6 +20,7 @@ VimSearch
 SearchTwitter #pentadactyl
 SearchTwitter #MacVim
 SearchTwitter #aspergers
+SearchTwitter gniemeyer
 NextSearchPage
 
 ProfileTwitter SethMilliken
@@ -37,6 +38,8 @@ BitLy
 " New Tweet Buffer
 new | set bt=nofile | wincmd J | 2wincmd _ | set colorcolumn=140 | map <buffer> <CR> :BPosttoTwitter
 
+" Set Up This Window
+so % | 5wincmd
 PosttoTwitter
 " CPosttoTwitter
 " BPosttoTwitter
@@ -131,7 +134,7 @@ endfunction
 function! s:VimSearchCleanup()
     wincmd l | set modifiable
     silent exec "2,$g/" . s:BlackList() . "/d"
-    silent %s/^\(.\{-}:\)\([^|]*\)|\(.\{-}\)/\=printf("%20s %s\r%125s", submatch(1), submatch(2), "|" . submatch(3))/e
+    " silent %s/^\(.\{-}:\)\([^|]*\)|\(.\{-}\)/\=printf("%20s %s\r%125s", submatch(1), submatch(2), "|" . submatch(3))/e
     normal gg
 endfunction
 function! s:BlackList()
