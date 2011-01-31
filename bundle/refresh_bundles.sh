@@ -61,6 +61,8 @@ refresh_bundle textobj-rubyblock git://github.com/nelstrom/vim-textobj-rubyblock
 refresh_bundle textobj-user git://github.com/kana/vim-textobj-user.git
 refresh_bundle twitvim git://github.com/vim-scripts/TwitVim.git
 refresh_bundle vcscommand git://github.com/vim-scripts/vcscommand.vim.git
+refresh_bundle vim-addon-async git://github.com/MarcWeber/vim-addon-async.git
+refresh_bundle vim-addon-signs git://github.com/MarcWeber/vim-addon-signs.git
 refresh_bundle vim-ruby git://github.com/vim-ruby/vim-ruby.git
 refresh_bundle vimple git://github.com/dahu/vimple.git
 refresh_bundle vimwiki git://github.com/vim-scripts/vimwiki.git
