@@ -1,4 +1,4 @@
-" INFO: {{{
+" INFO: " {{{
 
 " Maintainer:
 "   Seth Milliken <seth_vim@araxia.net>
@@ -258,7 +258,7 @@ nmap <Leader>_ Bi<em><Esc>ea</em>
 inoremap <C-p> <Esc>:set completeopt+=menuone<CR>a<C-n><C-p>
 
 " }}}
-" Help: help help help {{{
+" Help: help help help " {{{
 nmap <Leader>hw     :help<CR>:silent call AdjustFont(-4)<CR>:set columns=115 lines=999<CR>:winc _<CR>:winc \|<CR>:help<Space>
 nmap <Leader>pp     :help<CR><Esc>:winc _<CR><Esc>:winc \|<CR><Esc>:help<Space>
 nmap <Leader>hg     :HelpGrep<CR>
@@ -286,7 +286,7 @@ endfunction
 
 " }}}
 " }}}
-" Navigation: shortcuts {{{
+" Navigation: shortcuts " {{{
 nmap <C-e>/ :call HeaderLocationIndex()<CR>
 nmap <C-e>? :call FunctionLocationIndex()<CR>
 nmap <C-e>d :silent! lclose<CR>
@@ -349,7 +349,7 @@ nmap <Up>       :<Up>
 nmap <Down>     :<Down>
 
 " }}}
-" Accordion Mode: accordion style horizontal split navigation mode {{{
+" Accordion Mode: accordion style horizontal split navigation mode " {{{
 " yes, kids, I know WTF I'm doing WRT <C-e>
 nmap <silent> <C-e>j <C-w>j:call AccordionMode()<CR><C-l>
 nmap <silent> <C-e>k <C-w>k:call AccordionMode()<CR><C-l>
@@ -363,7 +363,7 @@ function! AccordionMode()
 endfunction
 
 " }}}
-" Timestamps: {{{
+" Timestamps: " {{{
 let g:timestamp_default_annotation = ""
 let g:timestamp_matchstring = '[0-9]\{4}-[0-9]\{2}-[0-9]\{2} [0-9:]\{8} [A-Z]\{3}'
 let g:timestamp_annotated_matchstring = escape(g:timestamp_matchstring . '\s*\({\(\w\+\s*\)*}\)*', '\')
@@ -379,7 +379,7 @@ nmap <silent> <Leader>fw :call FoldWrap()<CR>
 nmap <silent> <Leader>fi :call FoldInsert()<CR>
 nmap <silent> <Leader>ll o<Esc>:call Timestamp("short") \| call FoldWrap()<CR>
 " }}}
-" Tabs: switching {{{
+" Tabs: switching " {{{
 " set Cmd-# and Alt-# to switch tabs
 for n in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
     let k = n == "0" ? "10" : n
@@ -1027,7 +1027,7 @@ augroup TaskStack
     au FileType *tst* nmap <buffer> <C-y>k :echo TaskstackMoveToProjectAutoDetect()<CR>
     au FileType *tst* nmap <buffer> <silent> <Tab> :call search("@.*\\\\|^[A-Z]\\+")<CR>
     au FileType *tst* nmap <buffer> <silent> <S-Tab> :call search("@.*\\\\|^[A-Z]\\+", 'b')<CR>
-    au FileType tst nmap <buffer> <silent> <CR> yiW/<C-r>"<CR>zzzv<C-l>
+    au FileType tst nmap <unique> <buffer> <silent> <CR> yiW/<C-r>"<CR>zzzv<C-l>
     " Use <C-c> to avoid adding or updating a timestamp after editing.
     au! InsertLeave *.tst.* :call AddOrUpdateTimestamp("") " FIXME: External Dependency
     au! FocusLost *.tst.* nested write
@@ -1222,9 +1222,9 @@ endfunction
 " Vimwiki: " {{{
 "" let wiki.nested_syntaxes = {'python': 'python'}
 augroup vimwiki
-    " au! BufReadPre *.wiki doau FileType txt
+    "au! BufReadPre *.wiki doau FileType txt
     au! BufReadPost,FileReadPost *.wiki doau FileType tst
-    au FileType vimwiki set syntax=txt.vimwiki
+    au FileType vimwiki set syntax=vimwiki.txt
     au FileType vimwiki map <buffer> <silent> <C-p> ?=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
     au FileType vimwiki map <buffer> <silent> <C-n> /=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
     au FileType *vimwiki* imap <buffer> <silent> >> <Esc>>>a
@@ -1356,6 +1356,29 @@ function! OpenRelatedSnippetFileInVsplit() " {{{
 endfunction
 
 " }}}
+
+" Shift Completed Items:
+function! ShiftCompletedItemsDown() range " {{{
+    let filterrange = range(a:lastline, a:firstline, -1)
+    let movelines = []
+    for line in filterrange
+        if FilterCompletedItem(line) == 0
+            call insert(movelines, line)
+        end
+    endfor
+    let i = 0
+    for line in movelines
+        exec "silent " . (line - i) . "m" . a:lastline | let i += 1
+    endfor
+endfunction
+
+" }}}
+function! FilterCompletedItem(line) " {{{
+    return match(getline(a:line), "^o \\|^x \\|.*\\[X] ")
+endfunction
+
+" }}}
+
 
 map <Leader><CR> 0"ty$:<C-r>t<CR>:echo "Executed: " . @t<CR>
 
