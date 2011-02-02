@@ -1,4 +1,4 @@
-" INFO: {{{
+" INFO: " {{{
 
 " Maintainer:
 "   Seth Milliken <seth_vim@araxia.net>
@@ -133,18 +133,16 @@ set history=10000                   " keep craploads of command history
 set undolevels=100                  " keep lots of undo history
 set foldlevelstart=999              " don't use a default fold level; all folds open by default
 set fdm=marker                      " make the default foldmethod markers
-" set foldcolumn=4                  " trying out fold indicator column
 set display+=lastline               " always show as much of the last line as possible
-"set display+=uhex                   " show unprintable hex characters as <xx>
 set guioptions+=c                   " always use console dialogs (faster)
 set noerrorbells                    " don't need to hear if i hit esc twice
 set visualbell | set t_vb=          " nor see it
+"set foldcolumn=4                    " trying out fold indicator column
+"set display+=uhex                   " show unprintable hex characters as <xx>
 
 let mapleader=" "                   " experiment with using <Space> as <Leader>
 
-if version > 702
-    set rnu
-    au BufReadPost * set rnu
+if version > 702 | set rnu | au BufReadPost * set rnu
 end " use relative line numbers
 if version > 702 | set clipboard=unnamed | end " use system clipboard; FIXME: what version is actually required?
 set wildignore+=*.o,*.sw?,*.git,*.svn,*.hg,**/build,*.?ib,*.png,*.jpg,*.jpeg,*.mov,*.gif,*.bom,*.azw,*.lpr,*.mbp,*.mode1v3,*.gz,*.vmwarevm,*.rtf,*.pkg,*.developerprofile,*.xcodeproj,*.pdf,*.dmg,*.db,*.otf,*.bz2,*.tiff,*.iso,*.jar,*.dat,**/Cache,*.cache,*.sqlite*,*.collection,*.qsindex,*.qsplugin,*.growlTicket,*.part,*.ics,*.ico,**/iPhone\ Simulator,*.lock*,*.webbookmark
@@ -258,7 +256,7 @@ nmap <Leader>_ Bi<em><Esc>ea</em>
 inoremap <C-p> <Esc>:set completeopt+=menuone<CR>a<C-n><C-p>
 
 " }}}
-" Help: help help help {{{
+" Help: help help help " {{{
 nmap <Leader>hw     :help<CR>:silent call AdjustFont(-4)<CR>:set columns=115 lines=999<CR>:winc _<CR>:winc \|<CR>:help<Space>
 nmap <Leader>pp     :help<CR><Esc>:winc _<CR><Esc>:winc \|<CR><Esc>:help<Space>
 nmap <Leader>hg     :HelpGrep<CR>
@@ -286,7 +284,7 @@ endfunction
 
 " }}}
 " }}}
-" Navigation: shortcuts {{{
+" Navigation: shortcuts " {{{
 nmap <C-e>/ :call HeaderLocationIndex()<CR>
 nmap <C-e>? :call FunctionLocationIndex()<CR>
 nmap <C-e>d :silent! lclose<CR>
@@ -349,7 +347,7 @@ nmap <Up>       :<Up>
 nmap <Down>     :<Down>
 
 " }}}
-" Accordion Mode: accordion style horizontal split navigation mode {{{
+" Accordion Mode: accordion style horizontal split navigation mode " {{{
 " yes, kids, I know WTF I'm doing WRT <C-e>
 nmap <silent> <C-e>j <C-w>j:call AccordionMode()<CR><C-l>
 nmap <silent> <C-e>k <C-w>k:call AccordionMode()<CR><C-l>
@@ -363,13 +361,14 @@ function! AccordionMode()
 endfunction
 
 " }}}
-" Timestamps: {{{
+" Timestamps: " {{{
 let g:timestamp_default_annotation = ""
 let g:timestamp_matchstring = '[0-9]\{4}-[0-9]\{2}-[0-9]\{2} [0-9:]\{8} [A-Z]\{3}'
 let g:timestamp_annotated_matchstring = escape(g:timestamp_matchstring . '\s*\({\(\w\+\s*\)*}\)*', '\')
 " Note: setting g:auto_timestamp_bypass will deactivate autotimestamp in contexts they would normally be active
 " yes, kids, I know WTF I'm doing WRT <C-y>
 nmap <silent> <C-y><C-u> :call TimestampAutoUpdateToggle()<CR>
+nmap <silent> <C-y>Y :call AddOrUpdateTimestamp("", "force")<CR>
 nmap <silent> <C-y><C-y> :call AddOrUpdateTimestamp("")<CR>
 nmap <silent> <C-y><C-t> :call AddOrUpdateTimestampSolicitingAnnotation()<CR>
 nmap <silent> <C-y><C-x> :call RemoveTimestamp()<CR>
@@ -379,7 +378,7 @@ nmap <silent> <Leader>fw :call FoldWrap()<CR>
 nmap <silent> <Leader>fi :call FoldInsert()<CR>
 nmap <silent> <Leader>ll o<Esc>:call Timestamp("short") \| call FoldWrap()<CR>
 " }}}
-" Tabs: switching {{{
+" Tabs: switching " {{{
 " set Cmd-# and Alt-# to switch tabs
 for n in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
     let k = n == "0" ? "10" : n
@@ -707,9 +706,14 @@ function! AddOrUpdateTimestampSolicitingAnnotation() "{{{
 endfunction
 
 "}}}
-function! AddOrUpdateTimestamp(annotation) "{{{
-    if !exists("g:auto_timestamp_bypass")
-        if IsTimestampUpdateOkay(getline(".")) > 0
+function! AddOrUpdateTimestamp(annotation,...) "{{{
+    if exists("a:1") && len(a:1) > 0
+        let forceupdate = 1
+    else
+        let forceupdate = 0
+    endif
+    if forceupdate || !exists("g:auto_timestamp_bypass")
+        if forceupdate || IsTimestampUpdateOkay(getline(".")) > 0
             let l:bufferdirty = &modified
             let l:origpos = getpos(".")
             let l:hasbasictimestamp = match(getline("."), TimestampPattern())
@@ -736,12 +740,18 @@ function! IsTimestampUpdateOkay(line) "{{{
     elseif match(a:line, FoldMarkerOpen()) > 0
         echo "No autotimestamp: line already has open foldmarker."
         return 0
+    elseif match(a:line, "^@") > -1
+        echo "No autotimestamp: project fold"
+        return 0
     elseif match(a:line, FoldMarkerClose()) > 0
         echo "No autotimestamp: line already has close foldmarker."
         return 0
     elseif match(a:line, "^x\\s\\|^o\\s\\|\\sx\\s\\|\\so\\s") > -1
         echo "No autotimestamp: line contains completed marker."
         return 
+    elseif len(Strip(CommentStringOpen())) > 0 && match(a:line, "^" . CommentStringOpen()) > -1
+        echo "No autotimestamp: commented line"
+        return 0
     else
         return 1
     end
@@ -1027,7 +1037,7 @@ augroup TaskStack
     au FileType *tst* nmap <buffer> <C-y>k :echo TaskstackMoveToProjectAutoDetect()<CR>
     au FileType *tst* nmap <buffer> <silent> <Tab> :call search("@.*\\\\|^[A-Z]\\+")<CR>
     au FileType *tst* nmap <buffer> <silent> <S-Tab> :call search("@.*\\\\|^[A-Z]\\+", 'b')<CR>
-    au FileType tst nmap <buffer> <silent> <CR> yiW/<C-r>"<CR>zzzv<C-l>
+    au FileType tst nmap <unique> <buffer> <silent> <CR> yiW/<C-r>"<CR>zzzv<C-l>
     " Use <C-c> to avoid adding or updating a timestamp after editing.
     au! InsertLeave *.tst.* :call AddOrUpdateTimestamp("") " FIXME: External Dependency
     au! FocusLost *.tst.* nested write
@@ -1219,30 +1229,58 @@ function! UpdateSnippetsForBuffer()
 endfunction
 
 " }}}
+" Todo Lists: " {{{
+augroup todolist
+    au! BufReadPost,FileReadPost *todo* doau FileType tst
+    au BufReadPost,FileReadPost *todo* set syntax+=.txt
+    au BufReadPost,FileReadPost *todo* map <buffer> <silent> <C-p> ?=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
+    au BufReadPost,FileReadPost *tod* map <buffer> <silent> <C-n> /=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
+augroup END
+
+" }}}
 " Vimwiki: " {{{
-"" let wiki.nested_syntaxes = {'python': 'python'}
+" Autocmds: " {{{
 augroup vimwiki
-    " au! BufReadPre *.wiki doau FileType txt
+    "au! BufReadPre *.wiki doau FileType txt
     au! BufReadPost,FileReadPost *.wiki doau FileType tst
-    au FileType vimwiki set syntax=txt.vimwiki
+    au FileType vimwiki set syntax=vimwiki.txt
     au FileType vimwiki map <buffer> <silent> <C-p> ?=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
     au FileType vimwiki map <buffer> <silent> <C-n> /=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
-    au FileType *vimwiki* imap <buffer> <silent> >> <Esc>>>a
-    au FileType *vimwiki* imap <buffer> <silent> << <Esc><<a
     au FileType *vimwiki* nmap <buffer> <silent> <CR> :call VimwikiFollowLinkMod()<CR>
     au FileType vimwiki nested map <buffer> <silent> <Leader>w2 <Esc>:w<CR>:VimwikiAll2HTML<CR><Esc>:echo "Saved wiki to HTML."<CR>
 augroup END
+
+" }}}
+" Configuration: " {{{
+"" let wiki.nested_syntaxes = {'python': 'python'}
 let g:vimwiki_hl_headers = 1                " hilight header colors
 let g:vimwiki_hl_cb_checked = 1             " hilight todo item colors
 let g:vimwiki_list_ignore_newline = 0       " convert newlines to <br /> in list
 let g:vimwiki_folding = 1                   " outline folding
 let g:vimwiki_table_auto_fmt = 0            " don't use and conflicts with snipMate
 let g:vimwiki_fold_lists = 1                " folding of list subitems
-let g:vimwiki_list = [{'path': '~/sandbox/personal/vimwiki/', 'index': 'PersonalWiki', 'html_header': '~/sandbox/personal/vimwiki/header.tpl'}, {'path': '~/sandbox/public/wiki', 'index': 'SethMilliken', 'auto_export': 1}, {'path': '~/sandbox/work/wiki/', 'index': 'SethMilliken', 'html_header': '~/sandbox/work/wiki/header.tpl', 'auto_export': 1}]
-function! VimwikiExpandedPageName()
+let g:vimwiki_list = [
+             \{'path': '~/sandbox/personal/vimwiki/',
+                \'index': 'PersonalWiki',
+                \'html_header': '~/sandbox/personal/vimwiki/header.tpl',
+                \},
+            \{'path': '~/sandbox/public/wiki',
+                \'index': 'SethMilliken',
+                \'auto_export': 1,
+                \},
+            \{'path': '~/sandbox/work/wiki/',
+                \'index': 'SethMilliken',
+                \'html_header': '~/sandbox/work/wiki/header.tpl',
+                \'auto_export': 1,
+                \},
+                \]
+" }}}
+function! VimwikiExpandedPageName() " {{{
     return substitute(substitute(expand('%:t'), "[a-z]\\zs\\([A-Z]\\)", " \\1", "g"), "\\..*", "", "")
 endfunction
-function! VimwikiFollowLinkMod()
+
+" }}}
+function! VimwikiFollowLinkMod() " {{{
     if GetLetterAtCurrentPosition() == " "
         normal B
     end
@@ -1254,7 +1292,8 @@ function! VimwikiFollowLinkMod()
     endif
 endfunction
 
-function! GetLetterAtCurrentPosition()
+" }}}
+function! GetLetterAtCurrentPosition() " {{{
     let l:position = getpos(".")
     let l:column = get(l:position, 2)
     let l:letter = strpart(getline("."), l:column - 1, 1)
@@ -1262,15 +1301,18 @@ function! GetLetterAtCurrentPosition()
 endfunction
 
 " }}}
+
+" }}}
 " Xptemplate: " {{{
 let g:xptemplate_brace_complete = 0
 
 " }}}
-
+" VimSheet: " {{{
 augroup VimSheet
     au! BufRead /tmp/*.vim nmap <buffer> <CR> yyq:p<CR>
 augroup END
 
+" }}}
 " TOhtml: " {{{
 let html_dynamic_folds = 1
 let html_use_css = 1
@@ -1281,11 +1323,7 @@ let use_xhtml = 1
 let html_no_pre = 1
 
 " }}}
-" Miscellanous Filetype Settings: " {{{
-
-" }}}
-
-" Command-T: " {{{
+" CommandT: " {{{
 " See .gvimrc for map
 let g:CommandTMatchWindowAtTop=1
 " let g:CommandTSelectNextMap = ['<C-n>', '<C-j>', 'j']
@@ -1300,8 +1338,6 @@ function! DoMaintenance()
     " save all sessions
     " hg addremove and ci ~/.vim/sessions/*
 endfunction
-
-" }}}
 
 " }}}
 " Janrain:  " {{{
@@ -1333,6 +1369,8 @@ endfunction "}}}
 set foldtext=CleanFoldText()
 
 " }}}
+
+" }}}
 " EXPERIMENTAL: " {{{
 
 function! SnippetFilesForCurrentBuffer(A,L,P) " {{{
@@ -1347,15 +1385,38 @@ function! SnippetFilesForCurrentBuffer(A,L,P) " {{{
 endfunction
 
 " }}}
-map <Leader>so :call OpenRelatedSnippetFileInVsplit()<CR>
+map <Leader>sv :call OpenRelatedSnippetFileInVsplit()<CR>
 function! OpenRelatedSnippetFileInVsplit() " {{{
-    let snippetfile = input("Which related snippet file do you wish to edit, sir? ", "", "custom,SnippetFilesForCurrentBuffer")
+    let snippetfile = input("Edit which related sunippet file? ", "", "custom,SnippetFilesForCurrentBuffer")
     if filereadable(snippetfile) == 1
         exe ":vsplit " . snippetfile
     endif
 endfunction
 
 " }}}
+
+" Shift Completed Items:
+function! SweepComplete() range " {{{
+    let filterrange = range(a:lastline, a:firstline, -1)
+    let movelines = []
+    for line in filterrange
+        if FilterCompletedItem(line) == 0
+            call insert(movelines, line)
+        end
+    endfor
+    let i = 0
+    for line in movelines
+        exec "silent " . (line - i) . "m" . a:lastline | let i += 1
+    endfor
+endfunction
+
+" }}}
+function! FilterCompletedItem(line) " {{{
+    return match(getline(a:line), "^o \\|^x \\|.*\\[X] ")
+endfunction
+
+" }}}
+
 
 map <Leader><CR> 0"ty$:<C-r>t<CR>:echo "Executed: " . @t<CR>
 

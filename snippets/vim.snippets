@@ -53,3 +53,20 @@ snippet method A vimscript OOP prototype-based object method
 	function! s:${1}.${2:functionName}(${3:argument}) " {{{
 		${4:your code here}
 	endfunction " }}}
+
+snippet sfu Object public function
+	fu ${1:objectname}.${2:functionname}() dict " {{{
+	    $3
+	endfu
+	" }}}
+snippet sfp Object private function
+	fu ${1:objectname}._${2:functionname}() dict " {{{
+	    $3
+	endfu
+	" }}}
+snippet s_
+	self._${1:private_function}()
+snippet s.
+	self.${1:function}()
+snippet s[
+	self['${1:function}']
