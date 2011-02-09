@@ -1,8 +1,8 @@
-" Commands {{{
+" Commands " {{{
 python << END
 """
 " }}}
-" Settings {{{
+" Settings " {{{
 let twitvim_api_root = "https://api.twitter.com/1"
 let twitvim_enable_python = 1
 let twitvim_count = 25
@@ -15,12 +15,15 @@ SearchTwitter stevelosh
 SearchTwitter b4winckler
 SearchTwitter #rails
 UserTwitter SethMilliken
-ListTwitter barista
+ListTwitter ruby
 VimSearch
 SearchTwitter #pentadactyl
 SearchTwitter #MacVim
 SearchTwitter #aspergers
-SearchTwitter gniemeyer
+SearchTwitter @despo
+SearchTwitter blzysh
+SearchTwitter morticed
+SearchTwitter bavarious
 NextSearchPage
 
 ProfileTwitter SethMilliken
@@ -30,41 +33,24 @@ FollowTwitter b4winckler
 FollowingTwitter
 FollowersTwitter
 
-
 " url shortners
 Trim
 BitLy
 
-" New Tweet Buffer
-new | set bt=nofile | wincmd J | 2wincmd _ | set colorcolumn=140 | map <buffer> <CR> :BPosttoTwitter
+" <D-j>t New Tweet Buffer
 
-" Set Up This Window
-so % | 5wincmd
-PosttoTwitter
-" CPosttoTwitter
-" BPosttoTwitter
-
-" Keybindings {{{
-" long version of url
-" \e
-" profile info
-" \p
-" timeline of user
-" \g
-" delete tweet
-" \X
-" add tweet to favorites
-" \f
-" remove tweet from favorites
-" \<C-f>
-" previous timeline
-" <C-o>
-" next timeline
-" <C-i>
-" refresh timeline
-" \\
+" Keybindings " {{{
+" \e  long version of url
+" \p  profile info
+" \g timeline of user
+" \X delete tweet
+" \f add tweet to favorites
+" \<C-f>  remove tweet from favorites
+" \<C-o>  previous timeline
+" \ <C-i>  next timeline
+" \\  refresh timeline
 " }}}
-" Command Listing {{{
+" Command Listing " {{{
 RateLimitTwitter
 SendDMTwitter
 UserTwitter
@@ -108,16 +94,22 @@ ReportSpamTwitter
 AddToListTwitter
 RemoveFromListTwitter
 " }}}
-" End Commands {{{
+" End Commands " {{{
 """
 END
 " }}}
-" TwitVim Commands {{{
-map <buffer> <CR> yyq:p<CR> \| :wincmd h<CR>
-map <buffer> <D-j>t :wincmd h \| :call NextSearchPage() \| :wincmd h<CR>
-map <buffer> <D-j>v :wincmd h \| :call TwitVimVimSearch() \| :wincmd h<CR>
+" TwitVim Commands " {{{
+map <buffer> <silent> <CR> yyq:p<CR> \| :wincmd h<CR>
+map <buffer> <silent> <D-j>n :wincmd h \| :call NextSearchPage() \| :wincmd h<CR>
+map <buffer> <silent> <D-j>v :wincmd h \| :call TwitVimVimSearch() \| :wincmd h<CR>
+map <buffer> <silent> <D-j>t <Plug>NewTweet
+map <buffer> <silent> <D-j>j :40wincmd <bar><CR>
+noremap <script> <Plug>NewTweet :call <SID>NewTweet()<CR>
 command! NextSearchPage :call s:NextSearchPage()
 command! VimSearch :call s:TwitVimVimSearch()
+function! s:NewTweet()
+    new | set bt=nofile | wincmd J | 1wincmd _ | set colorcolumn=140 | map <buffer> <CR> :BPosttoTwitter
+endfunction
 function! s:TwitterSetup()
     let twitvim_count = 200
 endfunction
@@ -133,15 +125,19 @@ function! s:NextSearchPage()
 endfunction
 function! s:VimSearchCleanup()
     wincmd l | set modifiable
-    silent exec "2,$g/" . s:BlackList() . "/d"
-    " silent %s/^\(.\{-}:\)\([^|]*\)|\(.\{-}\)/\=printf("%20s %s\r%125s", submatch(1), submatch(2), "|" . submatch(3))/e
-    normal gg
+    if match(expand("%:p:t"), "Twitter_") > -1
+        silent exec "2,$g/" . s:BlackList() . "/d"
+        " silent %s/^\(.\{-}:\)\([^|]*\)|\(.\{-}\)/\=printf("%20s %s\r%125s", submatch(1), submatch(2), "|" . submatch(3))/e
+        normal gg
+    endif
 endfunction
 function! s:BlackList()
    let l =     [
-               \ "bar",
-               \ "baz",
+               \ "#JMG",
+               \ "vimradio",
+               \ "#TFB",
                \ "#teamfollowback",
+               \ "★",
                \ "☆",
                \ "#follow",
                \ "#Follow",
@@ -150,6 +146,7 @@ function! s:BlackList()
                \ "NERDYCHiiCK",
                \ "NeRdYChiiCk",
                \ "#TeamFollowBack",
+               \ "#TEAMFOLLOWBACK",
                \ "NiCCiisNeechee",
                \ "VERSATHEISSUE",
                \ "#ff",
