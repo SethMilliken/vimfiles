@@ -1,4 +1,6 @@
 " INFO: " {{{
+let g:session_autoload = 1
+let g:session_autosave = 1
 
 " Maintainer:
 "   Seth Milliken <seth_vim@araxia.net>
@@ -128,10 +130,10 @@ set diffopt+=vertical               " use vertical splits for diff
 set splitright                      " open vertical splits to the right
 set splitbelow                      " open horizonal splits below
 set winminheight=0                  " minimized horizontal splits show only statusline
-set switchbuf=useopen,usetab        " when switching to a buffer, go to where it's already open
+set switchbuf=useopen               " when switching to a buffer, go to where it's already open
 set history=10000                   " keep craploads of command history
-set undolevels=100                  " keep lots of undo history
-set foldlevelstart=999              " don't use a default fold level; all folds open by default
+set undolevels=500                  " keep lots of undo history
+" set foldlevelstart=999              " don't use a default fold level; all folds open by default
 set fdm=marker                      " make the default foldmethod markers
 set display+=lastline               " always show as much of the last line as possible
 set guioptions+=c                   " always use console dialogs (faster)
@@ -183,6 +185,12 @@ map Y y$
 " Undoable deletes in insert
 inoremap <C-w> <C-g>u<C-w>
 inoremap <C-u> <C-g>u<C-w>
+
+" lcd to file's container
+nmap <C-e>c :exec ":lcd " . expand("%:p:h")<CR>
+
+" tmux copy/paste issue in mac os x workaround
+nmap <C-x>p :call system("ssh localhost pbcopy", getreg('"'))<CR>
 
 " }}}
 " Reset: restore some default settings and redraw " {{{
@@ -682,24 +690,22 @@ endfunction
 "}}}
 function! AddOrUpdateTimestampSolicitingAnnotation() "{{{
     if !exists("g:auto_timestamp_bypass")
-        if IsTimestampUpdateOkay(getline(".")) > 0
-            let l:default_prompt = g:timestamp_default_annotation
-            let l:matchstring = g:timestamp_matchstring . '\zs\ze\s*\({\zs\(\w\+\s*\)*\ze}\)*$'
-            let l:originalannotations = matchstr(getline("."), l:matchstring)
+        let l:default_prompt = g:timestamp_default_annotation
+        let l:matchstring = g:timestamp_matchstring . '\zs\ze\s*\({\zs\(\w\+\s*\)*\ze}\)*$'
+        let l:originalannotations = matchstr(getline("."), l:matchstring)
+        if len(l:originalannotations) > 0
+            let l:default_prompt = l:originalannotations
+        end
+        let l:annotation = input("Annotation: ", Strip(l:default_prompt))
+        if len(l:annotation) > 0
+            call AddOrUpdateTimestamp(Strip(l:annotation), "force")
+        else
             if len(l:originalannotations) > 0
-                let l:default_prompt = l:originalannotations
-            end
-            let l:annotation = input("Annotation: ", Strip(l:default_prompt))
-            if len(l:annotation) > 0
-                call AddOrUpdateTimestamp(Strip(l:annotation))
+                silent! call RemoveTimestamp()
+                silent! call AddOrUpdateTimestamp("", "force")
+                echo "Annotations removed."
             else
-                if len(l:originalannotations) > 0
-                    silent! call RemoveTimestamp()
-                    silent! call AddOrUpdateTimestamp("")
-                    echo "Annotations removed."
-                else
-                    echo "Annotation aborted."
-                end
+                echo "Annotation aborted."
             end
         end
     end
@@ -999,12 +1005,16 @@ augroup END
 " Debug:  " {{{
 if &verbose > 0
     echo "Using Debug Mode..."
-    if exists("#vimwiki")
-        au! vimwiki
-    endif
-    if exists("#TaskStack")
-        au! TaskStack
-    end
+    let augroups = [
+                \ "vimwiki",
+                \ "TaskStack",
+                \]
+    for each in augroups
+        let symbol = "#" . each
+        if exists(symbol)
+            exec "au! " . each
+        endif
+    endfor
 endif
 
 " }}}
@@ -1037,7 +1047,7 @@ augroup TaskStack
     au FileType *tst* nmap <buffer> <C-y>k :echo TaskstackMoveToProjectAutoDetect()<CR>
     au FileType *tst* nmap <buffer> <silent> <Tab> :call search("@.*\\\\|^[A-Z]\\+")<CR>
     au FileType *tst* nmap <buffer> <silent> <S-Tab> :call search("@.*\\\\|^[A-Z]\\+", 'b')<CR>
-    au FileType tst nmap <unique> <buffer> <silent> <CR> yiW/<C-r>"<CR>zzzv<C-l>
+    au FileType *tst* if !mapcheck('<CR>', 'n') == "" | nmap <unique> <buffer> <silent> <CR> yiW/<C-r>"<CR>zzzv<C-l> | end
     " Use <C-c> to avoid adding or updating a timestamp after editing.
     au! InsertLeave *.tst.* :call AddOrUpdateTimestamp("") " FIXME: External Dependency
     au! FocusLost *.tst.* nested write
@@ -1045,8 +1055,8 @@ augroup END
 
 "}}}
 " Scratch: " {{{
-let g:volatile_scratch_columns = 90
-let g:volatile_scratch_lines = 20
+let g:volatile_scratch_columns = 100
+let g:volatile_scratch_lines = 40
 
 function! EmailAddressList(ArgLead, CmdLine, CursorPos)
         return system("~/bin/addresses")
@@ -1062,7 +1072,7 @@ function! SmallWindow()
     setlocal guioptions-=L
     setlocal guioptions-=r
     setlocal foldcolumn=0
-    setlocal guifont=Inconsolata:h9
+    setlocal guifont=Inconsolata:h11
     exec "set columns=" . g:volatile_scratch_columns . " lines=" . g:volatile_scratch_lines
     call SetColorColumnBorder()
     if exists('g:gundo_target_n')
@@ -1078,14 +1088,15 @@ endfunction
 function! ScratchCopy()
     if &modified == 1
         silent write
-        exec ":0,$y"
     endif
+    exec ":0,$y"
 endfunction
 
 function! ScratchPaste()
-    if &modified != 1
-        normal ggVGpG$
+    if &modified == 1
+        silent write
     endif
+    normal ggVGpG$
 endfunction
 
 command! -nargs=* -complete=custom,EmailAddressList To call EmitEmailAddress("To: ", <f-args>)
@@ -1103,7 +1114,7 @@ augroup VolatileScratch
     au BufRead *.scratch vmap <buffer> <silent> ZZ <Esc>ZZ
     " au! FocusGained *.scratch normal ggVGpG$
     au! FocusLost *.scratch call ScratchCopy()
-    " au! FocusGained *.scratch call ScratchPaste()
+    au! FocusGained *.scratch call ScratchPaste()
     au! VimResized *.scratch call SetColorColumnBorder() | :normal zz
 augroup END
 
@@ -1231,10 +1242,10 @@ endfunction
 " }}}
 " Todo Lists: " {{{
 augroup todolist
-    au! BufReadPost,FileReadPost *todo* doau FileType tst
-    au BufReadPost,FileReadPost *todo* set syntax+=.txt
-    au BufReadPost,FileReadPost *todo* map <buffer> <silent> <C-p> ?=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
-    au BufReadPost,FileReadPost *tod* map <buffer> <silent> <C-n> /=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
+    au! BufReadPost,FileReadPost *todo*,*list* doau FileType tst
+    au BufReadPost,FileReadPost *todo*,*list* set syntax+=.txt
+    au BufReadPost,FileReadPost *todo*,*list* map <buffer> <silent> <C-p> ?=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
+    au BufReadPost,FileReadPost *todo*,*list* map <buffer> <silent> <C-n> /=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
 augroup END
 
 " }}}
@@ -1259,6 +1270,8 @@ let g:vimwiki_list_ignore_newline = 0       " convert newlines to <br /> in list
 let g:vimwiki_folding = 1                   " outline folding
 let g:vimwiki_table_auto_fmt = 0            " don't use and conflicts with snipMate
 let g:vimwiki_fold_lists = 1                " folding of list subitems
+let g:vimwiki_file_exts = 'pdf,txt,doc,rtf,xls,php,zip,rar,7z,html,gz,vim'
+let g:vimwiki_valid_html_tags='b,i,s,u,sub,sup,kbd,br,hr,font,a,div,span'
 let g:vimwiki_list = [
              \{'path': '~/sandbox/personal/vimwiki/',
                 \'index': 'PersonalWiki',
@@ -1367,7 +1380,6 @@ function! CleanFoldText() "{{{
     return decoratedline
 endfunction "}}}
 set foldtext=CleanFoldText()
-
 " }}}
 
 " }}}
