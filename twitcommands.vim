@@ -11,14 +11,15 @@ let twitvim_count = 200
 " }}}
 
 FriendsTwitter
+VimSearch
+SearchTwitter #MacVim
+SearchTwitter mikelikesbikes
 SearchTwitter stevelosh
 SearchTwitter b4winckler
 SearchTwitter #rails
 UserTwitter SethMilliken
 ListTwitter ruby
-VimSearch
 SearchTwitter #pentadactyl
-SearchTwitter #MacVim
 SearchTwitter #aspergers
 SearchTwitter @despo
 SearchTwitter blzysh
@@ -152,6 +153,7 @@ function! s:BlackList()
                \ "#ff",
                \ "CouchMoneySweet",
                \ "BlakMuzick",
+               \ "#VIM",
                \ ]
    return join(l, "\\\|")
 endfunction
