@@ -1270,7 +1270,7 @@ let g:vimwiki_list_ignore_newline = 0       " convert newlines to <br /> in list
 let g:vimwiki_folding = 1                   " outline folding
 let g:vimwiki_table_auto_fmt = 0            " don't use and conflicts with snipMate
 let g:vimwiki_fold_lists = 1                " folding of list subitems
-let g:vimwiki_file_exts = 'pdf,txt,doc,rtf,xls,php,zip,rar,7z,html,gz,vim'
+let g:vimwiki_file_exts = 'pdf,txt,doc,rtf,xls,php,zip,rar,7z,html,gz,vim,screen'
 let g:vimwiki_valid_html_tags='b,i,s,u,sub,sup,kbd,br,hr,font,a,div,span'
 let g:vimwiki_list = [
              \{'path': '~/sandbox/personal/vimwiki/',
@@ -1429,6 +1429,11 @@ endfunction
 
 " }}}
 
+" Raimondi's stagnant mailapp plugin " {{{
+let g:MailApp_bundle = '~/.vim/bundle/MailApp/MailApp.bundle/'
+let g:MailAppl_from = 'Seth Milliken <seth@araxia.net>'
+
+" }}}
 
 map <Leader><CR> 0"ty$:<C-r>t<CR>:echo "Executed: " . @t<CR>
 
