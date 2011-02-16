@@ -142,7 +142,8 @@ set visualbell | set t_vb=          " nor see it
 "set foldcolumn=4                    " trying out fold indicator column
 "set display+=uhex                   " show unprintable hex characters as <xx>
 
-let mapleader=" "                   " experiment with using <Space> as <Leader>
+"let mapleader=" "                  " experiment with using <Space> as <Leader>.
+let mapleader="\\"                     " experiment with using <Space> as <Leader>. Nah. Stick with \
 
 if version > 702 | set rnu | au BufReadPost * set rnu
 end " use relative line numbers
