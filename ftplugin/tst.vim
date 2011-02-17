@@ -19,8 +19,30 @@ let s:completed_node_name = "COMPLETED"
 let s:dates_node_name = "DATES"
 let s:notes_node_name = "SCRATCH"
 
-let s:aborted_prefix = "x"
-let s:completed_prefix = "o"
+au FileType *tst* map <buffer> <Space> <Plug>ToggleLine
+au FileType *tst* map <buffer> Nc <Plug>CompleteLine
+au FileType *tst* map <buffer> Na <Plug>AbandonLine
+
+noremap <script> <Plug>AbandonLine <SID>AbandonLine
+noremap <SID>AbandonLine :call <SID>AbandonLine()<CR>
+function! s:AbandonLine()
+    if !exists("s:statusabandoned") | let s:statusabandoned = NewStatusToggler("x") | end
+    call s:statusabandoned.toggle()
+endfunction
+
+noremap <script> <Plug>CompleteLine <SID>CompleteLine
+noremap <SID>CompleteLine :call <SID>CompleteLine()<CR>
+function! s:CompleteLine()
+    if !exists("s:statuscomplete") | let s:statuscomplete = NewStatusToggler("o") | end
+    call s:statuscomplete.toggle()
+endfunction
+
+noremap <script> <Plug>ToggleLine <SID>ToggleLine
+noremap <SID>ToggleLine :call <SID>ToggleLine()<CR>
+function! s:ToggleLine()
+    if !exists("s:statustoggle") | let s:statustoggle = NewStatusToggler("-","o","x") | end
+    call s:statustoggle.toggle()
+endfunction
 
 "}}}
 " SYNTAX: " {{{

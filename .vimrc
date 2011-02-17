@@ -262,7 +262,7 @@ nmap <Leader>_ Bi<em><Esc>ea</em>
 
 " }}}
 " Completion: show completion preview, without actually completing " {{{
-inoremap <C-p> <Esc>:set completeopt+=menuone<CR>a<C-n><C-p>
+inoremap <C-p> <C-o>:set completeopt+=menuone<CR>a<C-n><C-p>
 
 " }}}
 " Help: help help help " {{{
