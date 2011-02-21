@@ -30,7 +30,7 @@ function! s:DefaultSettings.New()
     function! this.setMappings()
     endfunction
     function! this.finished()
-        echo self.os . " configured."
+        " echo self.os . " configured."
     endfunction
     return copy(this)
 endfunction
