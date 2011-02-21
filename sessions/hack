@@ -607,21 +607,23 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +6 ~/sandbox/work/vm/rpx/ruby/rails/app/views/site/xd_file.rhtml
+badd +13 ~/sandbox/work/vm/rpx/ruby/rails/app/views/site/xd_file.rhtml
 badd +18 ~/sandbox/work/vm/rpx/ruby/rails/app/views/js/lib_xdcomm.erb
-badd +5 ~/sandbox/work/vm/rpx/ruby/rails/app/controllers/twitter_controller.rb
 badd +1 ~/sandbox/work/vm/rpx/ruby/rails/app/helpers/application_helper.rb
-badd +1 ~/sandbox/work/vm/rpx/ruby/rails/config/environments/development.rb
+badd +128 ~/sandbox/work/vm/rpx/ruby/rails/config/environments/development.rb
 badd +35 ~/sandbox/work/vm/rpx/ruby/rails/lib/provider_information.rb
 badd +980 ~/sandbox/work/vm/rpx/ruby/rails/app/views/js/auth.erb
 badd +381 ~/sandbox/work/vm/rpx/ruby/rails/app/views/js/lib_rpx.erb
 badd +454 ~/sandbox/work/vm/rpx/dumb-rpx-test/app/views/rpxtest/api.rhtml
 badd +37 ~/sandbox/work/vm/rpx/ruby/rails/app/views/js/_hidden_iframe.erb
 badd +39 ~/sandbox/work/vm/rpx/ruby/rails/app/views/_rpx_js.rhtml
+badd +863 ~/sandbox/work/vm/rpx/ruby/rails/app/controllers/application.rb
+badd +58 ~/sandbox/work/vm/rpx/ruby/rails/config/environment.rb
+badd +0 ~/sandbox/work/vm/rpx/ruby/rails/app/views/js/_auth.erb
 silent! argdel *
 set lines=66 columns=235
 winpos 0 1178
-buffer ~/sandbox/work/vm/rpx/ruby/rails/app/views/site/xd_file.rhtml
+buffer ~/sandbox/work/vm/rpx/ruby/rails/app/views/js/_auth.erb
 set splitbelow splitright
 wincmd _ | wincmd |
 vsplit
@@ -636,9 +638,9 @@ wincmd w
 wincmd w
 wincmd t
 set winheight=1 winwidth=1
-exe '1resize ' . ((&lines * 31 + 33) / 66)
+exe '1resize ' . ((&lines * 63 + 33) / 66)
 exe 'vert 1resize ' . ((&columns * 78 + 117) / 235)
-exe '2resize ' . ((&lines * 32 + 33) / 66)
+exe '2resize ' . ((&lines * 0 + 33) / 66)
 exe 'vert 2resize ' . ((&columns * 78 + 117) / 235)
 exe 'vert 3resize ' . ((&columns * 78 + 117) / 235)
 exe 'vert 4resize ' . ((&columns * 77 + 117) / 235)
@@ -654,7 +656,6 @@ nnoremap <buffer> <silent> g :exe        "stjump =RubyCursorIdentifier()
 nnoremap <buffer> <silent>  :exe v:count1."stag =RubyCursorIdentifier()"
 nnoremap <buffer> <silent> ] :exe v:count1."stag =RubyCursorIdentifier()"
 nnoremap <buffer> <silent>  :exe  v:count1."tag =RubyCursorIdentifier()"
-nnoremap <buffer> <silent> ;# :ColorSelect
 nnoremap <buffer> <silent> ;tA :call HTMLgenerateTable()
 nnoremap <buffer> <silent> ;s4 :call append(0, '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"') | call append(1, ' "http://www.w3.org/TR/html4/strict.dtd">')
 nnoremap <buffer> <silent> ;4 :call append(0, '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"') | call append(1, ' "http://www.w3.org/TR/html4/loose.dtd">')
@@ -824,7 +825,6 @@ inoremap <buffer> <silent> &tm &trade;
 inoremap <buffer> <silent> &rO &reg;
 inoremap <buffer> <silent> &cO &copy;
 inoremap <buffer> <silent> && &amp;
-inoremap <buffer> <silent> ;# :ColorSelect
 inoremap <buffer> <silent> ;  &nbsp;
 inoremap <buffer> <silent> ;la <LABEL FOR=""></LABEL>F"
 inoremap <buffer> <silent> ;re <INPUT TYPE="RESET" VALUE="Reset">
@@ -953,7 +953,7 @@ setlocal commentstring=<%#%s%>
 setlocal complete=.,w,b,u,t,i
 setlocal concealcursor=
 setlocal conceallevel=0
-setlocal completefunc=syntaxcomplete#Complete
+setlocal completefunc=vimcomplete#Complete
 setlocal nocopyindent
 setlocal cryptmethod=
 setlocal nocursorbind
@@ -976,7 +976,7 @@ setlocal foldignore=#
 setlocal foldlevel=999
 setlocal foldmarker={{{,}}}
 set foldmethod=syntax
-setlocal foldmethod=marker
+setlocal foldmethod=syntax
 setlocal foldminlines=1
 setlocal foldnestmax=20
 set foldtext=CleanFoldText()
@@ -1009,7 +1009,7 @@ set number
 setlocal nonumber
 setlocal numberwidth=4
 setlocal omnifunc=rubycomplete#Complete
-setlocal path=.,~/sandbox/work/vm/rpx/ruby/rails,~/sandbox/work/vm/rpx/ruby/rails/app,~/sandbox/work/vm/rpx/ruby/rails/app/models,~/sandbox/work/vm/rpx/ruby/rails/app/controllers,~/sandbox/work/vm/rpx/ruby/rails/app/helpers,~/sandbox/work/vm/rpx/ruby/rails/config,~/sandbox/work/vm/rpx/ruby/rails/lib,~/sandbox/work/vm/rpx/ruby/rails/app/views,~/sandbox/work/vm/rpx/ruby/rails/app/views/site,~/sandbox/work/vm/rpx/ruby/rails/public,~/sandbox/work/vm/rpx/ruby/rails/test,~/sandbox/work/vm/rpx/ruby/rails/test/unit,~/sandbox/work/vm/rpx/ruby/rails/test/functional,~/sandbox/work/vm/rpx/ruby/rails/test/integration,~/sandbox/work/vm/rpx/ruby/rails/app/*,~/sandbox/work/vm/rpx/ruby/rails/vendor,~/sandbox/work/vm/rpx/ruby/rails/vendor/plugins/*/lib,~/sandbox/work/vm/rpx/ruby/rails/vendor/plugins/*/test,~/sandbox/work/vm/rpx/ruby/rails/vendor/rails/*/lib,~/sandbox/work/vm/rpx/ruby/rails/vendor/rails/*/test,~/.rvm/rubies/ruby-1.8.7-p330/lib/ruby/site_ruby/1.8,~/.rvm/rubies/ruby-1.8.7-p330/lib/ruby/site_ruby/1.8/i686-darwin10.5.0,~/.rvm/r
+setlocal path=.,~/sandbox/work/vm/rpx/ruby/rails,~/sandbox/work/vm/rpx/ruby/rails/app,~/sandbox/work/vm/rpx/ruby/rails/app/models,~/sandbox/work/vm/rpx/ruby/rails/app/controllers,~/sandbox/work/vm/rpx/ruby/rails/app/helpers,~/sandbox/work/vm/rpx/ruby/rails/config,~/sandbox/work/vm/rpx/ruby/rails/lib,~/sandbox/work/vm/rpx/ruby/rails/app/views,~/sandbox/work/vm/rpx/ruby/rails/app/views/js,~/sandbox/work/vm/rpx/ruby/rails/public,~/sandbox/work/vm/rpx/ruby/rails/test,~/sandbox/work/vm/rpx/ruby/rails/test/unit,~/sandbox/work/vm/rpx/ruby/rails/test/functional,~/sandbox/work/vm/rpx/ruby/rails/test/integration,~/sandbox/work/vm/rpx/ruby/rails/app/*,~/sandbox/work/vm/rpx/ruby/rails/vendor,~/sandbox/work/vm/rpx/ruby/rails/vendor/plugins/*/lib,~/sandbox/work/vm/rpx/ruby/rails/vendor/plugins/*/test,~/sandbox/work/vm/rpx/ruby/rails/vendor/rails/*/lib,~/sandbox/work/vm/rpx/ruby/rails/vendor/rails/*/test,~/.rvm/rubies/ruby-1.8.7-p330/lib/ruby/site_ruby/1.8,~/.rvm/rubies/ruby-1.8.7-p330/lib/ruby/site_ruby/1.8/i686-darwin10.5.0,~/.rvm/rub
 setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
@@ -1035,7 +1035,7 @@ if &syntax != 'eruby'
 setlocal syntax=eruby
 endif
 setlocal tabstop=8
-setlocal tags=~/sandbox/work/vm/rpx/ruby/rails/tmp/tags,./tags,tags,~/sandbox/personal/tags,~/.vim/bundle/vimple/plugin/vim/../../tags/vimbuiltins.tags,~/sandbox/work/vm/rpx/ruby/.git/tags,~/sandbox/work/vm/rpx/ruby/rails/tags
+setlocal tags=~/sandbox/work/vm/rpx/ruby/rails/tmp/tags,./tags,tags,~/sandbox/personal/tags,~/.vim/bundle/vimple/plugin/vim/../../tags/vimbuiltins.tags,~/sandbox/work/vm/rpx/ruby/.git/eruby.tags,~/sandbox/work/vm/rpx/ruby/.git/tags,~/sandbox/work/vm/rpx/ruby/rails/tags
 setlocal textwidth=0
 setlocal thesaurus=
 setlocal noundofile
@@ -1044,12 +1044,12 @@ setlocal winfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 13 - ((9 * winheight(0) + 15) / 31)
+let s:l = 48 - ((27 * winheight(0) + 31) / 63)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-13
-normal! 06l
+48
+normal! 029l
 wincmd w
 argglobal
 buffer ~/sandbox/work/vm/rpx/ruby/rails/app/views/site/xd_file.rhtml
@@ -1453,7 +1453,7 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 6 - ((5 * winheight(0) + 16) / 32)
+let s:l = 6 - ((0 * winheight(0) + 0) / 0)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -1860,7 +1860,7 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 655 - ((26 * winheight(0) + 32) / 64)
+let s:l = 655 - ((0 * winheight(0) + 32) / 64)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -2173,7 +2173,7 @@ setlocal cinoptions=
 setlocal cinwords=if,else,while,do,for,switch
 setlocal colorcolumn=
 setlocal comments=:#
-setlocal commentstring=<%#%s%>
+setlocal commentstring=#\ %s
 setlocal complete=.,w,b,u,t,i
 setlocal concealcursor=
 setlocal conceallevel=0
@@ -2190,8 +2190,8 @@ setlocal nodiff
 setlocal equalprg=
 setlocal errorformat=
 setlocal expandtab
-if &filetype != 'eruby'
-setlocal filetype=eruby
+if &filetype != 'ruby.javascript'
+setlocal filetype=ruby.javascript
 endif
 setlocal foldcolumn=0
 setlocal foldenable
@@ -2213,8 +2213,8 @@ setlocal iminsert=2
 setlocal imsearch=2
 setlocal include=^\\s*\\<\\(load\\|w*require\\)\\>
 setlocal includeexpr=RailsIncludeexpr()
-setlocal indentexpr=GetErubyIndent()
-setlocal indentkeys=o,O,*<Return>,<>>,{,},0),0],o,O,!^F,=end,=else,=elsif,=rescue,=ensure,=when
+setlocal indentexpr=GetRubyIndent()
+setlocal indentkeys=0{,0},0),0],!^F,o,O,e,=end,=elsif,=when,=ensure,=rescue,==begin,==end
 setlocal noinfercase
 setlocal iskeyword=@,48-57,_,192-255,-,$
 setlocal keywordprg=ri\ -T
@@ -2252,11 +2252,11 @@ setlocal spellcapcheck=off
 setlocal spellfile=
 setlocal spelllang=en
 setlocal statusline=%<(%n)\ %m%y%{rails#statusline()}%r\ %f\ %=%-14.(%l,%c%V%)\ %P
-setlocal suffixesadd=.rhtml,.erb,.rxml,.builder,.rjs,.mab,.liquid,.haml,.dryml,.mn,.rb,.css,.js,.html,.yml,.csv
+setlocal suffixesadd=.rb,.rhtml,.erb,.rxml,.builder,.rjs,.mab,.liquid,.haml,.dryml,.mn,.css,.js,.yml,.csv,.rake,.sql,.html,.xml
 setlocal swapfile
 setlocal synmaxcol=3000
-if &syntax != 'eruby'
-setlocal syntax=eruby
+if &syntax != 'ruby.javascript'
+setlocal syntax=ruby.javascript
 endif
 setlocal tabstop=8
 setlocal tags=~/sandbox/work/vm/rpx/ruby/rails/tmp/tags,./tags,tags,~/sandbox/personal/tags,~/.vim/bundle/vimple/plugin/vim/../../tags/vimbuiltins.tags,~/sandbox/work/vm/rpx/ruby/.git/tags,~/sandbox/work/vm/rpx/ruby/rails/tags
@@ -2267,16 +2267,16 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 635 - ((61 * winheight(0) + 32) / 64)
+let s:l = 659 - ((24 * winheight(0) + 32) / 64)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-635
-normal! 012l
+659
+normal! 08l
 wincmd w
-exe '1resize ' . ((&lines * 31 + 33) / 66)
+exe '1resize ' . ((&lines * 63 + 33) / 66)
 exe 'vert 1resize ' . ((&columns * 78 + 117) / 235)
-exe '2resize ' . ((&lines * 32 + 33) / 66)
+exe '2resize ' . ((&lines * 0 + 33) / 66)
 exe 'vert 2resize ' . ((&columns * 78 + 117) / 235)
 exe 'vert 3resize ' . ((&columns * 78 + 117) / 235)
 exe 'vert 4resize ' . ((&columns * 77 + 117) / 235)
@@ -2700,11 +2700,11 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 37 - ((36 * winheight(0) + 32) / 64)
+let s:l = 28 - ((27 * winheight(0) + 32) / 64)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-37
+28
 normal! 0
 wincmd w
 argglobal
@@ -3013,7 +3013,7 @@ setlocal cinoptions=
 setlocal cinwords=if,else,while,do,for,switch
 setlocal colorcolumn=
 setlocal comments=:#
-setlocal commentstring=<%#%s%>
+setlocal commentstring=#\ %s
 setlocal complete=.,w,b,u,t,i
 setlocal concealcursor=
 setlocal conceallevel=0
@@ -3030,8 +3030,8 @@ setlocal nodiff
 setlocal equalprg=
 setlocal errorformat=
 setlocal expandtab
-if &filetype != 'eruby'
-setlocal filetype=eruby
+if &filetype != 'ruby.javascript'
+setlocal filetype=ruby.javascript
 endif
 setlocal foldcolumn=0
 setlocal foldenable
@@ -3053,8 +3053,8 @@ setlocal iminsert=2
 setlocal imsearch=2
 setlocal include=^\\s*\\<\\(load\\|w*require\\)\\>
 setlocal includeexpr=RailsIncludeexpr()
-setlocal indentexpr=GetErubyIndent()
-setlocal indentkeys=o,O,*<Return>,<>>,{,},0),0],o,O,!^F,=end,=else,=elsif,=rescue,=ensure,=when
+setlocal indentexpr=GetRubyIndent()
+setlocal indentkeys=0{,0},0),0],!^F,o,O,e,=end,=elsif,=when,=ensure,=rescue,==begin,==end
 setlocal noinfercase
 setlocal iskeyword=@,48-57,_,192-255,-,$
 setlocal keywordprg=ri\ -T
@@ -3092,11 +3092,11 @@ setlocal spellcapcheck=off
 setlocal spellfile=
 setlocal spelllang=en
 setlocal statusline=%<(%n)\ %m%y%{rails#statusline()}%r\ %f\ %=%-14.(%l,%c%V%)\ %P
-setlocal suffixesadd=.rhtml,.erb,.rxml,.builder,.rjs,.mab,.liquid,.haml,.dryml,.mn,.rb,.css,.js,.html,.yml,.csv
+setlocal suffixesadd=.rb,.rhtml,.erb,.rxml,.builder,.rjs,.mab,.liquid,.haml,.dryml,.mn,.css,.js,.yml,.csv,.rake,.sql,.html,.xml
 setlocal swapfile
 setlocal synmaxcol=3000
-if &syntax != 'eruby'
-setlocal syntax=eruby
+if &syntax != 'ruby.javascript'
+setlocal syntax=ruby.javascript
 endif
 setlocal tabstop=8
 setlocal tags=~/sandbox/work/vm/rpx/ruby/rails/tmp/tags,./tags,tags,~/sandbox/personal/tags,~/.vim/bundle/vimple/plugin/vim/../../tags/vimbuiltins.tags,~/sandbox/work/vm/rpx/ruby/.git/tags,~/sandbox/work/vm/rpx/ruby/rails/tags
@@ -3107,12 +3107,12 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 52 - ((0 * winheight(0) + 32) / 64)
+let s:l = 318 - ((31 * winheight(0) + 32) / 64)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-52
-normal! 020l
+318
+normal! 028l
 wincmd w
 argglobal
 buffer ~/sandbox/work/vm/rpx/ruby/rails/app/views/_rpx_js.rhtml
@@ -3523,22 +3523,22 @@ normal! 0
 wincmd w
 argglobal
 buffer ~/sandbox/work/vm/rpx/ruby/rails/config/environments/development.rb
-let s:cpo_save=&cpo
-set cpo&vim
-nmap <buffer> gf <Plug>RailsTabFind
-nmap <buffer> f <Plug>RailsSplitFind
 nnoremap <buffer> <silent> g} :exe        "ptjump =RubyCursorIdentifier()"
 nnoremap <buffer> <silent> } :exe          "ptag =RubyCursorIdentifier()"
 nnoremap <buffer> <silent> g] :exe      "stselect =RubyCursorIdentifier()"
 nnoremap <buffer> <silent> g :exe        "stjump =RubyCursorIdentifier()"
 nnoremap <buffer> <silent>  :exe v:count1."stag =RubyCursorIdentifier()"
 nnoremap <buffer> <silent> ] :exe v:count1."stag =RubyCursorIdentifier()"
+let s:cpo_save=&cpo
+set cpo&vim
+nmap <buffer> gf <Plug>RailsTabFind
+nmap <buffer> f <Plug>RailsSplitFind
 nnoremap <buffer> <silent>  :exe  v:count1."tag =RubyCursorIdentifier()"
 nmap <buffer> [f <Plug>RailsAlternate
 nmap <buffer> ]f <Plug>RailsRelated
-nmap <buffer> gf <Plug>RailsFind
 nnoremap <buffer> <silent> g] :exe       "tselect =RubyCursorIdentifier()"
 nnoremap <buffer> <silent> g :exe         "tjump =RubyCursorIdentifier()"
+nmap <buffer> gf <Plug>RailsFind
 nnoremap <buffer> <silent> <Plug>RailsTabFind :RTfind
 nnoremap <buffer> <silent> <Plug>RailsVSplitFind :RVfind
 nnoremap <buffer> <silent> <Plug>RailsSplitFind :RSfind
@@ -3656,19 +3656,487 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 155 - ((25 * winheight(0) + 13) / 27)
+let s:l = 144 - ((0 * winheight(0) + 13) / 27)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-155
-normal! 034l
+144
+normal! 0
 wincmd w
+4wincmd w
 exe 'vert 1resize ' . ((&columns * 78 + 117) / 235)
 exe 'vert 2resize ' . ((&columns * 78 + 117) / 235)
 exe '3resize ' . ((&lines * 36 + 33) / 66)
 exe 'vert 3resize ' . ((&columns * 77 + 117) / 235)
 exe '4resize ' . ((&lines * 27 + 33) / 66)
 exe 'vert 4resize ' . ((&columns * 77 + 117) / 235)
+tabedit ~/sandbox/work/vm/rpx/ruby/rails/app/controllers/application.rb
+set splitbelow splitright
+wincmd _ | wincmd |
+vsplit
+1wincmd h
+wincmd w
+wincmd _ | wincmd |
+split
+1wincmd k
+wincmd w
+wincmd t
+set winheight=1 winwidth=1
+exe 'vert 1resize ' . ((&columns * 117 + 117) / 235)
+exe '2resize ' . ((&lines * 31 + 33) / 66)
+exe 'vert 2resize ' . ((&columns * 117 + 117) / 235)
+exe '3resize ' . ((&lines * 32 + 33) / 66)
+exe 'vert 3resize ' . ((&columns * 117 + 117) / 235)
+argglobal
+nnoremap <buffer> <silent> g} :exe        "ptjump =RubyCursorIdentifier()"
+nnoremap <buffer> <silent> } :exe          "ptag =RubyCursorIdentifier()"
+nnoremap <buffer> <silent> g] :exe      "stselect =RubyCursorIdentifier()"
+nnoremap <buffer> <silent> g :exe        "stjump =RubyCursorIdentifier()"
+nnoremap <buffer> <silent>  :exe v:count1."stag =RubyCursorIdentifier()"
+nnoremap <buffer> <silent> ] :exe v:count1."stag =RubyCursorIdentifier()"
+let s:cpo_save=&cpo
+set cpo&vim
+nmap <buffer> gf <Plug>RailsTabFind
+nmap <buffer> f <Plug>RailsSplitFind
+nnoremap <buffer> <silent>  :exe  v:count1."tag =RubyCursorIdentifier()"
+nmap <buffer> [f <Plug>RailsAlternate
+nmap <buffer> ]f <Plug>RailsRelated
+nnoremap <buffer> <silent> g] :exe       "tselect =RubyCursorIdentifier()"
+nnoremap <buffer> <silent> g :exe         "tjump =RubyCursorIdentifier()"
+nmap <buffer> gf <Plug>RailsFind
+nnoremap <buffer> <silent> <Plug>RailsTabFind :RTfind
+nnoremap <buffer> <silent> <Plug>RailsVSplitFind :RVfind
+nnoremap <buffer> <silent> <Plug>RailsSplitFind :RSfind
+nnoremap <buffer> <silent> <Plug>RailsFind :REfind
+nnoremap <buffer> <silent> <Plug>RailsRelated :R
+nnoremap <buffer> <silent> <Plug>RailsAlternate :A
+cnoremap <buffer> <expr>  fugitive#buffer().rev()
+let &cpo=s:cpo_save
+unlet s:cpo_save
+setlocal keymap=
+setlocal noarabic
+setlocal noautoindent
+setlocal balloonexpr=RubyBalloonexpr()
+setlocal nobinary
+setlocal bufhidden=
+setlocal buflisted
+setlocal buftype=
+setlocal nocindent
+setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
+setlocal cinoptions=
+setlocal cinwords=if,else,while,do,for,switch
+setlocal colorcolumn=
+setlocal comments=:#
+setlocal commentstring=#\ %s
+setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
+setlocal completefunc=vimcomplete#Complete
+setlocal nocopyindent
+setlocal cryptmethod=
+setlocal nocursorbind
+setlocal nocursorcolumn
+set cursorline
+setlocal cursorline
+setlocal define=^\\s*def\\s\\+\\(self\\.\\)\\=
+setlocal dictionary=
+setlocal nodiff
+setlocal equalprg=
+setlocal errorformat=
+setlocal expandtab
+if &filetype != 'ruby'
+setlocal filetype=ruby
+endif
+setlocal foldcolumn=0
+setlocal foldenable
+setlocal foldexpr=0
+setlocal foldignore=#
+setlocal foldlevel=999
+setlocal foldmarker={{{,}}}
+set foldmethod=syntax
+setlocal foldmethod=syntax
+setlocal foldminlines=1
+setlocal foldnestmax=20
+set foldtext=CleanFoldText()
+setlocal foldtext=CleanFoldText()
+setlocal formatexpr=
+setlocal formatoptions=croql
+setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
+setlocal grepprg=
+setlocal iminsert=2
+setlocal imsearch=2
+setlocal include=^\\s*\\<\\(load\\|w*require\\)\\>
+setlocal includeexpr=RailsIncludeexpr()
+setlocal indentexpr=GetRubyIndent()
+setlocal indentkeys=0{,0},0),0],!^F,o,O,e,=end,=elsif,=when,=ensure,=rescue,==begin,==end
+setlocal noinfercase
+setlocal iskeyword=@,48-57,_,192-255,-,$
+setlocal keywordprg=ri\ -T
+set linebreak
+setlocal linebreak
+setlocal nolisp
+setlocal nolist
+setlocal nomacmeta
+setlocal makeprg=
+setlocal matchpairs=(:),{:},[:]
+setlocal modeline
+setlocal modifiable
+setlocal nrformats=octal,hex
+set number
+setlocal nonumber
+setlocal numberwidth=4
+setlocal omnifunc=rubycomplete#Complete
+setlocal path=.,~/sandbox/work/vm/rpx/ruby/rails,~/sandbox/work/vm/rpx/ruby/rails/app,~/sandbox/work/vm/rpx/ruby/rails/app/models,~/sandbox/work/vm/rpx/ruby/rails/app/controllers,~/sandbox/work/vm/rpx/ruby/rails/app/helpers,~/sandbox/work/vm/rpx/ruby/rails/config,~/sandbox/work/vm/rpx/ruby/rails/lib,~/sandbox/work/vm/rpx/ruby/rails/app/views,~/sandbox/work/vm/rpx/ruby/rails/app/views/application,~/sandbox/work/vm/rpx/ruby/rails/public,~/sandbox/work/vm/rpx/ruby/rails/test,~/sandbox/work/vm/rpx/ruby/rails/test/unit,~/sandbox/work/vm/rpx/ruby/rails/test/functional,~/sandbox/work/vm/rpx/ruby/rails/test/integration,~/sandbox/work/vm/rpx/ruby/rails/app/*,~/sandbox/work/vm/rpx/ruby/rails/vendor,~/sandbox/work/vm/rpx/ruby/rails/vendor/plugins/*/lib,~/sandbox/work/vm/rpx/ruby/rails/vendor/plugins/*/test,~/sandbox/work/vm/rpx/ruby/rails/vendor/rails/*/lib,~/sandbox/work/vm/rpx/ruby/rails/vendor/rails/*/test,~/.rvm/rubies/ruby-1.8.7-p330/lib/ruby/site_ruby/1.8,~/.rvm/rubies/ruby-1.8.7-p330/lib/ruby/site_ruby/1.8/i686-darwin10.5.0,~
+setlocal nopreserveindent
+setlocal nopreviewwindow
+setlocal quoteescape=\\
+setlocal noreadonly
+set relativenumber
+setlocal relativenumber
+setlocal norightleft
+setlocal rightleftcmd=search
+setlocal noscrollbind
+setlocal shiftwidth=2
+setlocal noshortname
+setlocal nosmartindent
+setlocal softtabstop=2
+setlocal nospell
+setlocal spellcapcheck=off
+setlocal spellfile=
+setlocal spelllang=en
+setlocal statusline=%<(%n)\ %m%y%{rails#statusline()}%r\ %f\ %=%-14.(%l,%c%V%)\ %P
+setlocal suffixesadd=.rb,.rhtml,.erb,.rxml,.builder,.rjs,.mab,.liquid,.haml,.dryml,.mn,.yml,.csv,.rake,s.rb
+setlocal swapfile
+setlocal synmaxcol=3000
+if &syntax != 'ruby'
+setlocal syntax=ruby
+endif
+setlocal tabstop=8
+setlocal tags=~/sandbox/work/vm/rpx/ruby/rails/tmp/tags,./tags,tags,~/sandbox/personal/tags,~/.vim/bundle/vimple/plugin/vim/../../tags/vimbuiltins.tags,~/sandbox/work/vm/rpx/ruby/.git/ruby.tags,~/sandbox/work/vm/rpx/ruby/.git/tags,~/sandbox/work/vm/rpx/ruby/rails/tags
+setlocal textwidth=0
+setlocal thesaurus=
+setlocal noundofile
+setlocal nowinfixheight
+setlocal nowinfixwidth
+setlocal wrap
+setlocal wrapmargin=0
+8
+normal zo
+847
+normal zo
+848
+normal zo
+847
+normal zo
+855
+normal zo
+926
+normal zo
+928
+normal zo
+928
+normal zo
+926
+normal zo
+8
+normal zo
+let s:l = 856 - ((39 * winheight(0) + 32) / 64)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+856
+normal! 02l
+wincmd w
+argglobal
+buffer ~/sandbox/work/vm/rpx/ruby/rails/config/environments/development.rb
+nnoremap <buffer> <silent> g} :exe        "ptjump =RubyCursorIdentifier()"
+nnoremap <buffer> <silent> } :exe          "ptag =RubyCursorIdentifier()"
+nnoremap <buffer> <silent> g] :exe      "stselect =RubyCursorIdentifier()"
+nnoremap <buffer> <silent> g :exe        "stjump =RubyCursorIdentifier()"
+nnoremap <buffer> <silent>  :exe v:count1."stag =RubyCursorIdentifier()"
+nnoremap <buffer> <silent> ] :exe v:count1."stag =RubyCursorIdentifier()"
+let s:cpo_save=&cpo
+set cpo&vim
+nmap <buffer> gf <Plug>RailsTabFind
+nmap <buffer> f <Plug>RailsSplitFind
+nnoremap <buffer> <silent>  :exe  v:count1."tag =RubyCursorIdentifier()"
+nmap <buffer> [f <Plug>RailsAlternate
+nmap <buffer> ]f <Plug>RailsRelated
+nnoremap <buffer> <silent> g] :exe       "tselect =RubyCursorIdentifier()"
+nnoremap <buffer> <silent> g :exe         "tjump =RubyCursorIdentifier()"
+nmap <buffer> gf <Plug>RailsFind
+nnoremap <buffer> <silent> <Plug>RailsTabFind :RTfind
+nnoremap <buffer> <silent> <Plug>RailsVSplitFind :RVfind
+nnoremap <buffer> <silent> <Plug>RailsSplitFind :RSfind
+nnoremap <buffer> <silent> <Plug>RailsFind :REfind
+nnoremap <buffer> <silent> <Plug>RailsRelated :R
+nnoremap <buffer> <silent> <Plug>RailsAlternate :A
+cnoremap <buffer> <expr>  fugitive#buffer().rev()
+let &cpo=s:cpo_save
+unlet s:cpo_save
+setlocal keymap=
+setlocal noarabic
+setlocal noautoindent
+setlocal balloonexpr=RubyBalloonexpr()
+setlocal nobinary
+setlocal bufhidden=
+setlocal buflisted
+setlocal buftype=
+setlocal nocindent
+setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
+setlocal cinoptions=
+setlocal cinwords=if,else,while,do,for,switch
+setlocal colorcolumn=
+setlocal comments=:#
+setlocal commentstring=#\ %s
+setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
+setlocal completefunc=vimcomplete#Complete
+setlocal nocopyindent
+setlocal cryptmethod=
+setlocal nocursorbind
+setlocal nocursorcolumn
+set cursorline
+setlocal cursorline
+setlocal define=^\\s*def\\s\\+\\(self\\.\\)\\=
+setlocal dictionary=
+setlocal nodiff
+setlocal equalprg=
+setlocal errorformat=
+setlocal expandtab
+if &filetype != 'ruby'
+setlocal filetype=ruby
+endif
+setlocal foldcolumn=0
+setlocal foldenable
+setlocal foldexpr=0
+setlocal foldignore=#
+setlocal foldlevel=999
+setlocal foldmarker={{{,}}}
+set foldmethod=syntax
+setlocal foldmethod=syntax
+setlocal foldminlines=1
+setlocal foldnestmax=20
+set foldtext=CleanFoldText()
+setlocal foldtext=CleanFoldText()
+setlocal formatexpr=
+setlocal formatoptions=croql
+setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
+setlocal grepprg=
+setlocal iminsert=2
+setlocal imsearch=2
+setlocal include=^\\s*\\<\\(load\\|w*require\\)\\>
+setlocal includeexpr=RailsIncludeexpr()
+setlocal indentexpr=GetRubyIndent()
+setlocal indentkeys=0{,0},0),0],!^F,o,O,e,=end,=elsif,=when,=ensure,=rescue,==begin,==end
+setlocal noinfercase
+setlocal iskeyword=@,48-57,_,192-255,-,$
+setlocal keywordprg=ri\ -T
+set linebreak
+setlocal linebreak
+setlocal nolisp
+set list
+setlocal list
+setlocal nomacmeta
+setlocal makeprg=
+setlocal matchpairs=(:),{:},[:]
+setlocal modeline
+setlocal modifiable
+setlocal nrformats=octal,hex
+set number
+setlocal nonumber
+setlocal numberwidth=4
+setlocal omnifunc=rubycomplete#Complete
+setlocal path=.,~/sandbox/work/vm/rpx/ruby/rails,~/sandbox/work/vm/rpx/ruby/rails/app,~/sandbox/work/vm/rpx/ruby/rails/app/models,~/sandbox/work/vm/rpx/ruby/rails/app/controllers,~/sandbox/work/vm/rpx/ruby/rails/app/helpers,~/sandbox/work/vm/rpx/ruby/rails/config,~/sandbox/work/vm/rpx/ruby/rails/lib,~/sandbox/work/vm/rpx/ruby/rails/app/views,~/sandbox/work/vm/rpx/ruby/rails/test,~/sandbox/work/vm/rpx/ruby/rails/test/unit,~/sandbox/work/vm/rpx/ruby/rails/test/functional,~/sandbox/work/vm/rpx/ruby/rails/test/integration,~/sandbox/work/vm/rpx/ruby/rails/app/*,~/sandbox/work/vm/rpx/ruby/rails/vendor,~/sandbox/work/vm/rpx/ruby/rails/vendor/plugins/*/lib,~/sandbox/work/vm/rpx/ruby/rails/vendor/plugins/*/test,~/sandbox/work/vm/rpx/ruby/rails/vendor/rails/*/lib,~/sandbox/work/vm/rpx/ruby/rails/vendor/rails/*/test,~/.rvm/rubies/ruby-1.8.7-p330/lib/ruby/site_ruby/1.8,~/.rvm/rubies/ruby-1.8.7-p330/lib/ruby/site_ruby/1.8/i686-darwin10.5.0,~/.rvm/rubies/ruby-1.8.7-p330/lib/ruby/site_ruby,~/.rvm/rubies/ruby-1.8.7-p330/lib/ruby/vendor_r
+setlocal nopreserveindent
+setlocal nopreviewwindow
+setlocal quoteescape=\\
+setlocal noreadonly
+set relativenumber
+setlocal relativenumber
+setlocal norightleft
+setlocal rightleftcmd=search
+setlocal noscrollbind
+setlocal shiftwidth=2
+setlocal noshortname
+setlocal nosmartindent
+setlocal softtabstop=2
+setlocal nospell
+setlocal spellcapcheck=off
+setlocal spellfile=
+setlocal spelllang=en
+setlocal statusline=
+setlocal suffixesadd=.rb,.rhtml,.erb,.rxml,.builder,.rjs,.mab,.liquid,.haml,.dryml,.mn,.yml,.csv,.rake,s.rb
+setlocal swapfile
+setlocal synmaxcol=3000
+if &syntax != 'ruby'
+setlocal syntax=ruby
+endif
+setlocal tabstop=8
+setlocal tags=~/sandbox/work/vm/rpx/ruby/rails/tmp/tags,./tags,tags,~/sandbox/personal/tags,~/.vim/bundle/vimple/plugin/vim/../../tags/vimbuiltins.tags,~/sandbox/work/vm/rpx/ruby/.git/tags,~/sandbox/work/vm/rpx/ruby/rails/tags
+setlocal textwidth=0
+setlocal thesaurus=
+setlocal noundofile
+setlocal nowinfixheight
+setlocal nowinfixwidth
+setlocal wrap
+setlocal wrapmargin=0
+let s:l = 155 - ((27 * winheight(0) + 15) / 31)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+155
+normal! 0
+wincmd w
+argglobal
+buffer ~/sandbox/work/vm/rpx/ruby/rails/config/environment.rb
+nnoremap <buffer> <silent> g} :exe        "ptjump =RubyCursorIdentifier()"
+nnoremap <buffer> <silent> } :exe          "ptag =RubyCursorIdentifier()"
+nnoremap <buffer> <silent> g] :exe      "stselect =RubyCursorIdentifier()"
+nnoremap <buffer> <silent> g :exe        "stjump =RubyCursorIdentifier()"
+nnoremap <buffer> <silent>  :exe v:count1."stag =RubyCursorIdentifier()"
+nnoremap <buffer> <silent> ] :exe v:count1."stag =RubyCursorIdentifier()"
+let s:cpo_save=&cpo
+set cpo&vim
+nmap <buffer> gf <Plug>RailsTabFind
+nmap <buffer> f <Plug>RailsSplitFind
+nnoremap <buffer> <silent>  :exe  v:count1."tag =RubyCursorIdentifier()"
+nmap <buffer> [f <Plug>RailsAlternate
+nmap <buffer> ]f <Plug>RailsRelated
+nnoremap <buffer> <silent> g] :exe       "tselect =RubyCursorIdentifier()"
+nnoremap <buffer> <silent> g :exe         "tjump =RubyCursorIdentifier()"
+nmap <buffer> gf <Plug>RailsFind
+nnoremap <buffer> <silent> <Plug>RailsTabFind :RTfind
+nnoremap <buffer> <silent> <Plug>RailsVSplitFind :RVfind
+nnoremap <buffer> <silent> <Plug>RailsSplitFind :RSfind
+nnoremap <buffer> <silent> <Plug>RailsFind :REfind
+nnoremap <buffer> <silent> <Plug>RailsRelated :R
+nnoremap <buffer> <silent> <Plug>RailsAlternate :A
+cnoremap <buffer> <expr>  fugitive#buffer().rev()
+let &cpo=s:cpo_save
+unlet s:cpo_save
+setlocal keymap=
+setlocal noarabic
+setlocal noautoindent
+setlocal balloonexpr=RubyBalloonexpr()
+setlocal nobinary
+setlocal bufhidden=
+setlocal buflisted
+setlocal buftype=
+setlocal nocindent
+setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
+setlocal cinoptions=
+setlocal cinwords=if,else,while,do,for,switch
+setlocal colorcolumn=
+setlocal comments=:#
+setlocal commentstring=#\ %s
+setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
+setlocal completefunc=vimcomplete#Complete
+setlocal nocopyindent
+setlocal cryptmethod=
+setlocal nocursorbind
+setlocal nocursorcolumn
+set cursorline
+setlocal cursorline
+setlocal define=^\\s*def\\s\\+\\(self\\.\\)\\=
+setlocal dictionary=
+setlocal nodiff
+setlocal equalprg=
+setlocal errorformat=
+setlocal expandtab
+if &filetype != 'ruby'
+setlocal filetype=ruby
+endif
+setlocal foldcolumn=0
+setlocal foldenable
+setlocal foldexpr=0
+setlocal foldignore=#
+setlocal foldlevel=999
+setlocal foldmarker={{{,}}}
+set foldmethod=syntax
+setlocal foldmethod=syntax
+setlocal foldminlines=1
+setlocal foldnestmax=20
+set foldtext=CleanFoldText()
+setlocal foldtext=CleanFoldText()
+setlocal formatexpr=
+setlocal formatoptions=croql
+setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
+setlocal grepprg=
+setlocal iminsert=2
+setlocal imsearch=2
+setlocal include=^\\s*\\<\\(load\\|w*require\\)\\>
+setlocal includeexpr=RailsIncludeexpr()
+setlocal indentexpr=GetRubyIndent()
+setlocal indentkeys=0{,0},0),0],!^F,o,O,e,=end,=elsif,=when,=ensure,=rescue,==begin,==end
+setlocal noinfercase
+setlocal iskeyword=@,48-57,_,192-255,-,$
+setlocal keywordprg=ri\ -T
+set linebreak
+setlocal linebreak
+setlocal nolisp
+set list
+setlocal nolist
+setlocal nomacmeta
+setlocal makeprg=
+setlocal matchpairs=(:),{:},[:]
+setlocal modeline
+setlocal modifiable
+setlocal nrformats=octal,hex
+set number
+setlocal nonumber
+setlocal numberwidth=4
+setlocal omnifunc=rubycomplete#Complete
+setlocal path=.,~/sandbox/work/vm/rpx/ruby/rails,~/sandbox/work/vm/rpx/ruby/rails/app,~/sandbox/work/vm/rpx/ruby/rails/app/models,~/sandbox/work/vm/rpx/ruby/rails/app/controllers,~/sandbox/work/vm/rpx/ruby/rails/app/helpers,~/sandbox/work/vm/rpx/ruby/rails/config,~/sandbox/work/vm/rpx/ruby/rails/lib,~/sandbox/work/vm/rpx/ruby/rails/app/views,~/sandbox/work/vm/rpx/ruby/rails/test,~/sandbox/work/vm/rpx/ruby/rails/test/unit,~/sandbox/work/vm/rpx/ruby/rails/test/functional,~/sandbox/work/vm/rpx/ruby/rails/test/integration,~/sandbox/work/vm/rpx/ruby/rails/app/*,~/sandbox/work/vm/rpx/ruby/rails/vendor,~/sandbox/work/vm/rpx/ruby/rails/vendor/plugins/*/lib,~/sandbox/work/vm/rpx/ruby/rails/vendor/plugins/*/test,~/sandbox/work/vm/rpx/ruby/rails/vendor/rails/*/lib,~/sandbox/work/vm/rpx/ruby/rails/vendor/rails/*/test,~/.rvm/rubies/ruby-1.8.7-p330/lib/ruby/site_ruby/1.8,~/.rvm/rubies/ruby-1.8.7-p330/lib/ruby/site_ruby/1.8/i686-darwin10.5.0,~/.rvm/rubies/ruby-1.8.7-p330/lib/ruby/site_ruby,~/.rvm/rubies/ruby-1.8.7-p330/lib/ruby/vendor_r
+setlocal nopreserveindent
+setlocal nopreviewwindow
+setlocal quoteescape=\\
+setlocal noreadonly
+set relativenumber
+setlocal relativenumber
+setlocal norightleft
+setlocal rightleftcmd=search
+setlocal noscrollbind
+setlocal shiftwidth=2
+setlocal noshortname
+setlocal nosmartindent
+setlocal softtabstop=2
+setlocal nospell
+setlocal spellcapcheck=off
+setlocal spellfile=
+setlocal spelllang=en
+setlocal statusline=%<(%n)\ %m%y%{rails#statusline()}%r\ %f\ %=%-14.(%l,%c%V%)\ %P
+setlocal suffixesadd=.rb,.rhtml,.erb,.rxml,.builder,.rjs,.mab,.liquid,.haml,.dryml,.mn,.yml,.csv,.rake,s.rb
+setlocal swapfile
+setlocal synmaxcol=3000
+if &syntax != 'ruby'
+setlocal syntax=ruby
+endif
+setlocal tabstop=8
+setlocal tags=~/sandbox/work/vm/rpx/ruby/rails/tmp/tags,./tags,tags,~/sandbox/personal/tags,~/.vim/bundle/vimple/plugin/vim/../../tags/vimbuiltins.tags,~/sandbox/work/vm/rpx/ruby/.git/ruby.tags,~/sandbox/work/vm/rpx/ruby/.git/tags,~/sandbox/work/vm/rpx/ruby/rails/tags
+setlocal textwidth=0
+setlocal thesaurus=
+setlocal noundofile
+setlocal nowinfixheight
+setlocal nowinfixwidth
+setlocal wrap
+setlocal wrapmargin=0
+let s:l = 30 - ((13 * winheight(0) + 16) / 32)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+30
+normal! 021l
+wincmd w
+4wincmd w
+exe 'vert 1resize ' . ((&columns * 117 + 117) / 235)
+exe '2resize ' . ((&lines * 31 + 33) / 66)
+exe 'vert 2resize ' . ((&columns * 117 + 117) / 235)
+exe '3resize ' . ((&lines * 32 + 33) / 66)
+exe 'vert 3resize ' . ((&columns * 117 + 117) / 235)
 tabedit ~/sandbox/work/vm/rpx/dumb-rpx-test/app/views/rpxtest/api.rhtml
 set splitbelow splitright
 wincmd _ | wincmd |
@@ -4492,178 +4960,9 @@ normal! zt
 482
 normal! 05l
 wincmd w
+4wincmd w
 exe 'vert 1resize ' . ((&columns * 117 + 117) / 235)
 exe 'vert 2resize ' . ((&columns * 117 + 117) / 235)
-tabedit ~/sandbox/work/vm/rpx/ruby/rails/app/controllers/twitter_controller.rb
-set splitbelow splitright
-wincmd t
-set winheight=1 winwidth=1
-argglobal
-let s:cpo_save=&cpo
-set cpo&vim
-nmap <buffer> gf <Plug>RailsTabFind
-nmap <buffer> f <Plug>RailsSplitFind
-nnoremap <buffer> <silent> g} :exe        "ptjump =RubyCursorIdentifier()"
-nnoremap <buffer> <silent> } :exe          "ptag =RubyCursorIdentifier()"
-nnoremap <buffer> <silent> g] :exe      "stselect =RubyCursorIdentifier()"
-nnoremap <buffer> <silent> g :exe        "stjump =RubyCursorIdentifier()"
-nnoremap <buffer> <silent>  :exe v:count1."stag =RubyCursorIdentifier()"
-nnoremap <buffer> <silent> ] :exe v:count1."stag =RubyCursorIdentifier()"
-nnoremap <buffer> <silent>  :exe  v:count1."tag =RubyCursorIdentifier()"
-nmap <buffer> [f <Plug>RailsAlternate
-nmap <buffer> ]f <Plug>RailsRelated
-nmap <buffer> gf <Plug>RailsFind
-nnoremap <buffer> <silent> g] :exe       "tselect =RubyCursorIdentifier()"
-nnoremap <buffer> <silent> g :exe         "tjump =RubyCursorIdentifier()"
-nnoremap <buffer> <silent> <Plug>RailsTabFind :RTfind
-nnoremap <buffer> <silent> <Plug>RailsVSplitFind :RVfind
-nnoremap <buffer> <silent> <Plug>RailsSplitFind :RSfind
-nnoremap <buffer> <silent> <Plug>RailsFind :REfind
-nnoremap <buffer> <silent> <Plug>RailsRelated :R
-nnoremap <buffer> <silent> <Plug>RailsAlternate :A
-cnoremap <buffer> <expr>  fugitive#buffer().rev()
-let &cpo=s:cpo_save
-unlet s:cpo_save
-setlocal keymap=
-setlocal noarabic
-setlocal noautoindent
-setlocal balloonexpr=RubyBalloonexpr()
-setlocal nobinary
-setlocal bufhidden=
-setlocal buflisted
-setlocal buftype=
-setlocal nocindent
-setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
-setlocal cinoptions=
-setlocal cinwords=if,else,while,do,for,switch
-setlocal colorcolumn=
-setlocal comments=:#
-setlocal commentstring=#\ %s
-setlocal complete=.,w,b,u,t,i
-setlocal concealcursor=
-setlocal conceallevel=0
-setlocal completefunc=vimcomplete#Complete
-setlocal nocopyindent
-setlocal cryptmethod=
-setlocal nocursorbind
-setlocal nocursorcolumn
-set cursorline
-setlocal cursorline
-setlocal define=^\\s*def\\s\\+\\(self\\.\\)\\=
-setlocal dictionary=
-setlocal nodiff
-setlocal equalprg=
-setlocal errorformat=
-setlocal expandtab
-if &filetype != 'ruby'
-setlocal filetype=ruby
-endif
-setlocal foldcolumn=0
-setlocal foldenable
-setlocal foldexpr=0
-setlocal foldignore=#
-setlocal foldlevel=999
-setlocal foldmarker={{{,}}}
-set foldmethod=syntax
-setlocal foldmethod=syntax
-setlocal foldminlines=1
-setlocal foldnestmax=20
-set foldtext=CleanFoldText()
-setlocal foldtext=CleanFoldText()
-setlocal formatexpr=
-setlocal formatoptions=croql
-setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
-setlocal grepprg=
-setlocal iminsert=2
-setlocal imsearch=2
-setlocal include=^\\s*\\<\\(load\\|w*require\\)\\>
-setlocal includeexpr=RailsIncludeexpr()
-setlocal indentexpr=GetRubyIndent()
-setlocal indentkeys=0{,0},0),0],!^F,o,O,e,=end,=elsif,=when,=ensure,=rescue,==begin,==end
-setlocal noinfercase
-setlocal iskeyword=@,48-57,_,192-255,-,$
-setlocal keywordprg=ri\ -T
-set linebreak
-setlocal linebreak
-setlocal nolisp
-set list
-setlocal nolist
-setlocal nomacmeta
-setlocal makeprg=
-setlocal matchpairs=(:),{:},[:]
-setlocal modeline
-setlocal modifiable
-setlocal nrformats=octal,hex
-set number
-setlocal nonumber
-setlocal numberwidth=4
-setlocal omnifunc=rubycomplete#Complete
-setlocal path=.,~/sandbox/work/vm/rpx/ruby/rails,~/sandbox/work/vm/rpx/ruby/rails/app,~/sandbox/work/vm/rpx/ruby/rails/app/models,~/sandbox/work/vm/rpx/ruby/rails/app/controllers,~/sandbox/work/vm/rpx/ruby/rails/app/helpers,~/sandbox/work/vm/rpx/ruby/rails/config,~/sandbox/work/vm/rpx/ruby/rails/lib,~/sandbox/work/vm/rpx/ruby/rails/app/views,~/sandbox/work/vm/rpx/ruby/rails/app/views/twitter,~/sandbox/work/vm/rpx/ruby/rails/public,~/sandbox/work/vm/rpx/ruby/rails/test,~/sandbox/work/vm/rpx/ruby/rails/test/unit,~/sandbox/work/vm/rpx/ruby/rails/test/functional,~/sandbox/work/vm/rpx/ruby/rails/test/integration,~/sandbox/work/vm/rpx/ruby/rails/app/*,~/sandbox/work/vm/rpx/ruby/rails/vendor,~/sandbox/work/vm/rpx/ruby/rails/vendor/plugins/*/lib,~/sandbox/work/vm/rpx/ruby/rails/vendor/plugins/*/test,~/sandbox/work/vm/rpx/ruby/rails/vendor/rails/*/lib,~/sandbox/work/vm/rpx/ruby/rails/vendor/rails/*/test,~/.rvm/rubies/ruby-1.8.7-p330/lib/ruby/site_ruby/1.8,~/.rvm/rubies/ruby-1.8.7-p330/lib/ruby/site_ruby/1.8/i686-darwin10.5.0,~/.rv
-setlocal nopreserveindent
-setlocal nopreviewwindow
-setlocal quoteescape=\\
-setlocal noreadonly
-set relativenumber
-setlocal relativenumber
-setlocal norightleft
-setlocal rightleftcmd=search
-setlocal noscrollbind
-setlocal shiftwidth=2
-setlocal noshortname
-setlocal nosmartindent
-setlocal softtabstop=2
-setlocal nospell
-setlocal spellcapcheck=off
-setlocal spellfile=
-setlocal spelllang=en
-setlocal statusline=
-setlocal suffixesadd=.rb,.rhtml,.erb,.rxml,.builder,.rjs,.mab,.liquid,.haml,.dryml,.mn,.yml,.csv,.rake,s.rb
-setlocal swapfile
-setlocal synmaxcol=3000
-if &syntax != 'ruby'
-setlocal syntax=ruby
-endif
-setlocal tabstop=8
-setlocal tags=~/sandbox/work/vm/rpx/ruby/rails/tmp/tags,./tags,tags,~/sandbox/personal/tags,~/.vim/bundle/vimple/plugin/vim/../../tags/vimbuiltins.tags,~/sandbox/work/vm/rpx/ruby/.git/tags,~/sandbox/work/vm/rpx/ruby/rails/tags
-setlocal textwidth=0
-setlocal thesaurus=
-setlocal noundofile
-setlocal nowinfixheight
-setlocal nowinfixwidth
-setlocal wrap
-setlocal wrapmargin=0
-5
-normal zo
-9
-normal zo
-27
-normal zo
-9
-normal zo
-42
-normal zo
-49
-normal zo
-53
-normal zo
-60
-normal zo
-42
-normal zo
-72
-normal zo
-76
-normal zo
-76
-normal zo
-5
-normal zo
-let s:l = 64 - ((63 * winheight(0) + 32) / 64)
-if s:l < 1 | let s:l = 1 | endif
-exe s:l
-normal! zt
-64
-normal! 06l
 tabedit ~/sandbox/work/vm/rpx/ruby/rails/app/views/js/lib_xdcomm.erb
 set splitbelow splitright
 wincmd _ | wincmd |
@@ -5392,6 +5691,7 @@ normal! zt
 309
 normal! 04l
 wincmd w
+4wincmd w
 exe 'vert 1resize ' . ((&columns * 78 + 117) / 235)
 exe 'vert 2resize ' . ((&columns * 78 + 117) / 235)
 exe 'vert 3resize ' . ((&columns * 77 + 117) / 235)
