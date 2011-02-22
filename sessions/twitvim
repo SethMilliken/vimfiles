@@ -334,7 +334,6 @@ vmap ô <Plug>TwitvimVisual
 let &cpo=s:cpo_save
 unlet s:cpo_save
 set autowrite
-set autowriteall
 set background=dark
 set backspace=indent,eol,start
 set clipboard=unnamed
@@ -345,15 +344,15 @@ set directory=~/.vim/swap//,~/vimfiles/swap//
 set display=lastline
 set expandtab
 set fileencodings=ucs-bom,utf-8,default,latin1
+set fillchars=vert:┃
 set fuoptions=maxhorz,maxvert
-set guifont=Inconsolata:h13
+set guifont=Inconsolata:h15
 set guioptions=egmrLtc
 set guitablabel=%m\ %N\ %t\ %r
 set helplang=en
 set history=10000
 set hlsearch
 set incsearch
-set indentkeys=0{,0},:,0#,!^F,O,e
 set iskeyword=@,48-57,_,192-255,-
 set langmenu=none
 set laststatus=2
@@ -361,11 +360,10 @@ set listchars=tab:>-,trail:-
 set mouse=a
 set printexpr=system('open\ -a\ Preview\ '.v:fname_in)\ +\ v:shell_error
 set ruler
-set runtimepath=~/.vim,~/.vim/bundle/MailApp,~/.vim/bundle/RubyTextObjects,~/.vim/bundle/SnippetsMgr,~/.vim/bundle/VimLTextObjects,~/.vim/bundle/abolish,~/.vim/bundle/autotag,~/.vim/bundle/bufexplorer,~/.vim/bundle/calendar,~/.vim/bundle/calfork,~/.vim/bundle/cocoa,~/.vim/bundle/command-t,~/.vim/bundle/conque,~/.vim/bundle/dbext,~/.vim/bundle/fugitive,~/.vim/bundle/fuzzyfinder,~/.vim/bundle/gundo,~/.vim/bundle/hexhighlight,~/.vim/bundle/jslint.vim,~/.vim/bundle/kellys,~/.vim/bundle/l9,~/.vim/bundle/matrix,~/.vim/bundle/nerdcommenter,~/.vim/bundle/nerdtree,~/.vim/bundle/paster,~/.vim/bundle/pickacolor,~/.vim/bundle/project,~/.vim/bundle/rails,~/.vim/bundle/screenshot,~/.vim/bundle/sessionman,~/.vim/bundle/snipmate,~/.vim/bundle/surround,~/.vim/bundle/syntastic,~/.vim/bundle/textobj-user,~/.vim/bundle/twitvim,~/.vim/bundle/vcscommand,~/.vim/bundle/vim-addon-async,~/.vim/bundle/vim-addon-signs,~/.vim/bundle/vim-orgmode,~/.vim/bundle/vim-ruby,~/.vim/bundle/vim-toner,~/.vim/bundle/vimple,~/.vim/bundle/vimwiki,/Applications/Todo.
+set runtimepath=~/.vim,~/.vim/bundle/MailApp,~/.vim/bundle/RubyTextObjects,~/.vim/bundle/SnippetsMgr,~/.vim/bundle/VimLTextObjects,~/.vim/bundle/abolish,~/.vim/bundle/autotag,~/.vim/bundle/bufexplorer,~/.vim/bundle/calendar,~/.vim/bundle/calfork,~/.vim/bundle/cocoa,~/.vim/bundle/command-t,~/.vim/bundle/conque,~/.vim/bundle/dbext,~/.vim/bundle/fugitive,~/.vim/bundle/fuzzyfinder,~/.vim/bundle/gundo,~/.vim/bundle/hexhighlight,~/.vim/bundle/jslint.vim,~/.vim/bundle/kellys,~/.vim/bundle/l9,~/.vim/bundle/matrix,~/.vim/bundle/nerdcommenter,~/.vim/bundle/nerdtree,~/.vim/bundle/paster,~/.vim/bundle/pickacolor,~/.vim/bundle/project,~/.vim/bundle/rails,~/.vim/bundle/screenshot,~/.vim/bundle/sessionman,~/.vim/bundle/snipmate,~/.vim/bundle/surround,~/.vim/bundle/syntastic,~/.vim/bundle/textobj-user,~/.vim/bundle/twitvim,~/.vim/bundle/vcscommand,~/.vim/bundle/vim-addon-async,~/.vim/bundle/vim-addon-signs,~/.vim/bundle/vim-orgmode,~/.vim/bundle/vim-ruby,~/.vim/bundle/vim-toner,~/.vim/bundle/vimple,~/.vim/bundle/vimwiki,/Applications/TwitV
 set sessionoptions=folds,help,options,tabpages,winsize,globals,sesdir,resize,winpos,unix
 set shiftwidth=4
 set shortmess=filnxtToOIA
-set showbreak=\ \ 
 set showcmd
 set softtabstop=4
 set spellcapcheck=off
@@ -375,7 +373,6 @@ set statusline=%<(%n)\ %m%y%r\ %f\ %=%-14.(%l,%c%V%)\ %P
 set switchbuf=useopen
 set tabline=%!MyTabLine()
 set tabpagemax=100
-set tabstop=2
 set tags=./tags,tags,~/sandbox/personal/tags,~/.vim/bundle/vimple/plugin/vim/../../tags/vimbuiltins.tags
 set termencoding=utf-8
 set undolevels=500
@@ -500,50 +497,38 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +0 ~/sandbox/personal/todo/techtodo.txt
+badd +0 ~/.vim/twitcommands.vim
 silent! argdel *
-set lines=74 columns=235
-set fullscreen
+set lines=58 columns=205
 winpos 0 1028
-buffer ~/sandbox/personal/todo/techtodo.txt
+buffer ~/.vim/twitcommands.vim
 set splitbelow splitright
-wincmd _ | wincmd |
-vsplit
-wincmd _ | wincmd |
-vsplit
-2wincmd h
-wincmd w
-wincmd w
 wincmd t
 set winheight=1 winwidth=1
-exe 'vert 1resize ' . ((&columns * 78 + 117) / 235)
-exe 'vert 2resize ' . ((&columns * 77 + 117) / 235)
-exe 'vert 3resize ' . ((&columns * 78 + 117) / 235)
 argglobal
-nmap <buffer> / :call TaskstackNavigateToProjectPrompted()
-nmap <buffer> <silent> 	 :call search("@.*\\\|^[A-Z]\\+")
+map <buffer> <silent>  yyq:p | :wincmd h
+vnoremap <buffer> <silent> [" :exe "normal! gv"|call search('\%(^\s*".*\n\)\%(^\s*"\)\@!', "bW")
+nnoremap <buffer> <silent> [" :call search('\%(^\s*".*\n\)\%(^\s*"\)\@!', "bW")
+vnoremap <buffer> <silent> [] m':exe "normal! gv"|call search('^\s*endf*\%[unction]\>', "bW")
+nnoremap <buffer> <silent> [] m':call search('^\s*endf*\%[unction]\>', "bW")
+vnoremap <buffer> <silent> [[ m':exe "normal! gv"|call search('^\s*fu\%[nction]\>', "bW")
+nnoremap <buffer> <silent> [[ m':call search('^\s*fu\%[nction]\>', "bW")
+vnoremap <buffer> <silent> ]" :exe "normal! gv"|call search('^\(\s*".*\n\)\@<!\(\s*"\)', "W")
+nnoremap <buffer> <silent> ]" :call search('^\(\s*".*\n\)\@<!\(\s*"\)', "W")
+vnoremap <buffer> <silent> ][ m':exe "normal! gv"|call search('^\s*endf*\%[unction]\>', "W")
+nnoremap <buffer> <silent> ][ m':call search('^\s*endf*\%[unction]\>', "W")
+vnoremap <buffer> <silent> ]] m':exe "normal! gv"|call search('^\s*fu\%[nction]\>', "W")
+nnoremap <buffer> <silent> ]] m':call search('^\s*fu\%[nction]\>', "W")
 let s:cpo_save=&cpo
 set cpo&vim
-nmap <buffer> <silent> <NL> :call TaskstackMoveItemDown()
-nmap <buffer> <silent>  :call TaskstackMoveItemUp()
-map <buffer> <silent>  /=\{1,} \(.*\) =\{1,}zt:nohlsearch
-map <buffer> <silent>  ?=\{1,} \(.*\) =\{1,}zt:nohlsearch
-nmap <buffer> <silent> x :call TaskstackGroups()
-nmap <buffer> k :echo TaskstackMoveToProjectAutoDetect()
-nmap <buffer> <silent> $ :call TaskstackEOL()
-nmap <buffer> :w :call TaskstackSave()
-nmap <buffer> K :echo TaskstackMoveToProjectPrompt()
-nmap <buffer> LL :call TaskstackScratch()
-nmap <buffer> NN :call TaskstackNewItem()
-nmap <buffer> QQ :call TaskstackCompleteItem(g:completed_prefix)
-nmap <buffer> XX :call TaskstackCompleteItem(g:aborted_prefix)
-nmap <buffer> ZZ :call TaskstackHide()
-map <buffer> <BS> :call vimwiki#go_back_link()
-nmap <buffer> <silent> <S-Tab> :call search("@.*\\\|^[A-Z]\\+", 'b')
-imap <buffer> NN :call TaskstackNewItem()
-imap <buffer> QQ :call TaskstackCompleteItem(g:completed_prefix)
-imap <buffer> XX :call TaskstackCompleteItem(g:aborted_prefix)
-imap <buffer> ZZ :call TaskstackHide()
+vmap <buffer> ar <Plug>VimLTextObjectsAll
+omap <buffer> ar <Plug>VimLTextObjectsAll
+vmap <buffer> ir <Plug>VimLTextObjectsInner
+omap <buffer> ir <Plug>VimLTextObjectsInner
+map <buffer> <silent> <D-j>j :40wincmd |
+map <buffer> <silent> <D-j>t <Plug>NewTweet
+map <buffer> <silent> <D-j>v :wincmd h | :call TwitVimVimSearch() | :wincmd h
+map <buffer> <silent> <D-j>n :wincmd h | :call NextSearchPage() | :wincmd h
 let &cpo=s:cpo_save
 unlet s:cpo_save
 setlocal keymap=
@@ -559,13 +544,12 @@ setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
 setlocal cinoptions=
 setlocal cinwords=if,else,while,do,for,switch
 setlocal colorcolumn=
-setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
-setlocal commentstring=
+setlocal comments=sO:\"\ -,mO:\"\ \ ,eO:\"\",:\"
+setlocal commentstring=\"%s
 setlocal complete=.,w,b,u,t,i
 setlocal concealcursor=
-set conceallevel=3
-setlocal conceallevel=3
-setlocal completefunc=
+setlocal conceallevel=0
+setlocal completefunc=vimcomplete#Complete
 setlocal nocopyindent
 setlocal cryptmethod=
 setlocal nocursorbind
@@ -578,8 +562,8 @@ setlocal nodiff
 setlocal equalprg=
 setlocal errorformat=
 setlocal expandtab
-if &filetype != 'txt'
-setlocal filetype=txt
+if &filetype != 'vim'
+setlocal filetype=vim
 endif
 setlocal foldcolumn=0
 setlocal foldenable
@@ -594,17 +578,17 @@ setlocal foldnestmax=20
 set foldtext=CleanFoldText()
 setlocal foldtext=CleanFoldText()
 setlocal formatexpr=
-setlocal formatoptions=tcq
+setlocal formatoptions=croql
 setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
 setlocal grepprg=
 setlocal iminsert=2
 setlocal imsearch=2
 setlocal include=
 setlocal includeexpr=
-setlocal indentexpr=
-setlocal indentkeys=0{,0},:,0#,!^F,O,e
+setlocal indentexpr=GetVimIndent()
+setlocal indentkeys=0{,0},:,0#,!^F,o,O,e,=end,=else,=cat,=fina,=END,0\\
 setlocal noinfercase
-setlocal iskeyword=@,48-57,_,192-255,-
+setlocal iskeyword=@,48-57,_,192-255,-,#
 setlocal keywordprg=
 set linebreak
 setlocal linebreak
@@ -630,10 +614,10 @@ setlocal relativenumber
 setlocal norightleft
 setlocal rightleftcmd=search
 setlocal noscrollbind
-setlocal shiftwidth=2
+setlocal shiftwidth=4
 setlocal noshortname
 setlocal nosmartindent
-setlocal softtabstop=2
+setlocal softtabstop=4
 setlocal nospell
 setlocal spellcapcheck=off
 setlocal spellfile=
@@ -642,339 +626,27 @@ setlocal statusline=
 setlocal suffixesadd=
 setlocal swapfile
 setlocal synmaxcol=3000
-if &syntax != 'txt'
-setlocal syntax=txt
+if &syntax != 'vim'
+setlocal syntax=vim
 endif
-setlocal tabstop=2
+setlocal tabstop=8
 setlocal tags=
-setlocal textwidth=0
+setlocal textwidth=78
 setlocal thesaurus=
 setlocal noundofile
 set winfixheight
 setlocal winfixheight
 setlocal nowinfixwidth
-setlocal wrap
+setlocal nowrap
 setlocal wrapmargin=0
-21
+5
 normal zo
-21
-normal zo
-351
-normal zo
-351
-normal zo
-417
-normal zo
-417
-normal zo
-let s:l = 165 - ((144 * winheight(0) + 36) / 72)
+let s:l = 26 - ((21 * winheight(0) + 27) / 54)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-165
-normal! 0
-wincmd w
-argglobal
-buffer ~/sandbox/personal/todo/techtodo.txt
-nmap <buffer> / :call TaskstackNavigateToProjectPrompted()
-nmap <buffer> <silent> 	 :call search("@.*\\\|^[A-Z]\\+")
-let s:cpo_save=&cpo
-set cpo&vim
-nmap <buffer> <silent> <NL> :call TaskstackMoveItemDown()
-nmap <buffer> <silent>  :call TaskstackMoveItemUp()
-map <buffer> <silent>  /=\{1,} \(.*\) =\{1,}zt:nohlsearch
-map <buffer> <silent>  ?=\{1,} \(.*\) =\{1,}zt:nohlsearch
-nmap <buffer> <silent> x :call TaskstackGroups()
-nmap <buffer> k :echo TaskstackMoveToProjectAutoDetect()
-nmap <buffer> <silent> $ :call TaskstackEOL()
-nmap <buffer> :w :call TaskstackSave()
-nmap <buffer> K :echo TaskstackMoveToProjectPrompt()
-nmap <buffer> LL :call TaskstackScratch()
-nmap <buffer> NN :call TaskstackNewItem()
-nmap <buffer> QQ :call TaskstackCompleteItem(g:completed_prefix)
-nmap <buffer> XX :call TaskstackCompleteItem(g:aborted_prefix)
-nmap <buffer> ZZ :call TaskstackHide()
-map <buffer> <BS> :call vimwiki#go_back_link()
-nmap <buffer> <silent> <S-Tab> :call search("@.*\\\|^[A-Z]\\+", 'b')
-imap <buffer> NN :call TaskstackNewItem()
-imap <buffer> QQ :call TaskstackCompleteItem(g:completed_prefix)
-imap <buffer> XX :call TaskstackCompleteItem(g:aborted_prefix)
-imap <buffer> ZZ :call TaskstackHide()
-let &cpo=s:cpo_save
-unlet s:cpo_save
-setlocal keymap=
-setlocal noarabic
-setlocal noautoindent
-setlocal balloonexpr=
-setlocal nobinary
-setlocal bufhidden=
-setlocal buflisted
-setlocal buftype=
-setlocal nocindent
-setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
-setlocal cinoptions=
-setlocal cinwords=if,else,while,do,for,switch
-setlocal colorcolumn=
-setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
-setlocal commentstring=
-setlocal complete=.,w,b,u,t,i
-setlocal concealcursor=
-set conceallevel=3
-setlocal conceallevel=3
-setlocal completefunc=
-setlocal nocopyindent
-setlocal cryptmethod=
-setlocal nocursorbind
-setlocal nocursorcolumn
-set cursorline
-setlocal cursorline
-setlocal define=
-setlocal dictionary=
-setlocal nodiff
-setlocal equalprg=
-setlocal errorformat=
-setlocal expandtab
-if &filetype != 'txt'
-setlocal filetype=txt
-endif
-setlocal foldcolumn=0
-setlocal foldenable
-setlocal foldexpr=0
-setlocal foldignore=#
-setlocal foldlevel=0
-setlocal foldmarker={{{,}}}
-set foldmethod=marker
-setlocal foldmethod=marker
-setlocal foldminlines=1
-setlocal foldnestmax=20
-set foldtext=CleanFoldText()
-setlocal foldtext=CleanFoldText()
-setlocal formatexpr=
-setlocal formatoptions=tcq
-setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
-setlocal grepprg=
-setlocal iminsert=2
-setlocal imsearch=2
-setlocal include=
-setlocal includeexpr=
-setlocal indentexpr=
-setlocal indentkeys=0{,0},:,0#,!^F,O,e
-setlocal noinfercase
-setlocal iskeyword=@,48-57,_,192-255,-
-setlocal keywordprg=
-set linebreak
-setlocal linebreak
-setlocal nolisp
-set list
-setlocal list
-setlocal nomacmeta
-setlocal makeprg=
-setlocal matchpairs=(:),{:},[:]
-setlocal modeline
-setlocal modifiable
-setlocal nrformats=octal,hex
-set number
-setlocal nonumber
-setlocal numberwidth=4
-setlocal omnifunc=
-setlocal path=
-setlocal nopreserveindent
-setlocal nopreviewwindow
-setlocal quoteescape=\\
-setlocal noreadonly
-set relativenumber
-setlocal relativenumber
-setlocal norightleft
-setlocal rightleftcmd=search
-setlocal noscrollbind
-setlocal shiftwidth=2
-setlocal noshortname
-setlocal nosmartindent
-setlocal softtabstop=2
-setlocal nospell
-setlocal spellcapcheck=off
-setlocal spellfile=
-setlocal spelllang=en
-setlocal statusline=
-setlocal suffixesadd=
-setlocal swapfile
-setlocal synmaxcol=3000
-if &syntax != 'txt'
-setlocal syntax=txt
-endif
-setlocal tabstop=2
-setlocal tags=
-setlocal textwidth=0
-setlocal thesaurus=
-setlocal noundofile
-setlocal nowinfixheight
-setlocal nowinfixwidth
-setlocal wrap
-setlocal wrapmargin=0
-194
-normal zo
-209
-normal zo
-209
-normal zo
-let s:l = 194 - ((0 * winheight(0) + 36) / 72)
-if s:l < 1 | let s:l = 1 | endif
-exe s:l
-normal! zt
-194
-normal! 0
-wincmd w
-argglobal
-buffer ~/sandbox/personal/todo/techtodo.txt
-nmap <buffer> / :call TaskstackNavigateToProjectPrompted()
-nmap <buffer> <silent> 	 :call search("@.*\\\|^[A-Z]\\+")
-let s:cpo_save=&cpo
-set cpo&vim
-nmap <buffer> <silent> <NL> :call TaskstackMoveItemDown()
-nmap <buffer> <silent>  :call TaskstackMoveItemUp()
-map <buffer> <silent>  /=\{1,} \(.*\) =\{1,}zt:nohlsearch
-map <buffer> <silent>  ?=\{1,} \(.*\) =\{1,}zt:nohlsearch
-nmap <buffer> <silent> x :call TaskstackGroups()
-nmap <buffer> k :echo TaskstackMoveToProjectAutoDetect()
-nmap <buffer> <silent> $ :call TaskstackEOL()
-nmap <buffer> :w :call TaskstackSave()
-nmap <buffer> K :echo TaskstackMoveToProjectPrompt()
-nmap <buffer> LL :call TaskstackScratch()
-nmap <buffer> NN :call TaskstackNewItem()
-nmap <buffer> QQ :call TaskstackCompleteItem(g:completed_prefix)
-nmap <buffer> XX :call TaskstackCompleteItem(g:aborted_prefix)
-nmap <buffer> ZZ :call TaskstackHide()
-map <buffer> <BS> :call vimwiki#go_back_link()
-nmap <buffer> <silent> <S-Tab> :call search("@.*\\\|^[A-Z]\\+", 'b')
-imap <buffer> NN :call TaskstackNewItem()
-imap <buffer> QQ :call TaskstackCompleteItem(g:completed_prefix)
-imap <buffer> XX :call TaskstackCompleteItem(g:aborted_prefix)
-imap <buffer> ZZ :call TaskstackHide()
-let &cpo=s:cpo_save
-unlet s:cpo_save
-setlocal keymap=
-setlocal noarabic
-setlocal noautoindent
-setlocal balloonexpr=
-setlocal nobinary
-setlocal bufhidden=
-setlocal buflisted
-setlocal buftype=
-setlocal nocindent
-setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
-setlocal cinoptions=
-setlocal cinwords=if,else,while,do,for,switch
-setlocal colorcolumn=
-setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
-setlocal commentstring=
-setlocal complete=.,w,b,u,t,i
-setlocal concealcursor=
-set conceallevel=3
-setlocal conceallevel=3
-setlocal completefunc=
-setlocal nocopyindent
-setlocal cryptmethod=
-setlocal nocursorbind
-setlocal nocursorcolumn
-set cursorline
-setlocal cursorline
-setlocal define=
-setlocal dictionary=
-setlocal nodiff
-setlocal equalprg=
-setlocal errorformat=
-setlocal expandtab
-if &filetype != 'txt'
-setlocal filetype=txt
-endif
-setlocal foldcolumn=0
-setlocal foldenable
-setlocal foldexpr=0
-setlocal foldignore=#
-setlocal foldlevel=0
-setlocal foldmarker={{{,}}}
-set foldmethod=marker
-setlocal foldmethod=marker
-setlocal foldminlines=1
-setlocal foldnestmax=20
-set foldtext=CleanFoldText()
-setlocal foldtext=CleanFoldText()
-setlocal formatexpr=
-setlocal formatoptions=tcq
-setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
-setlocal grepprg=
-setlocal iminsert=2
-setlocal imsearch=2
-setlocal include=
-setlocal includeexpr=
-setlocal indentexpr=
-setlocal indentkeys=0{,0},:,0#,!^F,O,e
-setlocal noinfercase
-setlocal iskeyword=@,48-57,_,192-255,-
-setlocal keywordprg=
-set linebreak
-setlocal linebreak
-setlocal nolisp
-set list
-setlocal list
-setlocal nomacmeta
-setlocal makeprg=
-setlocal matchpairs=(:),{:},[:]
-setlocal modeline
-setlocal modifiable
-setlocal nrformats=octal,hex
-set number
-setlocal nonumber
-setlocal numberwidth=4
-setlocal omnifunc=
-setlocal path=
-setlocal nopreserveindent
-setlocal nopreviewwindow
-setlocal quoteescape=\\
-setlocal noreadonly
-set relativenumber
-setlocal relativenumber
-setlocal norightleft
-setlocal rightleftcmd=search
-setlocal noscrollbind
-setlocal shiftwidth=2
-setlocal noshortname
-setlocal nosmartindent
-setlocal softtabstop=2
-setlocal nospell
-setlocal spellcapcheck=off
-setlocal spellfile=
-setlocal spelllang=en
-setlocal statusline=
-setlocal suffixesadd=
-setlocal swapfile
-setlocal synmaxcol=3000
-if &syntax != 'txt'
-setlocal syntax=txt
-endif
-setlocal tabstop=2
-setlocal tags=
-setlocal textwidth=0
-setlocal thesaurus=
-setlocal noundofile
-setlocal nowinfixheight
-setlocal nowinfixwidth
-setlocal wrap
-setlocal wrapmargin=0
-279
-normal zo
-279
-normal zo
-let s:l = 279 - ((0 * winheight(0) + 36) / 72)
-if s:l < 1 | let s:l = 1 | endif
-exe s:l
-normal! zt
-279
-normal! 0
-wincmd w
-exe 'vert 1resize ' . ((&columns * 78 + 117) / 235)
-exe 'vert 2resize ' . ((&columns * 77 + 117) / 235)
-exe 'vert 3resize ' . ((&columns * 78 + 117) / 235)
+26
+normal! 01l
 tabnext 1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf

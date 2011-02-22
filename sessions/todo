@@ -339,6 +339,7 @@ set background=dark
 set backspace=indent,eol,start
 set clipboard=unnamed
 set commentstring=
+set completefunc=vimcomplete#Complete
 set diffopt=filler,vertical
 set directory=~/.vim/swap//,~/vimfiles/swap//
 set display=lastline
@@ -672,11 +673,11 @@ normal zo
 normal zo
 33
 normal zo
-let s:l = 36 - ((6 * winheight(0) + 36) / 72)
+let s:l = 34 - ((4 * winheight(0) + 36) / 72)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-36
+34
 normal! 0
 wincmd w
 argglobal
@@ -973,7 +974,6 @@ normal! zt
 1007
 normal! 0
 wincmd w
-2wincmd w
 exe 'vert 1resize ' . ((&columns * 78 + 117) / 235)
 exe 'vert 2resize ' . ((&columns * 78 + 117) / 235)
 exe 'vert 3resize ' . ((&columns * 77 + 117) / 235)
