@@ -196,7 +196,7 @@ nmap <C-x>p :call system("ssh localhost pbcopy", getreg('"'))<CR>
 " }}}
 " Reset: restore some default settings and redraw " {{{
 nnoremap <silent> <C-L> :call Reset() \| nohls<CR>
-imap <silent> <C-L> <Esc>:call Reset() \| nohls<CR>a
+imap <silent> <C-L> <Esc><C-L>a
 
 " }}}
 " Custom: <C-y> prefixed custom commands " {{{
@@ -888,7 +888,23 @@ function! Reset() " {{{
     set completeopt-=menuone
     set nolist
     redraw
-    echo "Reset"
+    echo "Reset [ Tip: " . RandomHint() . " ]"
+endfunction
+
+" }}}
+function! RandomHint() " {{{
+    let comment_character = "#"
+    if !exists("g:random_hint_list")
+        if !exists("g:hint_filename")
+            let g:hint_filename = $HOME . "/.vim/vimtips.txt"
+        endif
+        let g:random_hint_list = readfile(g:hint_filename, '')
+        call filter(g:random_hint_list, 'strpart(v:val, 0, 1) != comment_character')
+    endif
+    let hint_count = len(g:random_hint_list)
+    exec "ruby random_line = rand(" . hint_count . ")"
+    ruby VIM::command("let hint = #{random_line}")
+    return g:random_hint_list[hint]
 endfunction
 
 " }}}
