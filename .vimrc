@@ -17,6 +17,7 @@ let g:session_autosave = 1
 "   - /^""/ indicate intentionally disabled options
 
 " Todo:
+"   - Fix <D- conflicts
 "   - clean up SETTINGS; provide better descriptions
 "   - for clarity, replace abbreviated forms of options in all settings
 "   - annotate all line noise, especially statusline
@@ -50,7 +51,6 @@ if has("vms")
 else
     set backup      " keep a backup file
 endif
-set history=50      " keep 50 lines of command line history
 set ruler           " show the cursor position all the time
 set showcmd         " display incomplete commands
 set incsearch       " do incremental searching
@@ -104,7 +104,7 @@ endif " has("autocmd")
 " SETTINGS: " {{{
 " au! VimEnter * source ~/.vim/after/plugin/foo.vim " Way to set the latest
 " file that will always be sourced for any file opened.
-set winfixheight
+set winfixheight                    " keep existing window height when possible
 set shortmess+=I                    " don't show intro on start
 set shortmess+=A                    " don't show message on existing swapfile
 set nospell                         " spelling off by default
@@ -113,7 +113,7 @@ set encoding=UTF-8                  " use UTF-8 encoding
 set fileencoding=UTF-8              " use UTF-8 encoding as default
 set nolist                          " don't show invisibles
 set listchars=tab:>-,trail:-        " ...but make them look nice when they do show
-set iskeyword+=-                    " usually want - to not divide words
+set iskeyword+=-                    " usually do not want - to divide words
 set lbr                             " wrap lines at word breaks
 set noautoindent                    " don't like autoindent
 set number                          " always show line numbers
@@ -123,7 +123,6 @@ set softtabstop=4                   " set a narrow tab width
 set shiftwidth=4                    " and keep sw & sts in sync
 set expandtab                       " expand tabs to spaces
 set list                            " and consequently, reveal tabs by default now
-set hlsearch                        " highlight searches
 set nobackup                        " don't like ~ files littered about; don't need
 set laststatus=2                    " always show the status line
 set diffopt+=vertical               " use vertical splits for diff
@@ -133,21 +132,21 @@ set winminheight=0                  " minimized horizontal splits show only stat
 set switchbuf=useopen               " when switching to a buffer, go to where it's already open
 set history=10000                   " keep craploads of command history
 set undolevels=500                  " keep lots of undo history
-" set foldlevelstart=999              " don't use a default fold level; all folds open by default
+set foldlevelstart=1                " first level of folds open by default
 set fdm=marker                      " make the default foldmethod markers
 set display+=lastline               " always show as much of the last line as possible
 set guioptions+=c                   " always use console dialogs (faster)
 set noerrorbells                    " don't need to hear if i hit esc twice
-set visualbell | set t_vb=          " nor see it
-"set foldcolumn=4                    " trying out fold indicator column
-"set display+=uhex                   " show unprintable hex characters as <xx>
+set visualbell | set t_vb=          " ...nor see it
+let mapleader="\\"                  " <Leader>
 
+"set foldcolumn=4                   " trying out fold indicator column
+"set display+=uhex                  " show unprintable hex characters as <xx>
 "let mapleader=" "                  " experiment with using <Space> as <Leader>.
-let mapleader="\\"                     " experiment with using <Space> as <Leader>. Nah. Stick with \
 
-if version > 702 | set rnu | au BufReadPost * set rnu
-end " use relative line numbers
+if version > 702 | set rnu | exec "au BufReadPost * set rnu" | endif " use relative line numbers
 if version > 702 | set clipboard=unnamed | end " use system clipboard; FIXME: what version is actually required?
+
 set wildignore+=*.o,*.sw?,*.git,*.svn,*.hg,**/build,*.?ib,*.png,*.jpg,*.jpeg,*.mov,*.gif,*.bom,*.azw,*.lpr,*.mbp,*.mode1v3,*.gz,*.vmwarevm,*.rtf,*.pkg,*.developerprofile,*.xcodeproj,*.pdf,*.dmg,*.db,*.otf,*.bz2,*.tiff,*.iso,*.jar,*.dat,**/Cache,*.cache,*.sqlite*,*.collection,*.qsindex,*.qsplugin,*.growlTicket,*.part,*.ics,*.ico,**/iPhone\ Simulator,*.lock*,*.webbookmark
 
 " Tags: universal location
@@ -363,7 +362,7 @@ nmap <silent> <C-e>k <C-w>k:call AccordionMode()<CR><C-l>
 nmap <silent> <C-e>h <C-w>h:call AccordionMode()<CR><C-l>
 nmap <silent> <C-e>l <C-w>l:call AccordionMode()<CR><C-l>
 nmap <silent> <C-e>- :call AccordionMode()<CR><C-l>
-nnoremap <silent> <C-e><C-e> <C-e>
+noremap <silent> <C-e><C-e> <C-e>
 function! AccordionMode()
     set winminheight=0 winheight=9999
     set winheight=10 winminheight=10
@@ -388,12 +387,24 @@ nmap <silent> <Leader>fi :call FoldInsert()<CR>
 nmap <silent> <Leader>ll o<Esc>:call Timestamp("short") \| call FoldWrap()<CR>
 " }}}
 " Tabs: switching " {{{
-" set Cmd-# and Alt-# to switch tabs
+" set Cmd-# on Mac and Alt-# elsewhere to switch tabs
+for n in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+     let k = n == "0" ? "10" : n
+     for m in ["M"]
+         exec printf("imap <silent> <%s-%s> <Esc>:tabn %s<CR>", m, n, k)
+         exec printf("nmap <silent> <%s-%s> %sgt<CR>", m, n, k)
+     endfor
+endfor
+
+" }}}
+" Windows: switching " {{{
+" Set <C-w># to switch between windows (use [count]<C-w> instead of
+" <C-w>[count] for other wincmds).
 for n in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
     let k = n == "0" ? "10" : n
-    for m in ["A", "D"]
-        exec printf("imap <silent> <%s-%s> <Esc>:tabn %s<CR>", m, n, k)
-        exec printf("nmap <silent> <%s-%s> %sgt<CR>", m, n, k)
+    for m in ["<C-w>"]
+        exec printf("imap <silent> %s%s <Esc>%s%sa", m, n, m, n)
+        exec printf("nmap <silent> %s%s :%swincmd w<CR>", m, n, k)
     endfor
 endfor
 
@@ -1004,7 +1015,7 @@ endfunction
 " FILETYPES: " {{{
 
 au BufNewFile,BufRead *.applescript   setf applescript
-au BufNewFile,BufRead *.tst.* set ft=_.txt.tst
+" au BufNewFile,BufRead *.tst.* set ft=_.txt.tst
 au BufNewFile,BufRead *.yaml,*.yml so ~/.vim/syntax/yaml.vim
 au FileType ruby set fdm=syntax
 
@@ -1089,7 +1100,7 @@ function! SmallWindow()
     setlocal guioptions-=L
     setlocal guioptions-=r
     setlocal foldcolumn=0
-    setlocal guifont=Inconsolata:h11
+    setlocal guifont=Inconsolata:h13
     exec "set columns=" . g:volatile_scratch_columns . " lines=" . g:volatile_scratch_lines
     call SetColorColumnBorder()
     if exists('g:gundo_target_n')
@@ -1122,7 +1133,7 @@ command! -nargs=* Sub call InsertLine("Subject: " . <q-args>)
 
 augroup VolatileScratch
     " au! BufRead *.scratch call SmallWindow()
-    au! BufRead *.scratch nmap <buffer> <silent> <C-m> :call SmallWindow()<CR>ZZ
+    au! BufRead *.scratch nmap <buffer> <silent> <C-m> :call SmallWindow()<CR>
     au BufRead *.scratch nmap <buffer> <silent> <C-y>g :exec "set lines=999 columns=" . (g:gundo_width + &columns) \| :GundoToggle<CR>
     au BufRead *.scratch nmap <buffer> <silent> ZZ :wa \| :call ScratchCopy()<CR> \| :macaction hide:<CR>
     au BufRead *.scratch nmap <buffer> <silent> ZZ :call ScratchCopy()<CR> \| :macaction hide:<CR>
@@ -1173,7 +1184,7 @@ au! FileType xhtml inoremap <buffer> > <Esc>:call AutoTagComplete()<CR>
 
 " }}}
 " Help Files: " {{{
-augroup helpfiles 
+augroup helpfiles
     au! FileType help nnoremap <buffer> <silent> <C-p> ?^[=-]\{1,}$<CR>zt:nohlsearch<CR>
     au FileType help nnoremap <buffer> <silent> <C-n> /^[=-]\{1,}$<CR>zt:nohlsearch<CR>
     au FileType help nnoremap <buffer> <silent> <S-Tab> ?\|[^\[:space:]]*\|<CR>zz:nohlsearch<CR>
@@ -1188,7 +1199,7 @@ nnoremap <C-y>g :GundoToggle<CR>
 
 " }}}
 " Git Commit: " {{{
-augroup helpfiles 
+augroup Gundo
     au! FileType gitcommit nnoremap <buffer> <silent> <C-n> :DiffGitCached<CR>\|:wincmd L<CR>|:au FileType git nnoremap <buffer> <silent> <C-n> :hide<CR>
 augroup END
 
@@ -1270,7 +1281,8 @@ augroup END
 " Autocmds: " {{{
 augroup vimwiki
     "au! BufReadPre *.wiki doau FileType txt
-    au! BufReadPost,FileReadPost *.wiki doau FileType tst
+    au! BufReadPost,FileReadPost,BufNewFile *.wiki doau FileType tst
+    au BufNew vimwiki set foldlevel=999
     au FileType vimwiki set syntax=vimwiki.txt
     au FileType vimwiki map <buffer> <silent> <C-p> ?=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
     au FileType vimwiki map <buffer> <silent> <C-n> /=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
@@ -1474,6 +1486,9 @@ if !exists(":DiffOrig")
 endif
 
 " }}}
+
+" hack to deal with syntax clearing problem i haven't been able to track down
+au! syntaxset
 
 " type number then : to get relative range prepopulated in cmdline
 " new vocab word "idem" to get relative range prepopulated in cmdline
