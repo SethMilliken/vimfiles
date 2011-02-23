@@ -341,7 +341,7 @@ set mouse=a
 set printexpr=system('open\ -a\ Preview\ '.v:fname_in)\ +\ v:shell_error
 set ruler
 set rulerformat=%-14.(%l,%c%V%)%=%P%{XPMautoUpdate(\"ruler\")}
-set runtimepath=~/.vim,~/.vim/bundle/AnsiEsc.vim,~/.vim/bundle/RubyTextObjects,~/.vim/bundle/SnippetsMgr,~/.vim/bundle/abolish,~/.vim/bundle/ansiesc,~/.vim/bundle/autotag,~/.vim/bundle/bufexplorer,~/.vim/bundle/calendar,~/.vim/bundle/cocoa,~/.vim/bundle/command-t,~/.vim/bundle/conque,~/.vim/bundle/disabled,~/.vim/bundle/fugitive,~/.vim/bundle/fuzzyfinder,~/.vim/bundle/gundo,~/.vim/bundle/hexhighlight,~/.vim/bundle/jslint,~/.vim/bundle/jslint.vim,~/.vim/bundle/kellys,~/.vim/bundle/l9,~/.vim/bundle/matrix,~/.vim/bundle/nerdcommenter,~/.vim/bundle/nerdtree,~/.vim/bundle/paster,~/.vim/bundle/pickacolor,~/.vim/bundle/project,~/.vim/bundle/rails,~/.vim/bundle/screenshot,~/.vim/bundle/script-ed,~/.vim/bundle/sessionman,~/.vim/bundle/snipmate,~/.vim/bundle/space,~/.vim/bundle/surround,~/.vim/bundle/syntastic,~/.vim/bundle/textobj-function,~/.vim/bundle/textobj-rubyblock,~/.vim/bundle/textobj-user,~/.vim/bundle/twitvim,~/.vim/bundle/vcscommand,~/.vim/bundle/vim-css-color,~/.vim/bundle/vim-ruby,~/.vim/bundle/vimple,~/.vim/bundle/vimw
+set runtimepath=~/.vim,~/.vim/bundle/AnsiEsc.vim,~/.vim/bundle/RubyTextObjects,~/.vim/bundle/SnippetsMgr,~/.vim/bundle/abolish,~/.vim/bundle/ansiesc,~/.vim/bundle/autotag,~/.vim/bundle/bufexplorer,~/.vim/bundle/calendar,~/.vim/bundle/cocoa,~/.vim/bundle/command-t,~/.vim/bundle/conque,~/.vim/bundle/disabled,~/.vim/bundle/fugitive,~/.vim/bundle/fuzzyfinder,~/.vim/bundle/gundo,~/.vim/bundle/hexhighlight,~/.vim/bundle/jslint,~/.vim/bundle/jslint.vim,~/.vim/bundle/kellys,~/.vim/bundle/l9,~/.vim/bundle/matrix,~/.vim/bundle/nerdcommenter,~/.vim/bundle/nerdtree,~/.vim/bundle/paster,~/.vim/bundle/pickacolor,~/.vim/bundle/project,~/.vim/bundle/rails,~/.vim/bundle/screenshot,~/.vim/bundle/script-ed,~/.vim/bundle/sessionman,~/.vim/bundle/snipmate,~/.vim/bundle/space,~/.vim/bundle/surround,~/.vim/bundle/syntastic,~/.vim/bundle/textobj-function,~/.vim/bundle/textobj-rubyblock,~/.vim/bundle/textobj-user,~/.vim/bundle/twitvim,~/.vim/bundle/vcscommand,~/.vim/bundle/vim-ruby,~/.vim/bundle/vimple,~/.vim/bundle/vimwiki,~/.vim/bundle/xptemplate
 set sessionoptions=folds,help,options,tabpages,winsize,globals,sesdir,resize,winpos,unix
 set shiftwidth=4
 set shortmess=filnxtToOIA
@@ -359,7 +359,6 @@ set termencoding=utf-8
 set undolevels=500
 set visualbell
 set wildignore=*.o,*.sw?,*.git,*.svn,*.hg,**/build,*.?ib,*.png,*.jpg,*.jpeg,*.mov,*.gif,*.bom,*.azw,*.lpr,*.mbp,*.mode1v3,*.gz,*.vmwarevm,*.rtf,*.pkg,*.developerprofile,*.xcodeproj,*.pdf,*.dmg,*.db,*.otf,*.bz2,*.tiff,*.iso,*.jar,*.dat,**/Cache,*.cache,*.sqlite*,*.collection,*.qsindex,*.qsplugin,*.growlTicket,*.part,*.ics,*.ico,**/iPhone\ Simulator,*.lock*,*.webbookmark
-set window=57
 set winminheight=0
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
@@ -485,10 +484,11 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
+badd +78 ~/.vim/bundle/script-ed/plugin/script-ed.vim
 badd +0 ~/.vim/bundle/script-ed/doc/script-ed.txt
-badd +0 ~/.vim/bundle/script-ed/plugin/script-ed.vim
 silent! argdel *
-set lines=58 columns=205
+set lines=61 columns=205
+set fullscreen
 winpos 0 1028
 edit ~/.vim/bundle/script-ed/plugin/script-ed.vim
 set splitbelow splitright
@@ -498,8 +498,8 @@ vsplit
 wincmd w
 wincmd t
 set winheight=1 winwidth=1
-exe 'vert 1resize ' . ((&columns * 102 + 102) / 205)
-exe 'vert 2resize ' . ((&columns * 102 + 102) / 205)
+exe 'vert 1resize ' . ((&columns * 103 + 102) / 205)
+exe 'vert 2resize ' . ((&columns * 101 + 102) / 205)
 argglobal
 vnoremap <buffer> <silent> [" :exe "normal! gv"|call search('\%(^\s*".*\n\)\%(^\s*"\)\@!', "bW")
 nnoremap <buffer> <silent> [" :call search('\%(^\s*".*\n\)\%(^\s*"\)\@!', "bW")
@@ -617,11 +617,12 @@ setlocal tags=
 setlocal textwidth=78
 setlocal thesaurus=
 setlocal noundofile
-setlocal nowinfixheight
+set winfixheight
+setlocal winfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 78 - ((77 * winheight(0) + 28) / 56)
+let s:l = 78 - ((77 * winheight(0) + 29) / 59)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
@@ -660,7 +661,7 @@ setlocal commentstring=
 setlocal complete=.,w,b,u,t,i
 setlocal concealcursor=nc
 setlocal conceallevel=2
-setlocal completefunc=
+setlocal completefunc=vimcomplete#Complete
 setlocal nocopyindent
 setlocal cryptmethod=
 setlocal nocursorbind
@@ -745,20 +746,20 @@ setlocal tags=
 setlocal textwidth=78
 setlocal thesaurus=
 setlocal noundofile
-set winfixheight
-setlocal winfixheight
+setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 158 - ((36 * winheight(0) + 28) / 56)
+let s:l = 1 - ((0 * winheight(0) + 29) / 59)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-158
-normal! 031l
+1
+normal! 0
 wincmd w
-exe 'vert 1resize ' . ((&columns * 102 + 102) / 205)
-exe 'vert 2resize ' . ((&columns * 102 + 102) / 205)
+2wincmd w
+exe 'vert 1resize ' . ((&columns * 103 + 102) / 205)
+exe 'vert 2resize ' . ((&columns * 101 + 102) / 205)
 tabnext 1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf
