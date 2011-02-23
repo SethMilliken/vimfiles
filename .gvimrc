@@ -1,8 +1,12 @@
-" GUI Setup "{{{
+" GUI Setup: "{{{
+
+" Load Check: " {{{
 if version < 700 || exists("g:loaded_gvimrc")
     finish
 end
-" let g:loaded_gvimrc = 1
+let g:loaded_gvimrc = 1
+
+" }}}
 
 " Prototype-based settings Experiment {{{
 " this == prototype
@@ -21,7 +25,7 @@ function! s:DefaultSettings.New()
         set guioptions-=T
         "" Simple, informative gui tabs (dirty, number, name without path)
         set guitablabel=%m\ %N\ %t\ %r
-        set tabpagemax=100
+        set tabpagemax=10
         " yank to system clipboard
         set clipboard=unnamed
     endfunction
@@ -62,85 +66,87 @@ call settings.finished()
 
 " }}}
 
+" Basic: shared config " {{{
 if has("gui_running")
     set t_Co=256
-    set t_AB=[48;5;%dm
-    set t_AF=[38;5;%dm
-    set cursorline                                  " highlight current line
-    color araxia
-    "" No toolbar, please.
-    set guioptions-=T
+    set t_AB=[48;5;%dm                    " document this
+    set t_AF=[38;5;%dm                    " document this
+    set cursorline                          " highlight current line
+    color araxia                            " hey, those are my colors!
+    set guioptions-=T                       " no toolbar
+    set guioptons-=m                        " no menu
     "" Simple, informative gui tabs (dirty, number, name without path)
     set guitablabel=%m\ %N\ %t\ %r
-    set tabpagemax=100
-    " yank to system clipboard
-    set clipboard=unnamed
+    set tabpagemax=10                       " don't get ridiculous
 else
     if (&t_Co > 8)
-            color desert256
+        color desert256                     " decent fallback if necessary
     else
-            color elflord
+        color elflord                       " sigh
     end
 end
-let g:os_unknown = "hypothesis"
+
+" }}}
+" Mac: " {{{
 if has("gui_macvim")
     color araxia
     " max vertical and horizontal columns on resize to full screen
     set fuopt=maxhorz,maxvert
     " set transparency=5
     set antialias
-    set gfn=Inconsolata:h15
-    " set a reasonable window size
-    winsize 345 500
+    set guifont=Inconsolata:h15
+    winsize 345 500                         " set a reasonable window size
     unlet g:os_unknown
-if has("win")
-    set gfn=Terminal:h6
-    " set a reasonable window size
-    winsize 150 200
+    "" Map Cmd-t to new tab
+    exec "nmap <silent> <D-t>     <Esc>:" . &tabpagemax . "tabnew<CR>"
+    "" Map Cmd-w to close buffer
+    nmap <silent> <D-w>     <Esc>:bd<CR>
+    " NOTE: Have to unset menu commands in gvimrc
+    " Free Command Key Bindings " {{{
+    macmenu File.Print key=<nop>
+    map <silent> <D-p> :ln <CR>
+    map <silent> <D-P> :lp <CR>
+    map <silent> <D-e> :cn <CR>
+    map <silent> <D-E> :cp <CR>
+
+    " }}}
+    " Command-T " {{{
+    macmenu Edit.Find.Find\.\.\. key=<nop>
+    map <D-f> :CommandT<CR>
+    " }}}
+end
+
+" }}}
+" Windows: " {{{
+if has("win32")
+    set guifont=Terminal:h6
+    winsize 150 200                         " set a reasonable window size
     unlet g:os_unknown
 end
+
+" }}}
+" Other: " {{{
 if exists("g:os_unknown")
     " generic defaults if os not detected
-    set gfn=DejaVu\ Sans\ Mono\ 8
-    set guioptons-=m
-    end
+    set guifont=DejaVu\ Sans\ Mono\ 8
 end
-" }}}
-" MAPPINGS "{{{
-" Mac vs Windows mappings?
-"" Map Cmd-t to new tab
-nmap <silent> <D-t>     <Esc>:101tabnew<CR>
-"" Map Cmd-w to close buffer
-nmap <silent> <D-w>     <Esc>:bd<CR>
-
-""" Figure out correct map directive to prevent commands from having other side effects (like moving the cursor).
-
-" NOTE: Have to unset menu commands in gvimrc
-"
-" Free Command Key Bindings {{{
-macmenu File.Print key=<nop>
-map <silent> <D-p> :ln <CR>
-map <silent> <D-P> :lp <CR>
-map <silent> <D-e> :cn <CR>
-map <silent> <D-E> :cp <CR>
 
 " }}}
-" Command-T " {{{
-macmenu Edit.Find.Find\.\.\. key=<nop>
-map <D-f> :CommandT<CR>
-" }}}
 
+" }}}
+" MAPPINGS: "{{{
 " Ctrl-Left to previous tab
 nnoremap <silent> <C-Left>      <Esc>gT<CR>
 " Ctrl-Right to next tab
 nnoremap <silent> <C-Right>     <Esc>gt<CR>
 
 " Ctrl-Up Increase font size
-nnoremap <C-Up> :silent! :call AdjustFont(1)<CR>
+nnoremap <C-Up> :silent! call AdjustFont(1)<CR>
 " Ctrl-Down Decrease font size
-nnoremap <C-Down> :silent! :call AdjustFont(-1)<CR>
+nnoremap <C-Down> :silent! call AdjustFont(-1)<CR>
 
-function! AdjustFont(increment) "{{{
+function! AdjustFont(increment) " {{{
+    " TODO: work out better resizing heuristic here
     let columns = &columns
     let lines = &lines
     let replacement = 'submatch(0) + ' . a:increment
@@ -152,4 +158,4 @@ endfunction
 "}}}
 
 "}}}
-" vim:ft=vim:fdm=marker:nospell:cms=\ \"%s
+" vim:ft=vim:fdm=marker:nospell:cms=\ \"\ %s
