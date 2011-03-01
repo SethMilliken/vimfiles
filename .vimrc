@@ -138,11 +138,14 @@ set display+=lastline               " always show as much of the last line as po
 set guioptions+=c                   " always use console dialogs (faster)
 set noerrorbells                    " don't need to hear if i hit esc twice
 set visualbell | set t_vb=          " ...nor see it
+set ignorecase                      " case ignored for searches
+set smartcase                       " override ignorecase for searches with uppercase
+
 let mapleader="\\"                  " <Leader>
 
 "set foldcolumn=4                   " trying out fold indicator column
 "set display+=uhex                  " show unprintable hex characters as <xx>
-"let mapleader=" "                  " experiment with using <Space> as <Leader>.
+"let mapleader="\<Space>"                  " experiment with using <Space> as <Leader>.
 
 if version > 702 | set rnu | exec "au BufReadPost * set rnu" | endif " use relative line numbers
 if version > 702 | set clipboard=unnamed | end " use system clipboard; FIXME: what version is actually required?
@@ -384,6 +387,8 @@ nmap <silent> <Leader>sd :call Timestamp("date")<CR>
 nmap <silent> <Leader>sl :call Timestamp("long")<CR>
 nmap <silent> <Leader>fw :call FoldWrap()<CR>
 nmap <silent> <Leader>fi :call FoldInsert()<CR>
+nmap <silent> <Leader>st :call InsertAnnotation("Started typing", "0")<CR>
+nmap <silent> <Leader>ft :call InsertAnnotation("Finished typing", "$")<CR>
 nmap <silent> <Leader>ll o<Esc>:call Timestamp("short") \| call FoldWrap()<CR>
 " }}}
 " Tabs: switching " {{{
@@ -482,6 +487,12 @@ function! InsertLine(text) "{{{
     else
         call append(line(".") - 1,[a:text])
     end
+endfunction
+
+"}}}
+function! InsertAnnotation(label, line) "{{{
+    let result = printf("[ %s: %s ]", a:label, TimestampText("short"))
+    call append(a:line, result)
 endfunction
 
 "}}}
@@ -1075,7 +1086,7 @@ augroup TaskStack
     au FileType *tst* nmap <buffer> <C-y>k :echo TaskstackMoveToProjectAutoDetect()<CR>
     au FileType *tst* nmap <buffer> <silent> <Tab> :call search("@.*\\\\|^[A-Z]\\+")<CR>
     au FileType *tst* nmap <buffer> <silent> <S-Tab> :call search("@.*\\\\|^[A-Z]\\+", 'b')<CR>
-    au FileType *tst* if !mapcheck('<CR>', 'n') == "" | nmap <unique> <buffer> <silent> <CR> yiW/<C-r>"<CR>zzzv<C-l> | end
+    au FileType *tst* if mapcheck('<CR>', 'n') == "" | nmap <unique> <buffer> <silent> <CR> yiW/<C-r>"<CR>ztzv<C-l> | end
     " Use <C-c> to avoid adding or updating a timestamp after editing.
     au! InsertLeave *.tst.* :call AddOrUpdateTimestamp("") " FIXME: External Dependency
     au! FocusLost *.tst.* nested write
@@ -1155,8 +1166,8 @@ augroup END
 " }}}
 " Vimperator Y Pentadactyl: " {{{
 augroup VimperatorYPentadactyl
-    au! BufRead vimperator-*\|pentadactyl-* nmap <buffer> <silent> ZZ :call FormFieldArchive() \| :silent write \| :bd \| :macaction hide:<CR>
-    au BufRead vimperator-*\|pentadactyl-* imap <buffer> <silent> ZZ <Esc>ZZ
+    au! BufRead vimperator-*,pentadactyl-* nmap <buffer> <silent> ZZ :call FormFieldArchive() \| :silent write \| :bd \| :macaction hide:<CR>
+    au BufRead vimperator-*,pentadactyl-* imap <buffer> <silent> ZZ <Esc>ZZ
 augroup END
 
 " }}}
@@ -1488,7 +1499,8 @@ endif
 " }}}
 
 " hack to deal with syntax clearing problem i haven't been able to track down
-au! syntaxset
+" au! syntaxset
+" unlet b:current_syntax
 
 " type number then : to get relative range prepopulated in cmdline
 " new vocab word "idem" to get relative range prepopulated in cmdline
