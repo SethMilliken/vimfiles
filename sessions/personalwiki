@@ -2,8 +2,6 @@ let SessionLoad = 1
 if &cp | set nocp | endif
 let s:cpo_save=&cpo
 set cpo&vim
-imap <silent> <Plug>IMAP_JumpBack =IMAP_Jumpfunc('b', 0)
-imap <silent> <Plug>IMAP_JumpForward =IMAP_Jumpfunc('', 0)
 imap <D-BS> 
 imap <M-BS> 
 imap <M-Down> }
@@ -15,7 +13,19 @@ noremap! <D-Right> <End>
 noremap! <M-Left> <C-Left>
 noremap! <D-Left> <Home>
 inoremap <silent> <S-Tab> =BackwardsSnippet()
+inoremap <silent> <Plug>XPTrawKey 
+imap <silent> <Plug>XPTfallback <Plug>XPTrawKey
 inoremap <silent> <Plug>NERDCommenterInInsert  <BS>:call NERDComment(0, "insert")
+imap <silent> <D-9> :tabn 9
+imap <silent> <D-8> :tabn 8
+imap <silent> <D-7> :tabn 7
+imap <silent> <D-6> :tabn 6
+imap <silent> <D-5> :tabn 5
+imap <silent> <D-4> :tabn 4
+imap <silent> <D-3> :tabn 3
+imap <silent> <D-2> :tabn 2
+imap <silent> <D-1> :tabn 1
+imap <silent> <D-0> :tabn 10
 imap <F1> :Help
 imap <Nul> :
 map! <D-v> *
@@ -29,87 +39,103 @@ nmap P :call SectionHeadNav(-1, 1)
 nmap p :call SectionHeadNav(-1, 0)
 nmap N :call SectionHeadNav(1, 1)
 nmap n :call SectionHeadNav(1, 0)
-nmap c :silent! lclose
+nmap d :silent! lclose
 nmap ? :call FunctionLocationIndex()
 nmap / :call HeaderLocationIndex()
+map x :call feedkeys("yyq:p\r", "n")
+nmap c :exec ":lcd " . expand("%:p:h")
 snoremap <silent> 	 i<Right>=TriggerSnippet()
-vmap <NL> <Plug>IMAP_JumpForward
-nmap <NL> <Plug>IMAP_JumpForward
 nnoremap <silent>  :call Reset() | nohls
-map <silent>  /=\{1,} \(.*\) =\{1,}:nohlsearch
+vmap  <Plug>TwitvimVisual
 snoremap  b<BS>
-nmap <silent>  :call RemoveTimestamp(g:timestamp_annotation)
-nmap <silent>  :call AddOrUpdateTimestamp(g:timestamp_annotation)
-nmap <silent>  :call RemoveTimestamp("")
-nmap <silent>  :call TimestampAutoUpdateToggle()
+nmap p :call system("ssh localhost pbcopy", getreg('"'))
+nnoremap g :GundoToggle
+nmap <silent>  :call RemoveTimestamp()
+nmap <silent>  :call AddOrUpdateTimestampSolicitingAnnotation()
 nmap <silent>  :call AddOrUpdateTimestamp("")
+nmap <silent> Y :call AddOrUpdateTimestamp("", "force")
 nmap <silent>  :call TimestampAutoUpdateToggle()
-nmap  :call ReloadVimrc() | :echo "Resourced .vimrc."
+nmap s :SnipUp
+nmap v :call ReloadVimrc() | :echo "Resourced .vimrc."
+snoremap <silent>  `>a=XPTemplateStart(0,{'k':'<C-\++'})
+xnoremap <silent>  "0s=XPTemplatePreWrap(@0)
 snoremap % b<BS>%
 snoremap ' b<BS>'
-nmap ,ca <Plug>NERDCommenterAltDelims
-vmap ,cA <Plug>NERDCommenterAppend
-nmap ,cA <Plug>NERDCommenterAppend
-vmap ,c$ <Plug>NERDCommenterToEOL
-nmap ,c$ <Plug>NERDCommenterToEOL
-vmap ,cu <Plug>NERDCommenterUncomment
-nmap ,cu <Plug>NERDCommenterUncomment
-vmap ,cn <Plug>NERDCommenterNest
-nmap ,cn <Plug>NERDCommenterNest
-vmap ,cb <Plug>NERDCommenterAlignBoth
-nmap ,cb <Plug>NERDCommenterAlignBoth
-vmap ,cl <Plug>NERDCommenterAlignLeft
-nmap ,cl <Plug>NERDCommenterAlignLeft
-vmap ,cy <Plug>NERDCommenterYank
-nmap ,cy <Plug>NERDCommenterYank
-vmap ,ci <Plug>NERDCommenterInvert
-nmap ,ci <Plug>NERDCommenterInvert
-vmap ,cs <Plug>NERDCommenterSexy
-nmap ,cs <Plug>NERDCommenterSexy
-vmap ,cm <Plug>NERDCommenterMinimal
-nmap ,cm <Plug>NERDCommenterMinimal
-vmap ,c  <Plug>NERDCommenterToggle
-nmap ,c  <Plug>NERDCommenterToggle
-vmap ,cc <Plug>NERDCommenterComment
-nmap ,cc <Plug>NERDCommenterComment
 nnoremap // q/
 nnoremap :: q:
-nmap :W :w
 nnoremap ?? q?
-nmap <silent> K :e:$
+imap <silent> ¹ :tabn 9
+imap <silent> ¸ :tabn 8
+imap <silent> · :tabn 7
+imap <silent> ¶ :tabn 6
+imap <silent> µ :tabn 5
+imap <silent> ´ :tabn 4
+imap <silent> ³ :tabn 3
+imap <silent> ² :tabn 2
+imap <silent> ± :tabn 1
+imap <silent> ° :tabn 10
 map Q gq
 xmap S <Plug>VSurround
 snoremap U b<BS>U
+map Y y$
 vmap [% [%m'gv``
 snoremap \ b<BS>\
 map <silent> \w\t <Plug>VimwikiTabMakeDiaryNote
 map <silent> \w\w <Plug>VimwikiMakeDiaryNote
 map <silent> \ws <Plug>VimwikiUISelect
-map <silent> \wt <Plug>VimwikiTabGoHome
-map <silent> \ww <Plug>VimwikiGoHome
+map <silent> \wt <Plug>VimwikiTabIndex
+map <silent> \ww <Plug>VimwikiIndex
+noremap \l :call PreviewWord(0)
 nmap <silent> \cv <Plug>VCSVimDiff
-nmap <silent> \cu <Plug>VCSUpdate
 nmap <silent> \cU <Plug>VCSUnlock
-nmap <silent> \cs <Plug>VCSStatus
 nmap <silent> \cr <Plug>VCSReview
 nmap <silent> \cq <Plug>VCSRevert
-nmap <silent> \cn <Plug>VCSAnnotate
 nmap <silent> \cN <Plug>VCSSplitAnnotate
-nmap <silent> \cl <Plug>VCSLog
 nmap <silent> \cL <Plug>VCSLock
-nmap <silent> \ci <Plug>VCSInfo
 nmap <silent> \cg <Plug>VCSGotoOriginal
 nmap <silent> \cG <Plug>VCSClearAndGotoOriginal
 nmap <silent> \cd <Plug>VCSDiff
 nmap <silent> \cD <Plug>VCSDelete
-nmap <silent> \cc <Plug>VCSCommit
-nmap <silent> \ca <Plug>VCSAdd
+nmap \ca <Plug>NERDCommenterAltDelims
+vmap \cA <Plug>NERDCommenterAppend
+nmap \cA <Plug>NERDCommenterAppend
+vmap \c$ <Plug>NERDCommenterToEOL
+nmap \c$ <Plug>NERDCommenterToEOL
+vmap \cu <Plug>NERDCommenterUncomment
+nmap \cu <Plug>NERDCommenterUncomment
+vmap \cn <Plug>NERDCommenterNest
+nmap \cn <Plug>NERDCommenterNest
+vmap \cb <Plug>NERDCommenterAlignBoth
+nmap \cb <Plug>NERDCommenterAlignBoth
+vmap \cl <Plug>NERDCommenterAlignLeft
+nmap \cl <Plug>NERDCommenterAlignLeft
+vmap \cy <Plug>NERDCommenterYank
+nmap \cy <Plug>NERDCommenterYank
+vmap \ci <Plug>NERDCommenterInvert
+nmap \ci <Plug>NERDCommenterInvert
+vmap \cs <Plug>NERDCommenterSexy
+nmap \cs <Plug>NERDCommenterSexy
+vmap \cm <Plug>NERDCommenterMinimal
+nmap \cm <Plug>NERDCommenterMinimal
+vmap \c  <Plug>NERDCommenterToggle
+nmap \c  <Plug>NERDCommenterToggle
+vmap \cc <Plug>NERDCommenterComment
+nmap \cc <Plug>NERDCommenterComment
+nmap \p <Plug>RefreshColorScheme
+nmap \[ <Plug>HexHighlightRefresh
+nmap \<F2> <Plug>HexHighlightToggle
+nmap \caL <Plug>CalendarH
+nmap \cal <Plug>CalendarV
+nmap <silent> \sm <Plug>smgr_MapSnippetsManager
+map <silent> \o :call feedkeys(':OpenFileFromScriptnames ', 't')
+map \rwp <Plug>RestoreWinPosn
+map \swp <Plug>SaveWinPosn
 map \dk <Plug>DirDiffPrev
 map \dj <Plug>DirDiffNext
 map \dp <Plug>DirDiffPut
 map \dg <Plug>DirDiffGet
-map <silent> \w2 :w:VimwikiAll2HTML:echo "Saved wiki to HTML."
-map <silent> \snip :call ResetSnippets() | call GetSnippets(g:snippets_dir, "_") | call GetSnippets(g:snippets_dir, &ft):echo "Snippets for format \"" . &ft . "\" updated."
+map \ 0"ty$:t:echo "Executed: " . @t
+map \sv :call OpenRelatedSnippetFileInVsplit()
 nmap <silent> \ll o:call Timestamp("short") | call FoldWrap()
 nmap <silent> \fi :call FoldInsert()
 nmap <silent> \fw :call FoldWrap()
@@ -124,35 +150,43 @@ nmap <silent> \t :call HandleTS()
 nmap <silent> \/ :call HandleURI()
 nmap <silent> \c :call ScratchBuffer("scratch")
 nmap <silent> \0 :silent normal zvzt
-nmap <silent> \= :call FoldDefaultNodes():normal zvzkzjzt
+nmap <silent> \= :call FoldDefaultNodes():normal zv]z[zzt
 nmap <silent> \] :NERDTreeToggle
-nmap \j :call JournalEntry()
+nmap <silent> \j :call HandleMantis()
 nmap \\ :call CommitSession()
 nmap <silent> \w :!wc -w %
 vmap ]% ]%m'gv``
 snoremap ^ b<BS>^
 snoremap ` b<BS>`
+omap ar <Plug>(textobj-rubyblock-a)
+xmap ar <Plug>(textobj-rubyblock-a)
+omap af <Plug>(textobj-function-a)
+xmap af <Plug>(textobj-function-a)
 vmap a% [%v]%
 nmap cs <Plug>Csurround
+nmap cr <Plug>Coerce
 nmap ds <Plug>Dsurround
 nmap gx <Plug>NetrwBrowseX
+xmap gS <Plug>VgSurround
+omap ir <Plug>(textobj-rubyblock-i)
+xmap ir <Plug>(textobj-rubyblock-i)
+omap if <Plug>(textobj-function-i)
+xmap if <Plug>(textobj-function-i)
 xmap s <Plug>Vsurround
 nmap ySS <Plug>YSsurround
 nmap ySs <Plug>YSsurround
 nmap yss <Plug>Yssurround
 nmap yS <Plug>YSurround
 nmap ys <Plug>Ysurround
-map <silent> <C-`> /=\{1,} \(.*\) =\{1,}
-vmap <silent> <Plug>IMAP_JumpBack `<i=IMAP_Jumpfunc('b', 0)
-vmap <silent> <Plug>IMAP_JumpForward i=IMAP_Jumpfunc('', 0)
-vmap <silent> <Plug>IMAP_DeleteAndJumpBack "_<Del>i=IMAP_Jumpfunc('b', 0)
-vmap <silent> <Plug>IMAP_DeleteAndJumpForward "_<Del>i=IMAP_Jumpfunc('', 0)
-nmap <silent> <Plug>IMAP_JumpBack i=IMAP_Jumpfunc('b', 0)
-nmap <silent> <Plug>IMAP_JumpForward i=IMAP_Jumpfunc('', 0)
 nnoremap <C-Down> :silent! :call AdjustFont(-1)
 nnoremap <C-Up> :silent! :call AdjustFont(1)
 nnoremap <silent> <C-Right> gt
 nnoremap <silent> <C-Left> gT
+map <D-f> :CommandT
+map <silent> <D-E> :cp 
+map <silent> <D-e> :cn 
+map <silent> <D-P> :lp 
+map <silent> <D-p> :ln 
 nmap <silent> <D-w> :bd
 nmap <silent> <D-t> :101tabnew
 map <M-Down> }
@@ -168,6 +202,7 @@ snoremap <Right> a
 snoremap <BS> b<BS>
 snoremap <silent> <S-Tab> i<Right>=BackwardsSnippet()
 nnoremap <silent> <Plug>NetrwBrowseX :call netrw#NetrwBrowseX(expand("<cWORD>"),0)
+snoremap <Plug>selectToInsert d<BS>
 nnoremap <silent> <Plug>CVSWatchRemove :CVSWatch remove
 nnoremap <silent> <Plug>CVSWatchOn :CVSWatch on
 nnoremap <silent> <Plug>CVSWatchOff :CVSWatch off
@@ -193,12 +228,6 @@ nnoremap <silent> <Plug>VCSDelete :VCSDelete
 nnoremap <silent> <Plug>VCSCommit :VCSCommit
 nnoremap <silent> <Plug>VCSAnnotate :VCSAnnotate
 nnoremap <silent> <Plug>VCSAdd :VCSAdd
-map <M-F3> :call CSV_clear_all()  
-map <S-F3> :call CSV_toggle_field(CSV_get_field(0))
-map <S-F5> :call CSV_goto_highlighted(-1)
-map <S-F6> :call CSV_goto_highlighted(1)
-map <C-F5> :call CSV_goto_field()
-map <C-F6> :call CSV_get_new_sep()
 nmap <silent> <Plug>NERDCommenterAppend :call NERDComment(0, "append")
 nnoremap <silent> <Plug>NERDCommenterToEOL :call NERDComment(0, "toEOL")
 vnoremap <silent> <Plug>NERDCommenterUncomment :call NERDComment(1, "uncomment")
@@ -221,12 +250,35 @@ vnoremap <silent> <Plug>NERDCommenterToggle :call NERDComment(1, "toggle")
 nnoremap <silent> <Plug>NERDCommenterToggle :call NERDComment(0, "toggle")
 vnoremap <silent> <Plug>NERDCommenterComment :call NERDComment(1, "norm")
 nnoremap <silent> <Plug>NERDCommenterComment :call NERDComment(0, "norm")
+nnoremap <silent> <Plug>CalendarH :cal Calendar(1)
+nnoremap <silent> <Plug>CalendarV :cal Calendar(0)
+map <M-F3> :call CSV_clear_all()  
+map <S-F3> :call CSV_toggle_field(CSV_get_field(0))
+map <S-F5> :call CSV_goto_highlighted(-1)
+map <S-F6> :call CSV_goto_highlighted(1)
+map <C-F5> :call CSV_goto_field()
+map <C-F6> :call CSV_get_new_sep()
+nmap <silent> <Plug>RestoreWinPosn :call RestoreWinPosn()
+nmap <silent> <Plug>SaveWinPosn :call SaveWinPosn()
+map <D-j>e :GrepEngage 
+map <D-j>p :cd ~/sandbox/personal/
+map <D-j>w :cd ~/sandbox/work/vm/rpx/ruby/rails/
 map <silent> <C-S-Tab> :BufExplorerk
 map <silent> <C-Tab> :BufExplorerj
-nmap <Down> :echo "You should have typed j instead."
-nmap <Up> :echo "You should have typed k instead."
-nmap <Right> :echo "You should have typed l instead."
-nmap <Left> :echo "You should have typed h instead."
+nmap <silent> <D-9> 9gt
+nmap <silent> <D-8> 8gt
+nmap <silent> <D-7> 7gt
+nmap <silent> <D-6> 6gt
+nmap <silent> <D-5> 5gt
+nmap <silent> <D-4> 4gt
+nmap <silent> <D-3> 3gt
+nmap <silent> <D-2> 2gt
+nmap <silent> <D-1> 1gt
+nmap <silent> <D-0> 10gt
+nmap <Down> :<Down>
+nmap <Up> :<Up>
+nmap <Right> :<Down>
+nmap <Left> :<Up>
 nmap <S-Space> 
 map <F1> :Help
 nnoremap <Nul> :
@@ -238,15 +290,30 @@ nmap <D-v> "*P
 imap S <Plug>ISurround
 imap s <Plug>Isurround
 inoremap <silent> 	 =TriggerSnippet()
-imap <NL> <Plug>IMAP_JumpForward
 imap <silent>  :call Reset() | nohlsa
-imap  :set completeopt+=menuonea
+inoremap  :set completeopt+=menuonea
 inoremap <silent> 	 =ShowAvailableSnips()
+inoremap <silent>  =XPTemplateStart(0,{'k':'<C-r++<C-\++','forcePum':1})
+inoremap <silent>  =XPTemplateStart(0,{'k':'<C-r++<C-r++<C-\++','popupOnly':1})
 imap  <Plug>Isurround
-imap <silent>  :call RemoveTimestamp("")a
-imap <silent>  :call AddOrUpdateTimestamp("")a
-imap <silent>  :call TimestampAutoUpdateToggle()
-imap   :call ReloadVimrc() | :echo "Resourced .vimrc."
+inoremap  u
+inoremap  u
+imap v  :call ReloadVimrc() | :echo "Resourced .vimrc."
+inoremap <silent>  =XPTemplateStart(0,{'k':'<C-\++'})
+onoremap <expr> ¡ ToggleNumberDisplay()
+xnoremap <expr> ¡ ToggleNumberDisplay()
+nnoremap <expr> ¡ ToggleNumberDisplay()
+nmap <silent> ¹ 9gt
+nmap <silent> ¸ 8gt
+nmap <silent> · 7gt
+nmap <silent> ¶ 6gt
+nmap <silent> µ 5gt
+nmap <silent> ´ 4gt
+nmap <silent> ³ 3gt
+nmap <silent> ² 2gt
+nmap <silent> ± 1gt
+nmap <silent> ° 10gt
+vmap ô <Plug>TwitvimVisual
 let &cpo=s:cpo_save
 unlet s:cpo_save
 set autowrite
@@ -254,15 +321,15 @@ set autowriteall
 set background=dark
 set backspace=indent,eol,start
 set clipboard=unnamed
+set commentstring=
 set diffopt=filler,vertical
 set directory=~/.vim/swap//,~/vimfiles/swap//
-set display=lastline,uhex
-set errorformat=%l:%f:%m
+set display=lastline
+set expandtab
 set fileencodings=ucs-bom,utf-8,default,latin1
-set foldlevelstart=999
 set fuoptions=maxhorz,maxvert
-set guifont=Inconsolata:h13
-set guioptions=egmrLt
+set guifont=Inconsolata:h15
+set guioptions=egmrLtc
 set guitablabel=%m\ %N\ %t\ %r
 set helplang=en
 set history=10000
@@ -275,24 +342,25 @@ set listchars=tab:>-,trail:-
 set mouse=a
 set printexpr=system('open\ -a\ Preview\ '.v:fname_in)\ +\ v:shell_error
 set ruler
-set runtimepath=~/.vim,~/.vim/bundle/PickAColor,/Applications/Vimwiki.app/Contents/Resources/vim/vimfiles,/Applications/Vimwiki.app/Contents/Resources/vim/runtime,/Applications/Vimwiki.app/Contents/Resources/vim/vimfiles/after,~/.vim/after
+set rulerformat=%-14.(%l,%c%V%)%=%P%{XPMautoUpdate(\"ruler\")}
+set runtimepath=~/.vim,~/.vim/bundle/AnsiEsc.vim,~/.vim/bundle/RubyTextObjects,~/.vim/bundle/SnippetsMgr,~/.vim/bundle/abolish,~/.vim/bundle/ansiesc,~/.vim/bundle/autotag,~/.vim/bundle/bufexplorer,~/.vim/bundle/calendar,~/.vim/bundle/cocoa,~/.vim/bundle/command-t,~/.vim/bundle/conque,~/.vim/bundle/disabled,~/.vim/bundle/fugitive,~/.vim/bundle/fuzzyfinder,~/.vim/bundle/gundo,~/.vim/bundle/hexhighlight,~/.vim/bundle/jslint,~/.vim/bundle/jslint.vim,~/.vim/bundle/kellys,~/.vim/bundle/l9,~/.vim/bundle/matrix,~/.vim/bundle/nerdcommenter,~/.vim/bundle/nerdtree,~/.vim/bundle/paster,~/.vim/bundle/pickacolor,~/.vim/bundle/project,~/.vim/bundle/rails,~/.vim/bundle/screenshot,~/.vim/bundle/sessionman,~/.vim/bundle/snipmate,~/.vim/bundle/surround,~/.vim/bundle/syntastic,~/.vim/bundle/textobj-function,~/.vim/bundle/textobj-rubyblock,~/.vim/bundle/textobj-user,~/.vim/bundle/twitvim,~/.vim/bundle/vcscommand,~/.vim/bundle/vim-ruby,~/.vim/bundle/vimple,~/.vim/bundle/vimwiki,~/.vim/bundle/xptemplate,/Applications/Vimwiki.app/Contents/Resource
 set sessionoptions=folds,help,options,tabpages,winsize,globals,sesdir,resize,winpos,unix
 set shiftwidth=4
 set shortmess=filnxtToOIA
 set showcmd
+set softtabstop=4
 set spellcapcheck=off
 set splitbelow
 set splitright
 set statusline=%<(%n)\ %m%y%r\ %f\ %=%-14.(%l,%c%V%)\ %P
-set switchbuf=useopen,usetab
+set switchbuf=useopen
 set tabline=%!MyTabLine()
 set tabpagemax=100
-set tabstop=4
-set tags=./tags,tags,~/sandbox/personal/tags
+set tags=./tags,tags,~/sandbox/personal/tags,~/.vim/bundle/vimple/plugin/vim/../../tags/vimbuiltins.tags
 set termencoding=utf-8
-set transparency=5
-set undolevels=100
-set window=70
+set undolevels=500
+set visualbell
+set wildignore=*.o,*.sw?,*.git,*.svn,*.hg,**/build,*.?ib,*.png,*.jpg,*.jpeg,*.mov,*.gif,*.bom,*.azw,*.lpr,*.mbp,*.mode1v3,*.gz,*.vmwarevm,*.rtf,*.pkg,*.developerprofile,*.xcodeproj,*.pdf,*.dmg,*.db,*.otf,*.bz2,*.tiff,*.iso,*.jar,*.dat,**/Cache,*.cache,*.sqlite*,*.collection,*.qsindex,*.qsplugin,*.growlTicket,*.part,*.ics,*.ico,**/iPhone\ Simulator,*.lock*,*.webbookmark
 set winminheight=0
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
@@ -303,117 +371,128 @@ let ConqueTerm_EscKey = "<Esc>"
 let TailMinusF_Loaded =  1 
 let NERDSpaceDelims = "0"
 let NERDTreeMapCloseDir = "x"
+let XPT#ver =  2 
 let ConqueTerm_Color =  1 
-let ConqueTerm_Version =  120 
+let ConqueTerm_Version =  200 
 let NERDUsePlaceHolders = "1"
-let NERDTreeShowLineNumbers = "0"
+let NERDCompactSexyComs = "0"
+let NERDTreeMapRefresh = "r"
 let DirDiffSort =  1 
-let NERDTreeMapToggleHidden = "I"
+let XPMpreferRight = "r"
+let NERDTreeMapHelp = "?"
+let ConqueTerm_SendFunctionKeys =  0 
 let NERDTreeWinSize = "31"
-let NERDTreeMapRefreshRoot = "R"
+let NERDTreeMapOpenInTab = "t"
+let NERDTreeSortDirs = "1"
+let NERDTreeMapJumpParent = "p"
 let DirDiffInteractive =  0 
 let NERDTreeMapPreview = "go"
+let ConqueTerm_PyExe = ""
 let NERDTreeMapActivateNode = "o"
-let Imap_DeleteEmptyPlaceHolders =  1 
+let MailAppl_from = "Seth Milliken <seth@araxia.net>"
 let NERDTreeWinPos = "left"
 let DirDiffAddArgs = ""
-let NERDTreeStatusline = "%{b:NERDTreeRoot.path.strForOS(0)}"
+let NERDTreeMapMenu = "m"
+let NERDTreeStatusline = "%{exists('b:NERDTreeRoot')?b:NERDTreeRoot.path.str():''}"
+let NERDTreeMapToggleHidden = "I"
+let NERDLPlace = "[>"
 let NERDTreeMapOpenInTabSilent = "T"
-let NERDTreeMapHelp = "?"
-let NERDTreeMapJumpParent = "p"
 let NERDTreeMapToggleFilters = "f"
 let NERDTreeMapJumpLastChild = "J"
 let NERDTreeMapJumpPrevSibling = "<C-k>"
+let NERDTreeMapQuit = "q"
 let NERDTreeShowBookmarks = "0"
+let XPMpreferLeft = "l"
 let NERDMenuMode = "3"
-let NERDTreeMapOpenExpl = "e"
+let NERDTreeMapRefreshRoot = "R"
 let CSV_string_delimiter = "\""
-let NERDTreeMouseMode = "1"
 let NERDDefaultNesting = "1"
+let NERDTreeMapJumpFirstChild = "K"
 let NERDTreeChDirMode = "0"
 let NERDTreeRemoveDirCmd = "rm -rf "
 let NERDTreeAutoCenterThreshold = "3"
-let NERDTreeShowFiles = "1"
+let NERDCreateDefaultMappings = "1"
 let NERDTreeMapOpenSplit = "i"
 let DirDiffTextFiles = "Files "
 let NERDTreeCaseSensitiveSort = "0"
 let NERDTreeHijackNetrw = "1"
-let NERDTreeMapFilesystemMenu = "m"
-let NERDTreeMapRefresh = "r"
-let CSV_field_list = ""
+let DrChipTopLvlMenu = "DrChip."
+let NERDTreeShowLineNumbers = "0"
+let NERDTreeMapPreviewVSplit = "gs"
 let TailMinusF_Height =  10 
-let NERDTreeHighlightCursorline = "1"
-let NERDDelimiterRequests = "1"
-let NERDLPlace = "[>"
-let NERDTreeMapOpenInTab = "t"
+let CSV_field_list = ""
+let NERDTreeMouseMode = "1"
 let CSV_separator = ","
+let NERDTreeHighlightCursorline = "1"
 let DirDiffExcludes = ""
 let ConqueTerm_CloseOnEnd =  0 
-let NERDCreateDefaultMappings = "1"
 let ConqueTerm_InsertOnEnter =  0 
 let DirDiffDynamicDiffText =  0 
-let NERDTreeMapPreviewVSplit = "gs"
 let NERDChristmasTree = "1"
 let NERDTreeNotificationThreshold = "100"
-let NERDCommentWholeLinesInVMode = "0"
 let CSV_mono =  0 
 let DirDiffTextDiffer = " differ"
 let BufExplorer_title = "[Buf List]"
 let NERDTreeMapChdir = "cd"
 let NERDRPlace = "<]"
+let NERDTreeMapToggleZoom = "A"
 let DirDiffWindowSize =  14 
-let NERDTreeMapExecute = "!"
 let NERDRemoveExtraSpaces = "1"
+let NERDTreeMapUpdir = "u"
+let MailApp_bundle = "~/.vim/bundle/MailApp/MailApp.bundle/"
+let DirDiffIgnore = ""
 let NERDRemoveAltComs = "1"
 let NERDTreeAutoCenter = "1"
+let ConqueTerm_ToggleKey = "<F8>"
 let DirDiffTextOnlyIn = "Only in "
 let TailMinusF_Center_Win =  0 
 let DirDiffTextAnd = " and "
-let Imap_Debug =  0 
 let NERDTreeMapOpenVSplit = "s"
 let ConqueTerm_ReadUnfocused =  0 
+let XPT#nonEscaped = "\\%(\\%(\\[^\\\\]\\|\\^\\)\\%(\\\\\\\\\\)\\*\\)\\@<="
 let NERDTreeMapDeleteBookmark = "D"
+let XPT#let_sid = "map <Plug>xsid <SID>|let s:sid=matchstr(maparg(\"<Plug>xsid\"), \"\\\\d\\\\+_\")|unmap <Plug>xsid"
 let NERDBlockComIgnoreEmpty = "0"
 let AutoHiVersion = "0.2"
 let NERDTreeMapJumpNextSibling = "<C-j>"
 let DirDiffIgnoreCase =  0 
 let NERDTreeMapJumpRoot = "P"
+let NERDTreeShowFiles = "1"
+let NERDCommentWholeLinesInVMode = "0"
 let NERDTreeCopyCmd = "cp -r "
-let ConqueTerm_SendVisKey = "<F9>"
-let NERDTreeMapQuit = "q"
-let Imap_StickyPlaceHolders =  1 
 let NERDTreeMapChangeRoot = "C"
-let NERDCompactSexyComs = "0"
-let NERDTreeSortDirs = "1"
+let ConqueTerm_SessionSupport =  0 
 let ConqueTerm_TERM = "vt100"
 let NERDTreeMapToggleFiles = "F"
 let NERDAllowAnyVisualDelims = "1"
 let ConqueTerm_CWInsert =  0 
 let ConqueTerm_Idx =  0 
-let DirDiffIgnore = ""
+let CommandTMatchWindowAtTop =  1 
 let ConqueTerm_PromptRegex = "^\\w\\+@[0-9A-Za-z_.-]\\+:[0-9A-Za-z_./\\~,:-]\\+\\$"
 let BufExploreAdd =  1 
-let NERDTreeMapJumpFirstChild = "K"
+let NERDTreeMapOpenExpl = "e"
 let NERDTreeMapOpenRecursively = "O"
 let NERDTreeMapToggleBookmarks = "B"
 let NERDTreeBookmarksFile = "/Users/seth/.NERDTreeBookmarks"
 let ConqueTerm_Loaded =  1 
-let NERDTreeMapUpdir = "u"
+let ConqueTerm_SendVisKey = "<F9>"
 let ConqueTerm_Syntax = "conque_term"
 let NERDTreeMapUpdirKeepOpen = "U"
 let NERDTreeQuitOnOpen = "0"
+let ConqueTerm_PyVersion =  2 
 silent only
 exe "cd " . escape(expand("<sfile>:p:h"), ' ')
 if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +5 ~/sandbox/personal/vimwiki/PersonalProjects.wiki
-badd +2 ~/sandbox/personal/vimwiki/OrganizationNotes.wiki
+badd +25 ~/sandbox/personal/vimwiki/PersonalWiki.wiki
+badd +20 ~/sandbox/personal/vimwiki/Vimwiki\ Customization.wiki
 silent! argdel *
-set lines=71 columns=235
-winpos 0 1028
-buffer ~/sandbox/personal/vimwiki/PersonalProjects.wiki
+set lines=61 columns=205
+set fullscreen
+winpos 0 1050
+buffer ~/sandbox/personal/vimwiki/PersonalWiki.wiki
 set splitbelow splitright
 wincmd _ | wincmd |
 vsplit
@@ -421,20 +500,19 @@ vsplit
 wincmd w
 wincmd t
 set winheight=1 winwidth=1
-exe 'vert 1resize ' . ((&columns * 117 + 117) / 235)
-exe 'vert 2resize ' . ((&columns * 117 + 117) / 235)
+exe 'vert 1resize ' . ((&columns * 103 + 102) / 205)
+exe 'vert 2resize ' . ((&columns * 101 + 102) / 205)
 argglobal
 let s:cpo_save=&cpo
 set cpo&vim
 inoremap <buffer> <S-CR> <br />
-inoremap <buffer> <expr> <S-Tab> vimwiki_tbl#kbd_shift_tab()
-nmap <buffer> <silent> 	 <Plug>VimwikiNextWord
-nmap <buffer> <silent>  <Plug>VimwikiFollowWord
+nmap <buffer> <silent> 	 <Plug>VimwikiNextLink
+nmap <buffer> <silent>  <Plug>VimwikiFollowLink
 noremap <buffer> <silent> - :call vimwiki#RemoveHeaderLevel()
 noremap <buffer> <silent> = :call vimwiki#AddHeaderLevel()
-nnoremap <buffer> O :call vimwiki_lst#insertOo('O')a
-nmap <buffer> <silent> \wr <Plug>VimwikiRenameWord
-nmap <buffer> <silent> \wd <Plug>VimwikiDeleteWord
+nnoremap <buffer> O :call vimwiki_lst#kbd_oO('O')a
+nmap <buffer> <silent> \wr <Plug>VimwikiRenameLink
+nmap <buffer> <silent> \wd <Plug>VimwikiDeleteLink
 vnoremap <buffer> <silent> ac :call vimwiki#TO_table_col(0, 1)
 onoremap <buffer> <silent> ac :call vimwiki#TO_table_col(0, 0)
 vnoremap <buffer> <silent> a\ :call vimwiki#TO_table_cell(0, 1)
@@ -449,18 +527,18 @@ vnoremap <buffer> <silent> i\ :call vimwiki#TO_table_cell(1, 1)
 onoremap <buffer> <silent> i\ :call vimwiki#TO_table_cell(1, 0)
 vnoremap <buffer> <silent> ih :call vimwiki#TO_header(1, 1)
 onoremap <buffer> <silent> ih :call vimwiki#TO_header(1, 0)
-nnoremap <buffer> o :call vimwiki_lst#insertOo('o')a
+nnoremap <buffer> o :call vimwiki_lst#kbd_oO('o')a
 nnoremap <buffer> <M-Right> :VimwikiTableMoveColumnRight
 nnoremap <buffer> <M-Left> :VimwikiTableMoveColumnLeft
+nmap <buffer> <silent> <C-Up> <Plug>VimwikiDiaryPrevDay
+nmap <buffer> <silent> <C-Down> <Plug>VimwikiDiaryNextDay
 nmap <buffer> <silent> <Nul> <Plug>VimwikiToggleListItem
 vmap <buffer> <silent> <C-Space> <Plug>VimwikiToggleListItem
 nmap <buffer> <silent> <C-Space> <Plug>VimwikiToggleListItem
-nmap <buffer> <silent> <S-Tab> <Plug>VimwikiPrevWord
-nmap <buffer> <silent> <BS> <Plug>VimwikiGoBackWord
-nmap <buffer> <silent> <C-CR> <Plug>VimwikiVSplitWord
-nmap <buffer> <silent> <S-CR> <Plug>VimwikiSplitWord
-inoremap <buffer> <expr> 	 vimwiki_tbl#kbd_tab()
-inoremap <buffer> <expr>  vimwiki_tbl#kbd_cr()
+nmap <buffer> <silent> <S-Tab> <Plug>VimwikiPrevLink
+nmap <buffer> <silent> <BS> <Plug>VimwikiGoBackLink
+nmap <buffer> <silent> <C-CR> <Plug>VimwikiVSplitLink
+nmap <buffer> <silent> <S-CR> <Plug>VimwikiSplitLink
 let &cpo=s:cpo_save
 unlet s:cpo_save
 setlocal keymap=
@@ -480,7 +558,8 @@ setlocal comments=b:*,b:#,b:-
 setlocal commentstring=<!--%s-->
 setlocal complete=.,w,b,u,t,i
 setlocal concealcursor=
-setlocal conceallevel=0
+set conceallevel=3
+setlocal conceallevel=3
 setlocal completefunc=
 setlocal nocopyindent
 setlocal cryptmethod=
@@ -493,22 +572,21 @@ setlocal dictionary=
 setlocal nodiff
 setlocal equalprg=
 setlocal errorformat=
-setlocal noexpandtab
+setlocal expandtab
 if &filetype != 'vimwiki'
 setlocal filetype=vimwiki
 endif
-set foldcolumn=4
-setlocal foldcolumn=4
+setlocal foldcolumn=0
 setlocal foldenable
 setlocal foldexpr=VimwikiFoldLevel(v:lnum)
 setlocal foldignore=#
-setlocal foldlevel=999
+setlocal foldlevel=2
 setlocal foldmarker={{{,}}}
 set foldmethod=marker
 setlocal foldmethod=expr
 setlocal foldminlines=1
 setlocal foldnestmax=20
-set foldtext=MyFoldText()
+set foldtext=CleanFoldText()
 setlocal foldtext=VimwikiFoldText()
 setlocal formatexpr=
 setlocal formatoptions=tnro
@@ -526,7 +604,8 @@ setlocal keywordprg=
 set linebreak
 setlocal linebreak
 setlocal nolisp
-setlocal nolist
+set list
+setlocal list
 setlocal nomacmeta
 setlocal makeprg=
 setlocal matchpairs=(:),{:},[:]
@@ -550,12 +629,12 @@ setlocal noscrollbind
 setlocal shiftwidth=4
 setlocal noshortname
 setlocal nosmartindent
-setlocal softtabstop=0
+setlocal softtabstop=4
 setlocal nospell
-setlocal spellcapcheck=
+setlocal spellcapcheck=off
 setlocal spellfile=
 setlocal spelllang=en
-setlocal statusline=
+setlocal statusline=%<(%n)\ %m%y%r\ %f\ %=%-14.(%l,%c%V%)\ %P%{XPMautoUpdate(\"statusline\")}
 setlocal suffixesadd=.wiki
 setlocal swapfile
 setlocal synmaxcol=3000
@@ -568,30 +647,29 @@ setlocal textwidth=0
 setlocal thesaurus=
 setlocal noundofile
 set winfixheight
-setlocal nowinfixheight
+setlocal winfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 5 - ((4 * winheight(0) + 34) / 69)
+let s:l = 25 - ((24 * winheight(0) + 29) / 59)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-5
-normal! 043l
+25
+normal! 04l
 wincmd w
 argglobal
-buffer ~/sandbox/personal/vimwiki/OrganizationNotes.wiki
+buffer ~/sandbox/personal/vimwiki/Vimwiki\ Customization.wiki
 let s:cpo_save=&cpo
 set cpo&vim
 inoremap <buffer> <S-CR> <br />
-inoremap <buffer> <expr> <S-Tab> vimwiki_tbl#kbd_shift_tab()
-nmap <buffer> <silent> 	 <Plug>VimwikiNextWord
-nmap <buffer> <silent>  <Plug>VimwikiFollowWord
+nmap <buffer> <silent> 	 <Plug>VimwikiNextLink
+nmap <buffer> <silent>  <Plug>VimwikiFollowLink
 noremap <buffer> <silent> - :call vimwiki#RemoveHeaderLevel()
 noremap <buffer> <silent> = :call vimwiki#AddHeaderLevel()
-nnoremap <buffer> O :call vimwiki_lst#insertOo('O')a
-nmap <buffer> <silent> \wr <Plug>VimwikiRenameWord
-nmap <buffer> <silent> \wd <Plug>VimwikiDeleteWord
+nnoremap <buffer> O :call vimwiki_lst#kbd_oO('O')a
+nmap <buffer> <silent> \wr <Plug>VimwikiRenameLink
+nmap <buffer> <silent> \wd <Plug>VimwikiDeleteLink
 vnoremap <buffer> <silent> ac :call vimwiki#TO_table_col(0, 1)
 onoremap <buffer> <silent> ac :call vimwiki#TO_table_col(0, 0)
 vnoremap <buffer> <silent> a\ :call vimwiki#TO_table_cell(0, 1)
@@ -606,18 +684,18 @@ vnoremap <buffer> <silent> i\ :call vimwiki#TO_table_cell(1, 1)
 onoremap <buffer> <silent> i\ :call vimwiki#TO_table_cell(1, 0)
 vnoremap <buffer> <silent> ih :call vimwiki#TO_header(1, 1)
 onoremap <buffer> <silent> ih :call vimwiki#TO_header(1, 0)
-nnoremap <buffer> o :call vimwiki_lst#insertOo('o')a
+nnoremap <buffer> o :call vimwiki_lst#kbd_oO('o')a
 nnoremap <buffer> <M-Right> :VimwikiTableMoveColumnRight
 nnoremap <buffer> <M-Left> :VimwikiTableMoveColumnLeft
+nmap <buffer> <silent> <C-Up> <Plug>VimwikiDiaryPrevDay
+nmap <buffer> <silent> <C-Down> <Plug>VimwikiDiaryNextDay
 nmap <buffer> <silent> <Nul> <Plug>VimwikiToggleListItem
 vmap <buffer> <silent> <C-Space> <Plug>VimwikiToggleListItem
 nmap <buffer> <silent> <C-Space> <Plug>VimwikiToggleListItem
-nmap <buffer> <silent> <S-Tab> <Plug>VimwikiPrevWord
-nmap <buffer> <silent> <BS> <Plug>VimwikiGoBackWord
-nmap <buffer> <silent> <C-CR> <Plug>VimwikiVSplitWord
-nmap <buffer> <silent> <S-CR> <Plug>VimwikiSplitWord
-inoremap <buffer> <expr> 	 vimwiki_tbl#kbd_tab()
-inoremap <buffer> <expr>  vimwiki_tbl#kbd_cr()
+nmap <buffer> <silent> <S-Tab> <Plug>VimwikiPrevLink
+nmap <buffer> <silent> <BS> <Plug>VimwikiGoBackLink
+nmap <buffer> <silent> <C-CR> <Plug>VimwikiVSplitLink
+nmap <buffer> <silent> <S-CR> <Plug>VimwikiSplitLink
 let &cpo=s:cpo_save
 unlet s:cpo_save
 setlocal keymap=
@@ -637,7 +715,8 @@ setlocal comments=b:*,b:#,b:-
 setlocal commentstring=<!--%s-->
 setlocal complete=.,w,b,u,t,i
 setlocal concealcursor=
-setlocal conceallevel=0
+set conceallevel=3
+setlocal conceallevel=3
 setlocal completefunc=
 setlocal nocopyindent
 setlocal cryptmethod=
@@ -650,22 +729,21 @@ setlocal dictionary=
 setlocal nodiff
 setlocal equalprg=
 setlocal errorformat=
-setlocal noexpandtab
+setlocal expandtab
 if &filetype != 'vimwiki'
 setlocal filetype=vimwiki
 endif
-set foldcolumn=4
-setlocal foldcolumn=4
+setlocal foldcolumn=0
 setlocal foldenable
 setlocal foldexpr=VimwikiFoldLevel(v:lnum)
 setlocal foldignore=#
-setlocal foldlevel=999
+setlocal foldlevel=4
 setlocal foldmarker={{{,}}}
 set foldmethod=marker
 setlocal foldmethod=expr
 setlocal foldminlines=1
 setlocal foldnestmax=20
-set foldtext=MyFoldText()
+set foldtext=CleanFoldText()
 setlocal foldtext=VimwikiFoldText()
 setlocal formatexpr=
 setlocal formatoptions=tnro
@@ -707,19 +785,19 @@ setlocal noscrollbind
 setlocal shiftwidth=4
 setlocal noshortname
 setlocal nosmartindent
-setlocal softtabstop=0
+setlocal softtabstop=4
 setlocal nospell
-setlocal spellcapcheck=
+setlocal spellcapcheck=off
 setlocal spellfile=
 setlocal spelllang=en
-setlocal statusline=
+setlocal statusline=%<(%n)\ %m%y%r\ %f\ %=%-14.(%l,%c%V%)\ %P%{XPMautoUpdate(\"statusline\")}
 setlocal suffixesadd=.wiki
 setlocal swapfile
 setlocal synmaxcol=3000
 if &syntax != 'vimwiki'
 setlocal syntax=vimwiki
 endif
-setlocal tabstop=4
+setlocal tabstop=8
 setlocal tags=
 setlocal textwidth=0
 setlocal thesaurus=
@@ -730,19 +808,60 @@ setlocal wrap
 setlocal wrapmargin=0
 1
 normal zo
-6
+17
 normal zo
+19
+normal zo
+19
+normal zo
+19
+normal zo
+36
+normal zo
+17
+normal zo
+59
+normal zo
+60
+normal zo
+66
+normal zo
+60
+normal zo
+71
+normal zo
+73
+normal zo
+75
+normal zo
+71
+normal zo
+59
+normal zo
+69
+normal zo
+70
+normal zo
+72
+normal zo
+74
+normal zo
+70
+normal zo
+69
+normal zc
 1
 normal zo
-let s:l = 34 - ((33 * winheight(0) + 34) / 69)
+let s:l = 20 - ((19 * winheight(0) + 29) / 59)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-34
-normal! 0227l
+20
+normal! 06l
 wincmd w
-exe 'vert 1resize ' . ((&columns * 117 + 117) / 235)
-exe 'vert 2resize ' . ((&columns * 117 + 117) / 235)
+2wincmd w
+exe 'vert 1resize ' . ((&columns * 103 + 102) / 205)
+exe 'vert 2resize ' . ((&columns * 101 + 102) / 205)
 tabnext 1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf

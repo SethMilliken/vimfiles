@@ -6,7 +6,7 @@ syntax match foldmarkend /}\{3\}/
 " YYYY-MM-DD
 syntax match date /[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\} /
 " end of line timestamp
-syntax match eoltimestamp /[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\} [0-9]\{2\}:[0-9]\{2\}:[0-9]\{2\} [A-Z]\{3\}\s*\({\(\w*\s*\)*}\)*$/
+syntax match eoltimestamp /[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\} [0-9]\{2\}:[0-9]\{2\}:[0-9]\{2\} [A-Z]\{3\}\s*\({\(\w*,*\s*\)*}\)*$/
 " <protocol://url>
 syntax match url /[a-z]*:\/\/[^ >]*/
 " + ongoing todo item

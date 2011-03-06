@@ -1,4 +1,6 @@
 " INFO: " {{{
+let g:session_autoload = 1
+let g:session_autosave = 1
 
 " Maintainer:
 "   Seth Milliken <seth_vim@araxia.net>
@@ -15,6 +17,7 @@
 "   - /^""/ indicate intentionally disabled options
 
 " Todo:
+"   - Fix <D- conflicts
 "   - clean up SETTINGS; provide better descriptions
 "   - for clarity, replace abbreviated forms of options in all settings
 "   - annotate all line noise, especially statusline
@@ -48,7 +51,6 @@ if has("vms")
 else
     set backup      " keep a backup file
 endif
-set history=50      " keep 50 lines of command line history
 set ruler           " show the cursor position all the time
 set showcmd         " display incomplete commands
 set incsearch       " do incremental searching
@@ -102,7 +104,7 @@ endif " has("autocmd")
 " SETTINGS: " {{{
 " au! VimEnter * source ~/.vim/after/plugin/foo.vim " Way to set the latest
 " file that will always be sourced for any file opened.
-set winfixheight
+set winfixheight                    " keep existing window height when possible
 set shortmess+=I                    " don't show intro on start
 set shortmess+=A                    " don't show message on existing swapfile
 set nospell                         " spelling off by default
@@ -111,7 +113,7 @@ set encoding=UTF-8                  " use UTF-8 encoding
 set fileencoding=UTF-8              " use UTF-8 encoding as default
 set nolist                          " don't show invisibles
 set listchars=tab:>-,trail:-        " ...but make them look nice when they do show
-set iskeyword+=-                    " usually want - to not divide words
+set iskeyword+=-                    " usually do not want - to divide words
 set lbr                             " wrap lines at word breaks
 set noautoindent                    " don't like autoindent
 set number                          " always show line numbers
@@ -121,30 +123,33 @@ set softtabstop=4                   " set a narrow tab width
 set shiftwidth=4                    " and keep sw & sts in sync
 set expandtab                       " expand tabs to spaces
 set list                            " and consequently, reveal tabs by default now
-set hlsearch                        " highlight searches
 set nobackup                        " don't like ~ files littered about; don't need
 set laststatus=2                    " always show the status line
 set diffopt+=vertical               " use vertical splits for diff
 set splitright                      " open vertical splits to the right
 set splitbelow                      " open horizonal splits below
 set winminheight=0                  " minimized horizontal splits show only statusline
-set switchbuf=useopen,usetab        " when switching to a buffer, go to where it's already open
+set switchbuf=useopen               " when switching to a buffer, go to where it's already open
 set history=10000                   " keep craploads of command history
-set undolevels=100                  " keep lots of undo history
-set foldlevelstart=999              " don't use a default fold level; all folds open by default
+set undolevels=500                  " keep lots of undo history
+set foldlevelstart=1                " first level of folds open by default
 set fdm=marker                      " make the default foldmethod markers
 set display+=lastline               " always show as much of the last line as possible
 set guioptions+=c                   " always use console dialogs (faster)
 set noerrorbells                    " don't need to hear if i hit esc twice
-set visualbell | set t_vb=          " nor see it
-"set foldcolumn=4                    " trying out fold indicator column
-"set display+=uhex                   " show unprintable hex characters as <xx>
+set visualbell | set t_vb=          " ...nor see it
+set ignorecase                      " case ignored for searches
+set smartcase                       " override ignorecase for searches with uppercase
 
-let mapleader=" "                   " experiment with using <Space> as <Leader>
+let mapleader="\\"                  " <Leader>
 
-if version > 702 | set rnu | au BufReadPost * set rnu
-end " use relative line numbers
+"set foldcolumn=4                   " trying out fold indicator column
+"set display+=uhex                  " show unprintable hex characters as <xx>
+"let mapleader="\<Space>"                  " experiment with using <Space> as <Leader>.
+
+if version > 702 | set rnu | exec "au BufReadPost * set rnu" | endif " use relative line numbers
 if version > 702 | set clipboard=unnamed | end " use system clipboard; FIXME: what version is actually required?
+
 set wildignore+=*.o,*.sw?,*.git,*.svn,*.hg,**/build,*.?ib,*.png,*.jpg,*.jpeg,*.mov,*.gif,*.bom,*.azw,*.lpr,*.mbp,*.mode1v3,*.gz,*.vmwarevm,*.rtf,*.pkg,*.developerprofile,*.xcodeproj,*.pdf,*.dmg,*.db,*.otf,*.bz2,*.tiff,*.iso,*.jar,*.dat,**/Cache,*.cache,*.sqlite*,*.collection,*.qsindex,*.qsplugin,*.growlTicket,*.part,*.ics,*.ico,**/iPhone\ Simulator,*.lock*,*.webbookmark
 
 " Tags: universal location
@@ -184,10 +189,16 @@ map Y y$
 inoremap <C-w> <C-g>u<C-w>
 inoremap <C-u> <C-g>u<C-w>
 
+" lcd to file's container
+nmap <C-e>c :exec ":lcd " . expand("%:p:h")<CR>
+
+" tmux copy/paste issue in mac os x workaround
+nmap <C-x>p :call system("ssh localhost pbcopy", getreg('"'))<CR>
+
 " }}}
 " Reset: restore some default settings and redraw " {{{
 nnoremap <silent> <C-L> :call Reset() \| nohls<CR>
-imap <silent> <C-L> <Esc>:call Reset() \| nohls<CR>a
+imap <silent> <C-L> <Esc><C-L>a
 
 " }}}
 " Custom: <C-y> prefixed custom commands " {{{
@@ -253,7 +264,7 @@ nmap <Leader>_ Bi<em><Esc>ea</em>
 
 " }}}
 " Completion: show completion preview, without actually completing " {{{
-inoremap <C-p> <Esc>:set completeopt+=menuone<CR>a<C-n><C-p>
+inoremap <C-p> <C-o>:set completeopt+=menuone<CR>a<C-n><C-p>
 
 " }}}
 " Help: help help help " {{{
@@ -354,7 +365,7 @@ nmap <silent> <C-e>k <C-w>k:call AccordionMode()<CR><C-l>
 nmap <silent> <C-e>h <C-w>h:call AccordionMode()<CR><C-l>
 nmap <silent> <C-e>l <C-w>l:call AccordionMode()<CR><C-l>
 nmap <silent> <C-e>- :call AccordionMode()<CR><C-l>
-nnoremap <silent> <C-e><C-e> <C-e>
+noremap <silent> <C-e><C-e> <C-e>
 function! AccordionMode()
     set winminheight=0 winheight=9999
     set winheight=10 winminheight=10
@@ -376,15 +387,29 @@ nmap <silent> <Leader>sd :call Timestamp("date")<CR>
 nmap <silent> <Leader>sl :call Timestamp("long")<CR>
 nmap <silent> <Leader>fw :call FoldWrap()<CR>
 nmap <silent> <Leader>fi :call FoldInsert()<CR>
+nmap <silent> <Leader>st :call InsertAnnotation("Started typing", "0")<CR>
+nmap <silent> <Leader>ft :call InsertAnnotation("Finished typing", "$")<CR>
 nmap <silent> <Leader>ll o<Esc>:call Timestamp("short") \| call FoldWrap()<CR>
 " }}}
 " Tabs: switching " {{{
-" set Cmd-# and Alt-# to switch tabs
+" set Cmd-# on Mac and Alt-# elsewhere to switch tabs
+for n in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+     let k = n == "0" ? "10" : n
+     for m in ["M"]
+         exec printf("imap <silent> <%s-%s> <Esc>:tabn %s<CR>", m, n, k)
+         exec printf("nmap <silent> <%s-%s> %sgt<CR>", m, n, k)
+     endfor
+endfor
+
+" }}}
+" Windows: switching " {{{
+" Set <C-w># to switch between windows (use [count]<C-w> instead of
+" <C-w>[count] for other wincmds).
 for n in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
     let k = n == "0" ? "10" : n
-    for m in ["A", "D"]
-        exec printf("imap <silent> <%s-%s> <Esc>:tabn %s<CR>", m, n, k)
-        exec printf("nmap <silent> <%s-%s> %sgt<CR>", m, n, k)
+    for m in ["<C-w>"]
+        exec printf("imap <silent> %s%s <Esc>%s%sa", m, n, m, n)
+        exec printf("nmap <silent> %s%s :%swincmd w<CR>", m, n, k)
     endfor
 endfor
 
@@ -462,6 +487,12 @@ function! InsertLine(text) "{{{
     else
         call append(line(".") - 1,[a:text])
     end
+endfunction
+
+"}}}
+function! InsertAnnotation(label, line) "{{{
+    let result = printf("[ %s: %s ]", a:label, TimestampText("short"))
+    call append(a:line, result)
 endfunction
 
 "}}}
@@ -682,24 +713,22 @@ endfunction
 "}}}
 function! AddOrUpdateTimestampSolicitingAnnotation() "{{{
     if !exists("g:auto_timestamp_bypass")
-        if IsTimestampUpdateOkay(getline(".")) > 0
-            let l:default_prompt = g:timestamp_default_annotation
-            let l:matchstring = g:timestamp_matchstring . '\zs\ze\s*\({\zs\(\w\+\s*\)*\ze}\)*$'
-            let l:originalannotations = matchstr(getline("."), l:matchstring)
+        let l:default_prompt = g:timestamp_default_annotation
+        let l:matchstring = g:timestamp_matchstring . '\zs\ze\s*\({\zs\(\w\+\s*\)*\ze}\)*$'
+        let l:originalannotations = matchstr(getline("."), l:matchstring)
+        if len(l:originalannotations) > 0
+            let l:default_prompt = l:originalannotations
+        end
+        let l:annotation = input("Annotation: ", Strip(l:default_prompt))
+        if len(l:annotation) > 0
+            call AddOrUpdateTimestamp(Strip(l:annotation), "force")
+        else
             if len(l:originalannotations) > 0
-                let l:default_prompt = l:originalannotations
-            end
-            let l:annotation = input("Annotation: ", Strip(l:default_prompt))
-            if len(l:annotation) > 0
-                call AddOrUpdateTimestamp(Strip(l:annotation))
+                silent! call RemoveTimestamp()
+                silent! call AddOrUpdateTimestamp("", "force")
+                echo "Annotations removed."
             else
-                if len(l:originalannotations) > 0
-                    silent! call RemoveTimestamp()
-                    silent! call AddOrUpdateTimestamp("")
-                    echo "Annotations removed."
-                else
-                    echo "Annotation aborted."
-                end
+                echo "Annotation aborted."
             end
         end
     end
@@ -881,7 +910,23 @@ function! Reset() " {{{
     set completeopt-=menuone
     set nolist
     redraw
-    echo "Reset"
+    echo "Reset [ Tip: " . RandomHint() . " ]"
+endfunction
+
+" }}}
+function! RandomHint() " {{{
+    let comment_character = "#"
+    if !exists("g:random_hint_list")
+        if !exists("g:hint_filename")
+            let g:hint_filename = $HOME . "/.vim/vimtips.txt"
+        endif
+        let g:random_hint_list = readfile(g:hint_filename, '')
+        call filter(g:random_hint_list, 'strpart(v:val, 0, 1) != comment_character')
+    endif
+    let hint_count = len(g:random_hint_list)
+    exec "ruby random_line = rand(" . hint_count . ")"
+    ruby VIM::command("let hint = #{random_line}")
+    return g:random_hint_list[hint]
 endfunction
 
 " }}}
@@ -981,7 +1026,7 @@ endfunction
 " FILETYPES: " {{{
 
 au BufNewFile,BufRead *.applescript   setf applescript
-au BufNewFile,BufRead *.tst.* set ft=_.txt.tst
+" au BufNewFile,BufRead *.tst.* set ft=_.txt.tst
 au BufNewFile,BufRead *.yaml,*.yml so ~/.vim/syntax/yaml.vim
 au FileType ruby set fdm=syntax
 
@@ -999,12 +1044,16 @@ augroup END
 " Debug:  " {{{
 if &verbose > 0
     echo "Using Debug Mode..."
-    if exists("#vimwiki")
-        au! vimwiki
-    endif
-    if exists("#TaskStack")
-        au! TaskStack
-    end
+    let augroups = [
+                \ "vimwiki",
+                \ "TaskStack",
+                \]
+    for each in augroups
+        let symbol = "#" . each
+        if exists(symbol)
+            exec "au! " . each
+        endif
+    endfor
 endif
 
 " }}}
@@ -1037,7 +1086,7 @@ augroup TaskStack
     au FileType *tst* nmap <buffer> <C-y>k :echo TaskstackMoveToProjectAutoDetect()<CR>
     au FileType *tst* nmap <buffer> <silent> <Tab> :call search("@.*\\\\|^[A-Z]\\+")<CR>
     au FileType *tst* nmap <buffer> <silent> <S-Tab> :call search("@.*\\\\|^[A-Z]\\+", 'b')<CR>
-    au FileType tst nmap <unique> <buffer> <silent> <CR> yiW/<C-r>"<CR>zzzv<C-l>
+    au FileType *tst* if mapcheck('<CR>', 'n') == "" | nmap <unique> <buffer> <silent> <CR> yiW/<C-r>"<CR>ztzv<C-l> | end
     " Use <C-c> to avoid adding or updating a timestamp after editing.
     au! InsertLeave *.tst.* :call AddOrUpdateTimestamp("") " FIXME: External Dependency
     au! FocusLost *.tst.* nested write
@@ -1045,8 +1094,8 @@ augroup END
 
 "}}}
 " Scratch: " {{{
-let g:volatile_scratch_columns = 90
-let g:volatile_scratch_lines = 20
+let g:volatile_scratch_columns = 100
+let g:volatile_scratch_lines = 40
 
 function! EmailAddressList(ArgLead, CmdLine, CursorPos)
         return system("~/bin/addresses")
@@ -1062,7 +1111,7 @@ function! SmallWindow()
     setlocal guioptions-=L
     setlocal guioptions-=r
     setlocal foldcolumn=0
-    setlocal guifont=Inconsolata:h9
+    setlocal guifont=Inconsolata:h13
     exec "set columns=" . g:volatile_scratch_columns . " lines=" . g:volatile_scratch_lines
     call SetColorColumnBorder()
     if exists('g:gundo_target_n')
@@ -1078,14 +1127,15 @@ endfunction
 function! ScratchCopy()
     if &modified == 1
         silent write
-        exec ":0,$y"
     endif
+    exec ":0,$y"
 endfunction
 
 function! ScratchPaste()
-    if &modified != 1
-        normal ggVGpG$
+    if &modified == 1
+        silent write
     endif
+    normal ggVGpG$
 endfunction
 
 command! -nargs=* -complete=custom,EmailAddressList To call EmitEmailAddress("To: ", <f-args>)
@@ -1094,7 +1144,7 @@ command! -nargs=* Sub call InsertLine("Subject: " . <q-args>)
 
 augroup VolatileScratch
     " au! BufRead *.scratch call SmallWindow()
-    au! BufRead *.scratch nmap <buffer> <silent> <C-m> :call SmallWindow()<CR>ZZ
+    au! BufRead *.scratch nmap <buffer> <silent> <C-m> :call SmallWindow()<CR>
     au BufRead *.scratch nmap <buffer> <silent> <C-y>g :exec "set lines=999 columns=" . (g:gundo_width + &columns) \| :GundoToggle<CR>
     au BufRead *.scratch nmap <buffer> <silent> ZZ :wa \| :call ScratchCopy()<CR> \| :macaction hide:<CR>
     au BufRead *.scratch nmap <buffer> <silent> ZZ :call ScratchCopy()<CR> \| :macaction hide:<CR>
@@ -1103,7 +1153,7 @@ augroup VolatileScratch
     au BufRead *.scratch vmap <buffer> <silent> ZZ <Esc>ZZ
     " au! FocusGained *.scratch normal ggVGpG$
     au! FocusLost *.scratch call ScratchCopy()
-    " au! FocusGained *.scratch call ScratchPaste()
+    au! FocusGained *.scratch call ScratchPaste()
     au! VimResized *.scratch call SetColorColumnBorder() | :normal zz
 augroup END
 
@@ -1116,8 +1166,8 @@ augroup END
 " }}}
 " Vimperator Y Pentadactyl: " {{{
 augroup VimperatorYPentadactyl
-    au! BufRead vimperator-*\|pentadactyl-* nmap <buffer> <silent> ZZ :call FormFieldArchive() \| :silent write \| :bd \| :macaction hide:<CR>
-    au BufRead vimperator-*\|pentadactyl-* imap <buffer> <silent> ZZ <Esc>ZZ
+    au! BufRead vimperator-*,pentadactyl-* nmap <buffer> <silent> ZZ :call FormFieldArchive() \| :silent write \| :bd \| :macaction hide:<CR>
+    au BufRead vimperator-*,pentadactyl-* imap <buffer> <silent> ZZ <Esc>ZZ
 augroup END
 
 " }}}
@@ -1145,7 +1195,7 @@ au! FileType xhtml inoremap <buffer> > <Esc>:call AutoTagComplete()<CR>
 
 " }}}
 " Help Files: " {{{
-augroup helpfiles 
+augroup helpfiles
     au! FileType help nnoremap <buffer> <silent> <C-p> ?^[=-]\{1,}$<CR>zt:nohlsearch<CR>
     au FileType help nnoremap <buffer> <silent> <C-n> /^[=-]\{1,}$<CR>zt:nohlsearch<CR>
     au FileType help nnoremap <buffer> <silent> <S-Tab> ?\|[^\[:space:]]*\|<CR>zz:nohlsearch<CR>
@@ -1160,7 +1210,7 @@ nnoremap <C-y>g :GundoToggle<CR>
 
 " }}}
 " Git Commit: " {{{
-augroup helpfiles 
+augroup Gundo
     au! FileType gitcommit nnoremap <buffer> <silent> <C-n> :DiffGitCached<CR>\|:wincmd L<CR>|:au FileType git nnoremap <buffer> <silent> <C-n> :hide<CR>
 augroup END
 
@@ -1231,10 +1281,10 @@ endfunction
 " }}}
 " Todo Lists: " {{{
 augroup todolist
-    au! BufReadPost,FileReadPost *todo* doau FileType tst
-    au BufReadPost,FileReadPost *todo* set syntax+=.txt
-    au BufReadPost,FileReadPost *todo* map <buffer> <silent> <C-p> ?=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
-    au BufReadPost,FileReadPost *tod* map <buffer> <silent> <C-n> /=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
+    au! BufReadPost,FileReadPost *todo*,*list* doau FileType tst
+    au BufReadPost,FileReadPost *todo*,*list* set syntax+=.txt
+    au BufReadPost,FileReadPost *todo*,*list* map <buffer> <silent> <C-p> ?=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
+    au BufReadPost,FileReadPost *todo*,*list* map <buffer> <silent> <C-n> /=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
 augroup END
 
 " }}}
@@ -1242,7 +1292,8 @@ augroup END
 " Autocmds: " {{{
 augroup vimwiki
     "au! BufReadPre *.wiki doau FileType txt
-    au! BufReadPost,FileReadPost *.wiki doau FileType tst
+    au! BufReadPost,FileReadPost,BufNewFile *.wiki doau FileType tst
+    au BufNew vimwiki set foldlevel=999
     au FileType vimwiki set syntax=vimwiki.txt
     au FileType vimwiki map <buffer> <silent> <C-p> ?=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
     au FileType vimwiki map <buffer> <silent> <C-n> /=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
@@ -1259,6 +1310,8 @@ let g:vimwiki_list_ignore_newline = 0       " convert newlines to <br /> in list
 let g:vimwiki_folding = 1                   " outline folding
 let g:vimwiki_table_auto_fmt = 0            " don't use and conflicts with snipMate
 let g:vimwiki_fold_lists = 1                " folding of list subitems
+let g:vimwiki_file_exts = 'pdf,txt,doc,rtf,xls,php,zip,rar,7z,html,gz,vim,screen'
+let g:vimwiki_valid_html_tags='b,i,s,u,sub,sup,kbd,br,hr,font,a,div,span'
 let g:vimwiki_list = [
              \{'path': '~/sandbox/personal/vimwiki/',
                 \'index': 'PersonalWiki',
@@ -1367,7 +1420,6 @@ function! CleanFoldText() "{{{
     return decoratedline
 endfunction "}}}
 set foldtext=CleanFoldText()
-
 " }}}
 
 " }}}
@@ -1417,6 +1469,11 @@ endfunction
 
 " }}}
 
+" Raimondi's stagnant mailapp plugin " {{{
+let g:MailApp_bundle = '~/.vim/bundle/MailApp/MailApp.bundle/'
+let g:MailAppl_from = 'Seth Milliken <seth@araxia.net>'
+
+" }}}
 
 map <Leader><CR> 0"ty$:<C-r>t<CR>:echo "Executed: " . @t<CR>
 
@@ -1440,6 +1497,10 @@ if !exists(":DiffOrig")
 endif
 
 " }}}
+
+" hack to deal with syntax clearing problem i haven't been able to track down
+" au! syntaxset
+" unlet b:current_syntax
 
 " type number then : to get relative range prepopulated in cmdline
 " new vocab word "idem" to get relative range prepopulated in cmdline
