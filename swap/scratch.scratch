@@ -1,0 +1,1 @@
+i wonder if a hybrid 'hintkeys' could address both this and another hintkeys issue: have all the hints always *start* with a number (so type-ahead find still works in most cases) and then finish with homerow letters (or configurable ones).
