@@ -468,6 +468,13 @@ function! FunctionLocationIndex() "{{{
     end
 endfunction
 "}}}
+command! UnlinewiseMovement :call UnlinewiseMovement()
+function! UnlinewiseMovement() " {{{
+  nnoremap <buffer> j gj
+  nnoremap <buffer> k gk
+endfunction
+
+" }}}
 
 " Text: tools
 function! AppendText(text) "{{{
@@ -1112,6 +1119,7 @@ function! SmallWindow()
     setlocal guioptions-=r
     setlocal foldcolumn=0
     setlocal guifont=Inconsolata:h13
+    setlocal transparency=15
     exec "set columns=" . g:volatile_scratch_columns . " lines=" . g:volatile_scratch_lines
     call SetColorColumnBorder()
     if exists('g:gundo_target_n')
@@ -1132,6 +1140,8 @@ function! ScratchCopy()
 endfunction
 
 function! ScratchPaste()
+    normal ggVGo
+    return
     if &modified == 1
         silent write
     endif
@@ -1151,7 +1161,6 @@ augroup VolatileScratch
     au BufRead *.scratch nmap <buffer> <silent> :w<CR> :write \| :silent call ScratchCopy()<CR>
     au BufRead *.scratch imap <buffer> <silent> ZZ <Esc>ZZ
     au BufRead *.scratch vmap <buffer> <silent> ZZ <Esc>ZZ
-    " au! FocusGained *.scratch normal ggVGpG$
     au! FocusLost *.scratch call ScratchCopy()
     au! FocusGained *.scratch call ScratchPaste()
     au! VimResized *.scratch call SetColorColumnBorder() | :normal zz

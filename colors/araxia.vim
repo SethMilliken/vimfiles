@@ -10,7 +10,7 @@
 "       If you're editing colors files hexhilight.vim is great for showing you
 "       the hex values in the colors they define.
 "       <http://www.vim.org/scripts/script.php?script_id=2937>
-
+      
 set background=dark
 
 if version > 580

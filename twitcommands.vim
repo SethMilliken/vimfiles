@@ -21,6 +21,7 @@ UserTwitter SethMilliken
 ListTwitter ruby
 SearchTwitter #pentadactyl
 SearchTwitter #aspergers
+SearchTwitter @jerojasro
 SearchTwitter @despo
 SearchTwitter blzysh
 SearchTwitter morticed
@@ -37,6 +38,7 @@ FollowersTwitter
 " url shortners
 Trim
 BitLy
+http://bit.ly/eABfk3
 
 " <D-j>t New Tweet Buffer
 
@@ -160,3 +162,4 @@ endfunction
 
 " vim: nowrap fdl=0
 " }}}
+" vim: set cms=\ \"\ %s:
