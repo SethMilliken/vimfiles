@@ -923,20 +923,20 @@ endfunction
 " }}}
 function! RandomHint() " {{{
     let comment_character = "#"
-    if !exists("g:random_hint_list")
-        if !exists("g:hint_filename")
-            let g:hint_filename = $HOME . "/.vim/vimtips.txt"
+    try
+        if !exists("g:random_hint_list")
+            if !exists("g:hint_filename")
+                let g:hint_filename = $HOME . "/.vim/vimtips.txt"
+            endif
+            let g:random_hint_list = readfile(g:hint_filename, '')
+            call filter(g:random_hint_list, 'strpart(v:val, 0, 1) != comment_character')
         endif
-        let g:random_hint_list = readfile(g:hint_filename, '')
-        call filter(g:random_hint_list, 'strpart(v:val, 0, 1) != comment_character')
-    endif
-    let hint_count = len(g:random_hint_list)
-    if has("ruby")
+        let hint_count = len(g:random_hint_list)
         exec "ruby random_line = rand(" . hint_count . ")"
         ruby VIM::command("let hint = #{random_line}")
-    else
-        let hint = "Random hints not available."
-    endif
+    catch
+        return "Random hints not available."
+    endtry
     return g:random_hint_list[hint]
 endfunction
 
