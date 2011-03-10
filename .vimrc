@@ -931,8 +931,12 @@ function! RandomHint() " {{{
         call filter(g:random_hint_list, 'strpart(v:val, 0, 1) != comment_character')
     endif
     let hint_count = len(g:random_hint_list)
-    exec "ruby random_line = rand(" . hint_count . ")"
-    ruby VIM::command("let hint = #{random_line}")
+    if has("ruby")
+        exec "ruby random_line = rand(" . hint_count . ")"
+        ruby VIM::command("let hint = #{random_line}")
+    else
+        let hint = "Random hints not available."
+    endif
     return g:random_hint_list[hint]
 endfunction
 

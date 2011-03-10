@@ -19,6 +19,7 @@ SearchTwitter b4winckler
 SearchTwitter #rails
 UserTwitter SethMilliken
 ListTwitter ruby
+SearchTwitter #Xcode
 SearchTwitter #pentadactyl
 SearchTwitter #aspergers
 SearchTwitter @jerojasro
