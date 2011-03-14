@@ -395,7 +395,7 @@ nmap <silent> <Leader>ll o<Esc>:call Timestamp("short") \| call FoldWrap()<CR>
 " set Cmd-# on Mac and Alt-# elsewhere to switch tabs
 for n in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
      let k = n == "0" ? "10" : n
-     for m in ["M"]
+     for m in ["M", "A"]
          exec printf("imap <silent> <%s-%s> <Esc>:tabn %s<CR>", m, n, k)
          exec printf("nmap <silent> <%s-%s> %sgt<CR>", m, n, k)
      endfor
@@ -1342,7 +1342,7 @@ let g:vimwiki_list = [
                 \]
 " }}}
 function! VimwikiExpandedPageName() " {{{
-    return substitute(substitute(expand('%:t'), "[a-z]\\zs\\([A-Z]\\)", " \\1", "g"), "\\..*", "", "")
+    return substitute(substitute(expand('%:t'), "\\C\\([A-Z]\\)", " \\1", "g"), "\\..*", "", "")
 endfunction
 
 " }}}
