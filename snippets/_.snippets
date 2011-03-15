@@ -1,6 +1,10 @@
 # Global snippets
 
 # (c) holds no legal value ;)
+snippet kb
+	<${1:C-y}>
+snippet <a
+	<a href="${1:url}">${2:text}</a>
 snippet c)
 	`&enc[:2] == "utf" ? "©" : "(c)"` Copyright `strftime("%Y")` ${1:`g:snips_author`}. All Rights Reserved.${2}
 snippet date
@@ -17,3 +21,23 @@ snippet presh
 	<pre class="brush: ${1:brush}; auto-links: true; toolbar: false; first-line: 10; highlight: [2, 4, 6]; class-name: none; collapse: false; gutter: true; html-script: false; light: false; smart-tabs: true; tab-size: 2; ruler: false; wrap-lines: true">
 	${2:contents}
 	</pre>
+snippet vimtest
+	" 0Y:<C-r>"<CR> the following line to activate this function creation sandbox:
+	exec "map <buffer> <CR> 0y$:<C-r>\"<CR> \| :1,2d \| w " . tempname() . ".vimtest" | so %
+	function! ${1:TestFunction}()
+	   echo "hello world"
+	endfunction
+
+	map <buffer> K <Esc>:w<CR>:so %<CR>:call $1()<CR>
+
+	" Commands (<CR> to execute): " {{{
+	python << BLOCKCOMMENT
+	"""
+	" }}}
+	echo "test"
+	call TestFunction()
+	" End Commands " {{{
+	"""
+	BLOCKCOMMENT
+	" }}}
+	" vim: ft=vim fdl=0

@@ -9,17 +9,19 @@ snippet guard
 	endif
 	let $1 = 1${3}
 snippet f
-	fun ${1:function_name}(${2})
+	function! ${1:function_name}(${2})`CommentedFoldMarkerOpen()`
 		${3:" code}
-	endf
+	endfunction
+
+        `CommentedFoldMarkerClose()`
 snippet for
 	for ${1:needle} in ${2:haystack}
 		${3:" code}
 	endfor
-snippet wh
+snippet while
 	while ${1:condition}
 		${2:" code}
-	endw
+	endwhile
 snippet if
 	if ${1:condition}
 		${2:" code}
@@ -51,3 +53,24 @@ snippet method A vimscript OOP prototype-based object method
 	function! s:${1}.${2:functionName}(${3:argument}) " {{{
 		${4:your code here}
 	endfunction " }}}
+
+snippet sfu Object public function
+	fu ${1:objectname}.${2:functionname}() dict " {{{
+	    $3
+	endfu
+	" }}}
+snippet sfp Object private function
+	fu ${1:objectname}._${2:functionname}() dict " {{{
+	    $3
+	endfu
+	" }}}
+snippet s_
+	self._${1:private_function}()
+snippet s.
+	self.${1:function}()
+snippet s[
+	self['${1:function}']
+snippet gl. Get current line
+	getline(".")
+snippet l. Get current line
+	line(".")

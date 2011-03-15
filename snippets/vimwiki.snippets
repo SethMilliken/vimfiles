@@ -1,0 +1,17 @@
+# vimwiki snippets
+
+snippet np
+	%toc`VimwikiExpandedPageName()`
+	
+	= ${1:Header} =
+	${2:header_text}
+
+	== ${3:Subhead} ==
+	* ${4:subhead_contents}
+snippet cm Commit message for a ticket
+	${1:ticket} Commit message:
+	$1: ${2:summary}
+	${2:filename}: ${4:change}
+
+snippet link Link for external file
+	[[~/${1:sandbox/personal/}${2}][${3:title}]]

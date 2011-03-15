@@ -1,4 +1,6 @@
-" INFO: {{{
+" INFO: " {{{
+let g:session_autoload = 1
+let g:session_autosave = 1
 
 " Maintainer:
 "   Seth Milliken <seth_vim@araxia.net>
@@ -15,6 +17,7 @@
 "   - /^""/ indicate intentionally disabled options
 
 " Todo:
+"   - Fix <D- conflicts
 "   - clean up SETTINGS; provide better descriptions
 "   - for clarity, replace abbreviated forms of options in all settings
 "   - annotate all line noise, especially statusline
@@ -28,8 +31,9 @@
 "}}}
 " Pathogen: " {{{
 call pathogen#runtime_append_all_bundles()
+call pathogen#helptags()
 " }}}
-" DEFAULTS: from example .vimrc {{{
+" DEFAULTS: from example .vimrc " {{{
 " When started as "evim", evim.vim will already have done these settings.
 if v:progname =~? "evim"
     finish
@@ -47,7 +51,6 @@ if has("vms")
 else
     set backup      " keep a backup file
 endif
-set history=50      " keep 50 lines of command line history
 set ruler           " show the cursor position all the time
 set showcmd         " display incomplete commands
 set incsearch       " do incremental searching
@@ -98,10 +101,10 @@ if has("autocmd")
 endif " has("autocmd")
 "}}}
 " Seth Milliken additions
-" SETTINGS: {{{
+" SETTINGS: " {{{
 " au! VimEnter * source ~/.vim/after/plugin/foo.vim " Way to set the latest
 " file that will always be sourced for any file opened.
-set winfixheight
+set winfixheight                    " keep existing window height when possible
 set shortmess+=I                    " don't show intro on start
 set shortmess+=A                    " don't show message on existing swapfile
 set nospell                         " spelling off by default
@@ -110,7 +113,7 @@ set encoding=UTF-8                  " use UTF-8 encoding
 set fileencoding=UTF-8              " use UTF-8 encoding as default
 set nolist                          " don't show invisibles
 set listchars=tab:>-,trail:-        " ...but make them look nice when they do show
-set iskeyword+=-                    " usually want - to not divide words
+set iskeyword+=-                    " usually do not want - to divide words
 set lbr                             " wrap lines at word breaks
 set noautoindent                    " don't like autoindent
 set number                          " always show line numbers
@@ -120,30 +123,33 @@ set softtabstop=4                   " set a narrow tab width
 set shiftwidth=4                    " and keep sw & sts in sync
 set expandtab                       " expand tabs to spaces
 set list                            " and consequently, reveal tabs by default now
-set hlsearch                        " highlight searches
 set nobackup                        " don't like ~ files littered about; don't need
 set laststatus=2                    " always show the status line
 set diffopt+=vertical               " use vertical splits for diff
 set splitright                      " open vertical splits to the right
 set splitbelow                      " open horizonal splits below
 set winminheight=0                  " minimized horizontal splits show only statusline
-set switchbuf=useopen,usetab        " when switching to a buffer, go to where it's already open
+set switchbuf=useopen               " when switching to a buffer, go to where it's already open
 set history=10000                   " keep craploads of command history
-set undolevels=100                  " keep lots of undo history
-set foldlevelstart=999              " don't use a default fold level; all folds open by default
+set undolevels=500                  " keep lots of undo history
+set foldlevelstart=1                " first level of folds open by default
 set fdm=marker                      " make the default foldmethod markers
-" set foldcolumn=4                  " trying out fold indicator column
 set display+=lastline               " always show as much of the last line as possible
-set display+=uhex                   " show unprintable hex characters as <xx>
 set guioptions+=c                   " always use console dialogs (faster)
 set noerrorbells                    " don't need to hear if i hit esc twice
-set visualbell | set t_vb=          " nor see it
+set visualbell | set t_vb=          " ...nor see it
+set ignorecase                      " case ignored for searches
+set smartcase                       " override ignorecase for searches with uppercase
 
-if version > 702
-    set rnu
-    au BufReadPost * set rnu
-end " use relative line numbers
+let mapleader="\\"                  " <Leader>
+
+"set foldcolumn=4                   " trying out fold indicator column
+"set display+=uhex                  " show unprintable hex characters as <xx>
+"let mapleader="\<Space>"                  " experiment with using <Space> as <Leader>.
+
+if version > 702 | set rnu | exec "au BufReadPost * set rnu" | endif " use relative line numbers
 if version > 702 | set clipboard=unnamed | end " use system clipboard; FIXME: what version is actually required?
+
 set wildignore+=*.o,*.sw?,*.git,*.svn,*.hg,**/build,*.?ib,*.png,*.jpg,*.jpeg,*.mov,*.gif,*.bom,*.azw,*.lpr,*.mbp,*.mode1v3,*.gz,*.vmwarevm,*.rtf,*.pkg,*.developerprofile,*.xcodeproj,*.pdf,*.dmg,*.db,*.otf,*.bz2,*.tiff,*.iso,*.jar,*.dat,**/Cache,*.cache,*.sqlite*,*.collection,*.qsindex,*.qsplugin,*.growlTicket,*.part,*.ics,*.ico,**/iPhone\ Simulator,*.lock*,*.webbookmark
 
 " Tags: universal location
@@ -160,7 +166,7 @@ set ssop+=globals,sesdir,resize,winpos,unix
 set statusline=%<\(%n\)\ %m%y%r\ %f\ %=%-14.(%l,%c%V%)\ %P
 
 "}}}
-" MAPPINGS: {{{
+" MAPPINGS: " {{{
 
 " Zaurus: <C-Space> (<C-k><C-Space>) to invoke command mode in both insert and normal mode " {{{
 imap <Nul> <Esc>:
@@ -172,23 +178,37 @@ nnoremap <Nul> :
 map <F1> :Help<CR>
 imap <F1> <Esc>:Help<CR>
 " I frequently hold shift too long...
-nmap :W :w
+command! W :w
 " Handy but doesn't work in terminal
 nmap <S-Space> <C-f>
 
 " sane-itize Y
 map Y y$
 
+" Undoable deletes in insert
+inoremap <C-w> <C-g>u<C-w>
+inoremap <C-u> <C-g>u<C-w>
+
+" lcd to file's container
+nmap <C-e>c :exec ":lcd " . expand("%:p:h")<CR>
+
+" tmux copy/paste issue in mac os x workaround
+nmap <C-x>p :call system("ssh localhost pbcopy", getreg('"'))<CR>
+
 " }}}
 " Reset: restore some default settings and redraw " {{{
 nnoremap <silent> <C-L> :call Reset() \| nohls<CR>
-imap <silent> <C-L> <Esc>:call Reset() \| nohls<CR>a
+imap <silent> <C-L> <Esc><C-L>a
 
 " }}}
 " Custom: <C-y> prefixed custom commands " {{{
+" Reload .vimrc
 imap <C-y>v <Esc> :call ReloadVimrc()<CR> \| :echo "Resourced .vimrc."<CR>
 nmap <C-y>v :call ReloadVimrc()<CR> \| :echo "Resourced .vimrc."<CR>
+" Reload snippets
 nmap <C-y>s :SnipUp<CR>
+" Execute current line as ex command
+map <C-e>x :call feedkeys("yyq:p\r", "n")<CR>
 
 " }}}
 " Utility: word count of current file " {{{
@@ -244,10 +264,10 @@ nmap <Leader>_ Bi<em><Esc>ea</em>
 
 " }}}
 " Completion: show completion preview, without actually completing " {{{
-inoremap <C-p> <Esc>:set completeopt+=menuone<CR>a<C-n><C-p>
+inoremap <C-p> <C-o>:set completeopt+=menuone<CR>a<C-n><C-p>
 
 " }}}
-" Help: help help help {{{
+" Help: help help help " {{{
 nmap <Leader>hw     :help<CR>:silent call AdjustFont(-4)<CR>:set columns=115 lines=999<CR>:winc _<CR>:winc \|<CR>:help<Space>
 nmap <Leader>pp     :help<CR><Esc>:winc _<CR><Esc>:winc \|<CR><Esc>:help<Space>
 nmap <Leader>hg     :HelpGrep<CR>
@@ -275,7 +295,7 @@ endfunction
 
 " }}}
 " }}}
-" Navigation: shortcuts {{{
+" Navigation: shortcuts " {{{
 nmap <C-e>/ :call HeaderLocationIndex()<CR>
 nmap <C-e>? :call FunctionLocationIndex()<CR>
 nmap <C-e>d :silent! lclose<CR>
@@ -338,27 +358,28 @@ nmap <Up>       :<Up>
 nmap <Down>     :<Down>
 
 " }}}
-" Accordion Mode: accordion style horizontal split navigation mode {{{
+" Accordion Mode: accordion style horizontal split navigation mode " {{{
 " yes, kids, I know WTF I'm doing WRT <C-e>
 nmap <silent> <C-e>j <C-w>j:call AccordionMode()<CR><C-l>
 nmap <silent> <C-e>k <C-w>k:call AccordionMode()<CR><C-l>
 nmap <silent> <C-e>h <C-w>h:call AccordionMode()<CR><C-l>
 nmap <silent> <C-e>l <C-w>l:call AccordionMode()<CR><C-l>
 nmap <silent> <C-e>- :call AccordionMode()<CR><C-l>
-nnoremap <silent> <C-e><C-e> <C-e>
+noremap <silent> <C-e><C-e> <C-e>
 function! AccordionMode()
     set winminheight=0 winheight=9999
     set winheight=10 winminheight=10
 endfunction
 
 " }}}
-" Timestamps: {{{
+" Timestamps: " {{{
 let g:timestamp_default_annotation = ""
 let g:timestamp_matchstring = '[0-9]\{4}-[0-9]\{2}-[0-9]\{2} [0-9:]\{8} [A-Z]\{3}'
 let g:timestamp_annotated_matchstring = escape(g:timestamp_matchstring . '\s*\({\(\w\+\s*\)*}\)*', '\')
 " Note: setting g:auto_timestamp_bypass will deactivate autotimestamp in contexts they would normally be active
 " yes, kids, I know WTF I'm doing WRT <C-y>
 nmap <silent> <C-y><C-u> :call TimestampAutoUpdateToggle()<CR>
+nmap <silent> <C-y>Y :call AddOrUpdateTimestamp("", "force")<CR>
 nmap <silent> <C-y><C-y> :call AddOrUpdateTimestamp("")<CR>
 nmap <silent> <C-y><C-t> :call AddOrUpdateTimestampSolicitingAnnotation()<CR>
 nmap <silent> <C-y><C-x> :call RemoveTimestamp()<CR>
@@ -366,22 +387,36 @@ nmap <silent> <Leader>sd :call Timestamp("date")<CR>
 nmap <silent> <Leader>sl :call Timestamp("long")<CR>
 nmap <silent> <Leader>fw :call FoldWrap()<CR>
 nmap <silent> <Leader>fi :call FoldInsert()<CR>
+nmap <silent> <Leader>st :call InsertAnnotation("Started typing", "0")<CR>
+nmap <silent> <Leader>ft :call InsertAnnotation("Finished typing", "$")<CR>
 nmap <silent> <Leader>ll o<Esc>:call Timestamp("short") \| call FoldWrap()<CR>
 " }}}
-" Tabs: switching {{{
-" set Cmd-# and Alt-# to switch tabs
+" Tabs: switching " {{{
+" set Cmd-# on Mac and Alt-# elsewhere to switch tabs
+for n in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+     let k = n == "0" ? "10" : n
+     for m in ["M", "A"]
+         exec printf("imap <silent> <%s-%s> <Esc>:tabn %s<CR>", m, n, k)
+         exec printf("nmap <silent> <%s-%s> %sgt<CR>", m, n, k)
+     endfor
+endfor
+
+" }}}
+" Windows: switching " {{{
+" Set <C-w># to switch between windows (use [count]<C-w> instead of
+" <C-w>[count] for other wincmds).
 for n in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
     let k = n == "0" ? "10" : n
-    for m in ["A", "D"]
-        exec printf("imap <silent> <%s-%s> <Esc>:tabn %s<CR>", m, n, k)
-        exec printf("nmap <silent> <%s-%s> %sgt<CR>", m, n, k)
+    for m in ["<C-w>"]
+        exec printf("imap <silent> %s%s <Esc>%s%sa", m, n, m, n)
+        exec printf("nmap <silent> %s%s :%swincmd w<CR>", m, n, k)
     endfor
 endfor
 
 " }}}
 
 "}}}
-" FUNCTIONS: {{{
+" FUNCTIONS: " {{{
 
 " Navigation:
 function! EscapeShiftUp(incoming) " {{{
@@ -433,6 +468,13 @@ function! FunctionLocationIndex() "{{{
     end
 endfunction
 "}}}
+command! UnlinewiseMovement :call UnlinewiseMovement()
+function! UnlinewiseMovement() " {{{
+  nnoremap <buffer> j gj
+  nnoremap <buffer> k gk
+endfunction
+
+" }}}
 
 " Text: tools
 function! AppendText(text) "{{{
@@ -452,6 +494,12 @@ function! InsertLine(text) "{{{
     else
         call append(line(".") - 1,[a:text])
     end
+endfunction
+
+"}}}
+function! InsertAnnotation(label, line) "{{{
+    let result = printf("[ %s: %s ]", a:label, TimestampText("short"))
+    call append(a:line, result)
 endfunction
 
 "}}}
@@ -528,7 +576,7 @@ function! FoldWrap() "{{{
     " normal Jj
     normal 0"td$"_dd0"tPj
 endfunction
- 
+
 "}}}
 function! FoldMarkerOpen() "{{{
     return substitute(&foldmarker, ",.*", "", "")
@@ -672,33 +720,36 @@ endfunction
 "}}}
 function! AddOrUpdateTimestampSolicitingAnnotation() "{{{
     if !exists("g:auto_timestamp_bypass")
-        if IsTimestampUpdateOkay(getline(".")) > 0
-            let l:default_prompt = g:timestamp_default_annotation
-            let l:matchstring = g:timestamp_matchstring . '\zs\ze\s*\({\zs\(\w\+\s*\)*\ze}\)*$'
-            let l:originalannotations = matchstr(getline("."), l:matchstring)
+        let l:default_prompt = g:timestamp_default_annotation
+        let l:matchstring = g:timestamp_matchstring . '\zs\ze\s*\({\zs\(\w\+\s*\)*\ze}\)*$'
+        let l:originalannotations = matchstr(getline("."), l:matchstring)
+        if len(l:originalannotations) > 0
+            let l:default_prompt = l:originalannotations
+        end
+        let l:annotation = input("Annotation: ", Strip(l:default_prompt))
+        if len(l:annotation) > 0
+            call AddOrUpdateTimestamp(Strip(l:annotation), "force")
+        else
             if len(l:originalannotations) > 0
-                let l:default_prompt = l:originalannotations
-            end
-            let l:annotation = input("Annotation: ", Strip(l:default_prompt))
-            if len(l:annotation) > 0
-                call AddOrUpdateTimestamp(Strip(l:annotation))
+                silent! call RemoveTimestamp()
+                silent! call AddOrUpdateTimestamp("", "force")
+                echo "Annotations removed."
             else
-                if len(l:originalannotations) > 0
-                    silent! call RemoveTimestamp()
-                    silent! call AddOrUpdateTimestamp("")
-                    echo "Annotations removed."
-                else
-                    echo "Annotation aborted."
-                end
+                echo "Annotation aborted."
             end
         end
     end
 endfunction
 
 "}}}
-function! AddOrUpdateTimestamp(annotation) "{{{
-    if !exists("g:auto_timestamp_bypass")
-        if IsTimestampUpdateOkay(getline(".")) > 0
+function! AddOrUpdateTimestamp(annotation,...) "{{{
+    if exists("a:1") && len(a:1) > 0
+        let forceupdate = 1
+    else
+        let forceupdate = 0
+    endif
+    if forceupdate || !exists("g:auto_timestamp_bypass")
+        if forceupdate || IsTimestampUpdateOkay(getline(".")) > 0
             let l:bufferdirty = &modified
             let l:origpos = getpos(".")
             let l:hasbasictimestamp = match(getline("."), TimestampPattern())
@@ -725,12 +776,18 @@ function! IsTimestampUpdateOkay(line) "{{{
     elseif match(a:line, FoldMarkerOpen()) > 0
         echo "No autotimestamp: line already has open foldmarker."
         return 0
+    elseif match(a:line, "^@") > -1
+        echo "No autotimestamp: project fold"
+        return 0
     elseif match(a:line, FoldMarkerClose()) > 0
         echo "No autotimestamp: line already has close foldmarker."
         return 0
     elseif match(a:line, "^x\\s\\|^o\\s\\|\\sx\\s\\|\\so\\s") > -1
         echo "No autotimestamp: line contains completed marker."
         return 
+    elseif len(Strip(CommentStringOpen())) > 0 && match(a:line, "^" . CommentStringOpen()) > -1
+        echo "No autotimestamp: commented line"
+        return 0
     else
         return 1
     end
@@ -860,7 +917,27 @@ function! Reset() " {{{
     set completeopt-=menuone
     set nolist
     redraw
-    echo "Reset"
+    echo "Reset [ Tip: " . RandomHint() . " ]"
+endfunction
+
+" }}}
+function! RandomHint() " {{{
+    let comment_character = "#"
+    try
+        if !exists("g:random_hint_list")
+            if !exists("g:hint_filename")
+                let g:hint_filename = $HOME . "/.vim/vimtips.txt"
+            endif
+            let g:random_hint_list = readfile(g:hint_filename, '')
+            call filter(g:random_hint_list, 'strpart(v:val, 0, 1) != comment_character')
+        endif
+        let hint_count = len(g:random_hint_list)
+        exec "ruby random_line = rand(" . hint_count . ")"
+        ruby VIM::command("let hint = #{random_line}")
+    catch
+        return "Random hints not available."
+    endtry
+    return g:random_hint_list[hint]
 endfunction
 
 " }}}
@@ -957,7 +1034,12 @@ endfunction
 " }}}
 
 "}}}
-" SYNTAX: {{{
+" FILETYPES: " {{{
+
+au BufNewFile,BufRead *.applescript   setf applescript
+" au BufNewFile,BufRead *.tst.* set ft=_.txt.tst
+au BufNewFile,BufRead *.yaml,*.yml so ~/.vim/syntax/yaml.vim
+au FileType ruby set fdm=syntax
 
 " Java: " {{{
 augroup java
@@ -968,40 +1050,63 @@ augroup END
 " }}}
 
 "}}}
-" PLUGINS: {{{
+" PLUGINS: " {{{
 
+" Debug:  " {{{
+if &verbose > 0
+    echo "Using Debug Mode..."
+    let augroups = [
+                \ "vimwiki",
+                \ "TaskStack",
+                \]
+    for each in augroups
+        let symbol = "#" . each
+        if exists(symbol)
+            exec "au! " . each
+        endif
+    endfor
+endif
+
+" }}}
 " TaskStack: " {{{
 let g:aborted_prefix = "x"
 let g:completed_prefix = "o"
 augroup TaskStack
-    au! BufRead *.tst.* set indentkeys-=o indentkeys-=0 showbreak=\ \  filetype=_.tst.txt noai fdm=marker cms= ts=2
-    au BufRead *.tst.* nmap <buffer> XX :call TaskstackCompleteItem(g:aborted_prefix)<CR>
-    au BufRead *.tst.* imap <buffer> XX <C-c>:call TaskstackCompleteItem(g:aborted_prefix)<CR>
-    au BufRead *.tst.* nmap <buffer> QQ :call TaskstackCompleteItem(g:completed_prefix)<CR>
-    au BufRead *.tst.* imap <buffer> QQ <C-c>:call TaskstackCompleteItem(g:completed_prefix)<CR>
-    au BufRead *.tst.* nmap <buffer> NN :call TaskstackNewItem()<CR>
-    au BufRead *.tst.* imap <buffer> NN <C-c>:call TaskstackNewItem()<CR>
-    au BufRead *.tst.* nmap <buffer> ZZ :call TaskstackHide()<CR>
-    au BufRead *.tst.* imap <buffer> ZZ <C-c>:call TaskstackHide()<CR>
-    au BufRead *.tst.* nmap <buffer> LL :call TaskstackScratch()<CR>
-    au BufRead *.tst.* nmap <buffer> <silent> $ :call TaskstackEOL()<CR>
-    au BufRead *.tst.* nmap <buffer> <silent> <C-j> :call TaskstackMoveItemDown()<CR>
-    au BufRead *.tst.* nmap <buffer> <silent> <C-k> :call TaskstackMoveItemUp()<CR>
-    au BufRead *.tst.* nmap <buffer> <silent> <C-p> ?^@.* {\{3\}<CR>:nohls<CR>
-    au BufRead *.tst.* nmap <buffer> <silent> <C-n> /^@.* {\{3\}<CR>:nohls<CR>
-    au BufRead *.tst.* nmap <buffer> <silent> <Tab> /^\([A-Z]\+ \)\{1,\}<CR>:nohls<CR>
-    au BufRead *.tst.* nmap <buffer> <silent> <S-Tab> ?^\([A-Z]\+ \)\{1,\}<CR>:nohls<CR>
-    au BufRead *.tst.* nmap <buffer> :w<CR> :call TaskstackSave()<CR>
-    au BufRead *.tst.* nmap <buffer> <silent> <C-x>x :call TaskstackGroups()<CR>
+    au! BufRead *.tst.* set filetype=tst syntax=txt
+    au! FileType *tst* set indentkeys-=o indentkeys-=0 showbreak=\ \  noai fdm=marker cms= ts=2
+    au FileType *tst* nmap <buffer> XX :call TaskstackCompleteItem(g:aborted_prefix)<CR>
+    au FileType *tst* imap <buffer> XX <C-c>:call TaskstackCompleteItem(g:aborted_prefix)<CR>
+    au FileType *tst* nmap <buffer> QQ :call TaskstackCompleteItem(g:completed_prefix)<CR>
+    au FileType *tst* imap <buffer> QQ <C-c>:call TaskstackCompleteItem(g:completed_prefix)<CR>
+    au FileType *tst* nmap <buffer> NN :call TaskstackNewItem()<CR>
+    au FileType *tst* imap <buffer> NN <C-c>:call TaskstackNewItem()<CR>
+    au FileType *tst* nmap <buffer> ZZ :call TaskstackHide()<CR>
+    au FileType *tst* imap <buffer> ZZ <C-c>:call TaskstackHide()<CR>
+    au FileType *tst* nmap <buffer> LL :call TaskstackScratch()<CR>
+    au FileType *tst* nmap <buffer> <silent> $ :call TaskstackEOL()<CR>
+    au FileType *tst* nmap <buffer> <silent> <C-j> :call TaskstackMoveItemDown()<CR>
+    au FileType *tst* nmap <buffer> <silent> <C-k> :call TaskstackMoveItemUp()<CR>
+    au FileType *tst* nmap <buffer> <silent> <C-p> ?^@.* {\{3\}<CR>:nohls<CR>
+    au FileType *tst* nmap <buffer> <silent> <C-n> /^@.* {\{3\}<CR>:nohls<CR>
+    au FileType *tst* nmap <buffer> <silent> <Tab> /^\([A-Z]\+ \)\{1,\}<CR>:nohls<CR>
+    au FileType *tst* nmap <buffer> <silent> <S-Tab> ?^\([A-Z]\+ \)\{1,\}<CR>:nohls<CR>
+    au FileType *tst* nmap <buffer> :w<CR> :call TaskstackSave()<CR>
+    au FileType *tst* nmap <buffer> <silent> <C-x>x :call TaskstackGroups()<CR>
+    au FileType *tst* nmap <buffer> K :echo TaskstackMoveToProjectPrompt()<CR>
+    au FileType *tst* nmap <buffer> <C-e>/ :call TaskstackNavigateToProjectPrompted()<CR>
+    au FileType *tst* nmap <buffer> <C-y>k :echo TaskstackMoveToProjectAutoDetect()<CR>
+    au FileType *tst* nmap <buffer> <silent> <Tab> :call search("@.*\\\\|^[A-Z]\\+")<CR>
+    au FileType *tst* nmap <buffer> <silent> <S-Tab> :call search("@.*\\\\|^[A-Z]\\+", 'b')<CR>
+    au FileType *tst* if mapcheck('<CR>', 'n') == "" | nmap <unique> <buffer> <silent> <CR> yiW/<C-r>"<CR>ztzv<C-l> | end
     " Use <C-c> to avoid adding or updating a timestamp after editing.
     au! InsertLeave *.tst.* :call AddOrUpdateTimestamp("") " FIXME: External Dependency
-    au! FocusLost *.tst.* write
+    au! FocusLost *.tst.* nested write
 augroup END
 
 "}}}
 " Scratch: " {{{
-let g:volatile_scratch_columns = 90
-let g:volatile_scratch_lines = 20
+let g:volatile_scratch_columns = 100
+let g:volatile_scratch_lines = 40
 
 function! EmailAddressList(ArgLead, CmdLine, CursorPos)
         return system("~/bin/addresses")
@@ -1017,7 +1122,8 @@ function! SmallWindow()
     setlocal guioptions-=L
     setlocal guioptions-=r
     setlocal foldcolumn=0
-    setlocal guifont=Inconsolata:h9
+    setlocal guifont=Inconsolata:h13
+    setlocal transparency=15
     exec "set columns=" . g:volatile_scratch_columns . " lines=" . g:volatile_scratch_lines
     call SetColorColumnBorder()
     if exists('g:gundo_target_n')
@@ -1033,14 +1139,17 @@ endfunction
 function! ScratchCopy()
     if &modified == 1
         silent write
-        exec ":0,$y"
     endif
+    exec ":0,$y"
 endfunction
 
 function! ScratchPaste()
-    if &modified != 1
-        normal ggVGpG$
+    normal ggVGo
+    return
+    if &modified == 1
+        silent write
     endif
+    normal ggVGpG$
 endfunction
 
 command! -nargs=* -complete=custom,EmailAddressList To call EmitEmailAddress("To: ", <f-args>)
@@ -1049,24 +1158,29 @@ command! -nargs=* Sub call InsertLine("Subject: " . <q-args>)
 
 augroup VolatileScratch
     " au! BufRead *.scratch call SmallWindow()
-    au! BufRead *.scratch nmap <buffer> <silent> <C-m> :call SmallWindow()<CR>ZZ
+    au! BufRead *.scratch nmap <buffer> <silent> <C-m> :call SmallWindow()<CR>
     au BufRead *.scratch nmap <buffer> <silent> <C-y>g :exec "set lines=999 columns=" . (g:gundo_width + &columns) \| :GundoToggle<CR>
     au BufRead *.scratch nmap <buffer> <silent> ZZ :wa \| :call ScratchCopy()<CR> \| :macaction hide:<CR>
     au BufRead *.scratch nmap <buffer> <silent> ZZ :call ScratchCopy()<CR> \| :macaction hide:<CR>
     au BufRead *.scratch nmap <buffer> <silent> :w<CR> :write \| :silent call ScratchCopy()<CR>
     au BufRead *.scratch imap <buffer> <silent> ZZ <Esc>ZZ
     au BufRead *.scratch vmap <buffer> <silent> ZZ <Esc>ZZ
-    " au! FocusGained *.scratch normal ggVGpG$
     au! FocusLost *.scratch call ScratchCopy()
     au! FocusGained *.scratch call ScratchPaste()
     au! VimResized *.scratch call SetColorColumnBorder() | :normal zz
 augroup END
 
 "}}}
+" VCS Commit: " {{{
+augroup VCSCommit
+    au! BufRead hg-editor-* nmap <buffer> <silent> <C-e>d :set filetype=diff \| :r !hg diff<CR>gg
+augroup END
+
+" }}}
 " Vimperator Y Pentadactyl: " {{{
 augroup VimperatorYPentadactyl
-    au! BufRead vimperator-*\|pentadactyl-* nmap <buffer> <silent> ZZ :call FormFieldArchive() \| :silent write \| :bd \| :macaction hide:<CR>
-    au BufRead vimperator-*\|pentadactyl-* imap <buffer> <silent> ZZ <Esc>ZZ
+    au! BufRead vimperator-*,pentadactyl-* nmap <buffer> <silent> ZZ :call FormFieldArchive() \| :silent write \| :bd \| :macaction hide:<CR>
+    au BufRead vimperator-*,pentadactyl-* imap <buffer> <silent> ZZ <Esc>ZZ
 augroup END
 
 " }}}
@@ -1094,7 +1208,7 @@ au! FileType xhtml inoremap <buffer> > <Esc>:call AutoTagComplete()<CR>
 
 " }}}
 " Help Files: " {{{
-augroup helpfiles 
+augroup helpfiles
     au! FileType help nnoremap <buffer> <silent> <C-p> ?^[=-]\{1,}$<CR>zt:nohlsearch<CR>
     au FileType help nnoremap <buffer> <silent> <C-n> /^[=-]\{1,}$<CR>zt:nohlsearch<CR>
     au FileType help nnoremap <buffer> <silent> <S-Tab> ?\|[^\[:space:]]*\|<CR>zz:nohlsearch<CR>
@@ -1109,7 +1223,7 @@ nnoremap <C-y>g :GundoToggle<CR>
 
 " }}}
 " Git Commit: " {{{
-augroup helpfiles 
+augroup Gundo
     au! FileType gitcommit nnoremap <buffer> <silent> <C-n> :DiffGitCached<CR>\|:wincmd L<CR>|:au FileType git nnoremap <buffer> <silent> <C-n> :hide<CR>
 augroup END
 
@@ -1147,8 +1261,8 @@ augroup BufExplorerAdd
         " Navigate to the file under the cursor when you let go of Tab
         "au BufWinEnter \[BufExplorer\] set updatetime=1000
         " o is the BufExplorer command to select a file
-        "au! CursorHold \[BufExplorer\] normal o 
-    endif   
+        "au! CursorHold \[BufExplorer\] normal o
+    endif
 augroup END
 
 " }}}
@@ -1178,21 +1292,91 @@ function! UpdateSnippetsForBuffer()
 endfunction
 
 " }}}
-" Vimwiki: " {{{
-map <silent> <Leader>w2 <Esc>:w<CR>:VimwikiAll2HTML<CR><Esc>:echo "Saved wiki to HTML."<CR>
-"" let wiki.nested_syntaxes = {'python': 'python'}
-augroup vimwiki
-    au! FileType vimwiki map <buffer> <silent> <C-p> ?=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
-    au FileType vimwiki map <buffer> <silent> <C-n> /=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
-    au FileType vimwiki imap <buffer> <silent> >> <Esc>>>a
-    au FileType vimwiki imap <buffer> <silent> << <Esc><<a
+" Todo Lists: " {{{
+augroup todolist
+    au! BufReadPost,FileReadPost *todo*,*list* doau FileType tst
+    au BufReadPost,FileReadPost *todo*,*list* set syntax+=.txt
+    au BufReadPost,FileReadPost *todo*,*list* map <buffer> <silent> <C-p> ?=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
+    au BufReadPost,FileReadPost *todo*,*list* map <buffer> <silent> <C-n> /=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
 augroup END
+
+" }}}
+" Vimwiki: " {{{
+" Autocmds: " {{{
+augroup vimwiki
+    "au! BufReadPre *.wiki doau FileType txt
+    au! BufReadPost,FileReadPost,BufNewFile *.wiki doau FileType tst
+    au BufNew vimwiki set foldlevel=999
+    au FileType vimwiki set syntax=vimwiki.txt
+    au FileType vimwiki map <buffer> <silent> <C-p> ?=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
+    au FileType vimwiki map <buffer> <silent> <C-n> /=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
+    au FileType *vimwiki* nmap <buffer> <silent> <CR> :call VimwikiFollowLinkMod()<CR>
+    au FileType vimwiki nested map <buffer> <silent> <Leader>w2 <Esc>:w<CR>:VimwikiAll2HTML<CR><Esc>:echo "Saved wiki to HTML."<CR>
+augroup END
+
+" }}}
+" Configuration: " {{{
+"" let wiki.nested_syntaxes = {'python': 'python'}
 let g:vimwiki_hl_headers = 1                " hilight header colors
 let g:vimwiki_hl_cb_checked = 1             " hilight todo item colors
 let g:vimwiki_list_ignore_newline = 0       " convert newlines to <br /> in list
 let g:vimwiki_folding = 1                   " outline folding
+let g:vimwiki_table_auto_fmt = 0            " don't use and conflicts with snipMate
 let g:vimwiki_fold_lists = 1                " folding of list subitems
-let g:vimwiki_list = [{'path': '~/sandbox/personal/vimwiki/', 'index': 'PersonalWiki', 'html_header': '~/sandbox/personal/vimwiki/header.tpl'}, {'path': '~/sandbox/public/wiki', 'index': 'SethMilliken', 'auto_export': 1}, {'path': '~/sandbox/work/wiki/', 'index': 'SethMilliken', 'html_header': '~/sandbox/work/wiki/header.tpl', 'auto_export': 1}]
+let g:vimwiki_file_exts = 'pdf,txt,doc,rtf,xls,php,zip,rar,7z,html,gz,vim,screen'
+let g:vimwiki_valid_html_tags='b,i,s,u,sub,sup,kbd,br,hr,font,a,div,span'
+let g:vimwiki_list = [
+             \{'path': '~/sandbox/personal/vimwiki/',
+                \'index': 'PersonalWiki',
+                \'html_header': '~/sandbox/personal/vimwiki/header.tpl',
+                \},
+            \{'path': '~/sandbox/public/wiki',
+                \'index': 'SethMilliken',
+                \'auto_export': 1,
+                \},
+            \{'path': '~/sandbox/work/wiki/',
+                \'index': 'SethMilliken',
+                \'html_header': '~/sandbox/work/wiki/header.tpl',
+                \'auto_export': 1,
+                \},
+                \]
+" }}}
+function! VimwikiExpandedPageName() " {{{
+    return substitute(substitute(expand('%:t'), "\\C\\([A-Z]\\)", " \\1", "g"), "\\..*", "", "")
+endfunction
+
+" }}}
+function! VimwikiFollowLinkMod() " {{{
+    if GetLetterAtCurrentPosition() == " "
+        normal B
+    end
+    normal "tyiW
+    if GetLetterAtCurrentPosition() == "@"
+        exe "normal /\<C-r>\t\<CR>"
+    else
+        exe ":VimwikiFollowLink"
+    endif
+endfunction
+
+" }}}
+function! GetLetterAtCurrentPosition() " {{{
+    let l:position = getpos(".")
+    let l:column = get(l:position, 2)
+    let l:letter = strpart(getline("."), l:column - 1, 1)
+    return l:letter
+endfunction
+
+" }}}
+
+" }}}
+" Xptemplate: " {{{
+let g:xptemplate_brace_complete = 0
+
+" }}}
+" VimSheet: " {{{
+augroup VimSheet
+    au! BufRead /tmp/*.vim nmap <buffer> <CR> yyq:p<CR>
+augroup END
 
 " }}}
 " TOhtml: " {{{
@@ -1205,21 +1389,10 @@ let use_xhtml = 1
 let html_no_pre = 1
 
 " }}}
-" AppleScript: " {{{
-au! BufNewFile,BufRead *.applescript   setf applescript
-au! BufNewFile,BufRead *.tst.* set ft=_.txt.tst
-
-" }}}
-" YAML: " {{{
-    au BufNewFile,BufRead *.yaml,*.yml so ~/.vim/syntax/yaml.vim
-
-" }}}
-
-" Command-T: " {{{
+" CommandT: " {{{
 " See .gvimrc for map
 let g:CommandTMatchWindowAtTop=1
 " let g:CommandTSelectNextMap = ['<C-n>', '<C-j>', 'j']
-
 
 " }}}
 " Maintenance: " {{{
@@ -1233,9 +1406,114 @@ function! DoMaintenance()
 endfunction
 
 " }}}
+" Janrain:  " {{{
+map <D-j>w <Esc>:cd ~/sandbox/work/vm/rpx/ruby/rails/<CR>
+map <D-j>p <Esc>:cd ~/sandbox/personal/<CR>
+map <D-j>e <Esc>:GrepEngage 
+command! -nargs=1 GrepEngage call GrepEngage(<f-args>)
+function! GrepEngage(string)
+    echo "Searching Engage codebase for \"" . a:string . "\"...."
+    let l:engage_path = "~/sandbox/work/vm/rpx/ruby/rails/**/*.rb"
+    exec ":vimgrep /" . a:string . "/ " . l:engage_path
+    copen
+endfunction
 
 " }}}
-" EXPERIMENT: {{{
+" Folding: " {{{
+function! CleanFoldText() "{{{
+    let indentation = winwidth(0) - (winwidth(0) / 4)
+    let fullline = getline(v:foldstart)
+    let commentmatch = "\\s*" . substitute(CommentStringOpen(), "\\s\\+", "\\\\s*", "g")
+    let g:replacestring = commentmatch . FoldMarkerOpen() . '.*'
+    let line = substitute(fullline, g:replacestring, '', 'g')
+    let linecount = v:foldend - v:foldstart - 2
+    let linewidth = indentation - v:foldlevel - strlen(line)
+    let decoratedline = printf("%s %*s <%s>", line, linewidth, linecount.' lines', v:foldlevel)
+    let decoratedline = substitute(decoratedline, '^+\(.*\)done', 'o\1DONE', 'g')
+    return decoratedline
+endfunction "}}}
+set foldtext=CleanFoldText()
+" }}}
+
+" }}}
+" EXPERIMENTAL: " {{{
+
+function! SnippetFilesForCurrentBuffer(A,L,P) " {{{
+   let snipfiles = []
+   for current_dir in split(g:snippets_dir, ',')
+       for current_ft in split(&ft . "._", '\.')
+           call add(snipfiles, glob(current_dir . current_ft ."/*.snippet"))
+           call add(snipfiles, glob(current_dir . current_ft . "*.snippets"))
+       endfor
+   endfor
+   return join(snipfiles, "\n")
+endfunction
+
+" }}}
+map <Leader>sv :call OpenRelatedSnippetFileInVsplit()<CR>
+function! OpenRelatedSnippetFileInVsplit() " {{{
+    let snippetfile = input("Edit which related sunippet file? ", "", "custom,SnippetFilesForCurrentBuffer")
+    if filereadable(snippetfile) == 1
+        exe ":vsplit " . snippetfile
+    endif
+endfunction
+
+" }}}
+
+" Shift Completed Items:
+function! SweepComplete() range " {{{
+    let filterrange = range(a:lastline, a:firstline, -1)
+    let movelines = []
+    for line in filterrange
+        if FilterCompletedItem(line) == 0
+            call insert(movelines, line)
+        end
+    endfor
+    let i = 0
+    for line in movelines
+        exec "silent " . (line - i) . "m" . a:lastline | let i += 1
+    endfor
+endfunction
+
+" }}}
+function! FilterCompletedItem(line) " {{{
+    return match(getline(a:line), "^o \\|^x \\|.*\\[X] ")
+endfunction
+
+" }}}
+
+" Raimondi's stagnant mailapp plugin " {{{
+let g:MailApp_bundle = '~/.vim/bundle/MailApp/MailApp.bundle/'
+let g:MailAppl_from = 'Seth Milliken <seth@araxia.net>'
+
+" }}}
+
+map <Leader><CR> 0"ty$:<C-r>t<CR>:echo "Executed: " . @t<CR>
+
+" Toggle number column: " {{{
+" <A-1> to toggle between nu and rnu
+if exists('+relativenumber')
+  nnoremap <expr> ¡ ToggleNumberDisplay()
+  xnoremap <expr> ¡ ToggleNumberDisplay()
+  onoremap <expr> ¡ ToggleNumberDisplay()
+
+  function! ToggleNumberDisplay()
+      if &l:nu | setlocal rnu | else | setlocal nu | endif | redraw
+  endfunction
+
+endif
+
+" }}}
+" Diff of changes since opening file " {{{
+if !exists(":DiffOrig")
+  command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p | diffthis
+endif
+
+" }}}
+
+" hack to deal with syntax clearing problem i haven't been able to track down
+" au! syntaxset
+" unlet b:current_syntax
 
 " type number then : to get relative range prepopulated in cmdline
 " new vocab word "idem" to get relative range prepopulated in cmdline
@@ -1252,6 +1530,7 @@ endfunction
 " :set ff=unix
 " :let string="!echo 'bar' | ls"
 " :let mapleader=","
+" :let mapleader=" "
 
 " }}}
 " vim: set ft=vim fdm=marker cms=\ \"\ %s  :

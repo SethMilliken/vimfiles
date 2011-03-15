@@ -1,0 +1,8 @@
+- try something different
+- do somthing new
+- use i_<C-t> and i_<C-d> for insert mode indentation
+- use Command-Shift-/ for menu navigation
+- practice using i_C-[, i_C-o, and i_C-c
+- use tst to quickly record notes to be moved elsewhere later
+- use taskstack for queuing up todo items even if you're not actively doing them now
+- replace only visual selection with s/\%Vregex\%V/foo/g

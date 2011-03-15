@@ -1,4 +1,3 @@
 include .vimrc
-rename .vimrc vim/.vimrc
 include bundle/refresh_bundles.sh
-rename refresh_bundles.sh bundle/refresh_bundles.sh
+include colors/araxia.vim
