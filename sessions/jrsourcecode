@@ -235,7 +235,6 @@ set autowrite
 set background=dark
 set backspace=indent,eol,start
 set clipboard=unnamed
-set commentstring=
 set diffopt=filler,vertical
 set directory=~/.vim/swap//,~/vimfiles/swap//
 set display=lastline,uhex
@@ -249,7 +248,6 @@ set helplang=en
 set history=10000
 set hlsearch
 set incsearch
-set indentkeys=0{,0},:,0#,!^F,O,e
 set iskeyword=@,48-57,_,192-255,-
 set langmenu=none
 set laststatus=2
@@ -257,11 +255,10 @@ set listchars=tab:>-,trail:-
 set mouse=a
 set printexpr=system('open\ -a\ Preview\ '.v:fname_in)\ +\ v:shell_error
 set ruler
-set runtimepath=~/.vim,~/.vim/bundle/PickAColor,/Applications/MacVim.app/Contents/Resources/vim/vimfiles,/Applications/MacVim.app/Contents/Resources/vim/runtime,/Applications/MacVim.app/Contents/Resources/vim/vimfiles/after,~/.vim/after
+set runtimepath=~/.vim,~/.vim/bundle/PickAColor,/Applications/SourceCode.app/Contents/Resources/vim/vimfiles,/Applications/SourceCode.app/Contents/Resources/vim/runtime,/Applications/SourceCode.app/Contents/Resources/vim/vimfiles/after,~/.vim/after
 set sessionoptions=folds,help,options,tabpages,winsize,globals,sesdir,resize,winpos,unix
 set shiftwidth=4
 set shortmess=filnxtToOIA
-set showbreak=\ \ 
 set showcmd
 set spellcapcheck=off
 set splitbelow
@@ -270,11 +267,11 @@ set statusline=%<(%n)\ %m%y%r\ %f\ %=%-14.(%l,%c%V%)\ %P
 set switchbuf=useopen,usetab
 set tabline=%!MyTabLine()
 set tabpagemax=100
-set tabstop=2
+set tabstop=4
 set tags=./tags,tags,~/sandbox/personal/tags
 set termencoding=utf-8
 set undolevels=100
-set window=86
+set window=69
 set winminheight=0
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
@@ -290,6 +287,7 @@ let DirDiffSort =  1
 let NERDTreeMapToggleHidden = "I"
 let NERDTreeWinSize = "31"
 let NERDTreeMapRefreshRoot = "R"
+let NERDDelimiterRequests = "1"
 let DirDiffInteractive =  0 
 let NERDTreeMapPreview = "go"
 let NERDTreeMapActivateNode = "o"
@@ -308,6 +306,7 @@ let NERDTreeMapOpenExpl = "e"
 let CSV_string_delimiter = "\""
 let NERDTreeMouseMode = "1"
 let NERDDefaultNesting = "1"
+let TailMinusF_Height =  10 
 let NERDTreeChDirMode = "0"
 let NERDTreeRemoveDirCmd = "rm -rf "
 let NERDTreeAutoCenterThreshold = "3"
@@ -319,9 +318,7 @@ let NERDTreeHijackNetrw = "1"
 let NERDTreeMapFilesystemMenu = "m"
 let NERDTreeMapRefresh = "r"
 let CSV_field_list = ""
-let TailMinusF_Height =  10 
 let NERDTreeHighlightCursorline = "1"
-let NERDDelimiterRequests = "1"
 let NERDLPlace = "[>"
 let NERDTreeMapOpenInTab = "t"
 let CSV_separator = ","
@@ -340,6 +337,7 @@ let NERDRPlace = "<]"
 let DirDiffWindowSize =  14 
 let NERDTreeMapExecute = "!"
 let NERDRemoveExtraSpaces = "1"
+let DirDiffIgnore = ""
 let NERDRemoveAltComs = "1"
 let NERDTreeAutoCenter = "1"
 let DirDiffTextOnlyIn = "Only in "
@@ -359,7 +357,6 @@ let NERDCompactSexyComs = "0"
 let NERDTreeSortDirs = "1"
 let NERDTreeMapToggleFiles = "F"
 let NERDAllowAnyVisualDelims = "1"
-let DirDiffIgnore = ""
 let BufExploreAdd =  1 
 let NERDTreeMapJumpFirstChild = "K"
 let NERDTreeMapOpenRecursively = "O"
@@ -374,13 +371,12 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +1 ~/sandbox/personal/lists/readinglist.txt
-badd +0 ~/sandbox/personal/lists/videolist.txt
+badd +1 ~/Desktop/MyExample/Classes/MyExampleAppDelegate.h
+badd +1 ~/Desktop/MyExample/Classes/MyExampleAppDelegate.m
 silent! argdel *
-set lines=87 columns=274
-set fullscreen
-winpos 0 1028
-buffer ~/sandbox/personal/lists/readinglist.txt
+set lines=70 columns=234
+winpos 0 878
+buffer ~/Desktop/MyExample/Classes/MyExampleAppDelegate.h
 set splitbelow splitright
 wincmd _ | wincmd |
 vsplit
@@ -388,29 +384,57 @@ vsplit
 wincmd w
 wincmd t
 set winheight=1 winwidth=1
-exe 'vert 1resize ' . ((&columns * 136 + 137) / 274)
-exe 'vert 2resize ' . ((&columns * 137 + 137) / 274)
+exe 'vert 1resize ' . ((&columns * 116 + 117) / 234)
+exe 'vert 2resize ' . ((&columns * 117 + 117) / 234)
 argglobal
-nmap <buffer> <silent> 	 /^\([A-Z]\+ \)\{1,\}:nohls
 let s:cpo_save=&cpo
 set cpo&vim
-nmap <buffer> <silent> <NL> :call TaskstackMoveItemDown()
-nmap <buffer> <silent>  :call TaskstackMoveItemUp()
-nmap <buffer> <silent>  /^@.* {\{3\}:nohls
-nmap <buffer> <silent>  ?^@.* {\{3\}:nohls
-nmap <buffer> <silent> $ :call TaskstackEOL()
-nmap <buffer> :w :call TaskstackAutosaveReminder()
-nmap <buffer> LL :call TaskstackScratch()
-nmap <buffer> NN :call TaskstackNewItem()
-nmap <buffer> QQ :call TaskstackCompleteItem(g:completed_prefix)
-nmap <buffer> XX :call TaskstackCompleteItem(g:aborted_prefix)
-nmap <buffer> ZZ :call TaskstackHide()
-nmap <buffer> <F8> :call TaskstackGroups()
-nmap <buffer> <silent> <S-Tab> ?^\([A-Z]\+ \)\{1,\}:nohls
-imap <buffer> NN :call TaskstackNewItem()
-imap <buffer> QQ :call TaskstackCompleteItem(g:completed_prefix)
-imap <buffer> XX :call TaskstackCompleteItem(g:aborted_prefix)
-imap <buffer> ZZ :call TaskstackHide()
+inoremap <buffer> <silent> <F5> 
+imap <buffer> <silent> <D-9> :tabn 9
+imap <buffer> <silent> <D-8> :tabn 8
+imap <buffer> <silent> <D-7> :tabn 7
+imap <buffer> <silent> <D-6> :tabn 6
+imap <buffer> <silent> <D-5> :tabn 5
+imap <buffer> <silent> <D-4> :tabn 4
+imap <buffer> <silent> <D-3> :tabn 3
+imap <buffer> <silent> <D-2> :tabn 2
+imap <buffer> <silent> <D-1> :tabn 1
+imap <buffer> <silent> <D-0> :tabn 10
+imap <buffer> <silent> ¹ :tabn 9
+imap <buffer> <silent> ¸ :tabn 8
+imap <buffer> <silent> · :tabn 7
+imap <buffer> <silent> ¶ :tabn 6
+imap <buffer> <silent> µ :tabn 5
+imap <buffer> <silent> ´ :tabn 4
+imap <buffer> <silent> ³ :tabn 3
+imap <buffer> <silent> ² :tabn 2
+imap <buffer> <silent> ± :tabn 1
+imap <buffer> <silent> ° :tabn 10
+nnoremap <buffer> <silent> K :call objc#man#ShowDoc()
+nnoremap <buffer> <D-]> >>
+nnoremap <buffer> <D-[> <<
+nnoremap <buffer> <D-/> I// 
+nmap <buffer> <silent> <D-CR> <D-r>
+nmap <buffer> <silent> <D-9> 9gt
+nmap <buffer> <silent> <D-8> 8gt
+nmap <buffer> <silent> <D-7> 7gt
+nmap <buffer> <silent> <D-6> 6gt
+nmap <buffer> <silent> <D-5> 5gt
+nmap <buffer> <silent> <D-4> 4gt
+nmap <buffer> <silent> <D-3> 3gt
+nnoremap <buffer> <silent> <D-2> :ListMethods
+nmap <buffer> <D-1> :ListMethods
+nnoremap <buffer> <silent> <D-0> :call system('open -a Xcode '.b:cocoa_proj)
+nmap <buffer> <silent> ¹ 9gt
+nmap <buffer> <silent> ¸ 8gt
+nmap <buffer> <silent> · 7gt
+nmap <buffer> <silent> ¶ 6gt
+nmap <buffer> <silent> µ 5gt
+nmap <buffer> <silent> ´ 4gt
+nmap <buffer> <silent> ³ 3gt
+nmap <buffer> <silent> ² 2gt
+nmap <buffer> <silent> ± 1gt
+nmap <buffer> <silent> ° 10gt
 let &cpo=s:cpo_save
 unlet s:cpo_save
 setlocal keymap=
@@ -421,13 +445,13 @@ setlocal nobinary
 setlocal bufhidden=
 setlocal buflisted
 setlocal buftype=
-setlocal nocindent
+setlocal cindent
 setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
 setlocal cinoptions=
 setlocal cinwords=if,else,while,do,for,switch
 setlocal colorcolumn=
-setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
-setlocal commentstring=
+setlocal comments=sO:*\ -,mO:*\ \ ,exO:*/,s1:/*,mb:*,ex:*/,://
+setlocal commentstring=/*%s*/
 setlocal complete=.,w,b,u,t,i
 setlocal concealcursor=
 setlocal conceallevel=0
@@ -444,32 +468,31 @@ setlocal nodiff
 setlocal equalprg=
 setlocal errorformat=
 setlocal noexpandtab
-if &filetype != '_tst.txt'
-setlocal filetype=_tst.txt
+if &filetype != 'objc'
+setlocal filetype=objc
 endif
 set foldcolumn=4
 setlocal foldcolumn=4
 setlocal foldenable
 setlocal foldexpr=0
 setlocal foldignore=#
-setlocal foldlevel=3
+setlocal foldlevel=999
 setlocal foldmarker={{{,}}}
 set foldmethod=marker
 setlocal foldmethod=marker
 setlocal foldminlines=1
 setlocal foldnestmax=20
-set foldtext=MyFoldText()
-setlocal foldtext=MyFoldText()
+setlocal foldtext=foldtext()
 setlocal formatexpr=
-setlocal formatoptions=tcq
+setlocal formatoptions=croql
 setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
 setlocal grepprg=
 setlocal iminsert=2
 setlocal imsearch=2
-setlocal include=
+setlocal include=^s*#s*import
 setlocal includeexpr=
-setlocal indentexpr=
-setlocal indentkeys=0{,0},:,0#,!^F,O,e
+setlocal indentexpr=GetObjCIndent()
+setlocal indentkeys=0{,0},0#,!^F,o,O,e,<:>
 setlocal noinfercase
 setlocal iskeyword=@,48-57,_,192-255,-
 setlocal keywordprg=
@@ -486,7 +509,7 @@ setlocal nrformats=octal,hex
 set number
 setlocal nonumber
 setlocal numberwidth=4
-setlocal omnifunc=
+setlocal omnifunc=objc#cocoacomplete#Complete
 setlocal path=
 setlocal nopreserveindent
 setlocal nopreviewwindow
@@ -509,10 +532,10 @@ setlocal statusline=
 setlocal suffixesadd=
 setlocal swapfile
 setlocal synmaxcol=3000
-if &syntax != '_tst.txt'
-setlocal syntax=_tst.txt
+if &syntax != 'objc'
+setlocal syntax=objc
 endif
-setlocal tabstop=2
+setlocal tabstop=4
 setlocal tags=
 setlocal textwidth=0
 setlocal thesaurus=
@@ -522,43 +545,26 @@ setlocal winfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-1
-normal zo
-1
-normal zc
-14
-normal zo
-14
-normal zo
-let s:l = 55 - ((54 * winheight(0) + 42) / 85)
+let s:l = 1 - ((0 * winheight(0) + 34) / 68)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-55
-normal! 032l
+1
+normal! 0
 wincmd w
 argglobal
-buffer ~/sandbox/personal/lists/videolist.txt
-nmap <buffer> <silent> 	 /^\([A-Z]\+ \)\{1,\}:nohls
+buffer ~/Desktop/MyExample/Classes/MyExampleAppDelegate.m
 let s:cpo_save=&cpo
 set cpo&vim
-nmap <buffer> <silent> <NL> :call TaskstackMoveItemDown()
-nmap <buffer> <silent>  :call TaskstackMoveItemUp()
-nmap <buffer> <silent>  /^@.* {\{3\}:nohls
-nmap <buffer> <silent>  ?^@.* {\{3\}:nohls
-nmap <buffer> <silent> $ :call TaskstackEOL()
-nmap <buffer> :w :call TaskstackAutosaveReminder()
-nmap <buffer> LL :call TaskstackScratch()
-nmap <buffer> NN :call TaskstackNewItem()
-nmap <buffer> QQ :call TaskstackCompleteItem(g:completed_prefix)
-nmap <buffer> XX :call TaskstackCompleteItem(g:aborted_prefix)
-nmap <buffer> ZZ :call TaskstackHide()
-nmap <buffer> <F8> :call TaskstackGroups()
-nmap <buffer> <silent> <S-Tab> ?^\([A-Z]\+ \)\{1,\}:nohls
-imap <buffer> NN :call TaskstackNewItem()
-imap <buffer> QQ :call TaskstackCompleteItem(g:completed_prefix)
-imap <buffer> XX :call TaskstackCompleteItem(g:aborted_prefix)
-imap <buffer> ZZ :call TaskstackHide()
+inoremap <buffer> <silent> <F5> 
+nnoremap <buffer> <silent> K :call objc#man#ShowDoc()
+nmap <buffer> <D-1> :ListMethods
+nnoremap <buffer> <D-]> >>
+nnoremap <buffer> <D-[> <<
+nnoremap <buffer> <D-/> I// 
+nmap <buffer> <silent> <D-CR> <D-r>
+nnoremap <buffer> <silent> <D-2> :ListMethods
+nnoremap <buffer> <silent> <D-0> :call system('open -a Xcode '.b:cocoa_proj)
 let &cpo=s:cpo_save
 unlet s:cpo_save
 setlocal keymap=
@@ -569,13 +575,13 @@ setlocal nobinary
 setlocal bufhidden=
 setlocal buflisted
 setlocal buftype=
-setlocal nocindent
+setlocal cindent
 setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
 setlocal cinoptions=
 setlocal cinwords=if,else,while,do,for,switch
 setlocal colorcolumn=
-setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
-setlocal commentstring=
+setlocal comments=sO:*\ -,mO:*\ \ ,exO:*/,s1:/*,mb:*,ex:*/,://
+setlocal commentstring=/*%s*/
 setlocal complete=.,w,b,u,t,i
 setlocal concealcursor=
 setlocal conceallevel=0
@@ -592,32 +598,32 @@ setlocal nodiff
 setlocal equalprg=
 setlocal errorformat=
 setlocal noexpandtab
-if &filetype != '_tst.txt'
-setlocal filetype=_tst.txt
+if &filetype != 'objc'
+setlocal filetype=objc
 endif
 set foldcolumn=4
 setlocal foldcolumn=4
 setlocal foldenable
 setlocal foldexpr=0
 setlocal foldignore=#
-setlocal foldlevel=2
+setlocal foldlevel=999
 setlocal foldmarker={{{,}}}
 set foldmethod=marker
 setlocal foldmethod=marker
 setlocal foldminlines=1
 setlocal foldnestmax=20
 set foldtext=MyFoldText()
-setlocal foldtext=MyFoldText()
+setlocal foldtext=foldtext()
 setlocal formatexpr=
-setlocal formatoptions=tcq
+setlocal formatoptions=croql
 setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
 setlocal grepprg=
 setlocal iminsert=2
 setlocal imsearch=2
-setlocal include=
+setlocal include=^s*#s*import
 setlocal includeexpr=
-setlocal indentexpr=
-setlocal indentkeys=0{,0},:,0#,!^F,O,e
+setlocal indentexpr=GetObjCIndent()
+setlocal indentkeys=0{,0},0#,!^F,o,O,e,<:>
 setlocal noinfercase
 setlocal iskeyword=@,48-57,_,192-255,-
 setlocal keywordprg=
@@ -632,9 +638,9 @@ setlocal modeline
 setlocal modifiable
 setlocal nrformats=octal,hex
 set number
-setlocal nonumber
+setlocal number
 setlocal numberwidth=4
-setlocal omnifunc=
+setlocal omnifunc=objc#cocoacomplete#Complete
 setlocal path=
 setlocal nopreserveindent
 setlocal nopreviewwindow
@@ -657,10 +663,10 @@ setlocal statusline=
 setlocal suffixesadd=
 setlocal swapfile
 setlocal synmaxcol=3000
-if &syntax != '_tst.txt'
-setlocal syntax=_tst.txt
+if &syntax != 'objc'
+setlocal syntax=objc
 endif
-setlocal tabstop=2
+setlocal tabstop=4
 setlocal tags=
 setlocal textwidth=0
 setlocal thesaurus=
@@ -669,41 +675,16 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-1
-normal zo
-4
-normal zo
-1
-normal zc
-15
-normal zo
-37
-normal zo
-94
-normal zo
-109
-normal zc
-127
-normal zo
-128
-normal zo
-196
-normal zo
-127
-normal zo
-196
-normal zo
-15
-normal zo
-let s:l = 66 - ((51 * winheight(0) + 42) / 85)
+let s:l = 1 - ((0 * winheight(0) + 34) / 68)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-66
+1
 normal! 0
 wincmd w
-exe 'vert 1resize ' . ((&columns * 136 + 137) / 274)
-exe 'vert 2resize ' . ((&columns * 137 + 137) / 274)
+2wincmd w
+exe 'vert 1resize ' . ((&columns * 116 + 117) / 234)
+exe 'vert 2resize ' . ((&columns * 117 + 117) / 234)
 tabnext 1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf

@@ -1,0 +1,24 @@
+
+# Puppet snippets
+
+snippet types List of puppet types
+	file|service
+snippet res A puppet resource using a symbolic name.
+	${1:type} { "${2:symbolic name}"
+		name => "${3:title}"
+		${4:param} => "${5:paramValue}",
+		${6:par_or_parq}
+	}
+snippet rez A puppet resource.
+	${1:type} { "${2:title}"
+		${3:param} => "${4:paramValue}",
+		${5:par_or_parq}
+	}
+snippet par An unquoted puppet resource parameter.
+	${1:param} => ${2:paramValue},
+snippet parq A quoted puppet resource parameter.
+	${1:param} => "${2:paramValue}",
+snippet ref A reference to another puppet resource.
+	${1:type}["${2:title}"]
+snippet  description
+	
