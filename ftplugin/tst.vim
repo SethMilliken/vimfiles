@@ -971,6 +971,7 @@ endfunction
 function! TaskstackNavigateToProjectPrompted() " {{{
     let l:incoming = input("Navigate to: ", "", "custom,TaskstackProjectNameCompletion")
     call FindNode("@" . l:incoming)
+    normal zv
 endfunction
 
 "}}}
