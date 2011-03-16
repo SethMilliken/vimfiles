@@ -134,6 +134,7 @@ set history=10000                   " keep craploads of command history
 set undolevels=500                  " keep lots of undo history
 set foldlevelstart=1                " first level of folds open by default
 set fdm=marker                      " make the default foldmethod markers
+set foldopen+=jump                  " jumps open folds, too
 set display+=lastline               " always show as much of the last line as possible
 set guioptions+=c                   " always use console dialogs (faster)
 set noerrorbells                    " don't need to hear if i hit esc twice
