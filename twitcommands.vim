@@ -17,6 +17,8 @@ SearchTwitter mikelikesbikes
 SearchTwitter stevelosh
 SearchTwitter b4winckler
 SearchTwitter #rails
+SearchTwitter JonRowe
+SearchTwitter tungd
 UserTwitter SethMilliken
 ListTwitter ruby
 SearchTwitter #Xcode
@@ -39,7 +41,6 @@ FollowersTwitter
 " url shortners
 Trim
 BitLy
-http://bit.ly/eABfk3
 
 " <D-j>t New Tweet Buffer
 
@@ -151,9 +152,11 @@ function! s:BlackList()
                \ "NeRdYChiiCk",
                \ "#TeamFollowBack",
                \ "#TEAMFOLLOWBACK",
+               \ "#TeamFOLLOWBACK",
                \ "NiCCiisNeechee",
                \ "VERSATHEISSUE",
                \ "#ff",
+               \ "#FF",
                \ "CouchMoneySweet",
                \ "BlakMuzick",
                \ "#VIM",
