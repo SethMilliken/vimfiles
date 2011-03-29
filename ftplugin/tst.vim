@@ -329,15 +329,16 @@ endfu
 " }}}
 fun foldcontainer._end() dict " {{{
         " preserve folds
-        call cursor(self._start(), 0)
-        normal zv]z
-        let result = line(".")
-        " restore folds
+        call self['state'].winsave()
+        normal $
+        let result = searchpair(FoldMarkerOpen(), "", FoldMarkerClose(), 'W')
+        call self['state'].winrest()
         return result
 endfu
 
 " }}}
 fun foldcontainer._firstline() dict " {{{
+    " TODO: fix with FoldMarkerOpen()
     return [ self['header'] . " " . " \" {{" . "{" ]
 endfu
 
