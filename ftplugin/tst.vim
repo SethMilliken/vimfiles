@@ -712,7 +712,7 @@ endfunction
 
 " }}}
 function! TaskstackGroups() " {{{
-    call AutoTimestampBypass() " FIXME: External Dependency
+    call timestamp#autoUpdateBypass() " FIXME: External Dependency
     " silent! wincmd t
     if FindNode(s:groups_node_name) == 0
         call TaskstackMain()
@@ -722,12 +722,12 @@ function! TaskstackGroups() " {{{
     end
     call FindNode(s:groups_node_name)
     silent! normal zo
-    call AutoTimestampEnable() " FIXME: External Dependency
+    call timestamp#autoUpdateEnable() " FIXME: External Dependency
 endfunction
 
 " }}}
 function! TaskstackCompleted() " {{{
-    call AutoTimestampBypass() " FIXME: External Dependency
+    call timestamp#autoUpdateBypass() " FIXME: External Dependency
     " silent! wincmd t
     if FindNode(s:completed_node_name) == 0
         call TaskstackMain()
@@ -737,12 +737,12 @@ function! TaskstackCompleted() " {{{
     end
     call FindNode(s:completed_node_name)
     silent! normal zo
-    call AutoTimestampEnable() " FIXME: External Dependency
+    call timestamp#autoUpdateEnable() " FIXME: External Dependency
 endfunction
 
 " }}}
 function! TaskstackDates() " {{{
-    call AutoTimestampBypass() " FIXME: External Dependency
+    call timestamp#autoUpdateBypass() " FIXME: External Dependency
     " silent! wincmd t
     if FindNode(s:dates_node_name) == 0
         call TaskstackCompleted()
@@ -752,12 +752,12 @@ function! TaskstackDates() " {{{
     end
     call FindNode(s:dates_node_name)
     silent! normal zo
-    call AutoTimestampEnable() " FIXME: External Dependency
+    call timestamp#autoUpdateEnable() " FIXME: External Dependency
 endfunction
 
 " }}}
 function! TaskstackDate() "{{{
-    let l:currentdate = TimestampText('date')
+    let l:currentdate = timestamp#text('date')
     if FindNode(l:currentdate) == 0
         let l:origview = winsaveview()
                 call TaskstackDates()
@@ -774,7 +774,7 @@ endfunction
 
 "}}}
 function! TaskstackScratch() " {{{
-    call AutoTimestampBypass() " FIXME: External Dependency
+    call timestamp#autoUpdateBypass() " FIXME: External Dependency
     " silent! wincmd b
     if FindNode(s:notes_node_name) == 0
         exe "normal Go" . s:notes_node_name
@@ -782,30 +782,30 @@ function! TaskstackScratch() " {{{
     end
     call FindNode(s:notes_node_name)
     normal zozt]zk
-    call AutoTimestampEnable() " FIXME: External Dependency
+    call timestamp#autoUpdateEnable() " FIXME: External Dependency
 endfunction
 
 " }}}
 
 " Tasks: change status
 function! TaskstackNewItem() " {{{
-    call AutoTimestampBypass() " FIXME: External Dependency
+    call timestamp#autoUpdateBypass() " FIXME: External Dependency
     call TaskstackMain()
     exe "normal o- "
     startinsert!
-    call AutoTimestampEnable() " FIXME: External Dependency
+    call timestamp#autoUpdateEnable() " FIXME: External Dependency
 endfunction
 
 " }}}
 function! TaskstackCompleteItem(prefix) " {{{
-    call AutoTimestampBypass() " FIXME: External Dependency
+    call timestamp#autoUpdateBypass() " FIXME: External Dependency
 
     if empty(TaskstackFoldbounds())
         silent call MoveItemToDateNode(getline("."), a:prefix)
     else
         silent call MoveFoldToDateNode(TaskstackFoldbounds(), a:prefix)
     end
-    call AutoTimestampEnable() " FIXME: External Dependency
+    call timestamp#autoUpdateEnable() " FIXME: External Dependency
     echo ""
 endfunction
 
@@ -875,7 +875,7 @@ function! MoveFoldToDateNode(foldbounds, status) "{{{
     let l:itemnostatus = substitute(mytext, '^\s*. ', '', 'g')
         let l:enclosing_project = DetectEnclosingProjectName(a:foldbounds[0])
         if l:enclosing_project != "" | let l:enclosing_project .= ": " | end
-    let l:result = printf("%s [%s] %s%s", a:status, TimestampText('short'), l:enclosing_project, l:itemnostatus)
+    let l:result = printf("%s [%s] %s%s", a:status, timestamp#text('short'), l:enclosing_project, l:itemnostatus)
         call CompleteFoldedItems(a:foldbounds, a:status)
         call setline(a:foldbounds[0], l:result)
         exec ":" . a:foldbounds[0] . "," . a:foldbounds[1] . "m" . moveto_line
@@ -891,7 +891,7 @@ function! MoveItemToDateNode(text, status) "{{{
     normal ]zk
         if l:enclosing_project != "" | let l:enclosing_project .= ": " | end
     let l:itemnostatus = substitute(a:text, '^\s*. ', '', 'g')
-    let l:result = printf("%s [%s] %s%s", a:status, TimestampText('short'), l:enclosing_project, l:itemnostatus)
+    let l:result = printf("%s [%s] %s%s", a:status, timestamp#text('short'), l:enclosing_project, l:itemnostatus)
     let l:toappend = [l:result]
     if LineIsWhiteSpace(getline("."))
         call append(line(".") - 1, l:toappend)
@@ -1083,7 +1083,7 @@ endfunction
 
 " }}}
 function! TaskstackEOL() " {{{
-    let l:timestamp_location = match(getline("."), TimestampPattern() . ".*")
+    let l:timestamp_location = match(getline("."), timestamp#pattern() . ".*")
     if l:timestamp_location > 0
         call cursor(line("."), l:timestamp_location)
     else
