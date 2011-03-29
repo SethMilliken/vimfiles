@@ -1,5 +1,0 @@
-i'd like to create a map that puts the "-tags=..." at the end of the command line when i bookmark it if the page is already bookmarked and already has tags. is there a straightforward way i could get the current commandline to rewrite it? a better approach to this?
-
-
-
-
