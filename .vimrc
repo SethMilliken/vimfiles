@@ -1073,7 +1073,7 @@ endif
 let g:aborted_prefix = "x"
 let g:completed_prefix = "o"
 augroup TaskStack
-    au! BufRead *.tst.* set filetype=tst syntax=txt
+    au! BufRead *.tst* set filetype=tst syntax=txt
     au! FileType *tst* set indentkeys-=o indentkeys-=0 showbreak=\ \  noai fdm=marker cms= ts=2
     au FileType *tst* nmap <buffer> XX :call TaskstackCompleteItem(g:aborted_prefix)<CR>
     au FileType *tst* imap <buffer> XX <C-c>:call TaskstackCompleteItem(g:aborted_prefix)<CR>
