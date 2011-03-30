@@ -128,12 +128,12 @@ function! timestamp#pattern() "{{{
 endfunction
 
 "}}}
-function! timestamp#autoUpdateBypass() " {{{
+function! timestamp#autoUpdateBypass() "{{{
     let g:auto_timestamp_bypass = ""
 endfunction
 
 " }}}
-function! timestamp#autoUpdateEnable() " {{{
+function! timestamp#autoUpdateEnable() "{{{
     if exists("g:auto_timestamp_bypass")
         unlet g:auto_timestamp_bypass
     end
@@ -147,8 +147,9 @@ function! timestamp#remove() "{{{
 endfunction
 
 "}}}
+" Update old timestamp functions "{{{
 if has('python')
-function s:heredoc()
+function s:update_preferences()
 python << EOF
 """
 %s/ Timestamp(/ timestamp#insert(/g
@@ -167,3 +168,4 @@ END
 EOF
 endfunction
 endif
+" }}}

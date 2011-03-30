@@ -1285,6 +1285,10 @@ function! CleanFoldText() "{{{
 endfunction "}}}
 set foldtext=CleanFoldText()
 " }}}
+" FuzzyFinder: " {{{
+map <C-Tab> :FufBuffer<CR>
+
+" }}}
 
 " }}}
 " EXPERIMENTAL: " {{{
@@ -1361,10 +1365,6 @@ if !exists(":DiffOrig")
 endif
 
 " }}}
-
-" hack to deal with syntax clearing problem i haven't been able to track down
-" au! syntaxset
-" unlet b:current_syntax
 
 " type number then : to get relative range prepopulated in cmdline
 " new vocab word "idem" to get relative range prepopulated in cmdline
