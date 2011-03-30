@@ -65,6 +65,7 @@ refresh_bundle snipmate git://github.com/spf13/snipmate.vim.git
 refresh_bundle space git://github.com/spiiph/vim-space.git
 refresh_bundle surround git://github.com/vim-scripts/surround.vim.git
 refresh_bundle syntastic git://github.com/sjl/syntastic.git
+refresh_bundle tagbar git://github.com/majutsushi/tagbar.git
 refresh_bundle textobj-function git://github.com/kana/vim-textobj-function.git
 refresh_bundle textobj-rubyblock git://github.com/nelstrom/vim-textobj-rubyblock.git
 refresh_bundle textobj-user git://github.com/kana/vim-textobj-user.git
