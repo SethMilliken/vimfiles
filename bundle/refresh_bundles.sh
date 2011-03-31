@@ -63,6 +63,7 @@ refresh_bundle screenshot git://github.com/vim-scripts/ScreenShot.git
 refresh_bundle sessionman git://github.com/vim-scripts/sessionman.vim.git
 refresh_bundle snipmate git://github.com/spf13/snipmate.vim.git
 refresh_bundle space git://github.com/spiiph/vim-space.git
+refresh_bundle statuslinehighlight git://github.com/vim-scripts/StatusLineHighlight.git
 refresh_bundle surround git://github.com/vim-scripts/surround.vim.git
 refresh_bundle syntastic git://github.com/sjl/syntastic.git
 refresh_bundle tagbar git://github.com/majutsushi/tagbar.git
