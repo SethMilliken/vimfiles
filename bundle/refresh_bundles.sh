@@ -37,6 +37,7 @@ function refresh_bundle {
 #refresh_bundle dbext git://github.com/vim-scripts/dbext.vim.git # too buggy
 #refresh_bundle vim-addon-async git://github.com/MarcWeber/vim-addon-async.git
 #refresh_bundle vim-addon-signs git://github.com/MarcWeber/vim-addon-signs.git
+#refresh_bundle vimple git://github.com/dahu/vimple.git
 refresh_bundle abolish git://github.com/tpope/vim-abolish.git
 refresh_bundle ansiesc git://github.com/vim-scripts/AnsiEsc.vim.git
 refresh_bundle autotag git://github.com/vim-scripts/AutoTag.git
@@ -73,5 +74,4 @@ refresh_bundle textobj-user git://github.com/kana/vim-textobj-user.git
 refresh_bundle twitvim git://github.com/vim-scripts/TwitVim.git
 refresh_bundle vcscommand git://github.com/vim-scripts/vcscommand.vim.git
 refresh_bundle vim-ruby git://github.com/vim-ruby/vim-ruby.git
-refresh_bundle vimple git://github.com/dahu/vimple.git
 refresh_bundle vimwiki git://github.com/vim-scripts/vimwiki.git
