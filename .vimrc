@@ -1364,6 +1364,11 @@ let g:MailAppl_from = 'Seth Milliken <seth@araxia.net>'
 
 " }}}
 
+" Vimple: " {{{
+let g:loaded_vimpreviewtag = 1
+
+" }}}
+
 map <Leader><CR> 0"ty$:<C-r>t<CR>:echo "Executed: " . @t<CR>
 
 " Toggle number column: " {{{
