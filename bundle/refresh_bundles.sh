@@ -61,6 +61,7 @@ refresh_bundle pickacolor git://github.com/Raimondi/PickAColor.git
 refresh_bundle project git://github.com/shemerey/vim-project.git
 refresh_bundle rails git://github.com/tpope/vim-rails.git
 refresh_bundle screenshot git://github.com/vim-scripts/ScreenShot.git
+refresh_bundle script-ed ssh://seth@at.araxia.net/~/git/script-ed.git
 refresh_bundle sessionman git://github.com/vim-scripts/sessionman.vim.git
 refresh_bundle snipmate git://github.com/spf13/snipmate.vim.git
 refresh_bundle space git://github.com/spiiph/vim-space.git
