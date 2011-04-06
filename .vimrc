@@ -183,6 +183,12 @@ command! W :w
 " Handy but doesn't work in terminal
 nmap <S-Space> <C-f>
 
+" c & p normalization
+nmap dD :normal 0y$"_dd<CR>
+vmap dD :normal gvygv"_x<CR>
+vmap <BS> :normal gv"_x<CR>
+vmap dC :normal gv"_xP<CR>
+
 " sane-itize Y
 map Y y$
 
@@ -210,6 +216,9 @@ nmap <C-y>v :call ReloadVimrc()<CR> \| :echo "Resourced .vimrc."<CR>
 nmap <C-y>s :SnipUp<CR>
 " Execute current line as ex command
 map <C-e>x :call feedkeys("yyq:p\r", "n")<CR>
+" File path to pasteboard
+map <C-e>f :call FileToPasteboard()<CR>
+map <C-e>F :call FileToPasteboard(line("."))<CR>
 
 " }}}
 " Utility: word count of current file " {{{
@@ -238,7 +247,9 @@ command! Journal :call JournalEntry()
 " }}}
 " Misc: " {{{
 nmap <silent> <Leader>] :NERDTreeToggle<CR>
-" nmap <silent> <Leader>[ :TMiniBufExplorer<CR>
+nmap <silent> <Leader>[ :TagbarToggle<CR>
+nmap <silent> <Leader>p :FufBuffer<CR>
+nmap <silent> <Leader>- :GundoToggle<CR>
 
 " }}}
 " Folds: " {{{
@@ -521,6 +532,16 @@ endfunction
 "}}}
 function! StripFront(string) "{{{
     return substitute(a:string, "^[[:space:]]*", "", "")
+endfunction
+
+"}}}
+function! FileToPasteboard(...) "{{{
+    let appendtext = ""
+    if len(a:000) > 0
+        let appendtext = ":" . a:000[0]
+    end
+    call setreg('*', expand('%r') . appendtext)
+    echo "Pasteboard: \"" . @* . "\""
 endfunction
 
 "}}}

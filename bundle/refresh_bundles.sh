@@ -38,6 +38,7 @@ function refresh_bundle {
 #refresh_bundle tagbar git://github.com/majutsushi/tagbar.git
 #refresh_bundle vim-addon-async git://github.com/MarcWeber/vim-addon-async.git
 #refresh_bundle vim-addon-signs git://github.com/MarcWeber/vim-addon-signs.git
+#refresh_bundle vimple git://github.com/dahu/vimple.git
 refresh_bundle abolish git://github.com/tpope/vim-abolish.git
 refresh_bundle ansiesc git://github.com/vim-scripts/AnsiEsc.vim.git
 refresh_bundle autotag git://github.com/vim-scripts/AutoTag.git
@@ -64,6 +65,7 @@ refresh_bundle screenshot git://github.com/vim-scripts/ScreenShot.git
 refresh_bundle sessionman git://github.com/vim-scripts/sessionman.vim.git
 refresh_bundle snipmate git://github.com/spf13/snipmate.vim.git
 refresh_bundle space git://github.com/spiiph/vim-space.git
+refresh_bundle statuslinehighlight git://github.com/vim-scripts/StatusLineHighlight.git
 refresh_bundle surround git://github.com/vim-scripts/surround.vim.git
 refresh_bundle syntastic git://github.com/sjl/syntastic.git
 refresh_bundle tagbar git@github.com:SethMilliken/tagbar.git
@@ -73,5 +75,4 @@ refresh_bundle textobj-user git://github.com/kana/vim-textobj-user.git
 refresh_bundle twitvim git://github.com/vim-scripts/TwitVim.git
 refresh_bundle vcscommand git://github.com/vim-scripts/vcscommand.vim.git
 refresh_bundle vim-ruby git://github.com/vim-ruby/vim-ruby.git
-refresh_bundle vimple git://github.com/dahu/vimple.git
 refresh_bundle vimwiki git://github.com/vim-scripts/vimwiki.git
