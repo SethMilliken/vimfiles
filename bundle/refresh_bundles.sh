@@ -35,6 +35,7 @@ function refresh_bundle {
 # refresh_bundle gundo git@github.com:SethMilliken/gundo.vim.git
 # refresh_bundle viki git://github.com/tomtom/viki_vim.git
 #refresh_bundle dbext git://github.com/vim-scripts/dbext.vim.git # too buggy
+#refresh_bundle tagbar git://github.com/majutsushi/tagbar.git
 #refresh_bundle vim-addon-async git://github.com/MarcWeber/vim-addon-async.git
 #refresh_bundle vim-addon-signs git://github.com/MarcWeber/vim-addon-signs.git
 #refresh_bundle vimple git://github.com/dahu/vimple.git
@@ -61,13 +62,14 @@ refresh_bundle pickacolor git://github.com/Raimondi/PickAColor.git
 refresh_bundle project git://github.com/shemerey/vim-project.git
 refresh_bundle rails git://github.com/tpope/vim-rails.git
 refresh_bundle screenshot git://github.com/vim-scripts/ScreenShot.git
+refresh_bundle script-ed ssh://seth@at.araxia.net/~/git/script-ed.git
 refresh_bundle sessionman git://github.com/vim-scripts/sessionman.vim.git
 refresh_bundle snipmate git://github.com/spf13/snipmate.vim.git
 refresh_bundle space git://github.com/spiiph/vim-space.git
 refresh_bundle statuslinehighlight git://github.com/vim-scripts/StatusLineHighlight.git
 refresh_bundle surround git://github.com/vim-scripts/surround.vim.git
 refresh_bundle syntastic git://github.com/sjl/syntastic.git
-refresh_bundle tagbar git://github.com/majutsushi/tagbar.git
+refresh_bundle tagbar git@github.com:SethMilliken/tagbar.git
 refresh_bundle textobj-function git://github.com/kana/vim-textobj-function.git
 refresh_bundle textobj-rubyblock git://github.com/nelstrom/vim-textobj-rubyblock.git
 refresh_bundle textobj-user git://github.com/kana/vim-textobj-user.git
