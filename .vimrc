@@ -188,6 +188,7 @@ nmap dD :normal 0y$"_dd<CR>
 vmap dD :normal gvygv"_x<CR>
 vmap <BS> :normal gv"_x<CR>
 vmap dC :normal gv"_xP<CR>
+nnoremap dd :normal! dd<CR>
 
 " sane-itize Y
 map Y y$
@@ -217,8 +218,8 @@ nmap <C-y>s :SnipUp<CR>
 " Execute current line as ex command
 map <C-e>x :call feedkeys("yyq:p\r", "n")<CR>
 " File path to pasteboard
-map <C-e>f :call FileToPasteboard()<CR>
-map <C-e>F :call FileToPasteboard(line("."))<CR>
+map <C-y>f :call FileToPasteboard()<CR>
+map <C-y>F :call FileToPasteboard(line("."))<CR>
 
 " }}}
 " Utility: word count of current file " {{{
@@ -248,7 +249,6 @@ command! Journal :call JournalEntry()
 " Misc: " {{{
 nmap <silent> <Leader>] :NERDTreeToggle<CR>
 nmap <silent> <Leader>[ :TagbarToggle<CR>
-nmap <silent> <Leader>p :FufBuffer<CR>
 nmap <silent> <Leader>- :GundoToggle<CR>
 
 " }}}
@@ -420,7 +420,7 @@ endfor
 for n in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
     let k = n == "0" ? "10" : n
     for m in ["<C-w>"]
-        exec printf("imap <silent> %s%s <Esc>%s%sa", m, n, m, n)
+        "exec printf("imap <silent> %s%s <Esc>%s%sa", m, n, m, n)
         exec printf("nmap <silent> %s%s :%swincmd w<CR>", m, n, k)
     endfor
 endfor
@@ -1307,7 +1307,13 @@ endfunction "}}}
 set foldtext=CleanFoldText()
 " }}}
 " FuzzyFinder: " {{{
-map <C-Tab> :FufBuffer<CR>
+let g:fuf_dataDir = '~/swap/.vim-fuf-data'
+"let g:fuf_file_exclude = '\v\~$|\.(o|exe|dll|bak|orig|swp)$|(^|[/\\])\.(hg|git|bzr)($|[/\\])'
+let g:fuf_maxMenuWidth = 150
+map <C-e>e  :FufBuffer<CR>
+map <C-e>f  :FufCoverageFile<CR>
+map <C-e>t  :FufTag<CR>
+map <C-e>v  :call fuf#givenfile#launch('', 0, 'VimFiles>', split(glob('~/.vim/**/*.vim'), "\n"))<CR>
 
 " }}}
 
