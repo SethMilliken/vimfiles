@@ -189,6 +189,7 @@ vmap dD :normal gvygv"_x<CR>
 vmap <BS> :normal gv"_x<CR>
 vmap dC :normal gv"_xP<CR>
 nnoremap dd :normal! dd<CR>
+nnoremap d<Space> :normal! d<CR>
 
 " sane-itize Y
 map Y y$
@@ -198,10 +199,10 @@ inoremap <C-w> <C-g>u<C-w>
 inoremap <C-u> <C-g>u<C-w>
 
 " lcd to file's container
-nmap <C-e>c :exec ":lcd " . expand("%:p:h")<CR>
+nmap <C-e>c :exec ":lcd " . expand("%:p:h") \| echo "cwd now: " . getcwd()<CR>
 
 " tmux copy/paste issue in mac os x workaround
-nmap <C-x>p :call system("ssh localhost pbcopy", getreg('"'))<CR>
+nmap <C-x>p :call system("ssh localhost pbcopy", getreg('"')) \| echo "Copied default register to pasteboard."<CR>
 
 " }}}
 " Reset: restore some default settings and redraw " {{{
@@ -272,7 +273,9 @@ nmap <silent> <Leader>q :call FormatSqlStatement()<CR>
 
 " }}}
 " Formatting: Wrap current or immediately preceding word in in <em> tag " {{{
-nmap <Leader>_ Bi<em><Esc>ea</em>
+" Use surround.vim: csw<em>
+" nmap <Leader>_ Bi<em><Esc>ea</em>
+
 
 " }}}
 " Completion: show completion preview, without actually completing " {{{
@@ -646,7 +649,7 @@ function! FoldNodeIfDefault() "{{{
     let l:isrecurring = match(getline("."), '^(.).* {{') > -1
     " echo printf("isdone: %s, hasat: %s, allcap: %s", l:isdone, l:hasat, l:allcaps)
     if (l:hasat)
-        return  
+        return
     endif
     if (l:isrecurring)
         return
@@ -739,8 +742,8 @@ function! AutoTagComplete() " {{{
     normal! r>
     let l:save_position = getpos(".")
     exe "normal i\<C-g>u"
-    let [l:ignore, l:close_tag_pos] = searchpos("</\\zs\\S\\+", "bnW", line(".")) 
-    let [l:ignore, l:open_tag_pos] = searchpos("<[^/]\\zs[^[:space:]>]\\+", "bcW", line(".")) 
+    let [l:ignore, l:close_tag_pos] = searchpos("</\\zs\\S\\+", "bnW", line("."))
+    let [l:ignore, l:open_tag_pos] = searchpos("<[^/]\\zs[^[:space:]>]\\+", "bcW", line("."))
     if l:open_tag_pos == 0 || l:open_tag_pos < l:close_tag_pos
         call setpos('.', l:save_position)
     else
@@ -750,7 +753,7 @@ function! AutoTagComplete() " {{{
         normal p
         normal aa
         normal! r>
-        call search("<", "bW", line(".")) 
+        call search("<", "bW", line("."))
     endif
     if l:save_position[2] == len(getline("."))
         startinsert!
@@ -770,9 +773,9 @@ function! JournalEntry() " {{{
     if l:entryexists
         normal Go
         normal o
-        exec "call setline(\".\", \"" . timestamp#text('time') . "\")" 
+        exec "call setline(\".\", \"" . timestamp#text('time') . "\")"
     else
-        exec "call setline(\".\", \"" . timestamp#text('journal') . "\")" 
+        exec "call setline(\".\", \"" . timestamp#text('journal') . "\")"
         exec "silent !svn add " . l:entry
     endif
     normal o
@@ -890,15 +893,15 @@ function! FormFieldArchive() " {{{
     if l:entryexists
         normal Go
         normal o
-        exec "call setline(\".\", \"" . timestamp#text('time') . "\")" 
+        exec "call setline(\".\", \"" . timestamp#text('time') . "\")"
     else
-        exec "call setline(\".\", \"" . timestamp#text('journal') . "\")" 
+        exec "call setline(\".\", \"" . timestamp#text('journal') . "\")"
         exec "silent !svn add " . l:entry
     endif
     normal o
-    exec "call setline(\".\", \"" . l:filename . "\")" 
+    exec "call setline(\".\", \"" . l:filename . "\")"
     normal o
-    exec "call setline(\".\", " . string(l:contents) . ")" 
+    exec "call setline(\".\", " . string(l:contents) . ")"
     write
     bd
 endfunction
@@ -1279,9 +1282,10 @@ endfunction
 
 " }}}
 " Janrain:  " {{{
+
 map <D-j>w <Esc>:cd ~/sandbox/work/vm/rpx/ruby/rails/<CR>
 map <D-j>p <Esc>:cd ~/sandbox/personal/<CR>
-map <D-j>e <Esc>:GrepEngage 
+map <D-j>e <Esc>:GrepEngage<Space>
 command! -nargs=1 GrepEngage call GrepEngage(<f-args>)
 function! GrepEngage(string)
     echo "Searching Engage codebase for \"" . a:string . "\"...."
@@ -1289,6 +1293,17 @@ function! GrepEngage(string)
     exec ":vimgrep /" . a:string . "/ " . l:engage_path
     copen
 endfunction
+command! JanrainAbbreviations call JanrainAbbreviations()
+function! JanrainAbbreviations() " {{{
+    iabb pr provider
+    iabb sp social publishing
+    iabb oid OpenID
+    iabb oa OAuth
+    iabb apis APIs
+    iabb im implementation
+endfunction
+
+" }}}
 
 " }}}
 " Folding: " {{{
