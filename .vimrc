@@ -407,8 +407,8 @@ nmap <silent> <Leader>sd :call timestamp#insert("date")<CR>
 nmap <silent> <Leader>sl :call timestamp#insert("long")<CR>
 nmap <silent> <Leader>fw :call FoldWrap()<CR>
 nmap <silent> <Leader>fi :call FoldInsert()<CR>
-nmap <silent> <Leader>st :call InsertAnnotation("Started typing", "0")<CR>
-nmap <silent> <Leader>ft :call InsertAnnotation("Finished typing", "$")<CR>
+nmap <silent> <Leader>ts :call InsertAnnotation("Started typing", "0")<CR>
+nmap <silent> <Leader>tf :call InsertAnnotation("Finished typing", "$")<CR>
 nmap <silent> <Leader>ll o<Esc>:call timestamp#insert("short") \| call FoldWrap()<CR>
 " }}}
 " Tabs: switching " {{{
