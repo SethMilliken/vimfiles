@@ -34,19 +34,20 @@ function refresh_bundle {
 
 # refresh_bundle gundo git@github.com:SethMilliken/gundo.vim.git
 # refresh_bundle viki git://github.com/tomtom/viki_vim.git
-#refresh_bundle dbext git://github.com/vim-scripts/dbext.vim.git # too buggy
 #refresh_bundle tagbar git://github.com/majutsushi/tagbar.git
 #refresh_bundle vim-addon-async git://github.com/MarcWeber/vim-addon-async.git
 #refresh_bundle vim-addon-signs git://github.com/MarcWeber/vim-addon-signs.git
 #refresh_bundle vimple git://github.com/dahu/vimple.git
 refresh_bundle abolish git://github.com/tpope/vim-abolish.git
+refresh_bundle ack git://github.com/vim-scripts/ack.vim.git 'brew install ack'
 refresh_bundle ansiesc git://github.com/vim-scripts/AnsiEsc.vim.git
 refresh_bundle autotag git://github.com/vim-scripts/AutoTag.git
 refresh_bundle bufexplorer git://github.com/vim-scripts/bufexplorer.zip.git
 refresh_bundle calendar git://github.com/vim-scripts/calendar.vim--Matsumoto.git
 refresh_bundle cocoa git://github.com/msanders/cocoa.vim.git
-refresh_bundle command-t git://github.com/wincent/Command-T.git 'Remember to rebuild if necessary:\n\tpushd command-t/ruby/command-t/; ruby extconf.rb; make && popd'
+refresh_bundle command-t git://github.com/wincent/Command-T.git 'Rebuild if necessary:\n\tpushd command-t/ruby/command-t/; ruby extconf.rb; make && popd'
 refresh_bundle conque git://github.com/rson/vim-conque.git
+refresh_bundle dbext git://github.com/vim-scripts/dbext.vim.git
 refresh_bundle fugitive git://github.com/tpope/vim-fugitive.git
 refresh_bundle fuzzyfinder git://github.com/vim-scripts/FuzzyFinder.git
 refresh_bundle gundo git://github.com/sjl/gundo.vim.git
