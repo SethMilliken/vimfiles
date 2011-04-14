@@ -4,7 +4,7 @@
 if version < 700 || exists("g:loaded_gvimrc")
     finish
 end
-let g:loaded_gvimrc = 1
+" let g:loaded_gvimrc = 1
 
 " }}}
 
@@ -74,7 +74,7 @@ if has("gui_running")
     set cursorline                          " highlight current line
     color araxia                            " hey, those are my colors!
     set guioptions-=T                       " no toolbar
-    set guioptons-=m                        " no menu
+    set guioptions-=m                       " no menu
     "" Simple, informative gui tabs (dirty, number, name without path)
     set guitablabel=%m\ %N\ %t\ %r
     set tabpagemax=10                       " don't get ridiculous
@@ -96,7 +96,6 @@ if has("gui_macvim")
     set antialias
     set guifont=Inconsolata:h15
     winsize 345 500                         " set a reasonable window size
-    unlet g:os_unknown
     "" Map Cmd-t to new tab
     exec "nmap <silent> <D-t>     <Esc>:" . &tabpagemax . "tabnew<CR>"
     "" Map Cmd-w to close buffer
@@ -121,14 +120,6 @@ end
 if has("win32")
     set guifont=Terminal:h6
     winsize 150 200                         " set a reasonable window size
-    unlet g:os_unknown
-end
-
-" }}}
-" Other: " {{{
-if exists("g:os_unknown")
-    " generic defaults if os not detected
-    set guifont=DejaVu\ Sans\ Mono\ 8
 end
 
 " }}}

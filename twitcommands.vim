@@ -17,10 +17,14 @@ SearchTwitter mikelikesbikes
 SearchTwitter stevelosh
 SearchTwitter b4winckler
 SearchTwitter #rails
+SearchTwitter JonRowe
+SearchTwitter tungd
 UserTwitter SethMilliken
 ListTwitter ruby
+SearchTwitter #Xcode
 SearchTwitter #pentadactyl
 SearchTwitter #aspergers
+SearchTwitter @jerojasro
 SearchTwitter @despo
 SearchTwitter blzysh
 SearchTwitter morticed
@@ -148,9 +152,11 @@ function! s:BlackList()
                \ "NeRdYChiiCk",
                \ "#TeamFollowBack",
                \ "#TEAMFOLLOWBACK",
+               \ "#TeamFOLLOWBACK",
                \ "NiCCiisNeechee",
                \ "VERSATHEISSUE",
                \ "#ff",
+               \ "#FF",
                \ "CouchMoneySweet",
                \ "BlakMuzick",
                \ "#VIM",
@@ -160,3 +166,4 @@ endfunction
 
 " vim: nowrap fdl=0
 " }}}
+" vim: set cms=\ \"\ %s:

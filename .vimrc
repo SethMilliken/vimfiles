@@ -132,8 +132,9 @@ set winminheight=0                  " minimized horizontal splits show only stat
 set switchbuf=useopen               " when switching to a buffer, go to where it's already open
 set history=10000                   " keep craploads of command history
 set undolevels=500                  " keep lots of undo history
-set foldlevelstart=1                " first level of folds open by default
+set foldlevelstart=9                " first level of folds open by default
 set fdm=marker                      " make the default foldmethod markers
+set foldopen+=jump                  " jumps open folds, too
 set display+=lastline               " always show as much of the last line as possible
 set guioptions+=c                   " always use console dialogs (faster)
 set noerrorbells                    " don't need to hear if i hit esc twice
@@ -151,6 +152,11 @@ if version > 702 | set rnu | exec "au BufReadPost * set rnu" | endif " use relat
 if version > 702 | set clipboard=unnamed | end " use system clipboard; FIXME: what version is actually required?
 
 set wildignore+=*.o,*.sw?,*.git,*.svn,*.hg,**/build,*.?ib,*.png,*.jpg,*.jpeg,*.mov,*.gif,*.bom,*.azw,*.lpr,*.mbp,*.mode1v3,*.gz,*.vmwarevm,*.rtf,*.pkg,*.developerprofile,*.xcodeproj,*.pdf,*.dmg,*.db,*.otf,*.bz2,*.tiff,*.iso,*.jar,*.dat,**/Cache,*.cache,*.sqlite*,*.collection,*.qsindex,*.qsplugin,*.growlTicket,*.part,*.ics,*.ico,**/iPhone\ Simulator,*.lock*,*.webbookmark
+
+" To transform wildignore into fuf_exclude...
+" s/\*\./\\\./g
+" s/,/|/g
+let g:fuf_coveragefile_exclude = '\v\~$|\.(o|exe|dll|bak|orig|swp)$|(^|[/\\])\.(hg|git|bzr)($|[/\\])|.gitignore|.DS_Store|.htaccess'
 
 " Tags: universal location
 set tags+=$HOME/sandbox/personal/tags
@@ -182,6 +188,14 @@ command! W :w
 " Handy but doesn't work in terminal
 nmap <S-Space> <C-f>
 
+" c & p normalization
+nmap dD :normal 0y$"_dd<CR>
+vmap dD :normal gvygv"_x<CR>
+vmap <BS> :normal gv"_x<CR>
+vmap dC :normal gv"_xP<CR>
+nnoremap dd :normal! dd<CR>
+nnoremap d<Space> :normal! d<CR>
+
 " sane-itize Y
 map Y y$
 
@@ -190,10 +204,10 @@ inoremap <C-w> <C-g>u<C-w>
 inoremap <C-u> <C-g>u<C-w>
 
 " lcd to file's container
-nmap <C-e>c :exec ":lcd " . expand("%:p:h")<CR>
+nmap <C-e>c :exec ":lcd " . expand("%:p:h") \| echo "cwd now: " . getcwd()<CR>
 
 " tmux copy/paste issue in mac os x workaround
-nmap <C-x>p :call system("ssh localhost pbcopy", getreg('"'))<CR>
+nmap <C-x>p :call system("ssh localhost pbcopy", getreg('"')) \| echo "Copied default register to pasteboard."<CR>
 
 " }}}
 " Reset: restore some default settings and redraw " {{{
@@ -209,6 +223,9 @@ nmap <C-y>v :call ReloadVimrc()<CR> \| :echo "Resourced .vimrc."<CR>
 nmap <C-y>s :SnipUp<CR>
 " Execute current line as ex command
 map <C-e>x :call feedkeys("yyq:p\r", "n")<CR>
+" File path to pasteboard
+map <C-y>f :call FileToPasteboard()<CR>
+map <C-y>F :call FileToPasteboard(line("."))<CR>
 
 " }}}
 " Utility: word count of current file " {{{
@@ -237,7 +254,8 @@ command! Journal :call JournalEntry()
 " }}}
 " Misc: " {{{
 nmap <silent> <Leader>] :NERDTreeToggle<CR>
-" nmap <silent> <Leader>[ :TMiniBufExplorer<CR>
+nmap <silent> <Leader>[ :TagbarToggle<CR>
+nmap <silent> <Leader>- :GundoToggle<CR>
 
 " }}}
 " Folds: " {{{
@@ -260,7 +278,9 @@ nmap <silent> <Leader>q :call FormatSqlStatement()<CR>
 
 " }}}
 " Formatting: Wrap current or immediately preceding word in in <em> tag " {{{
-nmap <Leader>_ Bi<em><Esc>ea</em>
+" Use surround.vim: csw<em>
+" nmap <Leader>_ Bi<em><Esc>ea</em>
+
 
 " }}}
 " Completion: show completion preview, without actually completing " {{{
@@ -378,24 +398,24 @@ let g:timestamp_matchstring = '[0-9]\{4}-[0-9]\{2}-[0-9]\{2} [0-9:]\{8} [A-Z]\{3
 let g:timestamp_annotated_matchstring = escape(g:timestamp_matchstring . '\s*\({\(\w\+\s*\)*}\)*', '\')
 " Note: setting g:auto_timestamp_bypass will deactivate autotimestamp in contexts they would normally be active
 " yes, kids, I know WTF I'm doing WRT <C-y>
-nmap <silent> <C-y><C-u> :call TimestampAutoUpdateToggle()<CR>
-nmap <silent> <C-y>Y :call AddOrUpdateTimestamp("", "force")<CR>
-nmap <silent> <C-y><C-y> :call AddOrUpdateTimestamp("")<CR>
-nmap <silent> <C-y><C-t> :call AddOrUpdateTimestampSolicitingAnnotation()<CR>
-nmap <silent> <C-y><C-x> :call RemoveTimestamp()<CR>
-nmap <silent> <Leader>sd :call Timestamp("date")<CR>
-nmap <silent> <Leader>sl :call Timestamp("long")<CR>
+nmap <silent> <C-y><C-u> :call timestamp#autoUpdateToggle()<CR>
+nmap <silent> <C-y>Y :call timestamp#addOrUpdate("", "force")<CR>
+nmap <silent> <C-y><C-y> :call timestamp#addOrUpdate("")<CR>
+nmap <silent> <C-y><C-t> :call timestamp#addOrUpdateSolicitingAnnotation()<CR>
+nmap <silent> <C-y><C-x> :call timestamp#remove()<CR>
+nmap <silent> <Leader>sd :call timestamp#insert("date")<CR>
+nmap <silent> <Leader>sl :call timestamp#insert("long")<CR>
 nmap <silent> <Leader>fw :call FoldWrap()<CR>
 nmap <silent> <Leader>fi :call FoldInsert()<CR>
-nmap <silent> <Leader>st :call InsertAnnotation("Started typing", "0")<CR>
-nmap <silent> <Leader>ft :call InsertAnnotation("Finished typing", "$")<CR>
-nmap <silent> <Leader>ll o<Esc>:call Timestamp("short") \| call FoldWrap()<CR>
+nmap <silent> <Leader>ts :call InsertAnnotation("Started typing", "0")<CR>
+nmap <silent> <Leader>tf :call InsertAnnotation("Finished typing", "$")<CR>
+nmap <silent> <Leader>ll o<Esc>:call timestamp#insert("short") \| call FoldWrap()<CR>
 " }}}
 " Tabs: switching " {{{
 " set Cmd-# on Mac and Alt-# elsewhere to switch tabs
 for n in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
      let k = n == "0" ? "10" : n
-     for m in ["M"]
+     for m in ["M", "A"]
          exec printf("imap <silent> <%s-%s> <Esc>:tabn %s<CR>", m, n, k)
          exec printf("nmap <silent> <%s-%s> %sgt<CR>", m, n, k)
      endfor
@@ -408,7 +428,7 @@ endfor
 for n in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
     let k = n == "0" ? "10" : n
     for m in ["<C-w>"]
-        exec printf("imap <silent> %s%s <Esc>%s%sa", m, n, m, n)
+        "exec printf("imap <silent> %s%s <Esc>%s%sa", m, n, m, n)
         exec printf("nmap <silent> %s%s :%swincmd w<CR>", m, n, k)
     endfor
 endfor
@@ -468,6 +488,13 @@ function! FunctionLocationIndex() "{{{
     end
 endfunction
 "}}}
+command! UnlinewiseMovement :call UnlinewiseMovement()
+function! UnlinewiseMovement() " {{{
+  nnoremap <buffer> j gj
+  nnoremap <buffer> k gk
+endfunction
+
+" }}}
 
 " Text: tools
 function! AppendText(text) "{{{
@@ -491,7 +518,7 @@ endfunction
 
 "}}}
 function! InsertAnnotation(label, line) "{{{
-    let result = printf("[ %s: %s ]", a:label, TimestampText("short"))
+    let result = printf("[ %s: %s ]", a:label, timestamp#text("short"))
     call append(a:line, result)
 endfunction
 
@@ -513,6 +540,16 @@ endfunction
 "}}}
 function! StripFront(string) "{{{
     return substitute(a:string, "^[[:space:]]*", "", "")
+endfunction
+
+"}}}
+function! FileToPasteboard(...) "{{{
+    let appendtext = ""
+    if len(a:000) > 0
+        let appendtext = ":" . a:000[0]
+    end
+    call setreg('*', expand('%r') . appendtext)
+    echo "Pasteboard: \"" . @* . "\""
 endfunction
 
 "}}}
@@ -617,7 +654,7 @@ function! FoldNodeIfDefault() "{{{
     let l:isrecurring = match(getline("."), '^(.).* {{') > -1
     " echo printf("isdone: %s, hasat: %s, allcap: %s", l:isdone, l:hasat, l:allcaps)
     if (l:hasat)
-        return  
+        return
     endif
     if (l:isrecurring)
         return
@@ -667,156 +704,6 @@ endfunction
 
 "}}}
 
-" Timestamps:
-function! Timestamp(style) "{{{
-    call AppendText(TimestampText(a:style) . " ")
-endfunction
-
-" }}}
-function! TimestampText(style) "{{{
-    let l:iswindows = has("win16") || has("win32") || has("win64")
-    if l:iswindows
-        if a:style == "long"
-            let l:dateformat = strftime("%#x %H:%M:%S ")
-        elseif a:style == "short"
-            let l:dateformat = strftime("%Y-%m-%d %H:%M:%S ") 
-        endif
-        let l:dateformat .= substitute(strftime("%#z"), '[a-z]\+\($\| \)', '', 'g')
-    else
-        if a:style == "long"
-            let l:dateformat = strftime("%Y %b %d %a %X %Z")
-        elseif a:style == "journal"
-            let l:dateformat = strftime("%A, %B %d, %Y %H:%M:%S %Z")
-        elseif a:style == "short"
-            let l:dateformat = strftime("%Y-%m-%d %H:%M:%S %Z")
-        elseif a:style == "time"
-            let l:dateformat = strftime("%H:%M:%S %Z")
-        endif
-    endif
-    if a:style == "date"
-        let l:dateformat = strftime("%Y-%m-%d")
-    endif
-    return l:dateformat
-endfunction
-
-" }}}
-function! TimestampAutoUpdateToggle() "{{{
-    if !exists("g:auto_timestamp_bypass")
-        call AutoTimestampBypass()
-        echo "Timestamps: auto add/update DISABLED."
-    else
-        call AutoTimestampEnable()
-        echo "Timestamps: auto add/update ENABLED."
-    end
-endfunction
-
-"}}}
-function! AddOrUpdateTimestampSolicitingAnnotation() "{{{
-    if !exists("g:auto_timestamp_bypass")
-        let l:default_prompt = g:timestamp_default_annotation
-        let l:matchstring = g:timestamp_matchstring . '\zs\ze\s*\({\zs\(\w\+\s*\)*\ze}\)*$'
-        let l:originalannotations = matchstr(getline("."), l:matchstring)
-        if len(l:originalannotations) > 0
-            let l:default_prompt = l:originalannotations
-        end
-        let l:annotation = input("Annotation: ", Strip(l:default_prompt))
-        if len(l:annotation) > 0
-            call AddOrUpdateTimestamp(Strip(l:annotation), "force")
-        else
-            if len(l:originalannotations) > 0
-                silent! call RemoveTimestamp()
-                silent! call AddOrUpdateTimestamp("", "force")
-                echo "Annotations removed."
-            else
-                echo "Annotation aborted."
-            end
-        end
-    end
-endfunction
-
-"}}}
-function! AddOrUpdateTimestamp(annotation,...) "{{{
-    if exists("a:1") && len(a:1) > 0
-        let forceupdate = 1
-    else
-        let forceupdate = 0
-    endif
-    if forceupdate || !exists("g:auto_timestamp_bypass")
-        if forceupdate || IsTimestampUpdateOkay(getline(".")) > 0
-            let l:bufferdirty = &modified
-            let l:origpos = getpos(".")
-            let l:hasbasictimestamp = match(getline("."), TimestampPattern())
-            let l:annotation = len(a:annotation) > 0 ? '{' . a:annotation . '}' : ""
-            let l:newtimestamp = StripEnd(substitute(CommentStringFull(), "%s", TimestampText("short") . " " . l:annotation, ""))
-            silent! undojoin
-            if l:hasbasictimestamp > 0
-                call setline(".", substitute(getline("."), TimestampAnnotatedPattern(), l:newtimestamp, ""))
-            else
-                call AppendText(l:newtimestamp)
-            end
-            call setpos('.', l:origpos)
-            if !l:bufferdirty | write | end
-        end
-    end
-endfunction
-
-"}}}
-function! IsTimestampUpdateOkay(line) "{{{
-    let l:characters = 20
-    if len(a:line) < l:characters
-        echo "No autotimestamp: line shorter than ". l:characters . " characters."
-        return 0
-    elseif match(a:line, FoldMarkerOpen()) > 0
-        echo "No autotimestamp: line already has open foldmarker."
-        return 0
-    elseif match(a:line, "^@") > -1
-        echo "No autotimestamp: project fold"
-        return 0
-    elseif match(a:line, FoldMarkerClose()) > 0
-        echo "No autotimestamp: line already has close foldmarker."
-        return 0
-    elseif match(a:line, "^x\\s\\|^o\\s\\|\\sx\\s\\|\\so\\s") > -1
-        echo "No autotimestamp: line contains completed marker."
-        return 
-    elseif len(Strip(CommentStringOpen())) > 0 && match(a:line, "^" . CommentStringOpen()) > -1
-        echo "No autotimestamp: commented line"
-        return 0
-    else
-        return 1
-    end
-endfunction
-
-"}}}
-function! TimestampAnnotatedPattern() "{{{
-    return substitute(CommentStringFull(), "%s", g:timestamp_annotated_matchstring, "") . '\s*$'
-endfunction
-
-"}}}
-function! TimestampPattern() "{{{
-    return substitute(CommentStringFull(), "%s", escape(g:timestamp_matchstring, '\'), "")
-endfunction
-
-"}}}
-function! AutoTimestampBypass() " {{{
-    let g:auto_timestamp_bypass = ""
-endfunction
-
-" }}}
-function! AutoTimestampEnable() " {{{
-    if exists("g:auto_timestamp_bypass")
-        unlet g:auto_timestamp_bypass
-    end
-endfunction
-
-" }}}
-function! RemoveTimestamp() "{{{
-    let l:bufferdirty = &modified
-    call setline(".", substitute(getline("."), '\s*' . TimestampAnnotatedPattern(), "", ""))
-    if !l:bufferdirty | write | end
-endfunction
-
-"}}}
-
 " Sessions:
 function! FixSession() " {{{
   exe "vsplit " . v:this_session
@@ -860,8 +747,8 @@ function! AutoTagComplete() " {{{
     normal! r>
     let l:save_position = getpos(".")
     exe "normal i\<C-g>u"
-    let [l:ignore, l:close_tag_pos] = searchpos("</\\zs\\S\\+", "bnW", line(".")) 
-    let [l:ignore, l:open_tag_pos] = searchpos("<[^/]\\zs[^[:space:]>]\\+", "bcW", line(".")) 
+    let [l:ignore, l:close_tag_pos] = searchpos("</\\zs\\S\\+", "bnW", line("."))
+    let [l:ignore, l:open_tag_pos] = searchpos("<[^/]\\zs[^[:space:]>]\\+", "bcW", line("."))
     if l:open_tag_pos == 0 || l:open_tag_pos < l:close_tag_pos
         call setpos('.', l:save_position)
     else
@@ -871,7 +758,7 @@ function! AutoTagComplete() " {{{
         normal p
         normal aa
         normal! r>
-        call search("<", "bW", line(".")) 
+        call search("<", "bW", line("."))
     endif
     if l:save_position[2] == len(getline("."))
         startinsert!
@@ -883,7 +770,7 @@ endfunction
 " }}}
 function! JournalEntry() " {{{
     let l:journaldir = $HOME . "/sandbox/personal/zaurus/zlog/"
-    let l:currentdate = TimestampText('date')
+    let l:currentdate = timestamp#text('date')
     let l:entry = l:journaldir . l:currentdate . ".txt"
     let l:entryexists = filereadable(l:entry)
     exec "edit " . l:entry
@@ -891,9 +778,9 @@ function! JournalEntry() " {{{
     if l:entryexists
         normal Go
         normal o
-        exec "call setline(\".\", \"" . TimestampText('time') . "\")" 
+        exec "call setline(\".\", \"" . timestamp#text('time') . "\")"
     else
-        exec "call setline(\".\", \"" . TimestampText('journal') . "\")" 
+        exec "call setline(\".\", \"" . timestamp#text('journal') . "\")"
         exec "silent !svn add " . l:entry
     endif
     normal o
@@ -916,16 +803,20 @@ endfunction
 " }}}
 function! RandomHint() " {{{
     let comment_character = "#"
-    if !exists("g:random_hint_list")
-        if !exists("g:hint_filename")
-            let g:hint_filename = $HOME . "/.vim/vimtips.txt"
+    try
+        if !exists("g:random_hint_list")
+            if !exists("g:hint_filename")
+                let g:hint_filename = $HOME . "/.vim/vimtips.txt"
+            endif
+            let g:random_hint_list = readfile(g:hint_filename, '')
+            call filter(g:random_hint_list, 'strpart(v:val, 0, 1) != comment_character')
         endif
-        let g:random_hint_list = readfile(g:hint_filename, '')
-        call filter(g:random_hint_list, 'strpart(v:val, 0, 1) != comment_character')
-    endif
-    let hint_count = len(g:random_hint_list)
-    exec "ruby random_line = rand(" . hint_count . ")"
-    ruby VIM::command("let hint = #{random_line}")
+        let hint_count = len(g:random_hint_list)
+        exec "ruby random_line = rand(" . hint_count . ")"
+        ruby VIM::command("let hint = #{random_line}")
+    catch
+        return "Random hints not available."
+    endtry
     return g:random_hint_list[hint]
 endfunction
 
@@ -1000,22 +891,22 @@ function! FormFieldArchive() " {{{
     let l:filepath = expand("%")
     let l:filename = expand("%:t:r")
     let l:formfielddir = $HOME . "/sandbox/personal/forms/"
-    let l:currentdate = TimestampText('date')
+    let l:currentdate = timestamp#text('date')
     let l:entry = l:formfielddir . l:currentdate . ".txt"
     let l:entryexists = filereadable(l:entry)
     exec "split " . l:entry
     if l:entryexists
         normal Go
         normal o
-        exec "call setline(\".\", \"" . TimestampText('time') . "\")" 
+        exec "call setline(\".\", \"" . timestamp#text('time') . "\")"
     else
-        exec "call setline(\".\", \"" . TimestampText('journal') . "\")" 
+        exec "call setline(\".\", \"" . timestamp#text('journal') . "\")"
         exec "silent !svn add " . l:entry
     endif
     normal o
-    exec "call setline(\".\", \"" . l:filename . "\")" 
+    exec "call setline(\".\", \"" . l:filename . "\")"
     normal o
-    exec "call setline(\".\", " . string(l:contents) . ")" 
+    exec "call setline(\".\", " . string(l:contents) . ")"
     write
     bd
 endfunction
@@ -1061,8 +952,8 @@ endif
 let g:aborted_prefix = "x"
 let g:completed_prefix = "o"
 augroup TaskStack
-    au! BufRead *.tst.* set filetype=tst syntax=txt
-    au! FileType *tst* set indentkeys-=o indentkeys-=0 showbreak=\ \  noai fdm=marker cms= ts=2
+    au! BufRead *.tst* set filetype=tst syntax=txt
+    au! FileType *tst* set indentkeys-=o indentkeys-=0 showbreak=\ \  noai fdm=marker cms= sts=2 sw=2 isk+=#
     au FileType *tst* nmap <buffer> XX :call TaskstackCompleteItem(g:aborted_prefix)<CR>
     au FileType *tst* imap <buffer> XX <C-c>:call TaskstackCompleteItem(g:aborted_prefix)<CR>
     au FileType *tst* nmap <buffer> QQ :call TaskstackCompleteItem(g:completed_prefix)<CR>
@@ -1088,7 +979,7 @@ augroup TaskStack
     au FileType *tst* nmap <buffer> <silent> <S-Tab> :call search("@.*\\\\|^[A-Z]\\+", 'b')<CR>
     au FileType *tst* if mapcheck('<CR>', 'n') == "" | nmap <unique> <buffer> <silent> <CR> yiW/<C-r>"<CR>ztzv<C-l> | end
     " Use <C-c> to avoid adding or updating a timestamp after editing.
-    au! InsertLeave *.tst.* :call AddOrUpdateTimestamp("") " FIXME: External Dependency
+    au! InsertLeave *.tst.* :call timestamp#addOrUpdate("") " FIXME: External Dependency
     au! FocusLost *.tst.* nested write
 augroup END
 
@@ -1112,6 +1003,7 @@ function! SmallWindow()
     setlocal guioptions-=r
     setlocal foldcolumn=0
     setlocal guifont=Inconsolata:h13
+    setlocal transparency=15
     exec "set columns=" . g:volatile_scratch_columns . " lines=" . g:volatile_scratch_lines
     call SetColorColumnBorder()
     if exists('g:gundo_target_n')
@@ -1132,6 +1024,8 @@ function! ScratchCopy()
 endfunction
 
 function! ScratchPaste()
+    normal ggVGo
+    return
     if &modified == 1
         silent write
     endif
@@ -1151,13 +1045,18 @@ augroup VolatileScratch
     au BufRead *.scratch nmap <buffer> <silent> :w<CR> :write \| :silent call ScratchCopy()<CR>
     au BufRead *.scratch imap <buffer> <silent> ZZ <Esc>ZZ
     au BufRead *.scratch vmap <buffer> <silent> ZZ <Esc>ZZ
-    " au! FocusGained *.scratch normal ggVGpG$
     au! FocusLost *.scratch call ScratchCopy()
     au! FocusGained *.scratch call ScratchPaste()
     au! VimResized *.scratch call SetColorColumnBorder() | :normal zz
 augroup END
 
 "}}}
+" Vsplit: " {{{
+augroup Vsplit
+    au! FileType qf,help wincmd L
+augroup END
+
+" }}}
 " VCS Commit: " {{{
 augroup VCSCommit
     au! BufRead hg-editor-* nmap <buffer> <silent> <C-e>d :set filetype=diff \| :r !hg diff<CR>gg
@@ -1329,7 +1228,7 @@ let g:vimwiki_list = [
                 \]
 " }}}
 function! VimwikiExpandedPageName() " {{{
-    return substitute(substitute(expand('%:t'), "[a-z]\\zs\\([A-Z]\\)", " \\1", "g"), "\\..*", "", "")
+    return substitute(substitute(expand('%:t'), "\\C\\([A-Z]\\)", " \\1", "g"), "\\..*", "", "")
 endfunction
 
 " }}}
@@ -1366,6 +1265,12 @@ augroup VimSheet
 augroup END
 
 " }}}
+" Refresh Bundles: " {{{
+augroup RefreshBundles
+    au! BufRead *refresh_bundles.sh vmap <buffer> <Leader><CR> :sort \| echo "Sorted selection."<CR>
+augroup END
+
+" }}}
 " TOhtml: " {{{
 let html_dynamic_folds = 1
 let html_use_css = 1
@@ -1394,9 +1299,10 @@ endfunction
 
 " }}}
 " Janrain:  " {{{
+
 map <D-j>w <Esc>:cd ~/sandbox/work/vm/rpx/ruby/rails/<CR>
 map <D-j>p <Esc>:cd ~/sandbox/personal/<CR>
-map <D-j>e <Esc>:GrepEngage 
+map <D-j>e <Esc>:GrepEngage<Space>
 command! -nargs=1 GrepEngage call GrepEngage(<f-args>)
 function! GrepEngage(string)
     echo "Searching Engage codebase for \"" . a:string . "\"...."
@@ -1404,6 +1310,17 @@ function! GrepEngage(string)
     exec ":vimgrep /" . a:string . "/ " . l:engage_path
     copen
 endfunction
+command! JanrainAbbreviations call JanrainAbbreviations()
+function! JanrainAbbreviations() " {{{
+    iabb pr provider
+    iabb sp social publishing
+    iabb oid OpenID
+    iabb oa OAuth
+    iabb apis APIs
+    iabb im implementation
+endfunction
+
+" }}}
 
 " }}}
 " Folding: " {{{
@@ -1420,6 +1337,16 @@ function! CleanFoldText() "{{{
     return decoratedline
 endfunction "}}}
 set foldtext=CleanFoldText()
+" }}}
+" FuzzyFinder: " {{{
+let g:fuf_dataDir = '~/swap/.vim-fuf-data'
+"let g:fuf_file_exclude = '\v\~$|\.(o|exe|dll|bak|orig|swp)$|(^|[/\\])\.(hg|git|bzr)($|[/\\])'
+let g:fuf_maxMenuWidth = 150
+map <C-e>e  :FufBuffer<CR>
+map <C-e>f  :FufCoverageFile<CR>
+map <C-e>t  :FufTag<CR>
+map <C-e>v  :call fuf#givenfile#launch('', 0, 'VimFiles>', split(glob('~/.vim/**/*.vim'), "\n"))<CR>
+
 " }}}
 
 " }}}
@@ -1475,6 +1402,19 @@ let g:MailAppl_from = 'Seth Milliken <seth@araxia.net>'
 
 " }}}
 
+" Vim-addon-manager: " {{{
+command! -nargs=1 PluginInstall call PluginInstall(<q-args>)
+function! PluginInstall(plugin)
+    " TODO: check for vam
+    exec printf("call vam#install#Install(['github:vim-scripts/%s'])", a:plugin)
+endfunction
+
+" }}}
+" Vimple: " {{{
+let g:loaded_vimpreviewtag = 1
+
+" }}}
+
 map <Leader><CR> 0"ty$:<C-r>t<CR>:echo "Executed: " . @t<CR>
 
 " Toggle number column: " {{{
@@ -1497,10 +1437,6 @@ if !exists(":DiffOrig")
 endif
 
 " }}}
-
-" hack to deal with syntax clearing problem i haven't been able to track down
-" au! syntaxset
-" unlet b:current_syntax
 
 " type number then : to get relative range prepopulated in cmdline
 " new vocab word "idem" to get relative range prepopulated in cmdline

@@ -1,13 +1,13 @@
 # vimwiki snippets
 
 snippet np
-	%toc `VimwikiExpandedPageName()`
+	%toc`VimwikiExpandedPageName()`
 	
-	= ${1:Header} =
-	${2:header_text}
+	= Summary =
+	${1:summary_text}
 
-	== ${3:Subhead} ==
-	* ${4:subhead_contents}
+	== ${2:Subhead} ==
+	* ${3:subhead_contents}
 snippet cm Commit message for a ticket
 	${1:ticket} Commit message:
 	$1: ${2:summary}
@@ -15,3 +15,10 @@ snippet cm Commit message for a ticket
 
 snippet link Link for external file
 	[[~/${1:sandbox/personal/}${2}][${3:title}]]
+snippet sec Documentation section
+	* \`linkhere\`:
+	  - add #{provider} to \`blahblahblah\`
+	  {{{
+	  code
+	  }}}
+	  - add provider to \`blahblah\`

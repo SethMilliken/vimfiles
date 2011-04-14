@@ -2,3 +2,5 @@ syntax: glob
 bundle
 .VimballRecord
 view
+.netrwhist
+doc/tags

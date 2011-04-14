@@ -1,8 +1,8 @@
 " INFO: " {{{
 
 " Maintainer:
-" 	Seth Milliken <seth_vim@araxia.net>
-" 	Araxia on #vim irc.freenode.net
+"   Seth Milliken <seth_vim@araxia.net>
+"   Araxia on #vim irc.freenode.net
 
 " Version:
 " 0.1 " 2010-09-06 05:04:26 EDT
@@ -329,15 +329,16 @@ endfu
 " }}}
 fun foldcontainer._end() dict " {{{
         " preserve folds
-        call cursor(self._start(), 0)
-        normal zv]z
-        let result = line(".")
-        " restore folds
+        call self['state'].winsave()
+        normal $
+        let result = searchpair(FoldMarkerOpen(), "", FoldMarkerClose(), 'W')
+        call self['state'].winrest()
         return result
 endfu
 
 " }}}
 fun foldcontainer._firstline() dict " {{{
+    " TODO: fix with FoldMarkerOpen()
     return [ self['header'] . " " . " \" {{" . "{" ]
 endfu
 
@@ -597,61 +598,61 @@ endfu
 let s:Fold = {}
 " functions 
 function! s:Fold.locate() "{{{
-		let l:openmarker = CommentedFoldMarkerOpen()
-		let l:expression = self.header . "\\s*" . l:openmarker
-		let self.topline = search(l:expression, 'csw')
-		let l:foo = input("Currentb: ", self.topline . " " . self.header)
-		return self.topline
+        let l:openmarker = CommentedFoldMarkerOpen()
+        let l:expression = self.header . "\\s*" . l:openmarker
+        let self.topline = search(l:expression, 'csw')
+        let l:foo = input("Currentb: ", self.topline . " " . self.header)
+        return self.topline
 endfunction
 
 " }}}
 " constructor
 function! s:Fold.New(header) " {{{
-		let newFold = copy(self)
-		let newFold.header = a:header  
-		let newFold.upperpeer = []
-		let newFold.lowerpeer = []
-		let newFold.topline = -1
-		let newFold.bottomline = -1
-		return newFold
+        let newFold = copy(self)
+        let newFold.header = a:header  
+        let newFold.upperpeer = []
+        let newFold.lowerpeer = []
+        let newFold.topline = -1
+        let newFold.bottomline = -1
+        return newFold
 endfunction " }}}
 function! s:Fold.calculateBottom() " {{{
-		let l:place = self.locate()
-		let l:foo = input("Currentb: ", self.topline . " " . self.header)
-		redraw
-		let l:loop = 0
-		let l:foldCounter = 0
-		let l:foo = input("Currenta: ", self.header. " " . l:foldCounter . " " . foldclosedend(self.topline))
-		while foldclosedend(self.topline) > -1
-				let l:loop += 1
-				normal zo
-				let l:foldCounter += 1
-				redraw
-		endwhile
-		normal zc
-		let self.bottomline = foldclosedend(self.topline)
-		if l:loop == 0
-				let l:foo = input("Current: ", l:foldCounter)
-				normal zo
-		end	
-		while l:foldCounter > 0
-				normal zc
-				let l:foldCounter -= 1
-		endwhile
-		return self
+        let l:place = self.locate()
+        let l:foo = input("Currentb: ", self.topline . " " . self.header)
+        redraw
+        let l:loop = 0
+        let l:foldCounter = 0
+        let l:foo = input("Currenta: ", self.header. " " . l:foldCounter . " " . foldclosedend(self.topline))
+        while foldclosedend(self.topline) > -1
+                let l:loop += 1
+                normal zo
+                let l:foldCounter += 1
+                redraw
+        endwhile
+        normal zc
+        let self.bottomline = foldclosedend(self.topline)
+        if l:loop == 0
+                let l:foo = input("Current: ", l:foldCounter)
+                normal zo
+        end 
+        while l:foldCounter > 0
+                normal zc
+                let l:foldCounter -= 1
+        endwhile
+        return self
 endfunction " }}}
 function! s:Fold.setHeader(argument) " {{{
-		call add(self.header, a:argument)
-		call self.locate()
+        call add(self.header, a:argument)
+        call self.locate()
 endfunction " }}}
 function! s:Fold.setUpperPeer(argument) " {{{
-		call add(self.upperpeer, a:argument)
+        call add(self.upperpeer, a:argument)
 endfunction " }}}
 function! s:Fold.setLowerPeer(argument) " {{{
-		call add(self.lowerpeer, a:argument)
+        call add(self.lowerpeer, a:argument)
 endfunction " }}}
 function! s:Fold.name() " {{{
-		echo "My name is: " . self.header . " I think I start at " . string(self.topline) . " and end at " . string(self.bottomline)
+        echo "My name is: " . self.header . " I think I start at " . string(self.topline) . " and end at " . string(self.bottomline)
 endfunction " }}}
 
 " let myfold = s:Fold.New("test")
@@ -659,13 +660,13 @@ endfunction " }}}
 " call myfold.name()
 
 function! s:Fold.render() " {{{
-		if line == 1
-				normal O
-				normal k
-		elseif line == line("$")
-				normal o
-		end
-		exec "normal I" . self.header
+        if line == 1
+                normal O
+                normal k
+        elseif line == line("$")
+                normal o
+        end
+        exec "normal I" . self.header
 endfunction " }}}
 " Fold }}}
 
@@ -674,138 +675,138 @@ endfunction " }}}
 
 " Navigation:
 function! CreateNodeUnderNodeIfMissing(nodename, previous_node_name) " {{{
-	let l:origview = winsaveview()
-	if FindNode(a:nodename) == 0
-			if a:previous_node_name != ""
-					if FindNode(a:previous_node_name) == 0
-							call CreateNodeUnderNodeIfMissing(a:previous_node_name, "")
-					end
-					call FoldUnfolded()
-					normal o
-			else
-					normal ggO
-					normal k
-			end
-			exe "normal I" . a:nodename
-			call FoldWrap()
-			call FoldUnfolded()
-	end
-	call winrestview(l:origview)
+    let l:origview = winsaveview()
+    if FindNode(a:nodename) == 0
+            if a:previous_node_name != ""
+                    if FindNode(a:previous_node_name) == 0
+                            call CreateNodeUnderNodeIfMissing(a:previous_node_name, "")
+                    end
+                    call FoldUnfolded()
+                    normal o
+            else
+                    normal ggO
+                    normal k
+            end
+            exe "normal I" . a:nodename
+            call FoldWrap()
+            call FoldUnfolded()
+    end
+    call winrestview(l:origview)
 endfunction
 
 " }}}
 function! TaskstackMain() " {{{
-	" silent! wincmd t
-	if FindNode(s:main_node_name) == 0
-		normal gg
-		if len(getline(".")) == 0
-			call AppendText(s:main_node_name)
-		else
-			exe "normal O" . s:main_node_name
-		end
-		call FoldWrap()
-	end
-	call FindNode(s:main_node_name)
-	silent! normal zo
+    " silent! wincmd t
+    if FindNode(s:main_node_name) == 0
+        normal gg
+        if len(getline(".")) == 0
+            call AppendText(s:main_node_name)
+        else
+            exe "normal O" . s:main_node_name
+        end
+        call FoldWrap()
+    end
+    call FindNode(s:main_node_name)
+    silent! normal zo
 endfunction
 
 " }}}
 function! TaskstackGroups() " {{{
-	call AutoTimestampBypass() " FIXME: External Dependency
-	" silent! wincmd t
-	if FindNode(s:groups_node_name) == 0
-		call TaskstackMain()
-		normal zc
-		exe "normal o" . s:groups_node_name
-		call FoldWrap()
-	end
-	call FindNode(s:groups_node_name)
-	silent! normal zo
-	call AutoTimestampEnable() " FIXME: External Dependency
+    call timestamp#autoUpdateBypass() " FIXME: External Dependency
+    " silent! wincmd t
+    if FindNode(s:groups_node_name) == 0
+        call TaskstackMain()
+        normal zc
+        exe "normal o" . s:groups_node_name
+        call FoldWrap()
+    end
+    call FindNode(s:groups_node_name)
+    silent! normal zo
+    call timestamp#autoUpdateEnable() " FIXME: External Dependency
 endfunction
 
 " }}}
 function! TaskstackCompleted() " {{{
-	call AutoTimestampBypass() " FIXME: External Dependency
-	" silent! wincmd t
-	if FindNode(s:completed_node_name) == 0
-		call TaskstackMain()
-		normal zc
-		exe "normal o" . s:completed_node_name
-		call FoldWrap()
-	end
-	call FindNode(s:completed_node_name)
-	silent! normal zo
-	call AutoTimestampEnable() " FIXME: External Dependency
+    call timestamp#autoUpdateBypass() " FIXME: External Dependency
+    " silent! wincmd t
+    if FindNode(s:completed_node_name) == 0
+        call TaskstackMain()
+        normal zc
+        exe "normal o" . s:completed_node_name
+        call FoldWrap()
+    end
+    call FindNode(s:completed_node_name)
+    silent! normal zo
+    call timestamp#autoUpdateEnable() " FIXME: External Dependency
 endfunction
 
 " }}}
 function! TaskstackDates() " {{{
-	call AutoTimestampBypass() " FIXME: External Dependency
-	" silent! wincmd t
-	if FindNode(s:dates_node_name) == 0
-		call TaskstackCompleted()
-		normal zo
-		exe "normal o" . s:dates_node_name
-		call FoldWrap()
-	end
-	call FindNode(s:dates_node_name)
-	silent! normal zo
-	call AutoTimestampEnable() " FIXME: External Dependency
+    call timestamp#autoUpdateBypass() " FIXME: External Dependency
+    " silent! wincmd t
+    if FindNode(s:dates_node_name) == 0
+        call TaskstackCompleted()
+        normal zo
+        exe "normal o" . s:dates_node_name
+        call FoldWrap()
+    end
+    call FindNode(s:dates_node_name)
+    silent! normal zo
+    call timestamp#autoUpdateEnable() " FIXME: External Dependency
 endfunction
 
 " }}}
 function! TaskstackDate() "{{{
-	let l:currentdate = TimestampText('date')
-	if FindNode(l:currentdate) == 0
-		let l:origview = winsaveview()
+    let l:currentdate = timestamp#text('date')
+    if FindNode(l:currentdate) == 0
+        let l:origview = winsaveview()
                 call TaskstackDates()
-		call append(line("."), [""])
-		normal j
-		call AppendText(l:currentdate)
-		call FoldWrap()
-		" normal zMzo
-		" silent! call TaskstackMain()
-		call winrestview(l:origview)
-	endif
-	call OpenNode(l:currentdate)
+        call append(line("."), [""])
+        normal j
+        call AppendText(l:currentdate)
+        call FoldWrap()
+        " normal zMzo
+        " silent! call TaskstackMain()
+        call winrestview(l:origview)
+    endif
+    call OpenNode(l:currentdate)
 endfunction
 
 "}}}
 function! TaskstackScratch() " {{{
-	call AutoTimestampBypass() " FIXME: External Dependency
-	" silent! wincmd b
-	if FindNode(s:notes_node_name) == 0
-		exe "normal Go" . s:notes_node_name
-		call FoldWrap()
-	end
-	call FindNode(s:notes_node_name)
-	normal zozt]zk
-	call AutoTimestampEnable() " FIXME: External Dependency
+    call timestamp#autoUpdateBypass() " FIXME: External Dependency
+    " silent! wincmd b
+    if FindNode(s:notes_node_name) == 0
+        exe "normal Go" . s:notes_node_name
+        call FoldWrap()
+    end
+    call FindNode(s:notes_node_name)
+    normal zozt]zk
+    call timestamp#autoUpdateEnable() " FIXME: External Dependency
 endfunction
 
 " }}}
 
 " Tasks: change status
 function! TaskstackNewItem() " {{{
-	call AutoTimestampBypass() " FIXME: External Dependency
-	call TaskstackMain()
-	exe "normal o- "
-	startinsert!
-	call AutoTimestampEnable() " FIXME: External Dependency
+    call timestamp#autoUpdateBypass() " FIXME: External Dependency
+    call TaskstackMain()
+    exe "normal o- "
+    startinsert!
+    call timestamp#autoUpdateEnable() " FIXME: External Dependency
 endfunction
 
 " }}}
 function! TaskstackCompleteItem(prefix) " {{{
-	call AutoTimestampBypass() " FIXME: External Dependency
+    call timestamp#autoUpdateBypass() " FIXME: External Dependency
 
-	if empty(TaskstackFoldbounds())
-		silent call MoveItemToDateNode(getline("."), a:prefix)
-	else
-		silent call MoveFoldToDateNode(TaskstackFoldbounds(), a:prefix)
-	end
-	call AutoTimestampEnable() " FIXME: External Dependency
-	echo ""
+    if empty(TaskstackFoldbounds())
+        silent call MoveItemToDateNode(getline("."), a:prefix)
+    else
+        silent call MoveFoldToDateNode(TaskstackFoldbounds(), a:prefix)
+    end
+    call timestamp#autoUpdateEnable() " FIXME: External Dependency
+    echo ""
 endfunction
 
 " }}}
@@ -857,8 +858,8 @@ function! CompleteFoldedItems(foldbounds, status) "{{{
     let lines = getline(start, end)
     let linenumber = start
     for line in lines
-	let l:itemnostatus = substitute(line, '^\s*. ', '', 'g')
-	let l:result = printf("%s %s", a:status, l:itemnostatus)
+    let l:itemnostatus = substitute(line, '^\s*. ', '', 'g')
+    let l:result = printf("%s %s", a:status, l:itemnostatus)
         call setline(linenumber, l:result)
         let linenumber += 1
     endfor
@@ -868,78 +869,78 @@ endfunction
 function! MoveFoldToDateNode(foldbounds, status) "{{{
         let l:state = g:stateinfo.New('foldsave')
         echo "bounds: " . string(a:foldbounds) . " status: " . a:status
-	call TaskstackDate()
+    call TaskstackDate()
         let moveto_line = line(".")
         let mytext = getline(a:foldbounds[0])
-	let l:itemnostatus = substitute(mytext, '^\s*. ', '', 'g')
+    let l:itemnostatus = substitute(mytext, '^\s*. ', '', 'g')
         let l:enclosing_project = DetectEnclosingProjectName(a:foldbounds[0])
         if l:enclosing_project != "" | let l:enclosing_project .= ": " | end
-	let l:result = printf("%s [%s] %s%s", a:status, TimestampText('short'), l:enclosing_project, l:itemnostatus)
+    let l:result = printf("%s [%s] %s%s", a:status, timestamp#text('short'), l:enclosing_project, l:itemnostatus)
         call CompleteFoldedItems(a:foldbounds, a:status)
         call setline(a:foldbounds[0], l:result)
         exec ":" . a:foldbounds[0] . "," . a:foldbounds[1] . "m" . moveto_line
         call l:state.foldrest()
-	echo "Item marked as completed and moved."
+    echo "Item marked as completed and moved."
 endfunction
 
 "}}}
 function! MoveItemToDateNode(text, status) "{{{
         let l:state = g:stateinfo.New('foldsave')
         let l:enclosing_project = "" " DetectEnclosingProjectName()
-	call TaskstackDate()
-	normal ]zk
+    call TaskstackDate()
+    normal ]zk
         if l:enclosing_project != "" | let l:enclosing_project .= ": " | end
-	let l:itemnostatus = substitute(a:text, '^\s*. ', '', 'g')
-	let l:result = printf("%s [%s] %s%s", a:status, TimestampText('short'), l:enclosing_project, l:itemnostatus)
-	let l:toappend = [l:result]
-	if LineIsWhiteSpace(getline("."))
-		call append(line(".") - 1, l:toappend)
-	else
-		call insert(l:toappend, "", len(l:toappend))
-		call append(line("."), l:toappend)
-	endif
+    let l:itemnostatus = substitute(a:text, '^\s*. ', '', 'g')
+    let l:result = printf("%s [%s] %s%s", a:status, timestamp#text('short'), l:enclosing_project, l:itemnostatus)
+    let l:toappend = [l:result]
+    if LineIsWhiteSpace(getline("."))
+        call append(line(".") - 1, l:toappend)
+    else
+        call insert(l:toappend, "", len(l:toappend))
+        call append(line("."), l:toappend)
+    endif
         call l:state.foldrest()
-	normal zodd
-	echo "Item marked as completed and moved."
+    normal zodd
+    echo "Item marked as completed and moved."
 endfunction
 
 "}}}
 
 " Movement:
 function! TaskstackMoveItemDown() " {{{
-	normal ddp
+    normal ddp
 endfunction
 
 " }}}
 function! TaskstackMoveItemUp() range " {{{
-	let l:motion = a:lastline - a:firstline
-	if line(".") != 1
-		normal dd
-		if (l:motion > 0)
-			exe "normal " . l:motion . "k"
-		end
-		normal k
-		normal P
-	end
+    let l:motion = a:lastline - a:firstline
+    if line(".") != 1
+        normal dd
+        if (l:motion > 0)
+            exe "normal " . l:motion . "k"
+        end
+        normal k
+        normal P
+    end
 endfunction
 
 " }}}
 
 " Miscellaneous:
 function! TaskstackDetectProjectName(line) " {{{
-	let l:project_name = matchstr(getline(a:line),'^\(. \|@\)\zs\(\<\w*\>\s*\)\{,3}\ze:*')
-	return l:project_name	
+    let l:project_name = matchstr(getline(a:line),'^\(. \|@\)\zs\(\<\w*\>\s*\)\{,3}\ze:*')
+    return l:project_name   
 endfunction
 
 " }}}
 function! TaskstackMoveItemToNode(item,node) " {{{
-	let l:nodeline = FindNode(a:node)
-	let l:result = ""
-	if l:nodeline != 0
-		let l:result = ':' . a:item . 'm' . nodeline
-		exe l:result
-	end
-	return l:result
+    let l:nodeline = FindNode(a:node)
+    let l:result = ""
+    if l:nodeline != 0
+        let l:result = ':' . a:item . 'm' . nodeline
+        exe l:result
+    end
+    return l:result
 endfunction
 
 " }}}
@@ -950,7 +951,7 @@ endfunction
 
 "}}}
 function! TaskstackProjectNameCompletion(A,L,P) " {{{
-	  let l:origview = winsaveview()
+      let l:origview = winsaveview()
     let l:results = ""
     g/^@/let l:results .= matchstr(getline("."), ProjectRawMatchPattern()) . "\n"
     call winrestview(l:origview)
@@ -971,125 +972,126 @@ endfunction
 function! TaskstackNavigateToProjectPrompted() " {{{
     let l:incoming = input("Navigate to: ", "", "custom,TaskstackProjectNameCompletion")
     call FindNode("@" . l:incoming)
+    normal zv
 endfunction
 
 "}}}
 function! TaskstackMoveToProjectPrompt() " {{{
-	let l:origview = winsaveview()
+    let l:origview = winsaveview()
     let l:item_validity = TaskstackValidateItemForMove()
     if l:item_validity != ""
       return l:item_validity
     endif
-	let l:project_name = TaskstackPromptProjectName()
-	call winrestview(l:origview)
+    let l:project_name = TaskstackPromptProjectName()
+    call winrestview(l:origview)
   return TaskstackMoveItemToProject(l:project_name)
 endfunction
 
 " }}}
 function! TaskstackMoveToProjectAutoDetect() " {{{
-	let l:origview = winsaveview()
+    let l:origview = winsaveview()
     let l:item_validity = TaskstackValidateItemForMove()
     if l:item_validity != ""
       return l:item_validity
     endif
-	let l:project_name = TaskstackDetectProjectName(line("."))
-	call winrestview(l:origview)
+    let l:project_name = TaskstackDetectProjectName(line("."))
+    call winrestview(l:origview)
   return TaskstackMoveItemToProject(l:project_name)
 endfunction
 
 " }}}
 function! TaskstackValidateItemForMove() " {{{
     if TaskstackFindItemGroup() == 0
-			return "Can't move non-item."
+            return "Can't move non-item."
     endif
     return ""
 endfunction
 
 " }}}
 function! TaskstackMoveItemToProject(project_name) "{{{
-	let l:origview = winsaveview()
-	if a:project_name == ""
-		return "No project specified."
-	end
-	let l:group_lines = TaskstackFindItemGroup()
-	let l:result_message = ""
-	if l:group_lines != 0
-			let l:move_result = TaskstackMoveItemToNode(l:group_lines,a:project_name)
-			if l:move_result == ""
-				let l:result_message = "Project \"@" . a:project_name . "\" not found."
-			else
-					let l:result_message = "Moved item to project \"@" . a:project_name . "\". (" . l:move_result . ")"
-			endif
-	else
-			let l:result_message = "Can't move non-item."
-	endif
-	call winrestview(l:origview)
-	return l:result_message
+    let l:origview = winsaveview()
+    if a:project_name == ""
+        return "No project specified."
+    end
+    let l:group_lines = TaskstackFindItemGroup()
+    let l:result_message = ""
+    if l:group_lines != 0
+            let l:move_result = TaskstackMoveItemToNode(l:group_lines,a:project_name)
+            if l:move_result == ""
+                let l:result_message = "Project \"@" . a:project_name . "\" not found."
+            else
+                    let l:result_message = "Moved item to project \"@" . a:project_name . "\". (" . l:move_result . ")"
+            endif
+    else
+            let l:result_message = "Can't move non-item."
+    endif
+    call winrestview(l:origview)
+    return l:result_message
 endfunction
 
 " }}}
 function! TaskstackFindItemGroup() "{{{
-	if IsAntiItem()
-			return 0
-	end
-	let l:max_lines_without_warning = 5
-	let l:begin_line = line(".")
-	let l:end_line = line(".")
-	while l:end_line < line("$")
-		normal j
-		if IsItem() || IsAntiItem()
-				break
-		endif
-		let l:end_line = line(".")
-	endwhile
+    if IsAntiItem()
+            return 0
+    end
+    let l:max_lines_without_warning = 5
+    let l:begin_line = line(".")
+    let l:end_line = line(".")
+    while l:end_line < line("$")
+        normal j
+        if IsItem() || IsAntiItem()
+                break
+        endif
+        let l:end_line = line(".")
+    endwhile
 
-	let l:lines_to_move = l:end_line - l:begin_line
+    let l:lines_to_move = l:end_line - l:begin_line
   " TODO: this clause should be in calling function, so this function could be
   " generalized.
-	if l:lines_to_move > l:max_lines_without_warning
-			let l:continue = input("About to move " . l:lines_to_move . " lines. Proceed? ")
-			if l:continue != "y"
-				return 0
-			endif
-	endif
-	return l:begin_line . "," . l:end_line
+    if l:lines_to_move > l:max_lines_without_warning
+            let l:continue = input("About to move " . l:lines_to_move . " lines. Proceed? ")
+            if l:continue != "y"
+                return 0
+            endif
+    endif
+    return l:begin_line . "," . l:end_line
 endfunction
 
 " }}}
 function! IsItem() " {{{
-	let l:itemMatches = "^\[-ox?+@]\\s*"
-	let l:match_result = match(getline("."), l:itemMatches)
-	return l:match_result + 1
+    let l:itemMatches = "^\[-ox?+@]\\s*"
+    let l:match_result = match(getline("."), l:itemMatches)
+    return l:match_result + 1
 endfunction
 
 " }}}
 function! IsAntiItem() " {{{
-	let boundaryMatches = "^" . Strip(CommentStringOpen()) . "\\s*\\w*\\s*\[}{]"
-	return match(getline("."), boundaryMatches . "\\|" . "^$") + 1
+    let boundaryMatches = "^" . Strip(CommentStringOpen()) . "\\s*\\w*\\s*\[}{]"
+    return match(getline("."), boundaryMatches . "\\|" . "^$") + 1
 endfunction
 
 " }}}
 function! TaskstackHide() " {{{
-	macaction hide:
+    macaction hide:
 endfunction
 
 " }}}
 function! TaskstackSave() " {{{
-	silent write
-	call CommitSession() " FIXME: External Dependency
+    silent write
+    call CommitSession() " FIXME: External Dependency
 endfunction
 
 " }}}
 function! TaskstackEOL() " {{{
-	let l:timestamp_location = match(getline("."), TimestampPattern() . ".*")
-	if l:timestamp_location > 0
-		call cursor(line("."), l:timestamp_location)
-	else
-		normal g_
-	end
+    let l:timestamp_location = match(getline("."), timestamp#pattern() . ".*")
+    if l:timestamp_location > 0
+        call cursor(line("."), l:timestamp_location)
+    else
+        normal g_
+    end
 endfunction
 
 " }}}
 
 " }}}
-" vim: set ft=vim fdm=marker cms=\ \"\ %s  :
+" vim: set sw=4 ft=vim fdm=marker cms=\ \"\ %s  :

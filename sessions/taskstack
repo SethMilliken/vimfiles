@@ -29,7 +29,8 @@ imap <silent> <D-0> :tabn 10
 imap <F1> :Help
 imap <Nul> :
 map! <D-v> *
-nnoremap <silent>  
+nnoremap  0
+noremap <silent>  
 nmap <silent> - :call AccordionMode()
 nmap <silent> l l:call AccordionMode()
 nmap <silent> h h:call AccordionMode()
@@ -47,6 +48,17 @@ nmap c :exec ":lcd " . expand("%:p:h")
 snoremap <silent> 	 i<Right>=TriggerSnippet()
 nnoremap <silent>  :call Reset() | nohls
 vmap  <Plug>TwitvimVisual
+nmap <silent> 9 :9wincmd w
+nmap <silent> 8 :8wincmd w
+nmap <silent> 7 :7wincmd w
+nmap <silent> 6 :6wincmd w
+nmap <silent> 5 :5wincmd w
+nmap <silent> 4 :4wincmd w
+nmap <silent> 3 :3wincmd w
+nmap <silent> 2 :2wincmd w
+nmap <silent> 1 :1wincmd w
+nmap <silent> 0 :10wincmd w
+nnoremap  0
 snoremap  b<BS>
 nmap p :call system("ssh localhost pbcopy", getreg('"'))
 nnoremap g :GundoToggle
@@ -178,6 +190,7 @@ nmap ySs <Plug>YSsurround
 nmap yss <Plug>Yssurround
 nmap yS <Plug>YSurround
 nmap ys <Plug>Ysurround
+nmap <S-Space> 
 nnoremap <C-Down> :silent! :call AdjustFont(-1)
 nnoremap <C-Up> :silent! :call AdjustFont(1)
 nnoremap <silent> <C-Right> gt
@@ -295,6 +308,16 @@ inoremap <silent>  =XPTemplateStart(0,{'k':'<C-r++<C-\++','forcePum':1})
 inoremap <silent>  =XPTemplateStart(0,{'k':'<C-r++<C-r++<C-\++','popupOnly':1})
 imap  <Plug>Isurround
 inoremap  u
+imap <silent> 9 9a
+imap <silent> 8 8a
+imap <silent> 7 7a
+imap <silent> 6 6a
+imap <silent> 5 5a
+imap <silent> 4 4a
+imap <silent> 3 3a
+imap <silent> 2 2a
+imap <silent> 1 1a
+imap <silent> 0 0a
 inoremap  u
 imap v  :call ReloadVimrc() | :echo "Resourced .vimrc."
 inoremap <silent>  =XPTemplateStart(0,{'k':'<C-\++'})
@@ -325,8 +348,9 @@ set directory=~/.vim/swap//,~/vimfiles/swap//
 set display=lastline
 set expandtab
 set fileencodings=ucs-bom,utf-8,default,latin1
+set foldlevelstart=1
 set fuoptions=maxhorz,maxvert
-set guifont=Inconsolata:h15
+set guifont=Inconsolata:h13
 set guioptions=egmrLtc
 set guitablabel=%m\ %N\ %t\ %r
 set helplang=en
@@ -362,6 +386,7 @@ set termencoding=utf-8
 set undolevels=500
 set visualbell
 set wildignore=*.o,*.sw?,*.git,*.svn,*.hg,**/build,*.?ib,*.png,*.jpg,*.jpeg,*.mov,*.gif,*.bom,*.azw,*.lpr,*.mbp,*.mode1v3,*.gz,*.vmwarevm,*.rtf,*.pkg,*.developerprofile,*.xcodeproj,*.pdf,*.dmg,*.db,*.otf,*.bz2,*.tiff,*.iso,*.jar,*.dat,**/Cache,*.cache,*.sqlite*,*.collection,*.qsindex,*.qsplugin,*.growlTicket,*.part,*.ics,*.ico,**/iPhone\ Simulator,*.lock*,*.webbookmark
+set window=68
 set winminheight=0
 let s:so_save = &so | let s:siso_save = &siso | set so=0 siso=0
 let v:this_session=expand("<sfile>:p")
@@ -487,11 +512,11 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +0 ~/sandbox/personal/todo/personal.tst.txt
+badd +4 ~/sandbox/personal/todo/taskstack.tst
 silent! argdel *
-set lines=58 columns=103
-winpos 819 1028
-buffer ~/sandbox/personal/todo/personal.tst.txt
+set lines=69 columns=117
+winpos 840 1028
+buffer ~/sandbox/personal/todo/taskstack.tst
 set splitbelow splitright
 wincmd t
 set winheight=1 winwidth=1
@@ -502,6 +527,7 @@ let s:cpo_save=&cpo
 set cpo&vim
 nmap <buffer> <silent> <NL> :call TaskstackMoveItemDown()
 nmap <buffer> <silent>  :call TaskstackMoveItemUp()
+nmap <buffer> <silent>  yiW/"ztzv 
 nmap <buffer> <silent>  /^@.* {\{3\}:nohls
 nmap <buffer> <silent>  ?^@.* {\{3\}:nohls
 nmap <buffer> <silent> x :call TaskstackGroups()
@@ -511,9 +537,9 @@ nmap <buffer> <silent> $ :call TaskstackEOL()
 nmap <buffer> :w :call TaskstackSave()
 nmap <buffer> K :echo TaskstackMoveToProjectPrompt()
 nmap <buffer> LL :call TaskstackScratch()
+nmap <buffer> NN :call TaskstackNewItem()
 map <buffer> Na <Plug>AbandonLine
 map <buffer> Nc <Plug>CompleteLine
-nmap <buffer> NN :call TaskstackNewItem()
 nmap <buffer> QQ :call TaskstackCompleteItem(g:completed_prefix)
 nmap <buffer> XX :call TaskstackCompleteItem(g:aborted_prefix)
 nmap <buffer> ZZ :call TaskstackHide()
@@ -542,7 +568,7 @@ setlocal commentstring=
 setlocal complete=.,w,b,u,t,i
 setlocal concealcursor=
 setlocal conceallevel=0
-setlocal completefunc=
+setlocal completefunc=vimcomplete#Complete
 setlocal nocopyindent
 setlocal cryptmethod=
 setlocal nocursorbind
@@ -562,7 +588,7 @@ setlocal foldcolumn=0
 setlocal foldenable
 setlocal foldexpr=0
 setlocal foldignore=#
-setlocal foldlevel=4
+setlocal foldlevel=1
 setlocal foldmarker={{{,}}}
 set foldmethod=marker
 setlocal foldmethod=marker
@@ -586,8 +612,7 @@ setlocal keywordprg=
 set linebreak
 setlocal linebreak
 setlocal nolisp
-set list
-setlocal list
+setlocal nolist
 setlocal nomacmeta
 setlocal makeprg=
 setlocal matchpairs=(:),{:},[:]
@@ -608,10 +633,10 @@ setlocal relativenumber
 setlocal norightleft
 setlocal rightleftcmd=search
 setlocal noscrollbind
-setlocal shiftwidth=2
+setlocal shiftwidth=4
 setlocal noshortname
 setlocal nosmartindent
-setlocal softtabstop=2
+setlocal softtabstop=4
 setlocal nospell
 setlocal spellcapcheck=off
 setlocal spellfile=
@@ -635,26 +660,92 @@ setlocal wrap
 setlocal wrapmargin=0
 1
 normal zo
+2
+normal zo
+43
+normal zo
+54
+normal zo
+59
+normal zo
+180
+normal zo
+195
+normal zo
+222
+normal zo
+243
+normal zo
+252
+normal zo
+43
+normal zo
+239
+normal zo
+240
+normal zo
+241
+normal zo
+240
+normal zo
+239
+normal zo
+249
+normal zo
+250
+normal zo
+267
+normal zo
+249
+normal zo
 1
 normal zo
-437
+43
 normal zo
-437
+44
 normal zo
-2060
+52
 normal zo
-2074
+159
 normal zo
-2712
+174
 normal zo
-2074
+202
 normal zo
-let s:l = 2 - ((1 * winheight(0) + 28) / 56)
+224
+normal zo
+233
+normal zo
+248
+normal zo
+257
+normal zo
+43
+normal zo
+244
+normal zo
+245
+normal zo
+246
+normal zo
+245
+normal zo
+244
+normal zo
+254
+normal zo
+255
+normal zo
+272
+normal zo
+254
+normal zo
+let s:l = 12 - ((11 * winheight(0) + 33) / 67)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-2
-normal! 018l
+12
+normal! 089l
 tabnext 1
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf
