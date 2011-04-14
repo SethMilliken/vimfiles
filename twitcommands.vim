@@ -12,6 +12,10 @@ let twitvim_count = 200
 
 FriendsTwitter
 VimSearch
+SearchTwitter Spimpompam
+SearchTwitter samullen
+SearchTwitter bentayloruk
+SearchTwitter james_herdman
 SearchTwitter #MacVim
 SearchTwitter mikelikesbikes
 SearchTwitter stevelosh
