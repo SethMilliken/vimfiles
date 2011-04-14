@@ -1402,6 +1402,14 @@ let g:MailAppl_from = 'Seth Milliken <seth@araxia.net>'
 
 " }}}
 
+" Vim-addon-manager: " {{{
+command! -nargs=1 PluginInstall call PluginInstall(<q-args>)
+function! PluginInstall(plugin)
+    " TODO: check for vam
+    exec printf("call vam#install#Install(['github:vim-scripts/%s'])", a:plugin)
+endfunction
+
+" }}}
 " Vimple: " {{{
 let g:loaded_vimpreviewtag = 1
 
