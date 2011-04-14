@@ -365,7 +365,7 @@ augroup END
 " Learn: hjkl " {{{
 " nmap <Left>   :echo "You should have typed h instead."<CR>
 " nmap <Right>  :echo "You should have typed l instead."<CR>
-" nmap <Up>         :echo "You should have typed k instead."<CR>
+" nmap <Up>     :echo "You should have typed k instead."<CR>
 " nmap <Down>   :echo "You should have typed j instead."<CR>
 nmap <Left>     :<Up>
 nmap <Right>    :<Down>
@@ -408,11 +408,11 @@ nmap <silent> <Leader>ll o<Esc>:call timestamp#insert("short") \| call FoldWrap(
 " }}}
 " Tabs: switching " {{{
 " set Cmd-# on Mac and Alt-# elsewhere to switch tabs
-for n in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+for n in range(10)
      let k = n == "0" ? "10" : n
-     for m in ["M", "A"]
-         exec printf("imap <silent> <%s-%s> <Esc>:tabn %s<CR>", m, n, k)
-         exec printf("nmap <silent> <%s-%s> %sgt<CR>", m, n, k)
+     for m in ["D", "A"]
+         exec printf("imap <silent> <%s-%s> <Esc>%s", m, n, k)
+         exec printf("map <silent> <%s-%s> %sgt", m, n, k)
      endfor
 endfor
 
