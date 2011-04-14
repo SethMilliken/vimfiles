@@ -1,16 +1,18 @@
-" Description:  minor modification of kami stachowski's 'kellys' colorscheme
+" Description:  modification of kami stachowski's 'kellys' colorscheme
 "  Maintainer:  Seth Milliken <seth_vim@araxia.net>
 "     License:  gpl 3+
-"     Version:  0.1 (2011.01.14)
+"     Version:  .2 (2011.04.10)
 
 " changelog:
+"         0.2:  2011.04.10
+"               added support for rails keyword highlighting
 "         0.1:  2011.01.14
 "               initial release of modifications into the wild
 " note:
 "       If you're editing colors files hexhilight.vim is great for showing you
 "       the hex values in the colors they define.
 "       <http://www.vim.org/scripts/script.php?script_id=2937>
-      
+
 set background=dark
 
 if version > 580
@@ -92,6 +94,8 @@ if has("gui_running")
     hi SpellRare    term=reverse    ctermbg=13  gui=undercurl   guisp=Magenta
     hi SpellLocal   term=underline  ctermbg=14  gui=undercurl   guisp=Cyan
     hi LineNr       term=underline  ctermfg=11  guifg=Yellow
+    hi rubyMethod   term=bold       ctermfg=11  guifg=Yellow
+    hi Regexp       term=reverse    ctermfg=Red guifg=Red
 
 else
     if &t_Co == 256
@@ -219,10 +223,20 @@ hi! link phpRegion          Special
 hi! link phpVarSelector     Special
 " py
 hi! link pythonStatement    Type
+" rails
+hi link railsMethod         PreProc
+hi link rubyDefine          Type
+hi link rubySymbol          Constant
+hi link rubyAccess          rubyMethod
+hi link rubyAttribute       rubyMethod
+hi link rubyEval            rubyMethod
+hi link rubyException       rubyMethod
+hi link rubyInclude         rubyMethod
+hi link rubyStringDelimiter rubyString
+hi link rubyRegexp          Regexp
+hi link rubyRegexpDelimiter rubyRegexp
 " rb
 hi! link rubyConstant       Special
-hi! link rubyDefine         Type
-hi! link rubyRegexp         Special
 " scm
 hi! link schemeSyntax       Special
 " sh

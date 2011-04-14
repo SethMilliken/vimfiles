@@ -132,7 +132,7 @@ set winminheight=0                  " minimized horizontal splits show only stat
 set switchbuf=useopen               " when switching to a buffer, go to where it's already open
 set history=10000                   " keep craploads of command history
 set undolevels=500                  " keep lots of undo history
-set foldlevelstart=1                " first level of folds open by default
+set foldlevelstart=9                " first level of folds open by default
 set fdm=marker                      " make the default foldmethod markers
 set foldopen+=jump                  " jumps open folds, too
 set display+=lastline               " always show as much of the last line as possible
@@ -152,6 +152,11 @@ if version > 702 | set rnu | exec "au BufReadPost * set rnu" | endif " use relat
 if version > 702 | set clipboard=unnamed | end " use system clipboard; FIXME: what version is actually required?
 
 set wildignore+=*.o,*.sw?,*.git,*.svn,*.hg,**/build,*.?ib,*.png,*.jpg,*.jpeg,*.mov,*.gif,*.bom,*.azw,*.lpr,*.mbp,*.mode1v3,*.gz,*.vmwarevm,*.rtf,*.pkg,*.developerprofile,*.xcodeproj,*.pdf,*.dmg,*.db,*.otf,*.bz2,*.tiff,*.iso,*.jar,*.dat,**/Cache,*.cache,*.sqlite*,*.collection,*.qsindex,*.qsplugin,*.growlTicket,*.part,*.ics,*.ico,**/iPhone\ Simulator,*.lock*,*.webbookmark
+
+" To transform wildignore into fuf_exclude...
+" s/\*\./\\\./g
+" s/,/|/g
+let g:fuf_coveragefile_exclude = '\v\~$|\.(o|exe|dll|bak|orig|swp)$|(^|[/\\])\.(hg|git|bzr)($|[/\\])|.gitignore|.DS_Store|.htaccess'
 
 " Tags: universal location
 set tags+=$HOME/sandbox/personal/tags
@@ -402,8 +407,8 @@ nmap <silent> <Leader>sd :call timestamp#insert("date")<CR>
 nmap <silent> <Leader>sl :call timestamp#insert("long")<CR>
 nmap <silent> <Leader>fw :call FoldWrap()<CR>
 nmap <silent> <Leader>fi :call FoldInsert()<CR>
-nmap <silent> <Leader>st :call InsertAnnotation("Started typing", "0")<CR>
-nmap <silent> <Leader>ft :call InsertAnnotation("Finished typing", "$")<CR>
+nmap <silent> <Leader>ts :call InsertAnnotation("Started typing", "0")<CR>
+nmap <silent> <Leader>tf :call InsertAnnotation("Finished typing", "$")<CR>
 nmap <silent> <Leader>ll o<Esc>:call timestamp#insert("short") \| call FoldWrap()<CR>
 " }}}
 " Tabs: switching " {{{
@@ -1046,6 +1051,12 @@ augroup VolatileScratch
 augroup END
 
 "}}}
+" Vsplit: " {{{
+augroup Vsplit
+    au! FileType qf,help wincmd L
+augroup END
+
+" }}}
 " VCS Commit: " {{{
 augroup VCSCommit
     au! BufRead hg-editor-* nmap <buffer> <silent> <C-e>d :set filetype=diff \| :r !hg diff<CR>gg
@@ -1254,6 +1265,12 @@ augroup VimSheet
 augroup END
 
 " }}}
+" Refresh Bundles: " {{{
+augroup RefreshBundles
+    au! BufRead *refresh_bundles.sh vmap <buffer> <Leader><CR> :sort \| echo "Sorted selection."<CR>
+augroup END
+
+" }}}
 " TOhtml: " {{{
 let html_dynamic_folds = 1
 let html_use_css = 1
@@ -1385,6 +1402,14 @@ let g:MailAppl_from = 'Seth Milliken <seth@araxia.net>'
 
 " }}}
 
+" Vim-addon-manager: " {{{
+command! -nargs=1 PluginInstall call PluginInstall(<q-args>)
+function! PluginInstall(plugin)
+    " TODO: check for vam
+    exec printf("call vam#install#Install(['github:vim-scripts/%s'])", a:plugin)
+endfunction
+
+" }}}
 " Vimple: " {{{
 let g:loaded_vimpreviewtag = 1
 
