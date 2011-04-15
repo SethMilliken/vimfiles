@@ -1,4 +1,5 @@
 # vimwiki snippets
+# vim: set list:
 
 snippet np
 	%toc`VimwikiExpandedPageName()`
@@ -16,9 +17,23 @@ snippet cm Commit message for a ticket
 snippet link Link for external file
 	[[~/${1:sandbox/personal/}${2}][${3:title}]]
 snippet sec Documentation section
-	* \`linkhere\`:
-	  - add #{provider} to \`blahblahblah\`
-	  {{{
-	  code
-	  }}}
-	  - add provider to \`blahblah\`
+	=== \`linkhere\` ===
+	Renders menuhere
+	    - [ ] add provider to \`blahblahblah\`
+	    {{{class="brush: ruby" >
+	      code
+	    }}}
+	      - <span class="callout">orkut</span>: n/a
+snippet ite Documentation section item
+	- [ ] add provider to \`blahblahblah\`
+	{{{class="brush: ruby" >
+	}}}
+	   - <span class="callout">orkut</span>: text here
+snippet tod TODO item
+	TODO: _${1:revise}_
+snippet feat features
+	<span class="feature">${1:featurename}</span>
+snippet ork orkut callout
+	<span class="callout">orkut</span>
+snippet menuhere
+	Blah _${1:value}_ *|* _${2:value}_

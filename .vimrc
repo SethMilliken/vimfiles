@@ -1215,6 +1215,7 @@ let g:vimwiki_list = [
              \{'path': '~/sandbox/personal/vimwiki/',
                 \'index': 'PersonalWiki',
                 \'html_header': '~/sandbox/personal/vimwiki/header.tpl',
+                \'html_footer': '~/sandbox/personal/vimwiki/footer.tpl',
                 \},
             \{'path': '~/sandbox/public/wiki',
                 \'index': 'SethMilliken',
@@ -1223,6 +1224,8 @@ let g:vimwiki_list = [
             \{'path': '~/sandbox/work/wiki/',
                 \'index': 'SethMilliken',
                 \'html_header': '~/sandbox/work/wiki/header.tpl',
+                \'html_footer': '~/sandbox/personal/vimwiki/footer.tpl',
+                \'maxhi': 0,
                 \'auto_export': 1,
                 \},
                 \]
