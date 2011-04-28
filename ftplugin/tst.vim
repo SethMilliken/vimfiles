@@ -19,7 +19,7 @@ let s:completed_node_name = "COMPLETED"
 let s:dates_node_name = "DATES"
 let s:notes_node_name = "SCRATCH"
 
-au FileType *tst* map <buffer> <Space> <Plug>ToggleLine
+"au FileType *tst* map <buffer> <Space> <Plug>ToggleLine
 au FileType *tst* map <buffer> Nc <Plug>CompleteLine
 au FileType *tst* map <buffer> Na <Plug>AbandonLine
 

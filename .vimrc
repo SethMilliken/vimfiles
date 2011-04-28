@@ -1321,6 +1321,8 @@ function! JanrainAbbreviations() " {{{
     iabb oa OAuth
     iabb apis APIs
     iabb im implementation
+    iabb oso OpenSocial
+    iabb hr =><Space>
 endfunction
 
 " }}}
