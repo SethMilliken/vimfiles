@@ -160,6 +160,7 @@ let g:fuf_coveragefile_exclude = '\v\~$|\.(o|exe|dll|bak|orig|swp)$|(^|[/\\])\.(
 
 " Tags: universal location
 set tags+=$HOME/sandbox/personal/tags
+set tags+=$HOME/.vim/tags
 
 " Swap: centralized with unique names via //
 set directory=$HOME/.vim/swap//,~/vimfiles/swap//
@@ -269,8 +270,7 @@ nmap <silent> <Leader>c :call ScratchBuffer("scratch")<CR>
 " }}}
 " Open URIs: " {{{
 nmap <silent> <Leader>/ :call HandleURI()<CR>
-nmap <silent> <Leader>t :call HandleTS()<CR>
-nmap <silent> <Leader>j :call HandleMantis()<CR>
+nmap <silent> <Leader>t :call HandleMantis()<CR>
 
 " }}}
 " SQL: grab and format sql statement from current line " {{{
@@ -359,8 +359,8 @@ augroup cmdline-window
     au CmdwinEnter * map <buffer> <C-y> <C-c><CR>q:
     au CmdwinEnter * inoremap <buffer> <C-y> <Esc><C-y>
     " Allow commands that echo to work.
-    au CmdwinEnter * nnoremap <buffer> <CR> 0y$<C-c><C-c>:<C-r>"<CR>
-    au CmdwinEnter * inoremap <buffer> <CR> <Esc>0y$<C-c><C-c>:<C-r>"<CR>
+    au CmdwinEnter * nnoremap <buffer> <CR> 0"ty$<C-c><C-c>:<C-r>t<CR>
+    au CmdwinEnter * inoremap <buffer> <CR> <Esc>0"ty$<C-c><C-c>:<C-r>t<CR>
     " Quickly close cmdline-window
     au CmdwinEnter * map <buffer> ZZ <C-c><C-c>
     au CmdwinEnter * inoremap <buffer> ZZ <Esc>ZZ
@@ -822,7 +822,9 @@ endfunction
 
 " }}}
 function! HandleMantis() " {{{
-  let l:ticket = matchstr(getline("."), 'JR#[0-9]\+')
+  " Keep in sync with ~/.vim/after/syntax/txt.vim
+  let l:expression = '\%(mt\|MT\|jr\|JR\|TS\|PF\|BUG\|FIXME\|STORY\)[:# ]\+[0-9]\+'
+  let l:ticket = matchstr(getline("."), l:expression)
   let l:number = matchstr(l:ticket, '[0-9]\+')
   if l:ticket != "<Esc>:"
     let l:uri = 'https://mantis.janrain.com/view.php?id=' . l:number
@@ -977,7 +979,7 @@ augroup TaskStack
     au FileType *tst* nmap <buffer> <C-y>k :echo TaskstackMoveToProjectAutoDetect()<CR>
     au FileType *tst* nmap <buffer> <silent> <Tab> :call search("@.*\\\\|^[A-Z]\\+")<CR>
     au FileType *tst* nmap <buffer> <silent> <S-Tab> :call search("@.*\\\\|^[A-Z]\\+", 'b')<CR>
-    au FileType *tst* if mapcheck('<CR>', 'n') == "" | nmap <unique> <buffer> <silent> <CR> yiW/<C-r>"<CR>ztzv<C-l> | end
+    au FileType *tst* if mapcheck('<CR>', 'n') == "" | nmap <unique> <buffer> <silent> <CR> "tyiW/<C-r>t<CR>ztzv<C-l> | end
     " Use <C-c> to avoid adding or updating a timestamp after editing.
     au! InsertLeave *.tst.* :call timestamp#addOrUpdate("") " FIXME: External Dependency
     au! FocusLost *.tst.* nested write
@@ -1051,9 +1053,21 @@ augroup VolatileScratch
 augroup END
 
 "}}}
-" Vsplit: " {{{
-augroup Vsplit
-    au! FileType qf,help wincmd L
+" Quickfix: " {{{
+augroup Quickfix
+    au! FileType qf set nu | :wincmd L
+augroup END
+
+" }}}
+" Vimscript: " {{{
+augroup Vimscript
+    au! FileType vim nmap <buffer> <silent> <C-y>t :silent !ctags -f ~/.vim/tags -R --languages=vim ~/.vim/bundle/<CR>
+augroup END
+
+" }}}
+" Help: " {{{
+augroup Help
+    au! FileType help wincmd L
 augroup END
 
 " }}}
@@ -1086,6 +1100,13 @@ augroup END
 " Cocoa: " {{{
 augroup Cocoa
     au BufRead *.[mh] nmap <buffer> <d-1> :ListMethods<CR>
+augroup END
+
+" }}}
+" Tlib: " {{{
+augroup Tlib
+    au! FileType tlibInputList map <buffer> <Tab> <Down>
+    au FileType tlibInputList map <buffer> <S-Tab> <Up>
 augroup END
 
 " }}}
@@ -1310,7 +1331,7 @@ command! -nargs=1 GrepEngage call GrepEngage(<f-args>)
 function! GrepEngage(string)
     echo "Searching Engage codebase for \"" . a:string . "\"...."
     let l:engage_path = "~/sandbox/work/vm/rpx/ruby/rails/**/*.rb"
-    exec ":vimgrep /" . a:string . "/ " . l:engage_path
+    exec ":Ack \"" . a:string . "\" " . l:engage_path
     copen
 endfunction
 command! JanrainAbbreviations call JanrainAbbreviations()
