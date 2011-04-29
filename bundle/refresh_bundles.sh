@@ -31,10 +31,11 @@ function refresh_bundle {
     fi
 }
 
-
 # refresh_bundle gundo git@github.com:SethMilliken/gundo.vim.git
 # refresh_bundle viki git://github.com/tomtom/viki_vim.git
+#refresh_bundle dbext git://github.com/vim-scripts/dbext.vim.git
 #refresh_bundle tagbar git@github.com:SethMilliken/tagbar.git
+#refresh_bundle tlib-seth git@github.com:SethMilliken/tlib_vim.git
 #refresh_bundle vim-addon-signs git://github.com/MarcWeber/vim-addon-signs.git
 #refresh_bundle vimple git://github.com/dahu/vimple.git
 refresh_bundle abolish git://github.com/tpope/vim-abolish.git
@@ -46,7 +47,6 @@ refresh_bundle calendar git://github.com/vim-scripts/calendar.vim--Matsumoto.git
 refresh_bundle cocoa git://github.com/msanders/cocoa.vim.git
 refresh_bundle command-t git://github.com/wincent/Command-T.git 'Rebuild if necessary:\n\tpushd command-t/ruby/command-t/; ruby extconf.rb; make && popd'
 refresh_bundle conque git://github.com/rson/vim-conque.git
-refresh_bundle dbext git://github.com/vim-scripts/dbext.vim.git
 refresh_bundle fugitive git://github.com/tpope/vim-fugitive.git
 refresh_bundle fuzzyfinder git://github.com/vim-scripts/FuzzyFinder.git
 refresh_bundle gundo git://github.com/sjl/gundo.vim.git
@@ -54,6 +54,7 @@ refresh_bundle hexhighlight git://github.com/yurifury/hexHighlight.git
 refresh_bundle jslint git://github.com/vim-scripts/jslint.vim.git
 refresh_bundle kellys git://github.com/vim-scripts/kellys.git
 refresh_bundle l9 git://github.com/slack/vim-l9.git
+refresh_bundle matchit git://github.com/vim-scripts/matchit.zip.git
 refresh_bundle matrix git://github.com/vim-scripts/matrix.vim--Yang.git
 refresh_bundle nerdcommenter git://github.com/scrooloose/nerdcommenter.git
 refresh_bundle nerdtree git://github.com/scrooloose/nerdtree.git
@@ -61,11 +62,13 @@ refresh_bundle paster git://github.com/weierophinney/paster.vim.git
 refresh_bundle pickacolor git://github.com/Raimondi/PickAColor.git
 refresh_bundle project git://github.com/shemerey/vim-project.git
 refresh_bundle rails git://github.com/tpope/vim-rails.git
+refresh_bundle ruby-matchit git://github.com/vim-scripts/ruby-matchit.git
 refresh_bundle screenshot git://github.com/vim-scripts/ScreenShot.git
 refresh_bundle script-ed ssh://seth@at.araxia.net/~/git/script-ed.git
 refresh_bundle sessionman git://github.com/vim-scripts/sessionman.git
 refresh_bundle snipmate git://github.com/spf13/snipmate.vim.git
 refresh_bundle space git://github.com/spiiph/vim-space.git
+refresh_bundle sparkup git://github.com/kogakure/vim-sparkup.git
 refresh_bundle statuslinehighlight git://github.com/vim-scripts/StatusLineHighlight.git
 refresh_bundle surround git://github.com/vim-scripts/surround.vim.git
 refresh_bundle syntastic git://github.com/sjl/syntastic.git
