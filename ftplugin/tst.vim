@@ -864,7 +864,7 @@ function! CompleteFoldedItems(foldbounds, status) "{{{
         let linenumber += 1
     endfor
 endfunction
-    
+
 " }}}
 function! MoveFoldToDateNode(foldbounds, status) "{{{
         let l:state = g:stateinfo.New('foldsave')
@@ -929,7 +929,7 @@ endfunction
 " Miscellaneous:
 function! TaskstackDetectProjectName(line) " {{{
     let l:project_name = matchstr(getline(a:line),'^\(. \|@\)\zs\(\<\w*\>\s*\)\{,3}\ze:*')
-    return l:project_name   
+    return l:project_name
 endfunction
 
 " }}}
@@ -946,7 +946,7 @@ endfunction
 " }}}
 
 function! ProjectRawMatchPattern() " {{{
-    return '^@\zs\(\<\w*\>\s*\)\{,3}\ze\s' 
+    return '^@\zs\(\<\w*\>\s*\)\{,3}\ze\s'
 endfunction
 
 "}}}

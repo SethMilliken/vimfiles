@@ -12,9 +12,6 @@ let twitvim_count = 200
 
 FriendsTwitter
 VimSearch
-SearchTwitter Spimpompam
-SearchTwitter samullen
-SearchTwitter bentayloruk
 SearchTwitter james_herdman
 SearchTwitter #MacVim
 SearchTwitter mikelikesbikes
@@ -28,7 +25,7 @@ ListTwitter ruby
 SearchTwitter #Xcode
 SearchTwitter #pentadactyl
 SearchTwitter #aspergers
-SearchTwitter @jerojasro
+SearchTwitter jerojasro
 SearchTwitter @despo
 SearchTwitter blzysh
 SearchTwitter morticed

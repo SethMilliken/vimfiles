@@ -10,7 +10,7 @@ function! timestamp#text(style) "{{{
         if a:style == "long"
             let l:dateformat = strftime("%#x %H:%M:%S ")
         elseif a:style == "short"
-            let l:dateformat = strftime("%Y-%m-%d %H:%M:%S ") 
+            let l:dateformat = strftime("%Y-%m-%d %H:%M:%S ")
         endif
         let l:dateformat .= substitute(strftime("%#z"), '[a-z]\+\($\| \)', '', 'g')
     else
@@ -108,7 +108,7 @@ function! timestamp#isUpdateOkay(line) "{{{
         return 0
     elseif match(a:line, "^x\\s\\|^o\\s\\|\\sx\\s\\|\\so\\s") > -1
         echo "No autotimestamp: line contains completed marker."
-        return 
+        return 0
     elseif len(Strip(CommentStringOpen())) > 0 && match(a:line, "^" . CommentStringOpen()) > -1
         echo "No autotimestamp: commented line"
         return 0
