@@ -78,7 +78,7 @@ if has("gui_running")
     hi WarningMsg  term=standout    ctermfg=209                 guifg=#fa8072
     hi Visual      term=reverse     cterm=reverse ctermfg=64 ctermbg=222 gui=reverse guifg=#6b8e23 guibg=#f0e68c
     "hi Pmenu           cterm=reverse ctermfg=52 ctermbg=222 gui=reverse guifg=#544444 guibg=#f0e68c
-    "hi PmenuSel        ctermfg=52 ctermbg=222 guifg=#544444 guibg=#f0e68c
+    hi PmenuSel        ctermfg=52 ctermbg=222 guifg=#544444 guibg=#f0e68c
     "hi PmenuSbar   ctermbg=235 guibg=#333333
     "hi PmenuThumb  cterm=reverse ctermbg=222 gui=reverse guibg=#f0e68c
     hi Ignore       guifg=#323232   guibg=#000000   gui=none
