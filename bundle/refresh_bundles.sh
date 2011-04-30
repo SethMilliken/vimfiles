@@ -77,7 +77,7 @@ refresh    tagbar               git://github.com/majutsushi/tagbar.git
 refresh    textobj-function     git://github.com/kana/vim-textobj-function.git
 refresh    textobj-rubyblock    git://github.com/nelstrom/vim-textobj-rubyblock.git
 refresh    textobj-user         git://github.com/kana/vim-textobj-user.git
-refresh    tlib                 git://github.com/vim-scripts/tlib.git
+refresh    tlib                 git://github.com/tomtom/tlib_vim.git
 refresh    twitvim              git://github.com/vim-scripts/TwitVim.git
 refresh    vcscommand           git://github.com/vim-scripts/vcscommand.vim.git
 refresh    viki                 git://github.com/vim-scripts/VikiDeplate.git
