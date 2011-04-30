@@ -1299,7 +1299,25 @@ augroup END
 " Refresh Bundles: " {{{
 augroup RefreshBundles
     au! BufRead *refresh_bundles.sh vmap <buffer> <Leader><CR> :sort \| echo "Sorted selection."<CR>
+    au BufRead *refresh_bundles.sh map <buffer> K :call AddNewRefreshBundleEntry()<CR>
 augroup END
+
+" }}}
+function! AddNewRefreshBundleEntry() " {{{
+    let repo = Strip(@")
+    if match(repo, ".git$") == -1
+        echo "Is there a git repo URL on the pasteboard?"
+        return 0
+    end
+"/Users/seth/.vim/bundle/refresh_bundles.sh
+    let parsed_name = substitute(split(repo, '/')[-1], '\.vim\|\.git', '', 'g')
+    let new_entry = printf("%-10s %-20s %s", "refresh", parsed_name, repo)
+    let exists = search(repo, 'nw') ? "possible duplicate" : "new"
+    call setline(line("$"), [getline("$"), new_entry])
+    normal Gzb
+    redraw
+    echo printf("Added %s entry for '%s'", exists, parsed_name)
+endfunction
 
 " }}}
 " TOhtml: " {{{
