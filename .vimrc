@@ -257,6 +257,7 @@ command! Journal :call JournalEntry()
 nmap <silent> <Leader>] :NERDTreeToggle<CR>
 nmap <silent> <Leader>[ :TagbarToggle<CR>
 nmap <silent> <Leader>- :GundoToggle<CR>
+nmap <silent> <Leader>s :TBrowseScriptnames<CR>
 
 " }}}
 " Folds: " {{{
