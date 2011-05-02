@@ -196,6 +196,8 @@ vmap <BS> :normal gv"_x<CR>
 vmap dC :normal gv"_xP<CR>
 nnoremap dd :normal! dd<CR>
 nnoremap d<Space> :normal! d<CR>
+nnoremap <Leader>p :call AppendLine(getreg("*"), "below")<CR>
+nnoremap <Leader>P :call AppendLine(getreg("*"), "above")<CR>
 
 " sane-itize Y
 map Y y$
@@ -290,7 +292,6 @@ inoremap <C-p> <C-o>:set completeopt+=menuone<CR>a<C-n><C-p>
 " }}}
 " Help: help help help " {{{
 nmap <Leader>hw     :help<CR>:silent call AdjustFont(-4)<CR>:set columns=115 lines=999<CR>:winc _<CR>:winc \|<CR>:help<Space>
-nmap <Leader>pp     :help<CR><Esc>:winc _<CR><Esc>:winc \|<CR><Esc>:help<Space>
 nmap <Leader>hg     :HelpGrep<CR>
 command! Help :call HelpSmart()
 command! HelpGrep :call HelpSmart("grep")
@@ -515,6 +516,17 @@ function! InsertLine(text) "{{{
     else
         call append(line(".") - 1,[a:text])
     end
+endfunction
+
+"}}}
+function! AppendLine(text, direction) "{{{
+    echo a:direction
+    if a:direction == "above"
+        let where = 1
+    else
+        let where = 0
+    end
+    call append(line(".") - where,[a:text])
 endfunction
 
 "}}}
@@ -1073,12 +1085,6 @@ augroup Vimscript
 augroup END
 
 " }}}
-" Help: " {{{
-augroup Help
-    au! FileType help wincmd L
-augroup END
-
-" }}}
 " VCS Commit: " {{{
 augroup VCSCommit
     au! BufRead hg-editor-* nmap <buffer> <silent> <C-e>d :set filetype=diff \| :r !hg diff<CR>gg
@@ -1130,6 +1136,7 @@ augroup helpfiles
     au FileType help nnoremap <buffer> <silent> <Tab> /\|[^\[:space:]]*\|<CR>zz:nohlsearch<CR>
     au FileType help nnoremap <buffer> <silent> <CR> <C-]>
     au FileType help nnoremap <buffer> <silent> <BS> <C-o>
+    au FileType help wincmd L
 augroup END
 
 " }}}
