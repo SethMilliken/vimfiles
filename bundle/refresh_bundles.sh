@@ -52,6 +52,8 @@ refresh    fugitive             git://github.com/tpope/vim-fugitive.git
 refresh    fuzzyfinder          git://github.com/vim-scripts/FuzzyFinder.git
 refresh    gundo                git://github.com/sjl/gundo.vim.git
 refresh    hexhighlight         git://github.com/yurifury/hexHighlight.git
+refresh    javaScriptLint       git://github.com/smith/javaScriptLint.vim.git               'brew install jsl'
+refresh    javascript           git://github.com/serverhorror/javascript.vim.git
 refresh    jslint               git://github.com/vim-scripts/jslint.vim.git
 refresh    kellys               git://github.com/vim-scripts/kellys.git
 refresh    l9                   git://github.com/slack/vim-l9.git
@@ -82,5 +84,8 @@ refresh    twitvim              git://github.com/vim-scripts/TwitVim.git
 refresh    vcscommand           git://github.com/vim-scripts/vcscommand.vim.git
 refresh    viki                 git://github.com/vim-scripts/VikiDeplate.git
 refresh    vim-addon-async      git://github.com/MarcWeber/vim-addon-async.git
+refresh    vim-javascript       git://github.com/pangloss/vim-javascript.git
+refresh    vim-ragtag           git://github.com/tpope/vim-ragtag.git
 refresh    vim-ruby             git://github.com/vim-ruby/vim-ruby.git
 refresh    vimwiki              git://github.com/vim-scripts/vimwiki.git
+refresh    xml                  git://github.com/vim-scripts/xml.vim.git
