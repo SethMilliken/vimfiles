@@ -207,7 +207,12 @@ inoremap <C-w> <C-g>u<C-w>
 inoremap <C-u> <C-g>u<C-w>
 
 " lcd to file's container
-nmap <C-e>c :exec ":lcd " . expand("%:p:h") \| echo "cwd now: " . getcwd()<CR>
+
+" Extended Navigation
+nmap <C-e>h :bnext<CR>
+nmap <C-e>l :bprev<CR>
+nmap <C-e>j :exec ":lcd " . expand("%:p:h") \| echo "cwd now: " . getcwd()<CR>
+nmap <C-e>k :exec ":lcd .." \| echo "cwd now: " . getcwd()<CR>
 
 " tmux copy/paste issue in mac os x workaround
 nmap <C-x>p :call system("ssh localhost pbcopy", getreg('"')) \| echo "Copied default register to pasteboard."<CR>
@@ -935,6 +940,8 @@ au BufNewFile,BufRead *.applescript   setf applescript
 " au BufNewFile,BufRead *.tst.* set ft=_.txt.tst
 au BufNewFile,BufRead *.yaml,*.yml so ~/.vim/syntax/yaml.vim
 au FileType ruby set fdm=syntax
+au BufNewFile,BufRead *vimperatorrc*,*.vimp set filetype=vimperator
+au BufNewFile,BufRead *pentadactylrc*,*.penta set filetype=pentadactyl
 
 " Java: " {{{
 augroup java
@@ -1073,6 +1080,12 @@ augroup FuzzyFinder
 augroup END
 
 " }}}
+" Fuf: " {{{
+augroup FuzzyFinder
+    au! FileType tLibInputList set nolist nornu nonu
+augroup END
+
+" }}}
 " Quickfix: " {{{
 augroup Quickfix
     au! FileType qf set nu | :wincmd L
@@ -1081,7 +1094,7 @@ augroup END
 " }}}
 " Vimscript: " {{{
 augroup Vimscript
-    au! FileType vim nmap <buffer> <silent> <C-y>t :silent !ctags -f ~/.vim/tags -R --languages=vim ~/.vim/bundle/<CR>
+    au! FileType vim nmap <buffer> <silent> <C-y>t :echo "Generating vimscript tags..." \| :silent !ctags -f ~/.vim/tags -R --languages=vim ~/.vim/.vimrc ~/.vim/.gvimrc ~/.vim/bundle/*.vim<CR>
 augroup END
 
 " }}}
@@ -1312,7 +1325,7 @@ augroup END
 
 " }}}
 function! AddNewRefreshBundleEntry() " {{{
-    let repo = Strip(@")
+    let repo = Strip(@*)
     if match(repo, ".git$") == -1
         echo "Is there a git repo URL on the pasteboard?"
         return 0
@@ -1350,6 +1363,8 @@ command! DoMaintenance call DoMaintenance()
 function! DoMaintenance()
     " ~/.vim/bundle/refresh_bundles.sh
     call pathogen#helptags()
+    silent! FufRenewCache
+    silent! CommandTFlush
     " save all sessions
     " hg addremove and ci ~/.vim/sessions/*
 endfunction
