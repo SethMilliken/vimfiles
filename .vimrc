@@ -230,7 +230,8 @@ nmap <C-y>v :call ReloadVimrc()<CR> \| :echo "Resourced .vimrc."<CR>
 " Reload snippets
 nmap <C-y>s :SnipUp<CR>
 " Execute current line as ex command
-map <C-e>x :call feedkeys("yyq:p\r", "n")<CR>
+"map <C-e>x :call feedkeys("yyq:p\r", "n")<CR>
+
 " File path to pasteboard
 map <C-y>f :call FileToPasteboard()<CR>
 map <C-y>F :call FileToPasteboard(line("."))<CR>
@@ -387,16 +388,16 @@ nmap <Down>     :<Down>
 " }}}
 " Accordion Mode: accordion style horizontal split navigation mode " {{{
 " yes, kids, I know WTF I'm doing WRT <C-e>
-nmap <silent> <C-e>j <C-w>j:call AccordionMode()<CR><C-l>
-nmap <silent> <C-e>k <C-w>k:call AccordionMode()<CR><C-l>
-nmap <silent> <C-e>h <C-w>h:call AccordionMode()<CR><C-l>
-nmap <silent> <C-e>l <C-w>l:call AccordionMode()<CR><C-l>
-nmap <silent> <C-e>- :call AccordionMode()<CR><C-l>
-noremap <silent> <C-e><C-e> <C-e>
-function! AccordionMode()
-    set winminheight=0 winheight=9999
-    set winheight=10 winminheight=10
-endfunction
+ "nmap <silent> <C-e>j <C-w>j:call AccordionMode()<CR><C-l>
+ "nmap <silent> <C-e>k <C-w>k:call AccordionMode()<CR><C-l>
+ "nmap <silent> <C-e>h <C-w>h:call AccordionMode()<CR><C-l>
+ "nmap <silent> <C-e>l <C-w>l:call AccordionMode()<CR><C-l>
+ "nmap <silent> <C-e>- :call AccordionMode()<CR><C-l>
+ "noremap <silent> <C-e><C-e> <C-e>
+ "function! AccordionMode()
+     "set winminheight=0 winheight=9999
+     "set winheight=10 winminheight=10
+ "endfunction
 
 " }}}
 " Timestamps: " {{{
@@ -950,6 +951,12 @@ augroup java
 augroup END
 
 " }}}
+" Extradite: " {{{
+augroup Extradite
+    au! FileType extradite set showbreak=⇒\ \ \  wrap
+augroup END
+
+" }}}
 
 "}}}
 " PLUGINS: " {{{
@@ -1094,7 +1101,7 @@ augroup END
 " }}}
 " Vimscript: " {{{
 augroup Vimscript
-    au! FileType vim nmap <buffer> <silent> <C-y>t :echo "Generating vimscript tags..." \| :silent !ctags -f ~/.vim/tags -R --languages=vim ~/.vim/.vimrc ~/.vim/.gvimrc ~/.vim/bundle/*.vim<CR>
+    au! FileType vim nmap <buffer> <silent> <C-y>t :echo "Generating vimscript tags..." \| exe ":silent !ctags -f ~/.vim/tags -R --languages=vim ~/.vim/.vimrc ~/.vim/.gvimrc ~/.vim/bundle/*.vim" \| :echo "Generated vimscript tags."<CR>
 augroup END
 
 " }}}
@@ -1170,7 +1177,7 @@ let python_highlight_all = 1
 " PickAColor: " {{{
 let g:pickacolor_use_web_colors = 1
 " }}}
-" HTML: " {{{
+" HTML: " {{{dd
 let g:no_html_tab_mapping=1
 let g:no_html_toolbar=1
 
@@ -1417,11 +1424,19 @@ let g:fuf_dataDir = '~/swap/.vim-fuf-data'
 "let g:fuf_file_exclude = '\v\~$|\.(o|exe|dll|bak|orig|swp)$|(^|[/\\])\.(hg|git|bzr)($|[/\\])'
 let g:fuf_maxMenuWidth = 150
 map <C-e>e  :FufBuffer<CR>
-map <C-e>f  :FufCoverageFile<CR>
+map <C-e>f  :call RecursiveFileSearch()<CR>
 map <C-e>t  :FufTag<CR>
 map <C-e>v  :call fuf#givenfile#launch('', 0, 'VimFiles>', split(glob('~/.vim/**/*.vim'), "\n"))<CR>
 
 " }}}
+function! RecursiveFileSearch()
+    let bad_paths = '^\(' . expand('~') . '\|' . expand('/') .'\)$'
+    if match(getcwd(), bad_paths) > -1
+        echo printf("Are you kidding? You want to recursively search in '%s'?", getcwd())
+    else
+        FufCoverageFile
+    end
+endf
 
 " }}}
 " EXPERIMENTAL: " {{{
@@ -1440,7 +1455,7 @@ endfunction
 " }}}
 map <Leader>sv :call OpenRelatedSnippetFileInVsplit()<CR>
 function! OpenRelatedSnippetFileInVsplit() " {{{
-    let snippetfile = input("Edit which related sunippet file? ", "", "custom,SnippetFilesForCurrentBuffer")
+    let snippetfile = input("Edit which related snippet file? ", "", "custom,SnippetFilesForCurrentBuffer")
     if filereadable(snippetfile) == 1
         exe ":vsplit " . snippetfile
     endif
