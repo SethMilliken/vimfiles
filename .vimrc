@@ -1,6 +1,4 @@
 " INFO: " {{{
-let g:session_autoload = 1
-let g:session_autosave = 1
 
 " Maintainer:
 "   Seth Milliken <seth_vim@araxia.net>
@@ -29,13 +27,13 @@ let g:session_autosave = 1
 "   - consider: is keeping example .vimrc useful
 "   - consider: add tw setting to .vimrc modeline
 "   - consider: move ft-specific settings to individual files
-"   - consider: :: shortcut worth the : pause? (remember that the pause is essentially only percieved; immediately continuing to type the : command works fine)
 
-"}}}
 " Pathogen: " {{{
 call pathogen#runtime_append_all_bundles()
 call pathogen#helptags()
 " }}}
+
+"}}}
 " DEFAULTS: from example .vimrc " {{{
 " When started as "evim", evim.vim will already have done these settings.
 if v:progname =~? "evim"
@@ -66,7 +64,7 @@ map Q gq
 
 " This is an alternative that also works in block mode, but the deleted
 " text is lost and it only works for putting the current register.
-"vnoremap p "_dp
+vnoremap p "_dp
 
 " Switch syntax highlighting on, when the terminal has colors
 " Also switch on highlighting the last used search pattern.
@@ -105,21 +103,17 @@ endif " has("autocmd")
 "}}}
 " Seth Milliken additions
 " SETTINGS: " {{{
-" au! VimEnter * source ~/.vim/after/plugin/foo.vim " Way to set the latest
-" file that will always be sourced for any file opened.
-set winfixheight                    " keep existing window height when possible
+set encoding=UTF-8                  " use UTF-8 encoding
+set fileencoding=UTF-8              " use UTF-8 encoding as default
 set shortmess+=I                    " don't show intro on start
 set shortmess+=A                    " don't show message on existing swapfile
 set nospell                         " spelling off by default
 set spellcapcheck=off               " ignore case in spellcheck
-set encoding=UTF-8                  " use UTF-8 encoding
-set fileencoding=UTF-8              " use UTF-8 encoding as default
 set nolist                          " don't show invisibles
 set listchars=tab:>-,trail:-        " ...but make them look nice when they do show
 set iskeyword+=-                    " usually do not want - to divide words
 set lbr                             " wrap lines at word breaks
 set noautoindent                    " don't like autoindent
-set number                          " always show line numbers
 set autowrite                       " auto write changes when switching buffers
 set tabstop=8                       " default tab stop width
 set softtabstop=4                   " set a narrow tab width
@@ -131,12 +125,13 @@ set laststatus=2                    " always show the status line
 set diffopt+=vertical               " use vertical splits for diff
 set splitright                      " open vertical splits to the right
 set splitbelow                      " open horizonal splits below
+set winfixheight                    " keep existing window height when possible
 set winminheight=0                  " minimized horizontal splits show only statusline
 set switchbuf=useopen               " when switching to a buffer, go to where it's already open
 set history=10000                   " keep craploads of command history
 set undolevels=500                  " keep lots of undo history
 set foldlevelstart=9                " first level of folds open by default
-set fdm=marker                      " make the default foldmethod markers
+set foldmethod=marker               " use markers for the default foldmethod
 set foldopen+=jump                  " jumps open folds, too
 set display+=lastline               " always show as much of the last line as possible
 set guioptions+=c                   " always use console dialogs (faster)
@@ -144,6 +139,7 @@ set noerrorbells                    " don't need to hear if i hit esc twice
 set visualbell | set t_vb=          " ...nor see it
 set ignorecase                      " case ignored for searches
 set smartcase                       " override ignorecase for searches with uppercase
+set clipboard=unnamed               " share os pasteboard
 
 let mapleader="\\"                  " <Leader>
 
@@ -151,14 +147,18 @@ let mapleader="\\"                  " <Leader>
 "set display+=uhex                  " show unprintable hex characters as <xx>
 "let mapleader="\<Space>"                  " experiment with using <Space> as <Leader>.
 
-if version > 702 | set rnu | exec "au BufReadPost * set rnu" | endif " use relative line numbers
-if version > 702 | set clipboard=unnamed | end " use system clipboard; FIXME: what version is actually required?
+" use relative line numbers if available, otherwise just use line numbers
+exec "au BufReadPost * setl" (version > 702 ? 'rnu' : 'nu')
 
-set wildignore+=*.o,*.sw?,*.git,*.svn,*.hg,**/build,*.?ib,*.png,*.jpg,*.jpeg,*.mov,*.gif,*.bom,*.azw,*.lpr,*.mbp,*.mode1v3,*.gz,*.vmwarevm,*.rtf,*.pkg,*.developerprofile,*.xcodeproj,*.pdf,*.dmg,*.db,*.otf,*.bz2,*.tiff,*.iso,*.jar,*.dat,**/Cache,*.cache,*.sqlite*,*.collection,*.qsindex,*.qsplugin,*.growlTicket,*.part,*.ics,*.ico,**/iPhone\ Simulator,*.lock*,*.webbookmark
+set wildignore+=*.o,*.sw?,*.git,*.svn,*.hg,**/build,*.?ib,*.png,*.jpg,*.jpeg,
+            \*.mov,*.gif,*.bom,*.azw,*.lpr,*.mbp,*.mode1v3,*.gz,*.vmwarevm,
+            \*.rtf,*.pkg,*.developerprofile,*.xcodeproj,*.pdf,*.dmg,
+            \*.db,*.otf,*.bz2,*.tiff,*.iso,*.jar,*.dat,**/Cache,*.cache,
+            \*.sqlite*,*.collection,*.qsindex,*.qsplugin,*.growlTicket,
+            \*.part,*.ics,*.ico,**/iPhone\ Simulator,*.lock*,*.webbookmark
 
 " To transform wildignore into fuf_exclude...
-" s/\*\./\\\./g
-" s/,/|/g
+" s/\*\./\\\./g | s/,/|/g
 let g:fuf_coveragefile_exclude = '\v\~$|\.(o|exe|dll|bak|orig|swp)$|(^|[/\\])\.(hg|git|bzr)($|[/\\])|.gitignore|.DS_Store|.htaccess'
 
 " Tags: universal location
@@ -209,8 +209,6 @@ map Y y$
 inoremap <C-w> <C-g>u<C-w>
 inoremap <C-u> <C-g>u<C-w>
 
-" lcd to file's container
-
 " Extended Navigation
 nmap <C-e>h :bnext<CR>
 nmap <C-e>l :bprev<CR>
@@ -235,27 +233,18 @@ nmap <C-y>s :SnipUp<CR>
 nmap <C-y>S :call feedkeys(":call OpenRelatedSnippetFileInVsplit()\r\<Tab>\<Tab>", 't')<CR>
 nmap <C-y>a :AbbUp<CR>
 nmap <C-y>A :vsplit ~/.vim/plugin/iabbs.vim<CR>
-" Execute current line as ex command
-"map <C-e>x :call feedkeys("yyq:p\r", "n")<CR>
 
 " File path to pasteboard
-map <C-y>f :call FileToPasteboard()<CR>
-map <C-y>F :call FileToPasteboard(line("."))<CR>
+map <Leader>f :call FileToPasteboard()<CR>
+map <Leader>F :call FileToPasteboard(line("."))<CR>
 
 " }}}
 " Utility: word count of current file " {{{
 nmap <silent> <Leader>w :!wc -w %<CR>
 
 " }}}
-" Clipboard: Copy buffer to clipboard " {{{
-" trying 'set clipboard=unnamed' instead; see .gvimrc
-"" map <something>  :%y*<CR>
-
-" }}}
-" Tail: reload buffer from disk and go to end " {{{
-" - FIXME: find a non-conflicting binding
-" - TODO: restrict to certain filetypes, e.g. only .log?
-" nmap <silent> <S-k> :e<CR><Esc>:$<CR>
+" Manual Tail: reload buffer from disk and go to end " {{{
+nmap <silent> <C-e>0 :e<CR>G
 
 " }}}
 " Save Session: " {{{
@@ -263,7 +252,7 @@ nmap <Leader>\ :call CommitSession()<CR>
 
 " }}}
 " Journal: " {{{
-nmap \j :call JournalEntry()<CR>
+nmap <Leader>j :call JournalEntry()<CR>
 command! Journal :call JournalEntry()
 
 " }}}
@@ -293,13 +282,13 @@ nmap <silent> <Leader>q :call FormatSqlStatement()<CR>
 
 " }}}
 " Formatting: Wrap current or immediately preceding word in in <em> tag " {{{
-" Use surround.vim: csw<em>
+" Use surround.vim: csw<em>?
 " nmap <Leader>_ Bi<em><Esc>ea</em>
-
 
 " }}}
 " Completion: show completion preview, without actually completing " {{{
-inoremap <C-p> <C-o>:set completeopt+=menuone<CR>a<C-n><C-p>
+inoremap <C-p> <C-r>=pumvisible() ? "\<lt>Up>" : "\<lt>C-o>:set completeopt+=menuone\<lt>CR>a\<lt>C-n>\<lt>C-p>"<CR>
+inoremap <C-n> <C-r>=pumvisible() ? "\<lt>Down>" : "\<lt>C-o>:set completeopt+=menuone\<lt>CR>a\<lt>C-p>\<lt>C-n>"<CR>
 
 " }}}
 " Help: help help help " {{{
@@ -389,10 +378,10 @@ augroup END
 
 " }}}
 " Cmdline Convenience: " {{{
-nmap <Left>     :<Up>
-nmap <Right>    :<Down>
-nmap <Up>       :<Up>
-nmap <Down>     :<Down>
+map <Left>     /<Up>
+map <Right>    /<Down>
+nmap <Up>      :<Up>
+nmap <Down>    :<Down>
 
 " }}}
 " Accordion Mode: accordion style horizontal split navigation mode " {{{
@@ -1512,6 +1501,8 @@ let g:loaded_vimpreviewtag = 1
 
 " Execute current line as an ex command.
 map <Leader><CR> 0"ty$:<C-r>t<CR>:echo "Executed: " . @t<CR>
+" Execute current line as an ex command (no status to allow echo).
+map <Leader><S-CR> :call feedkeys("yyq:p\r", "n")<CR>
 
 " Automatic Behavior Per MacVim Instance: " {{{
 au GUIEnter * nested call DetectInstance()
@@ -1587,6 +1578,9 @@ highlight def StatusLineUnmodifiable       term=bold,reverse cterm=bold,reverse 
 highlight def StatusLineUnmodifiableNC     term=reverse      cterm=reverse      ctermfg=Grey      gui=reverse      guifg=Grey
 
 " }}}
+
+let g:session_autoload = 1
+let g:session_autosave = 1
 
 " type number then : to get relative range prepopulated in cmdline
 " idem to get relative range prepopulated in cmdline
