@@ -7,21 +7,24 @@ let g:session_autosave = 1
 "   Araxia on #vim irc.freenode.net
 
 " Version:
-" 1.0 " 2010-12-21 17:24:29 PST
+" 1.2 " 2011-05-04 16:34:09 PDT
 
 " Notes:
-"   - I'm deliberately overloading <C-e> and <C-y> for more useful purposes.
-"   - In this file (as in most of my editing), I try to group distinct features in such a way that I can easily use a simple text-object operation on them (vap, yap, etc.).
+"   - I'm deliberately overloading <C-e> and <C-y> for what i consider to be
+"     more useful purposes.
+"   - In this file (as in most of my editing), I try to create distinct groupings
+"     in such a way that I can easily use simple text-object operations
+"     on them (vap, yap, etc.).
 "   - Folds can be quickly selected simply by closing the fold (za) and yanking
-"   the folded line (yy).
+"     the folded line (yy).
 "   - /^""/ indicate intentionally disabled options
 
 " Todo:
+"   - make .vimrc re-source-able without sideeffects (guards around au, maps, etc.)
 "   - Fix <D- conflicts
 "   - clean up SETTINGS; provide better descriptions
 "   - for clarity, replace abbreviated forms of options in all settings
 "   - annotate all line noise, especially statusline
-"   - make .vimrc re-source-able without sideeffects (guards around au, maps, etc.)
 "   - create keybindings for new location list fold header navigation mechanism
 "   - consider: is keeping example .vimrc useful
 "   - consider: add tw setting to .vimrc modeline
@@ -229,6 +232,9 @@ imap <C-y>v <Esc> :call ReloadVimrc()<CR> \| :echo "Resourced .vimrc."<CR>
 nmap <C-y>v :call ReloadVimrc()<CR> \| :echo "Resourced .vimrc."<CR>
 " Reload snippets
 nmap <C-y>s :SnipUp<CR>
+nmap <C-y>S :call feedkeys(":call OpenRelatedSnippetFileInVsplit()\r\<Tab>\<Tab>", 't')<CR>
+nmap <C-y>a :AbbUp<CR>
+nmap <C-y>A :vsplit ~/.vim/plugin/iabbs.vim<CR>
 " Execute current line as ex command
 "map <C-e>x :call feedkeys("yyq:p\r", "n")<CR>
 
@@ -380,6 +386,9 @@ augroup END
 " nmap <Right>  :echo "You should have typed l instead."<CR>
 " nmap <Up>     :echo "You should have typed k instead."<CR>
 " nmap <Down>   :echo "You should have typed j instead."<CR>
+
+" }}}
+" Cmdline Convenience: " {{{
 nmap <Left>     :<Up>
 nmap <Right>    :<Down>
 nmap <Up>       :<Up>
@@ -1053,7 +1062,7 @@ function! ScratchCopy()
 endfunction
 
 function! ScratchPaste()
-    normal ggVGo
+    "normal ggVGo
     return
     if &modified == 1
         silent write
@@ -1066,7 +1075,7 @@ command! -nargs=* -complete=custom,EmailAddressList Cc call EmitEmailAddress("Cc
 command! -nargs=* Sub call InsertLine("Subject: " . <q-args>)
 
 augroup VolatileScratch
-    " au! BufRead *.scratch call SmallWindow()
+    au! BufRead *.scratch call SmallWindow()
     au! BufRead *.scratch nmap <buffer> <silent> <C-m> :call SmallWindow()<CR>
     au BufRead *.scratch nmap <buffer> <silent> <C-y>g :exec "set lines=999 columns=" . (g:gundo_width + &columns) \| :GundoToggle<CR>
     au BufRead *.scratch nmap <buffer> <silent> ZZ :wa \| :call ScratchCopy()<CR> \| :macaction hide:<CR>
@@ -1115,6 +1124,7 @@ augroup END
 augroup VimperatorYPentadactyl
     au! BufRead vimperator-*,pentadactyl-* nmap <buffer> <silent> ZZ :call FormFieldArchive() \| :silent write \| :bd \| :macaction hide:<CR>
     au BufRead vimperator-*,pentadactyl-* imap <buffer> <silent> ZZ <Esc>ZZ
+    au BufRead vimperator-*,pentadactyl-* :macaction unhide:
 augroup END
 
 " }}}
@@ -1234,6 +1244,14 @@ function! UpdateSnippetsForBuffer()
 endfunction
 
 " }}}
+" AbbUp: " {{{
+command! -nargs=0 AbbUp call AbbUp()
+function! AbbUp()
+    so ~/.vim/plugin/iabbs.vim
+    echo "Abbreviations updated."
+endfunction
+
+" }}}
 " Todo Lists: " {{{
 augroup todolist
     au! BufReadPost,FileReadPost *todo*,*list* doau FileType tst
@@ -1330,14 +1348,12 @@ augroup RefreshBundles
     au BufRead *refresh_bundles.sh map <buffer> K :call AddNewRefreshBundleEntry()<CR>
 augroup END
 
-" }}}
 function! AddNewRefreshBundleEntry() " {{{
     let repo = Strip(@*)
     if match(repo, ".git$") == -1
         echo "Is there a git repo URL on the pasteboard?"
         return 0
     end
-"/Users/seth/.vim/bundle/refresh_bundles.sh
     let parsed_name = substitute(split(repo, '/')[-1], '\.vim\|\.git', '', 'g')
     let new_entry = printf("%-10s %-20s %s", "refresh", parsed_name, repo)
     let exists = search(repo, 'nw') ? "possible duplicate" : "new"
@@ -1347,6 +1363,7 @@ function! AddNewRefreshBundleEntry() " {{{
     echo printf("Added %s entry for '%s'", exists, parsed_name)
 endfunction
 
+" }}}
 " }}}
 " TOhtml: " {{{
 let html_dynamic_folds = 1
@@ -1393,12 +1410,8 @@ command! JanrainAbbreviations call JanrainAbbreviations()
 function! JanrainAbbreviations() " {{{
     iabb pr provider
     iabb sp social publishing
-    iabb oid OpenID
-    iabb oa OAuth
     iabb apis APIs
     iabb im implementation
-    iabb oso OpenSocial
-    iabb hr =><Space>
 endfunction
 
 " }}}
@@ -1428,8 +1441,7 @@ map <C-e>f  :call RecursiveFileSearch()<CR>
 map <C-e>t  :FufTag<CR>
 map <C-e>v  :call fuf#givenfile#launch('', 0, 'VimFiles>', split(glob('~/.vim/**/*.vim'), "\n"))<CR>
 
-" }}}
-function! RecursiveFileSearch()
+function! RecursiveFileSearch() " {{{
     let bad_paths = '^\(' . expand('~') . '\|' . expand('/') .'\)$'
     if match(getcwd(), bad_paths) > -1
         echo printf("Are you kidding? You want to recursively search in '%s'?", getcwd())
@@ -1438,6 +1450,7 @@ function! RecursiveFileSearch()
     end
 endf
 
+" }}}
 " }}}
 " EXPERIMENTAL: " {{{
 
@@ -1453,7 +1466,6 @@ function! SnippetFilesForCurrentBuffer(A,L,P) " {{{
 endfunction
 
 " }}}
-map <Leader>sv :call OpenRelatedSnippetFileInVsplit()<CR>
 function! OpenRelatedSnippetFileInVsplit() " {{{
     let snippetfile = input("Edit which related snippet file? ", "", "custom,SnippetFilesForCurrentBuffer")
     if filereadable(snippetfile) == 1
@@ -1485,12 +1497,6 @@ endfunction
 
 " }}}
 
-" Raimondi's stagnant mailapp plugin " {{{
-let g:MailApp_bundle = '~/.vim/bundle/MailApp/MailApp.bundle/'
-let g:MailAppl_from = 'Seth Milliken <seth@araxia.net>'
-
-" }}}
-
 " Vim-addon-manager: " {{{
 command! -nargs=1 PluginInstall call PluginInstall(<q-args>)
 function! PluginInstall(plugin)
@@ -1504,17 +1510,59 @@ let g:loaded_vimpreviewtag = 1
 
 " }}}
 
+" Execute current line as an ex command.
 map <Leader><CR> 0"ty$:<C-r>t<CR>:echo "Executed: " . @t<CR>
 
+" Automatic Behavior Per MacVim Instance: " {{{
+au GUIEnter * nested call DetectInstance()
+function! DetectInstance() " {{{
+    if match($VIMRUNTIME, "VimHelp.app") > -1
+        help help
+    elseif match($VIMRUNTIME, "MacVim.app") > -1
+        silent! edit ~/.vim/.vimrc
+        vsplit ~/.vim/.gvimrc
+        silent :!echo foo
+    elseif match($VIMRUNTIME, "Scratch.app") > -1
+        silent! edit ~/.vim/swap/scratch.scratch
+        call SmallWindow()
+    elseif match($VIMRUNTIME, "Tasks.app") > -1
+        "silent! edit ~/sandbox/personal/todo/personal.tst.txt
+        "silent! edit ~/sandbox/personal/todo/laboratory.tst.txt
+        silent! edit ~/sandbox/work/janrain.tst.txt
+        silent! call AdjustFont(-4)
+        winsize 120 100
+        normal ggzo
+    else
+        help split
+    endif
+endfunction
+
+" }}}
+" }}}
+
 " Toggle number column: " {{{
-" <A-1> to toggle between nu and rnu
+" <C-e>1 to toggle between nu and rnu
 if exists('+relativenumber')
-  nnoremap <expr> ¡ ToggleNumberDisplay()
-  xnoremap <expr> ¡ ToggleNumberDisplay()
-  onoremap <expr> ¡ ToggleNumberDisplay()
+  nnoremap <expr> <C-e>1 ToggleNumberDisplay()
+  xnoremap <expr> <C-e>1 ToggleNumberDisplay()
+  onoremap <expr> <C-e>1 ToggleNumberDisplay()
 
   function! ToggleNumberDisplay()
-      if &l:nu | setlocal rnu | else | setlocal nu | endif | redraw
+      exe "setl" &l:nu ? "rnu" : "nu" | redraw
+  endfunction
+
+endif
+
+" }}}
+" Toggle List: " {{{
+" <C-e>2 to toggle between list and nolist
+if exists('+relativenumber')
+  nnoremap <expr> <C-e>2 ToggleListDisplay()
+  xnoremap <expr> <C-e>2 ToggleListDisplay()
+  onoremap <expr> <C-e>2 ToggleListDisplay()
+
+  function! ToggleListDisplay()
+      exe "setl" &l:list? "nolist" : "list"
   endfunction
 
 endif
@@ -1526,9 +1574,22 @@ if !exists(":DiffOrig")
 endif
 
 " }}}
+" StatusLineHighlight: " {{{
+highlight def StatusLineModified           term=bold,reverse cterm=bold,reverse ctermfg=DarkRed   gui=bold,reverse guifg=DarkRed
+highlight def StatusLineModifiedNC         term=reverse      cterm=reverse      ctermfg=LightRed  gui=reverse      guifg=LightRed
+highlight def StatusLinePreview            term=bold,reverse cterm=bold,reverse ctermfg=Blue      gui=bold,reverse guifg=Blue
+highlight def StatusLinePreviewNC          term=reverse      cterm=reverse      ctermfg=Blue      gui=reverse      guifg=Blue
+highlight def StatusLineReadonly           term=bold,reverse cterm=bold,reverse ctermfg=Grey      gui=bold,reverse guifg=DarkGrey
+highlight def StatusLineReadonlyNC         term=reverse      cterm=reverse      ctermfg=Grey      gui=reverse      guifg=DarkGrey
+highlight def StatusLineSpecial            term=bold,reverse cterm=bold,reverse ctermfg=DarkGreen gui=bold,reverse guifg=DarkGreen
+highlight def StatusLineSpecialNC          term=reverse      cterm=reverse      ctermfg=DarkGreen gui=reverse      guifg=DarkGreen
+highlight def StatusLineUnmodifiable       term=bold,reverse cterm=bold,reverse ctermfg=Grey      gui=bold,reverse guifg=Grey
+highlight def StatusLineUnmodifiableNC     term=reverse      cterm=reverse      ctermfg=Grey      gui=reverse      guifg=Grey
+
+" }}}
 
 " type number then : to get relative range prepopulated in cmdline
-" new vocab word "idem" to get relative range prepopulated in cmdline
+" idem to get relative range prepopulated in cmdline
 " . as range, e.g. :.w >> foo
 " can @ take a range?
 
