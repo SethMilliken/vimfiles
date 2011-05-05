@@ -199,8 +199,8 @@ vmap <BS> :normal gv"_x<CR>
 vmap dC :normal gv"_xP<CR>
 nnoremap dd :normal! dd<CR>
 nnoremap d<Space> :normal! d<CR>
-nnoremap <Leader>p :call AppendLine(getreg("*"), "below")<CR>
-nnoremap <Leader>P :call AppendLine(getreg("*"), "above")<CR>
+nnoremap <Leader>p :call text#append_line(getreg("*"), "below")<CR>
+nnoremap <Leader>P :call text#append_line(getreg("*"), "above")<CR>
 
 " sane-itize Y
 map Y y$
@@ -226,8 +226,8 @@ imap <silent> <C-L> <Esc><C-L>a
 " }}}
 " Custom: <C-y> prefixed custom commands " {{{
 " Reload .vimrc
-imap <C-y>v <Esc> :call ReloadVimrc()<CR> \| :echo "Resourced .vimrc."<CR>
-nmap <C-y>v :call ReloadVimrc()<CR> \| :echo "Resourced .vimrc."<CR>
+imap <C-y>v <Esc><C-y>v
+nmap <C-y>v :call ReloadVimrc()<CR>
 " Reload snippets
 nmap <C-y>s :SnipUp<CR>
 nmap <C-y>S :call feedkeys(":call OpenRelatedSnippetFileInVsplit()\r\<Tab>\<Tab>", 't')<CR>
@@ -454,7 +454,7 @@ function! HeaderLocationIndex() "{{{
     let l:incoming = input("Go To Header: ")
     lgetexpr "" " Clear the location list
     exe "set errorformat=%l:%f:%m"
-    let l:rawcommentstring = escape((StripFront(CommentStringOpen() . CommentStringClose())), "\"")
+    let l:rawcommentstring = escape((text#strip_front(CommentStringOpen() . CommentStringClose())), "\"")
     exe "let l:commentstring = " .  EscapeShiftUp("l:rawcommentstring")
     let l:rawexpression = '\\(.*' . l:incoming . '\\c.*\\) ' . FoldMarkerOpen()
     " let l:rawexpression = '\\([ [:upper:]]*\\) ' . FoldMarkerOpen() " MAJOR header
@@ -626,7 +626,7 @@ endfunction
 function! CommentedFoldMarkerClose() "{{{
     let fcms = CommentStringFull()
     let rawclosemarker = substitute(fcms, '%s', FoldMarkerClose(), 'g')
-    return StripFront(rawclosemarker)
+    return text#strip_front(rawclosemarker)
 endfunction
 
 "}}}
@@ -643,7 +643,7 @@ endfunction
 
 "}}}
 function! ExpandedCommentString() "{{{
-    return StripFront(substitute(CommentStringFull(), "%s", "", ""))
+    return text#strip_front(substitute(CommentStringFull(), "%s", "", ""))
 endfunction
 
 "}}}
@@ -683,9 +683,13 @@ endfunction
 
 " Specialized:
 if !exists("g:reloadvim_function_loaded") " {{{
+    " unlet g:reloadvim_function_loaded
     function! ReloadVimrc()
-        write
-        source ~/.vimrc
+        silent update
+        silent source ~/.vimrc
+        silent edit
+        redraw
+        echo "Resourced .vimrc."
     endfunction
     let g:reloadvim_function_loaded = ""
 end
@@ -1270,7 +1274,7 @@ augroup RefreshBundles
 augroup END
 
 function! AddNewRefreshBundleEntry() " {{{
-    let repo = Strip(@*)
+    let repo = text#strip(@*)
     if match(repo, ".git$") == -1
         echo "Is there a git repo URL on the pasteboard?"
         return 0
@@ -1373,6 +1377,7 @@ endf
 
 " }}}
 " }}}
+" }}}
 " EXPERIMENTAL: " {{{
 
 function! SnippetFilesForCurrentBuffer(A,L,P) " {{{
@@ -1437,26 +1442,28 @@ map <Leader><CR> 0"ty$:<C-r>t<CR>:echo "Executed: " . @t<CR>
 map <Leader><S-CR> :call feedkeys("yyq:p\r", "n")<CR>
 
 " Automatic Behavior Per MacVim Instance: " {{{
-au GUIEnter * nested call DetectInstance()
+augroup Startup
+    au! GUIEnter * nested silent! call DetectInstance()
+augroup END
 function! DetectInstance() " {{{
     if match($VIMRUNTIME, "VimHelp.app") > -1
         help help
     elseif match($VIMRUNTIME, "MacVim.app") > -1
-        silent! edit ~/.vim/.vimrc
-        vsplit ~/.vim/.gvimrc
-        silent :!echo foo
+        call AdjustFont(-2)
+        edit ~/.vim/.vimrc
+        vsplit ~/.vim/.gvimrc | wincmd t | wincmd =
     elseif match($VIMRUNTIME, "Scratch.app") > -1
-        silent! edit ~/.vim/swap/scratch.scratch
+        edit ~/.vim/swap/scratch.scratch
         call SmallWindow()
     elseif match($VIMRUNTIME, "Tasks.app") > -1
-        "silent! edit ~/sandbox/personal/todo/personal.tst.txt
-        "silent! edit ~/sandbox/personal/todo/laboratory.tst.txt
-        silent! edit ~/sandbox/work/janrain.tst.txt
-        silent! call AdjustFont(-4)
+        edit ~/sandbox/personal/todo/personal.tst.txt
+        edit ~/sandbox/personal/todo/laboratory.tst.txt
+        edit ~/sandbox/work/janrain.tst.txt
+        call AdjustFont(-2)
         winsize 120 100
         normal ggzo
-    else
-        help split
+    " else
+    "    help split
     endif
 endfunction
 
@@ -1511,8 +1518,8 @@ highlight def StatusLineUnmodifiableNC     term=reverse      cterm=reverse      
 
 " }}}
 
-let g:session_autoload = 1
-let g:session_autosave = 1
+" let g:session_autoload = 1
+" let g:session_autosave = 1
 
 " type number then : to get relative range prepopulated in cmdline
 " idem to get relative range prepopulated in cmdline
