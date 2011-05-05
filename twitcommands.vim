@@ -7,6 +7,7 @@ let twitvim_api_root = "https://api.twitter.com/1"
 let twitvim_enable_python = 1
 let twitvim_count = 25
 let twitvim_count = 200
+let twitvim_count = 100
 40wincmd  |
 " }}}
 
