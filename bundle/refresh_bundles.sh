@@ -89,3 +89,4 @@ refresh    vim-ragtag           git://github.com/tpope/vim-ragtag.git
 refresh    vim-ruby             git://github.com/vim-ruby/vim-ruby.git
 refresh    vimwiki              git://github.com/vim-scripts/vimwiki.git
 refresh    xml                  git://github.com/vim-scripts/xml.vim.git
+refresh    vundle               git://github.com/vim-scripts/vundle.git

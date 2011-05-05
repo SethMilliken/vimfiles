@@ -5,32 +5,32 @@ snippet header
 	${4:" Last Modified: `strftime("%B %d, %Y")`}
 snippet guard
 	if exists('${1:did_`Filename()`}') || &cp${2: || version < 700}
-		finish
+	    finish
 	endif
 	let $1 = 1${3}
 snippet f
 	function! ${1:function_name}(${2})`CommentedFoldMarkerOpen()`
-		${3:" code}
+	    ${3}
 	endfunction
-
-        `CommentedFoldMarkerClose()`
+	
+	`CommentedFoldMarkerClose()`
 snippet for
 	for ${1:needle} in ${2:haystack}
-		${3:" code}
+	    ${3:" code}
 	endfor
 snippet while
 	while ${1:condition}
-		${2:" code}
+	    ${2:" code}
 	endwhile
 snippet if
 	if ${1:condition}
-		${2:" code}
+	    ${2:" code}
 	endif
 snippet ife
 	if ${1:condition}
-		${2}
+	    ${2}
 	else
-		${3}
+	    ${3}
 	endif
 
 snippet class An vimscript OOP prototype-based object
@@ -38,20 +38,20 @@ snippet class An vimscript OOP prototype-based object
 	let s:$1 = {}
 	" constructor
 	function! s:$1.New() " {{{
-		let new$1 = copy(self)
-		let new$1.${2:fieldname} = []  
-		return new$1
+	    let new$1 = copy(self)
+	    let new$1.${2:fieldname} = []
+	    return new$1
 	endfunction " }}}
-	" functions 
+	" functions
 	function! s:$1.${3:functionName}(${4:argument}) " {{{
-		call add(self.$2, a:$4)
-		${5:your code here}
+	    call add(self.$2, a:$4)
+	    ${5:your code here}
 	endfunction " }}}
 	" $1 }}}
 
 snippet method A vimscript OOP prototype-based object method
 	function! s:${1}.${2:functionName}(${3:argument}) " {{{
-		${4:your code here}
+	    ${4:your code here}
 	endfunction " }}}
 
 snippet sfu Object public function
@@ -74,3 +74,13 @@ snippet gl. Get current line
 	getline(".")
 snippet l. Get current line
 	line(".")
+snippet com
+	command! ${1:commandname} ${2:rhs}
+snippet comfun
+	" ${1:CommandName}: " {{{
+	command! -nargs=${2:01*?+} $1 call $1(<q-args>)
+	function! $1(args)
+	    ${3}
+	endfunction
+	
+	" }}}
