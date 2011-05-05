@@ -700,7 +700,7 @@ function! TaskstackMain() " {{{
     if FindNode(s:main_node_name) == 0
         normal gg
         if len(getline(".")) == 0
-            call AppendText(s:main_node_name)
+            call text#append(s:main_node_name)
         else
             exe "normal O" . s:main_node_name
         end
@@ -763,7 +763,7 @@ function! TaskstackDate() "{{{
                 call TaskstackDates()
         call append(line("."), [""])
         normal j
-        call AppendText(l:currentdate)
+        call text#append(l:currentdate)
         call FoldWrap()
         " normal zMzo
         " silent! call TaskstackMain()
@@ -893,7 +893,7 @@ function! MoveItemToDateNode(text, status) "{{{
     let l:itemnostatus = substitute(a:text, '^\s*. ', '', 'g')
     let l:result = printf("%s [%s] %s%s", a:status, timestamp#text('short'), l:enclosing_project, l:itemnostatus)
     let l:toappend = [l:result]
-    if LineIsWhiteSpace(getline("."))
+    if text#line_is_whitespace(getline("."))
         call append(line(".") - 1, l:toappend)
     else
         call insert(l:toappend, "", len(l:toappend))
@@ -1066,7 +1066,7 @@ endfunction
 
 " }}}
 function! IsAntiItem() " {{{
-    let boundaryMatches = "^" . Strip(CommentStringOpen()) . "\\s*\\w*\\s*\[}{]"
+    let boundaryMatches = "^" . text#strip(CommentStringOpen()) . "\\s*\\w*\\s*\[}{]"
     return match(getline("."), boundaryMatches . "\\|" . "^$") + 1
 endfunction
 

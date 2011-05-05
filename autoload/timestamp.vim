@@ -1,6 +1,6 @@
 " Timestamp Functions
 function! timestamp#insert(style) "{{{
-    call AppendText(timestamp#text(a:style) . " ")
+    call text#append(timestamp#text(a:style) . " ")
 endfunction
 
 " }}}
@@ -50,9 +50,9 @@ function! timestamp#addOrUpdateSolicitingAnnotation() "{{{
         if len(l:originalannotations) > 0
             let l:default_prompt = l:originalannotations
         end
-        let l:annotation = input("Annotation: ", Strip(l:default_prompt))
+        let l:annotation = input("Annotation: ", text#strip(l:default_prompt))
         if len(l:annotation) > 0
-            call timestamp#addOrUpdate(Strip(l:annotation), "force")
+            call timestamp#addOrUpdate(text#strip(l:annotation), "force")
         else
             if len(l:originalannotations) > 0
                 silent! call timestamp#remove()
@@ -78,12 +78,12 @@ function! timestamp#addOrUpdate(annotation,...) "{{{
             let l:origpos = getpos(".")
             let l:hasbasictimestamp = match(getline("."), timestamp#pattern())
             let l:annotation = len(a:annotation) > 0 ? '{' . a:annotation . '}' : ""
-            let l:newtimestamp = StripEnd(substitute(CommentStringFull(), "%s", timestamp#text("short") . " " . l:annotation, ""))
+            let l:newtimestamp = text#strip_end(substitute(CommentStringFull(), "%s", timestamp#text("short") . " " . l:annotation, ""))
             silent! undojoin
             if l:hasbasictimestamp > 0
                 call setline(".", substitute(getline("."), timestamp#annotatedPattern(), l:newtimestamp, ""))
             else
-                call AppendText(l:newtimestamp)
+                call text#append(l:newtimestamp)
             end
             call setpos('.', l:origpos)
             if !l:bufferdirty | write | end
@@ -109,7 +109,7 @@ function! timestamp#isUpdateOkay(line) "{{{
     elseif match(a:line, "^x\\s\\|^o\\s\\|\\sx\\s\\|\\so\\s") > -1
         echo "No autotimestamp: line contains completed marker."
         return 0
-    elseif len(Strip(CommentStringOpen())) > 0 && match(a:line, "^" . CommentStringOpen()) > -1
+    elseif len(text#strip(CommentStringOpen())) > 0 && match(a:line, "^" . CommentStringOpen()) > -1
         echo "No autotimestamp: commented line"
         return 0
     else

@@ -235,8 +235,8 @@ nmap <C-y>a :AbbUp<CR>
 nmap <C-y>A :vsplit ~/.vim/plugin/iabbs.vim<CR>
 
 " File path to pasteboard
-map <Leader>f :call FileToPasteboard()<CR>
-map <Leader>F :call FileToPasteboard(line("."))<CR>
+map <Leader>f :call text#file_to_pasteboard()<CR>
+map <Leader>F :call text#file_to_pasteboard(line("."))<CR>
 
 " }}}
 " Utility: word count of current file " {{{
@@ -502,74 +502,6 @@ endfunction
 
 " }}}
 
-" Text: tools
-function! AppendText(text) "{{{
-    let l:originalline = getline(".")
-    if LineIsWhiteSpace(getline("."))
-        call InsertLine(a:text)
-    else
-        call append(line("."),[a:text])
-        normal J$
-    endif
-endfunction
-
-"}}}
-function! InsertLine(text) "{{{
-    if LineIsWhiteSpace(getline("."))
-        call setline(line("."),[a:text])
-    else
-        call append(line(".") - 1,[a:text])
-    end
-endfunction
-
-"}}}
-function! AppendLine(text, direction) "{{{
-    echo a:direction
-    if a:direction == "above"
-        let where = 1
-    else
-        let where = 0
-    end
-    call append(line(".") - where,[a:text])
-endfunction
-
-"}}}
-function! InsertAnnotation(label, line) "{{{
-    let result = printf("[ %s: %s ]", a:label, timestamp#text("short"))
-    call append(a:line, result)
-endfunction
-
-"}}}
-function! LineIsWhiteSpace(line) "{{{
-    return a:line =~ '^\s*$'
-endfunction
-
-"}}}
-function! Strip(string) "{{{
-    return StripFront(StripEnd(a:string))
-endfunction
-
-"}}}
-function! StripEnd(string) "{{{
-    return substitute(a:string, "[[:space:]]*$", "", "")
-endfunction
-
-"}}}
-function! StripFront(string) "{{{
-    return substitute(a:string, "^[[:space:]]*", "", "")
-endfunction
-
-"}}}
-function! FileToPasteboard(...) "{{{
-    let appendtext = ""
-    if len(a:000) > 0
-        let appendtext = ":" . a:000[0]
-    end
-    call setreg('*', expand('%r') . appendtext)
-    echo "Pasteboard: \"" . @* . "\""
-endfunction
-
-"}}}
 
 " Folds: manipulation
 function! FindNode(label) "{{{
