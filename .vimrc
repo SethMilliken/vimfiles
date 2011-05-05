@@ -1455,6 +1455,8 @@ function! DetectInstance() " {{{
     elseif match($VIMRUNTIME, "Scratch.app") > -1
         edit ~/.vim/swap/scratch.scratch
         call SmallWindow()
+    elseif match($VIMRUNTIME, "VimWiki.app") > -1
+        exe "normal \<Leader>ww"
     elseif match($VIMRUNTIME, "Tasks.app") > -1
         edit ~/sandbox/personal/todo/personal.tst.txt
         edit ~/sandbox/personal/todo/laboratory.tst.txt
