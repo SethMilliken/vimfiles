@@ -1,38 +1,39 @@
 " INFO: " {{{
-let g:session_autoload = 1
-let g:session_autosave = 1
 
 " Maintainer:
 "   Seth Milliken <seth_vim@araxia.net>
 "   Araxia on #vim irc.freenode.net
 
 " Version:
-" 1.0 " 2010-12-21 17:24:29 PST
+" 1.2 " 2011-05-04 16:34:09 PDT
 
 " Notes:
-"   - I'm deliberately overloading <C-e> and <C-y> for more useful purposes.
-"   - In this file (as in most of my editing), I try to group distinct features in such a way that I can easily use a simple text-object operation on them (vap, yap, etc.).
+"   - I'm deliberately overloading <C-e> and <C-y> for what i consider to be
+"     more useful purposes.
+"   - In this file (as in most of my editing), I try to create distinct groupings
+"     in such a way that I can easily use simple text-object operations
+"     on them (vap, yap, etc.).
 "   - Folds can be quickly selected simply by closing the fold (za) and yanking
-"   the folded line (yy).
+"     the folded line (yy).
 "   - /^""/ indicate intentionally disabled options
 
 " Todo:
+"   - make .vimrc re-source-able without sideeffects (guards around au, maps, etc.)
 "   - Fix <D- conflicts
 "   - clean up SETTINGS; provide better descriptions
 "   - for clarity, replace abbreviated forms of options in all settings
 "   - annotate all line noise, especially statusline
-"   - make .vimrc re-source-able without sideeffects (guards around au, maps, etc.)
 "   - create keybindings for new location list fold header navigation mechanism
 "   - consider: is keeping example .vimrc useful
 "   - consider: add tw setting to .vimrc modeline
 "   - consider: move ft-specific settings to individual files
-"   - consider: :: shortcut worth the : pause? (remember that the pause is essentially only percieved; immediately continuing to type the : command works fine)
 
-"}}}
 " Pathogen: " {{{
 call pathogen#runtime_append_all_bundles()
 call pathogen#helptags()
 " }}}
+
+"}}}
 " DEFAULTS: from example .vimrc " {{{
 " When started as "evim", evim.vim will already have done these settings.
 if v:progname =~? "evim"
@@ -63,7 +64,7 @@ map Q gq
 
 " This is an alternative that also works in block mode, but the deleted
 " text is lost and it only works for putting the current register.
-"vnoremap p "_dp
+vnoremap p "_dp
 
 " Switch syntax highlighting on, when the terminal has colors
 " Also switch on highlighting the last used search pattern.
@@ -102,21 +103,17 @@ endif " has("autocmd")
 "}}}
 " Seth Milliken additions
 " SETTINGS: " {{{
-" au! VimEnter * source ~/.vim/after/plugin/foo.vim " Way to set the latest
-" file that will always be sourced for any file opened.
-set winfixheight                    " keep existing window height when possible
+set encoding=UTF-8                  " use UTF-8 encoding
+set fileencoding=UTF-8              " use UTF-8 encoding as default
 set shortmess+=I                    " don't show intro on start
 set shortmess+=A                    " don't show message on existing swapfile
 set nospell                         " spelling off by default
 set spellcapcheck=off               " ignore case in spellcheck
-set encoding=UTF-8                  " use UTF-8 encoding
-set fileencoding=UTF-8              " use UTF-8 encoding as default
 set nolist                          " don't show invisibles
 set listchars=tab:>-,trail:-        " ...but make them look nice when they do show
 set iskeyword+=-                    " usually do not want - to divide words
 set lbr                             " wrap lines at word breaks
 set noautoindent                    " don't like autoindent
-set number                          " always show line numbers
 set autowrite                       " auto write changes when switching buffers
 set tabstop=8                       " default tab stop width
 set softtabstop=4                   " set a narrow tab width
@@ -128,12 +125,13 @@ set laststatus=2                    " always show the status line
 set diffopt+=vertical               " use vertical splits for diff
 set splitright                      " open vertical splits to the right
 set splitbelow                      " open horizonal splits below
+set winfixheight                    " keep existing window height when possible
 set winminheight=0                  " minimized horizontal splits show only statusline
 set switchbuf=useopen               " when switching to a buffer, go to where it's already open
 set history=10000                   " keep craploads of command history
 set undolevels=500                  " keep lots of undo history
 set foldlevelstart=9                " first level of folds open by default
-set fdm=marker                      " make the default foldmethod markers
+set foldmethod=marker               " use markers for the default foldmethod
 set foldopen+=jump                  " jumps open folds, too
 set display+=lastline               " always show as much of the last line as possible
 set guioptions+=c                   " always use console dialogs (faster)
@@ -141,6 +139,7 @@ set noerrorbells                    " don't need to hear if i hit esc twice
 set visualbell | set t_vb=          " ...nor see it
 set ignorecase                      " case ignored for searches
 set smartcase                       " override ignorecase for searches with uppercase
+set clipboard=unnamed               " share os pasteboard
 
 let mapleader="\\"                  " <Leader>
 
@@ -148,14 +147,18 @@ let mapleader="\\"                  " <Leader>
 "set display+=uhex                  " show unprintable hex characters as <xx>
 "let mapleader="\<Space>"                  " experiment with using <Space> as <Leader>.
 
-if version > 702 | set rnu | exec "au BufReadPost * set rnu" | endif " use relative line numbers
-if version > 702 | set clipboard=unnamed | end " use system clipboard; FIXME: what version is actually required?
+" use relative line numbers if available, otherwise just use line numbers
+exec "au BufReadPost * setl" (version > 702 ? 'rnu' : 'nu')
 
-set wildignore+=*.o,*.sw?,*.git,*.svn,*.hg,**/build,*.?ib,*.png,*.jpg,*.jpeg,*.mov,*.gif,*.bom,*.azw,*.lpr,*.mbp,*.mode1v3,*.gz,*.vmwarevm,*.rtf,*.pkg,*.developerprofile,*.xcodeproj,*.pdf,*.dmg,*.db,*.otf,*.bz2,*.tiff,*.iso,*.jar,*.dat,**/Cache,*.cache,*.sqlite*,*.collection,*.qsindex,*.qsplugin,*.growlTicket,*.part,*.ics,*.ico,**/iPhone\ Simulator,*.lock*,*.webbookmark
+set wildignore+=*.o,*.sw?,*.git,*.svn,*.hg,**/build,*.?ib,*.png,*.jpg,*.jpeg,
+            \*.mov,*.gif,*.bom,*.azw,*.lpr,*.mbp,*.mode1v3,*.gz,*.vmwarevm,
+            \*.rtf,*.pkg,*.developerprofile,*.xcodeproj,*.pdf,*.dmg,
+            \*.db,*.otf,*.bz2,*.tiff,*.iso,*.jar,*.dat,**/Cache,*.cache,
+            \*.sqlite*,*.collection,*.qsindex,*.qsplugin,*.growlTicket,
+            \*.part,*.ics,*.ico,**/iPhone\ Simulator,*.lock*,*.webbookmark
 
 " To transform wildignore into fuf_exclude...
-" s/\*\./\\\./g
-" s/,/|/g
+" s/\*\./\\\./g | s/,/|/g
 let g:fuf_coveragefile_exclude = '\v\~$|\.(o|exe|dll|bak|orig|swp)$|(^|[/\\])\.(hg|git|bzr)($|[/\\])|.gitignore|.DS_Store|.htaccess'
 
 " Tags: universal location
@@ -206,8 +209,11 @@ map Y y$
 inoremap <C-w> <C-g>u<C-w>
 inoremap <C-u> <C-g>u<C-w>
 
-" lcd to file's container
-nmap <C-e>c :exec ":lcd " . expand("%:p:h") \| echo "cwd now: " . getcwd()<CR>
+" Extended Navigation
+nmap <C-e>h :bnext<CR>
+nmap <C-e>l :bprev<CR>
+nmap <C-e>j :exec ":lcd " . expand("%:p:h") \| echo "cwd now: " . getcwd()<CR>
+nmap <C-e>k :exec ":lcd .." \| echo "cwd now: " . getcwd()<CR>
 
 " tmux copy/paste issue in mac os x workaround
 nmap <C-x>p :call system("ssh localhost pbcopy", getreg('"')) \| echo "Copied default register to pasteboard."<CR>
@@ -224,26 +230,21 @@ imap <C-y>v <Esc> :call ReloadVimrc()<CR> \| :echo "Resourced .vimrc."<CR>
 nmap <C-y>v :call ReloadVimrc()<CR> \| :echo "Resourced .vimrc."<CR>
 " Reload snippets
 nmap <C-y>s :SnipUp<CR>
-" Execute current line as ex command
-map <C-e>x :call feedkeys("yyq:p\r", "n")<CR>
+nmap <C-y>S :call feedkeys(":call OpenRelatedSnippetFileInVsplit()\r\<Tab>\<Tab>", 't')<CR>
+nmap <C-y>a :AbbUp<CR>
+nmap <C-y>A :vsplit ~/.vim/plugin/iabbs.vim<CR>
+
 " File path to pasteboard
-map <C-y>f :call FileToPasteboard()<CR>
-map <C-y>F :call FileToPasteboard(line("."))<CR>
+map <Leader>f :call FileToPasteboard()<CR>
+map <Leader>F :call FileToPasteboard(line("."))<CR>
 
 " }}}
 " Utility: word count of current file " {{{
 nmap <silent> <Leader>w :!wc -w %<CR>
 
 " }}}
-" Clipboard: Copy buffer to clipboard " {{{
-" trying 'set clipboard=unnamed' instead; see .gvimrc
-"" map <something>  :%y*<CR>
-
-" }}}
-" Tail: reload buffer from disk and go to end " {{{
-" - FIXME: find a non-conflicting binding
-" - TODO: restrict to certain filetypes, e.g. only .log?
-" nmap <silent> <S-k> :e<CR><Esc>:$<CR>
+" Manual Tail: reload buffer from disk and go to end " {{{
+nmap <silent> <C-e>0 :e<CR>G
 
 " }}}
 " Save Session: " {{{
@@ -251,7 +252,7 @@ nmap <Leader>\ :call CommitSession()<CR>
 
 " }}}
 " Journal: " {{{
-nmap \j :call JournalEntry()<CR>
+nmap <Leader>j :call JournalEntry()<CR>
 command! Journal :call JournalEntry()
 
 " }}}
@@ -281,13 +282,13 @@ nmap <silent> <Leader>q :call FormatSqlStatement()<CR>
 
 " }}}
 " Formatting: Wrap current or immediately preceding word in in <em> tag " {{{
-" Use surround.vim: csw<em>
+" Use surround.vim: csw<em>?
 " nmap <Leader>_ Bi<em><Esc>ea</em>
-
 
 " }}}
 " Completion: show completion preview, without actually completing " {{{
-inoremap <C-p> <C-o>:set completeopt+=menuone<CR>a<C-n><C-p>
+inoremap <C-p> <C-r>=pumvisible() ? "\<lt>Up>" : "\<lt>C-o>:set completeopt+=menuone\<lt>CR>a\<lt>C-n>\<lt>C-p>"<CR>
+inoremap <C-n> <C-r>=pumvisible() ? "\<lt>Down>" : "\<lt>C-o>:set completeopt+=menuone\<lt>CR>a\<lt>C-p>\<lt>C-n>"<CR>
 
 " }}}
 " Help: help help help " {{{
@@ -374,24 +375,27 @@ augroup END
 " nmap <Right>  :echo "You should have typed l instead."<CR>
 " nmap <Up>     :echo "You should have typed k instead."<CR>
 " nmap <Down>   :echo "You should have typed j instead."<CR>
-nmap <Left>     :<Up>
-nmap <Right>    :<Down>
-nmap <Up>       :<Up>
-nmap <Down>     :<Down>
+
+" }}}
+" Cmdline Convenience: " {{{
+map <Left>     /<Up>
+map <Right>    /<Down>
+nmap <Up>      :<Up>
+nmap <Down>    :<Down>
 
 " }}}
 " Accordion Mode: accordion style horizontal split navigation mode " {{{
 " yes, kids, I know WTF I'm doing WRT <C-e>
-nmap <silent> <C-e>j <C-w>j:call AccordionMode()<CR><C-l>
-nmap <silent> <C-e>k <C-w>k:call AccordionMode()<CR><C-l>
-nmap <silent> <C-e>h <C-w>h:call AccordionMode()<CR><C-l>
-nmap <silent> <C-e>l <C-w>l:call AccordionMode()<CR><C-l>
-nmap <silent> <C-e>- :call AccordionMode()<CR><C-l>
-noremap <silent> <C-e><C-e> <C-e>
-function! AccordionMode()
-    set winminheight=0 winheight=9999
-    set winheight=10 winminheight=10
-endfunction
+ "nmap <silent> <C-e>j <C-w>j:call AccordionMode()<CR><C-l>
+ "nmap <silent> <C-e>k <C-w>k:call AccordionMode()<CR><C-l>
+ "nmap <silent> <C-e>h <C-w>h:call AccordionMode()<CR><C-l>
+ "nmap <silent> <C-e>l <C-w>l:call AccordionMode()<CR><C-l>
+ "nmap <silent> <C-e>- :call AccordionMode()<CR><C-l>
+ "noremap <silent> <C-e><C-e> <C-e>
+ "function! AccordionMode()
+     "set winminheight=0 winheight=9999
+     "set winheight=10 winminheight=10
+ "endfunction
 
 " }}}
 " Timestamps: " {{{
@@ -935,11 +939,19 @@ au BufNewFile,BufRead *.applescript   setf applescript
 " au BufNewFile,BufRead *.tst.* set ft=_.txt.tst
 au BufNewFile,BufRead *.yaml,*.yml so ~/.vim/syntax/yaml.vim
 au FileType ruby set fdm=syntax
+au BufNewFile,BufRead *vimperatorrc*,*.vimp set filetype=vimperator
+au BufNewFile,BufRead *pentadactylrc*,*.penta set filetype=pentadactyl
 
 " Java: " {{{
 augroup java
     au BufReadPre *.java setlocal foldmethod=syntax
     au BufReadPre *.java setlocal foldlevelstart=-1
+augroup END
+
+" }}}
+" Extradite: " {{{
+augroup Extradite
+    au! FileType extradite set showbreak=⇒\ \ \  wrap
 augroup END
 
 " }}}
@@ -1039,7 +1051,7 @@ function! ScratchCopy()
 endfunction
 
 function! ScratchPaste()
-    normal ggVGo
+    "normal ggVGo
     return
     if &modified == 1
         silent write
@@ -1052,7 +1064,7 @@ command! -nargs=* -complete=custom,EmailAddressList Cc call EmitEmailAddress("Cc
 command! -nargs=* Sub call InsertLine("Subject: " . <q-args>)
 
 augroup VolatileScratch
-    " au! BufRead *.scratch call SmallWindow()
+    au! BufRead *.scratch call SmallWindow()
     au! BufRead *.scratch nmap <buffer> <silent> <C-m> :call SmallWindow()<CR>
     au BufRead *.scratch nmap <buffer> <silent> <C-y>g :exec "set lines=999 columns=" . (g:gundo_width + &columns) \| :GundoToggle<CR>
     au BufRead *.scratch nmap <buffer> <silent> ZZ :wa \| :call ScratchCopy()<CR> \| :macaction hide:<CR>
@@ -1073,6 +1085,12 @@ augroup FuzzyFinder
 augroup END
 
 " }}}
+" Fuf: " {{{
+augroup FuzzyFinder
+    au! FileType tLibInputList set nolist nornu nonu
+augroup END
+
+" }}}
 " Quickfix: " {{{
 augroup Quickfix
     au! FileType qf set nu | :wincmd L
@@ -1081,7 +1099,7 @@ augroup END
 " }}}
 " Vimscript: " {{{
 augroup Vimscript
-    au! FileType vim nmap <buffer> <silent> <C-y>t :silent !ctags -f ~/.vim/tags -R --languages=vim ~/.vim/bundle/<CR>
+    au! FileType vim nmap <buffer> <silent> <C-y>t :echo "Generating vimscript tags..." \| exe ":silent !ctags -f ~/.vim/tags -R --languages=vim ~/.vim/.vimrc ~/.vim/.gvimrc ~/.vim/bundle/*.vim" \| :echo "Generated vimscript tags."<CR>
 augroup END
 
 " }}}
@@ -1095,6 +1113,7 @@ augroup END
 augroup VimperatorYPentadactyl
     au! BufRead vimperator-*,pentadactyl-* nmap <buffer> <silent> ZZ :call FormFieldArchive() \| :silent write \| :bd \| :macaction hide:<CR>
     au BufRead vimperator-*,pentadactyl-* imap <buffer> <silent> ZZ <Esc>ZZ
+    au BufRead vimperator-*,pentadactyl-* :macaction unhide:
 augroup END
 
 " }}}
@@ -1157,7 +1176,7 @@ let python_highlight_all = 1
 " PickAColor: " {{{
 let g:pickacolor_use_web_colors = 1
 " }}}
-" HTML: " {{{
+" HTML: " {{{dd
 let g:no_html_tab_mapping=1
 let g:no_html_toolbar=1
 
@@ -1211,6 +1230,14 @@ function! UpdateSnippetsForBuffer()
     call GetSnippets(g:snippets_dir, "_")
     call GetSnippets(g:snippets_dir, &ft)
     echo "Snippets for format \"" . &ft . "\" updated."
+endfunction
+
+" }}}
+" AbbUp: " {{{
+command! -nargs=0 AbbUp call AbbUp()
+function! AbbUp()
+    so ~/.vim/plugin/iabbs.vim
+    echo "Abbreviations updated."
 endfunction
 
 " }}}
@@ -1310,14 +1337,12 @@ augroup RefreshBundles
     au BufRead *refresh_bundles.sh map <buffer> K :call AddNewRefreshBundleEntry()<CR>
 augroup END
 
-" }}}
 function! AddNewRefreshBundleEntry() " {{{
-    let repo = Strip(@")
+    let repo = Strip(@*)
     if match(repo, ".git$") == -1
         echo "Is there a git repo URL on the pasteboard?"
         return 0
     end
-"/Users/seth/.vim/bundle/refresh_bundles.sh
     let parsed_name = substitute(split(repo, '/')[-1], '\.vim\|\.git', '', 'g')
     let new_entry = printf("%-10s %-20s %s", "refresh", parsed_name, repo)
     let exists = search(repo, 'nw') ? "possible duplicate" : "new"
@@ -1327,6 +1352,7 @@ function! AddNewRefreshBundleEntry() " {{{
     echo printf("Added %s entry for '%s'", exists, parsed_name)
 endfunction
 
+" }}}
 " }}}
 " TOhtml: " {{{
 let html_dynamic_folds = 1
@@ -1350,6 +1376,8 @@ command! DoMaintenance call DoMaintenance()
 function! DoMaintenance()
     " ~/.vim/bundle/refresh_bundles.sh
     call pathogen#helptags()
+    silent! FufRenewCache
+    silent! CommandTFlush
     " save all sessions
     " hg addremove and ci ~/.vim/sessions/*
 endfunction
@@ -1371,12 +1399,8 @@ command! JanrainAbbreviations call JanrainAbbreviations()
 function! JanrainAbbreviations() " {{{
     iabb pr provider
     iabb sp social publishing
-    iabb oid OpenID
-    iabb oa OAuth
     iabb apis APIs
     iabb im implementation
-    iabb oso OpenSocial
-    iabb hr =><Space>
 endfunction
 
 " }}}
@@ -1402,12 +1426,20 @@ let g:fuf_dataDir = '~/swap/.vim-fuf-data'
 "let g:fuf_file_exclude = '\v\~$|\.(o|exe|dll|bak|orig|swp)$|(^|[/\\])\.(hg|git|bzr)($|[/\\])'
 let g:fuf_maxMenuWidth = 150
 map <C-e>e  :FufBuffer<CR>
-map <C-e>f  :FufCoverageFile<CR>
+map <C-e>f  :call RecursiveFileSearch()<CR>
 map <C-e>t  :FufTag<CR>
 map <C-e>v  :call fuf#givenfile#launch('', 0, 'VimFiles>', split(glob('~/.vim/**/*.vim'), "\n"))<CR>
 
-" }}}
+function! RecursiveFileSearch() " {{{
+    let bad_paths = '^\(' . expand('~') . '\|' . expand('/') .'\)$'
+    if match(getcwd(), bad_paths) > -1
+        echo printf("Are you kidding? You want to recursively search in '%s'?", getcwd())
+    else
+        FufCoverageFile
+    end
+endf
 
+" }}}
 " }}}
 " EXPERIMENTAL: " {{{
 
@@ -1423,9 +1455,8 @@ function! SnippetFilesForCurrentBuffer(A,L,P) " {{{
 endfunction
 
 " }}}
-map <Leader>sv :call OpenRelatedSnippetFileInVsplit()<CR>
 function! OpenRelatedSnippetFileInVsplit() " {{{
-    let snippetfile = input("Edit which related sunippet file? ", "", "custom,SnippetFilesForCurrentBuffer")
+    let snippetfile = input("Edit which related snippet file? ", "", "custom,SnippetFilesForCurrentBuffer")
     if filereadable(snippetfile) == 1
         exe ":vsplit " . snippetfile
     endif
@@ -1455,12 +1486,6 @@ endfunction
 
 " }}}
 
-" Raimondi's stagnant mailapp plugin " {{{
-let g:MailApp_bundle = '~/.vim/bundle/MailApp/MailApp.bundle/'
-let g:MailAppl_from = 'Seth Milliken <seth@araxia.net>'
-
-" }}}
-
 " Vim-addon-manager: " {{{
 command! -nargs=1 PluginInstall call PluginInstall(<q-args>)
 function! PluginInstall(plugin)
@@ -1474,17 +1499,61 @@ let g:loaded_vimpreviewtag = 1
 
 " }}}
 
+" Execute current line as an ex command.
 map <Leader><CR> 0"ty$:<C-r>t<CR>:echo "Executed: " . @t<CR>
+" Execute current line as an ex command (no status to allow echo).
+map <Leader><S-CR> :call feedkeys("yyq:p\r", "n")<CR>
+
+" Automatic Behavior Per MacVim Instance: " {{{
+au GUIEnter * nested call DetectInstance()
+function! DetectInstance() " {{{
+    if match($VIMRUNTIME, "VimHelp.app") > -1
+        help help
+    elseif match($VIMRUNTIME, "MacVim.app") > -1
+        silent! edit ~/.vim/.vimrc
+        vsplit ~/.vim/.gvimrc
+        silent :!echo foo
+    elseif match($VIMRUNTIME, "Scratch.app") > -1
+        silent! edit ~/.vim/swap/scratch.scratch
+        call SmallWindow()
+    elseif match($VIMRUNTIME, "Tasks.app") > -1
+        "silent! edit ~/sandbox/personal/todo/personal.tst.txt
+        "silent! edit ~/sandbox/personal/todo/laboratory.tst.txt
+        silent! edit ~/sandbox/work/janrain.tst.txt
+        silent! call AdjustFont(-4)
+        winsize 120 100
+        normal ggzo
+    else
+        help split
+    endif
+endfunction
+
+" }}}
+" }}}
 
 " Toggle number column: " {{{
-" <A-1> to toggle between nu and rnu
+" <C-e>1 to toggle between nu and rnu
 if exists('+relativenumber')
-  nnoremap <expr> ¡ ToggleNumberDisplay()
-  xnoremap <expr> ¡ ToggleNumberDisplay()
-  onoremap <expr> ¡ ToggleNumberDisplay()
+  nnoremap <expr> <C-e>1 ToggleNumberDisplay()
+  xnoremap <expr> <C-e>1 ToggleNumberDisplay()
+  onoremap <expr> <C-e>1 ToggleNumberDisplay()
 
   function! ToggleNumberDisplay()
-      if &l:nu | setlocal rnu | else | setlocal nu | endif | redraw
+      exe "setl" &l:nu ? "rnu" : "nu" | redraw
+  endfunction
+
+endif
+
+" }}}
+" Toggle List: " {{{
+" <C-e>2 to toggle between list and nolist
+if exists('+relativenumber')
+  nnoremap <expr> <C-e>2 ToggleListDisplay()
+  xnoremap <expr> <C-e>2 ToggleListDisplay()
+  onoremap <expr> <C-e>2 ToggleListDisplay()
+
+  function! ToggleListDisplay()
+      exe "setl" &l:list? "nolist" : "list"
   endfunction
 
 endif
@@ -1496,9 +1565,25 @@ if !exists(":DiffOrig")
 endif
 
 " }}}
+" StatusLineHighlight: " {{{
+highlight def StatusLineModified           term=bold,reverse cterm=bold,reverse ctermfg=DarkRed   gui=bold,reverse guifg=DarkRed
+highlight def StatusLineModifiedNC         term=reverse      cterm=reverse      ctermfg=LightRed  gui=reverse      guifg=LightRed
+highlight def StatusLinePreview            term=bold,reverse cterm=bold,reverse ctermfg=Blue      gui=bold,reverse guifg=Blue
+highlight def StatusLinePreviewNC          term=reverse      cterm=reverse      ctermfg=Blue      gui=reverse      guifg=Blue
+highlight def StatusLineReadonly           term=bold,reverse cterm=bold,reverse ctermfg=Grey      gui=bold,reverse guifg=DarkGrey
+highlight def StatusLineReadonlyNC         term=reverse      cterm=reverse      ctermfg=Grey      gui=reverse      guifg=DarkGrey
+highlight def StatusLineSpecial            term=bold,reverse cterm=bold,reverse ctermfg=DarkGreen gui=bold,reverse guifg=DarkGreen
+highlight def StatusLineSpecialNC          term=reverse      cterm=reverse      ctermfg=DarkGreen gui=reverse      guifg=DarkGreen
+highlight def StatusLineUnmodifiable       term=bold,reverse cterm=bold,reverse ctermfg=Grey      gui=bold,reverse guifg=Grey
+highlight def StatusLineUnmodifiableNC     term=reverse      cterm=reverse      ctermfg=Grey      gui=reverse      guifg=Grey
+
+" }}}
+
+let g:session_autoload = 1
+let g:session_autosave = 1
 
 " type number then : to get relative range prepopulated in cmdline
-" new vocab word "idem" to get relative range prepopulated in cmdline
+" idem to get relative range prepopulated in cmdline
 " . as range, e.g. :.w >> foo
 " can @ take a range?
 
