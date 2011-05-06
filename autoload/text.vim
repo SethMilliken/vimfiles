@@ -2,7 +2,7 @@
 function! text#append(text) "{{{
     let l:originalline = getline(".")
     if text#line_is_whitespace(getline("."))
-        call insert_line(a:text)
+        call text#insert_line(a:text)
     else
         call append(line("."),[a:text])
         normal J$
@@ -41,6 +41,18 @@ function! text#line_is_whitespace(line) "{{{
 endfunction
 
 "}}}
+function! text#file_to_pasteboard(...) "{{{
+    let appendtext = ""
+    if len(a:000) > 0
+        let appendtext = ":" . a:000[0]
+    end
+    call setreg('*', expand('%r') . appendtext)
+    echo "Pasteboard: \"" . @* . "\""
+endfunction
+
+"}}}
+
+" Replace with tlib/autoload/tlib/string.vim Strip and Trim func
 function! text#strip(string) "{{{
     return text#strip_front(text#strip_end(a:string))
 endfunction
@@ -53,16 +65,6 @@ endfunction
 "}}}
 function! text#strip_front(string) "{{{
     return substitute(a:string, "^[[:space:]]*", "", "")
-endfunction
-
-"}}}
-function! text#file_to_pasteboard(...) "{{{
-    let appendtext = ""
-    if len(a:000) > 0
-        let appendtext = ":" . a:000[0]
-    end
-    call setreg('*', expand('%r') . appendtext)
-    echo "Pasteboard: \"" . @* . "\""
 endfunction
 
 "}}}
