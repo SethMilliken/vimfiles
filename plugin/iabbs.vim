@@ -15,4 +15,9 @@ iabb hr =>
 " Vimscript:
 iabb ia iabb
 
+" Personal
+iabb labo laboratory.local
+iabb sam samsaral.local
+iabb jan seth.local
+
 " }}}
