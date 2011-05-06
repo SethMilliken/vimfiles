@@ -216,7 +216,7 @@ nmap <C-e>j :exec ":lcd " . expand("%:p:h") \| echo "cwd now: " . getcwd()<CR>
 nmap <C-e>k :exec ":lcd .." \| echo "cwd now: " . getcwd()<CR>
 
 " tmux copy/paste issue in mac os x workaround
-nmap <C-x>p :call system("ssh localhost pbcopy", getreg('"')) \| echo "Copied default register to pasteboard."<CR>
+nmap <C-x>p :call system("ssh localhost pbcopy", getreg('*')) \| echo "Copied default register to pasteboard."<CR>
 
 " }}}
 " Reset: restore some default settings and redraw " {{{
