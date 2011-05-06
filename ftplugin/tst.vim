@@ -712,7 +712,7 @@ endfunction
 
 " }}}
 function! TaskstackGroups() " {{{
-    call timestamp#autoUpdateBypass() " FIXME: External Dependency
+    call timestamp#autoUpdateBypass()
     " silent! wincmd t
     if FindNode(s:groups_node_name) == 0
         call TaskstackMain()
@@ -722,12 +722,12 @@ function! TaskstackGroups() " {{{
     end
     call FindNode(s:groups_node_name)
     silent! normal zo
-    call timestamp#autoUpdateEnable() " FIXME: External Dependency
+    call timestamp#autoUpdateEnable()
 endfunction
 
 " }}}
 function! TaskstackCompleted() " {{{
-    call timestamp#autoUpdateBypass() " FIXME: External Dependency
+    call timestamp#autoUpdateBypass()
     " silent! wincmd t
     if FindNode(s:completed_node_name) == 0
         call TaskstackMain()
@@ -737,12 +737,12 @@ function! TaskstackCompleted() " {{{
     end
     call FindNode(s:completed_node_name)
     silent! normal zo
-    call timestamp#autoUpdateEnable() " FIXME: External Dependency
+    call timestamp#autoUpdateEnable()
 endfunction
 
 " }}}
 function! TaskstackDates() " {{{
-    call timestamp#autoUpdateBypass() " FIXME: External Dependency
+    call timestamp#autoUpdateBypass()
     " silent! wincmd t
     if FindNode(s:dates_node_name) == 0
         call TaskstackCompleted()
@@ -752,7 +752,7 @@ function! TaskstackDates() " {{{
     end
     call FindNode(s:dates_node_name)
     silent! normal zo
-    call timestamp#autoUpdateEnable() " FIXME: External Dependency
+    call timestamp#autoUpdateEnable()
 endfunction
 
 " }}}
@@ -774,7 +774,7 @@ endfunction
 
 "}}}
 function! TaskstackScratch() " {{{
-    call timestamp#autoUpdateBypass() " FIXME: External Dependency
+    call timestamp#autoUpdateBypass()
     " silent! wincmd b
     if FindNode(s:notes_node_name) == 0
         exe "normal Go" . s:notes_node_name
@@ -782,30 +782,30 @@ function! TaskstackScratch() " {{{
     end
     call FindNode(s:notes_node_name)
     normal zozt]zk
-    call timestamp#autoUpdateEnable() " FIXME: External Dependency
+    call timestamp#autoUpdateEnable()
 endfunction
 
 " }}}
 
 " Tasks: change status
 function! TaskstackNewItem() " {{{
-    call timestamp#autoUpdateBypass() " FIXME: External Dependency
+    call timestamp#autoUpdateBypass()
     call TaskstackMain()
     exe "normal o- "
     startinsert!
-    call timestamp#autoUpdateEnable() " FIXME: External Dependency
+    call timestamp#autoUpdateEnable()
 endfunction
 
 " }}}
 function! TaskstackCompleteItem(prefix) " {{{
-    call timestamp#autoUpdateBypass() " FIXME: External Dependency
+    call timestamp#autoUpdateBypass()
 
     if empty(TaskstackFoldbounds())
         silent call MoveItemToDateNode(getline("."), a:prefix)
     else
         silent call MoveFoldToDateNode(TaskstackFoldbounds(), a:prefix)
     end
-    call timestamp#autoUpdateEnable() " FIXME: External Dependency
+    call timestamp#autoUpdateEnable()
     echo ""
 endfunction
 
