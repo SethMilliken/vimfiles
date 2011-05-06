@@ -1457,6 +1457,14 @@ function! DetectInstance() " {{{
         call SmallWindow()
     elseif match($VIMRUNTIME, "VimWiki.app") > -1
         exe "normal \<Leader>ww"
+    elseif match($VIMRUNTIME, "TwitVim.app") > -1
+        edit ~/.vim/twitcommands.vim
+        so %
+        let twitvim_count = 100
+        VimSearch
+        wincmd L
+        wincmd t
+        40wincmd  |
     elseif match($VIMRUNTIME, "Tasks.app") > -1
         edit ~/sandbox/personal/todo/personal.tst.txt
         edit ~/sandbox/personal/todo/laboratory.tst.txt
@@ -1507,17 +1515,25 @@ endif
 
 " }}}
 " StatusLineHighlight: " {{{
-highlight def StatusLineModified           term=bold,reverse cterm=bold,reverse ctermfg=DarkRed   gui=bold,reverse guifg=DarkRed
-highlight def StatusLineModifiedNC         term=reverse      cterm=reverse      ctermfg=LightRed  gui=reverse      guifg=LightRed
-highlight def StatusLinePreview            term=bold,reverse cterm=bold,reverse ctermfg=Blue      gui=bold,reverse guifg=Blue
-highlight def StatusLinePreviewNC          term=reverse      cterm=reverse      ctermfg=Blue      gui=reverse      guifg=Blue
-highlight def StatusLineReadonly           term=bold,reverse cterm=bold,reverse ctermfg=Grey      gui=bold,reverse guifg=DarkGrey
-highlight def StatusLineReadonlyNC         term=reverse      cterm=reverse      ctermfg=Grey      gui=reverse      guifg=DarkGrey
-highlight def StatusLineSpecial            term=bold,reverse cterm=bold,reverse ctermfg=DarkGreen gui=bold,reverse guifg=DarkGreen
-highlight def StatusLineSpecialNC          term=reverse      cterm=reverse      ctermfg=DarkGreen gui=reverse      guifg=DarkGreen
-highlight def StatusLineUnmodifiable       term=bold,reverse cterm=bold,reverse ctermfg=Grey      gui=bold,reverse guifg=Grey
-highlight def StatusLineUnmodifiableNC     term=reverse      cterm=reverse      ctermfg=Grey      gui=reverse      guifg=Grey
+augroup StatusLineHighlight
+    au BufReadPost,BufNewFile * call StatusHighlightColors()
+augroup END
 
+function! StatusHighlightColors() " {{{
+    highlight def StatusLineModified           term=bold,reverse cterm=bold,reverse ctermfg=DarkRed   gui=bold,reverse guifg=DarkRed
+    highlight def StatusLineModifiedNC         term=reverse      cterm=reverse      ctermfg=LightRed  gui=reverse      guifg=LightRed
+    highlight def StatusLinePreview            term=bold,reverse cterm=bold,reverse ctermfg=Blue      gui=bold,reverse guifg=Blue
+    highlight def StatusLinePreviewNC          term=reverse      cterm=reverse      ctermfg=Blue      gui=reverse      guifg=Blue
+    highlight def StatusLineReadonly           term=bold,reverse cterm=bold,reverse ctermfg=Grey      gui=bold,reverse guifg=DarkGrey
+    highlight def StatusLineReadonlyNC         term=reverse      cterm=reverse      ctermfg=Grey      gui=reverse      guifg=DarkGrey
+    highlight def StatusLineSpecial            term=bold,reverse cterm=bold,reverse ctermfg=DarkGreen gui=bold,reverse guifg=DarkGreen
+    highlight def StatusLineSpecialNC          term=reverse      cterm=reverse      ctermfg=DarkGreen gui=reverse      guifg=DarkGreen
+    highlight def StatusLineUnmodifiable       term=bold,reverse cterm=bold,reverse ctermfg=Grey      gui=bold,reverse guifg=Grey
+    highlight def StatusLineUnmodifiableNC     term=reverse      cterm=reverse      ctermfg=Grey      gui=reverse      guifg=Grey
+    echo "Done loading colors"
+endfunction
+
+" }}}
 " }}}
 
 " let g:session_autoload = 1
