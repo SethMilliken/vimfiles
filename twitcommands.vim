@@ -19,6 +19,7 @@ SearchTwitter mikelikesbikes
 SearchTwitter stevelosh
 SearchTwitter b4winckler
 SearchTwitter #rails
+SearchTwitter cleverdevil
 SearchTwitter JonRowe
 SearchTwitter tungd
 UserTwitter SethMilliken

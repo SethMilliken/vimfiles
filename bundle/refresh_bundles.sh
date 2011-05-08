@@ -85,8 +85,9 @@ refresh    vcscommand           git://github.com/vim-scripts/vcscommand.vim.git
 refresh    viki                 git://github.com/vim-scripts/VikiDeplate.git
 refresh    vim-addon-async      git://github.com/MarcWeber/vim-addon-async.git
 refresh    vim-javascript       git://github.com/pangloss/vim-javascript.git
+refresh    pathogen             git://github.com/Raimondi/vim-pathogen.git
 refresh    vim-ragtag           git://github.com/tpope/vim-ragtag.git
 refresh    vim-ruby             git://github.com/vim-ruby/vim-ruby.git
 refresh    vimwiki              git://github.com/vim-scripts/vimwiki.git
-refresh    xml                  git://github.com/vim-scripts/xml.vim.git
 refresh    vundle               git://github.com/vim-scripts/vundle.git
+refresh    xml                  git://github.com/vim-scripts/xml.vim.git

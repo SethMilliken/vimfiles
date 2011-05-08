@@ -29,8 +29,10 @@
 "   - consider: move ft-specific settings to individual files
 
 " Pathogen: " {{{
+set rtp+=~/.vim/bundle/pathogen/
 call pathogen#runtime_append_all_bundles()
 call pathogen#helptags()
+
 " }}}
 
 "}}}
@@ -1456,13 +1458,15 @@ function! DetectInstance() " {{{
         edit ~/.vim/swap/scratch.scratch
         call SmallWindow()
     elseif match($VIMRUNTIME, "VimWiki.app") > -1
-        exe "normal \<Leader>ww"
+        VimwikiIndex
+        set nolist
+        vsplit
     elseif match($VIMRUNTIME, "TwitVim.app") > -1
         edit ~/.vim/twitcommands.vim
         so %
         let twitvim_count = 100
         VimSearch
-        wincmd L
+        wincmd H
         wincmd t
         40wincmd  |
     elseif match($VIMRUNTIME, "Tasks.app") > -1
@@ -1530,7 +1534,7 @@ function! StatusHighlightColors() " {{{
     highlight def StatusLineSpecialNC          term=reverse      cterm=reverse      ctermfg=DarkGreen gui=reverse      guifg=DarkGreen
     highlight def StatusLineUnmodifiable       term=bold,reverse cterm=bold,reverse ctermfg=Grey      gui=bold,reverse guifg=Grey
     highlight def StatusLineUnmodifiableNC     term=reverse      cterm=reverse      ctermfg=Grey      gui=reverse      guifg=Grey
-    echo "Done loading colors"
+    let g:foobar = "Done loading colors"
 endfunction
 
 " }}}
