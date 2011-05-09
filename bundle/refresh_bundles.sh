@@ -47,6 +47,7 @@ refresh    calendar             git://github.com/vim-scripts/calendar.vim--Matsu
 refresh    cocoa                git://github.com/msanders/cocoa.vim.git
 refresh    command-t            git://github.com/wincent/Command-T.git                     'Rebuild if necessary:\n\tpushd command-t/ruby/command-t/; ruby extconf.rb; make && popd'
 refresh    conque               git://github.com/rson/vim-conque.git
+refresh    csapprox             git://github.com/godlygeek/csapprox.git
 refresh    extradite            git://github.com/int3/vim-extradite.git
 refresh    fugitive             git://github.com/tpope/vim-fugitive.git
 refresh    fuzzyfinder          git://github.com/vim-scripts/FuzzyFinder.git
@@ -62,6 +63,7 @@ refresh    matrix               git://github.com/vim-scripts/matrix.vim--Yang.gi
 refresh    nerdcommenter        git://github.com/scrooloose/nerdcommenter.git
 refresh    nerdtree             git://github.com/scrooloose/nerdtree.git
 refresh    paster               git://github.com/weierophinney/paster.vim.git
+refresh    pathogen             git://github.com/Raimondi/vim-pathogen.git
 refresh    pickacolor           git://github.com/Raimondi/PickAColor.git
 refresh    project              git://github.com/shemerey/vim-project.git
 refresh    rails                git://github.com/tpope/vim-rails.git
@@ -85,7 +87,6 @@ refresh    vcscommand           git://github.com/vim-scripts/vcscommand.vim.git
 refresh    viki                 git://github.com/vim-scripts/VikiDeplate.git
 refresh    vim-addon-async      git://github.com/MarcWeber/vim-addon-async.git
 refresh    vim-javascript       git://github.com/pangloss/vim-javascript.git
-refresh    pathogen             git://github.com/Raimondi/vim-pathogen.git
 refresh    vim-ragtag           git://github.com/tpope/vim-ragtag.git
 refresh    vim-ruby             git://github.com/vim-ruby/vim-ruby.git
 refresh    vimwiki              git://github.com/vim-scripts/vimwiki.git
