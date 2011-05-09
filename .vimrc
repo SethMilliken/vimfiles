@@ -1512,7 +1512,7 @@ if exists('+relativenumber')
   onoremap <expr> <C-e>1 ToggleNumberDisplay()
 
   function! ToggleNumberDisplay()
-      exe "setl" &l:nu ? "rnu" : "nu" | redraw
+      exe "setl" &l:nu ? "rnu" : &l:rnu ? "nornu" : "nu" | redraw
   endfunction
 
 endif
