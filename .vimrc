@@ -108,7 +108,7 @@ endif " has("autocmd")
 set encoding=UTF-8                  " use UTF-8 encoding
 set fileencoding=UTF-8              " use UTF-8 encoding as default
 set shortmess+=I                    " don't show intro on start
-set shortmess+=A                    " don't show message on existing swapfile
+""set shortmess+=A                  " don't show message on existing swapfile (set in an autocmd below)
 set nospell                         " spelling off by default
 set spellcapcheck=off               " ignore case in spellcheck
 set nolist                          " don't show invisibles
@@ -1037,7 +1037,7 @@ augroup END
 " }}}
 " Vimscript: " {{{
 augroup Vimscript
-    au! FileType vim nmap <buffer> <silent> <C-y>t :echo "Generating vimscript tags..." \| exe ":silent !ctags -f ~/.vim/tags -R --languages=vim ~/.vim/.vimrc ~/.vim/.gvimrc ~/.vim/bundle/*.vim" \| :echo "Generated vimscript tags."<CR>
+    au! FileType vim nmap <buffer> <silent> <C-y>t :echo "Generating vimscript tags..." \| exe ":silent !ctags -f ~/.vim/tags -R --languages=vim ~/.vim/autoload/*.vim ~/.vim/.vimrc ~/.vim/.gvimrc ~/.vim/bundle/*.vim" \| :echo "Generated vimscript tags."<CR>
 augroup END
 
 " }}}
@@ -1364,16 +1364,16 @@ let g:fuf_dataDir = '~/swap/.vim-fuf-data'
 "let g:fuf_file_exclude = '\v\~$|\.(o|exe|dll|bak|orig|swp)$|(^|[/\\])\.(hg|git|bzr)($|[/\\])'
 let g:fuf_maxMenuWidth = 150
 map <C-e>e  :FufBuffer<CR>
-map <C-e>f  :call RecursiveFileSearch()<CR>
+map <C-e>f  :call RecursiveFileSearch(":FufCoverageFile")<CR>
 map <C-e>t  :FufTag<CR>
 map <C-e>v  :call fuf#givenfile#launch('', 0, 'VimFiles>', split(glob('~/.vim/**/*.vim'), "\n"))<CR>
 
-function! RecursiveFileSearch() " {{{
+function! RecursiveFileSearch(callback) " {{{
     let bad_paths = '^\(' . expand('~') . '\|' . expand('/') .'\)$'
     if match(getcwd(), bad_paths) > -1
         echo printf("Are you kidding? You want to recursively search in '%s'?", getcwd())
     else
-        FufCoverageFile
+       exe a:callback
     end
 endf
 
@@ -1444,24 +1444,16 @@ map <Leader><CR> 0"ty$:<C-r>t<CR>:echo "Executed: " . @t<CR>
 map <Leader><S-CR> :call feedkeys("yyq:p\r", "n")<CR>
 
 " Automatic Behavior Per MacVim Instance: " {{{
-augroup Startup
-    au! GUIEnter * nested silent! call DetectInstance()
+augroup Startup | au!
+    au GUIEnter * au! SwapExists * let v:swapchoice="a" | set shortmess+=A | augroup! Startup
+    au GUIEnter * nested silent! call StartupHandler()
 augroup END
-function! DetectInstance() " {{{
-    if match($VIMRUNTIME, "VimHelp.app") > -1
+function! StartupHandler() " {{{
+    let startup = {}
+    fun startup.VimHelp() dict
         help help
-    elseif match($VIMRUNTIME, "MacVim.app") > -1
-        call AdjustFont(-2)
-        edit ~/.vim/.vimrc
-        vsplit ~/.vim/.gvimrc | wincmd t | wincmd =
-    elseif match($VIMRUNTIME, "Scratch.app") > -1
-        edit ~/.vim/swap/scratch.scratch
-        call SmallWindow()
-    elseif match($VIMRUNTIME, "VimWiki.app") > -1
-        VimwikiIndex
-        set nolist
-        vsplit
-    elseif match($VIMRUNTIME, "TwitVim.app") > -1
+    endfun
+    fun startup.TwitVim() dict
         edit ~/.vim/twitcommands.vim
         so %
         let twitvim_count = 100
@@ -1469,16 +1461,44 @@ function! DetectInstance() " {{{
         wincmd H
         wincmd t
         40wincmd  |
-    elseif match($VIMRUNTIME, "Tasks.app") > -1
-        edit ~/sandbox/personal/todo/personal.tst.txt
-        edit ~/sandbox/personal/todo/laboratory.tst.txt
-        edit ~/sandbox/work/janrain.tst.txt
+    endfun
+    fun startup.Scratch() dict
+        edit ~/.vim/swap/scratch.scratch
+        call SmallWindow()
+    endfun
+    fun startup.MacVim() dict
+        call AdjustFont(-2)
+        edit ~/.vim/.vimrc
+        vsplit ~/.vim/.gvimrc | wincmd t | wincmd =
+    endfun
+    fun startup.VimWiki() dict
+        VimwikiIndex
+        set nolist
+        vsplit
+    endfun
+    fun startup.Tasks() dict
         call AdjustFont(-2)
         winsize 120 100
+        let host = text#strip(system('echo $SHORTHOST'))
+        if host == ""
+            redraw
+            echo "No host available."
+            return
+        elseif host == "SETH"
+            edit ~/sandbox/work/janrain.tst.txt
+        elseif host == "SAMSARA"
+            edit ~/sandbox/personal/todo/personal.tst.txt
+        elseif host == "LABORATORY"
+            edit ~/sandbox/personal/todo/laboratory.tst.txt
+        endif
         normal ggzo
-    " else
-    "    help split
-    endif
+    endfun
+    fun startup.handle() dict
+        let func_name = split(split($VIMRUNTIME, ".app")[0], '/')[1]
+        silent! call self[func_name]()
+    endfun
+
+    silent! call startup.handle()
 endfunction
 
 " }}}
@@ -1519,8 +1539,8 @@ endif
 
 " }}}
 " StatusLineHighlight: " {{{
-augroup StatusLineHighlight
-    au BufReadPost,BufNewFile * call StatusHighlightColors()
+augroup StatusLineHighlightExtra | au!
+    au Syntax * call StatusHighlightColors()
 augroup END
 
 function! StatusHighlightColors() " {{{
@@ -1534,7 +1554,6 @@ function! StatusHighlightColors() " {{{
     highlight def StatusLineSpecialNC          term=reverse      cterm=reverse      ctermfg=DarkGreen gui=reverse      guifg=DarkGreen
     highlight def StatusLineUnmodifiable       term=bold,reverse cterm=bold,reverse ctermfg=Grey      gui=bold,reverse guifg=Grey
     highlight def StatusLineUnmodifiableNC     term=reverse      cterm=reverse      ctermfg=Grey      gui=reverse      guifg=Grey
-    let g:foobar = "Done loading colors"
 endfunction
 
 " }}}
