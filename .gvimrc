@@ -68,10 +68,9 @@ call settings.finished()
 
 " Basic: shared config " {{{
 if has("gui_running")
-    set t_Co=256
-    set t_AB=[48;5;%dm                    " document this
-    set t_AF=[38;5;%dm                    " document this
-    set cursorline                          " highlight current line
+    "set t_Co=256
+    "set t_AB=[48;5;%dm                    " document this
+    "set t_AF=[38;5;%dm                    " document this
     color araxia                            " hey, those are my colors!
     set guioptions-=T                       " no toolbar
     set guioptions-=m                       " no menu
@@ -89,7 +88,6 @@ end
 " }}}
 " Mac: " {{{
 if has("gui_macvim")
-    color araxia
     " max vertical and horizontal columns on resize to full screen
     set fuopt=maxhorz,maxvert
     " set transparency=5
@@ -103,10 +101,12 @@ if has("gui_macvim")
     " NOTE: Have to unset menu commands in gvimrc
     " Free Command Key Bindings " {{{
     macmenu File.Print key=<nop>
+    macmenu Window.Zoom key=<nop>
     map <silent> <D-p> :ln <CR>
     map <silent> <D-P> :lp <CR>
     map <silent> <D-e> :cn <CR>
     map <silent> <D-E> :cp <CR>
+    map <silent> <D-i> :winsize 999 999 \| wincmd =<CR>
 
     " }}}
     " Command-T " {{{
@@ -142,8 +142,8 @@ function! AdjustFont(increment) " {{{
     let lines = &lines
     let replacement = 'submatch(0) + ' . a:increment
     let &guifont = substitute( &guifont, ':h\zs\d\+', '\=eval(' .  replacement . ')', '')
-    exe "set columns=" . (columns - (a:increment * 10))
-    exe "set lines=" . (lines - (a:increment * 7))
+    "exe "set columns=" . (columns - (a:increment * 10))
+    "exe "set lines=" . (lines - (a:increment * 7))
 endfunction
 
 "}}}
