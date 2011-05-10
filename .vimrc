@@ -1498,16 +1498,16 @@ augroup StatusLineHighlightExtra | au!
 augroup END
 
 function! StatusHighlightColors() " {{{
-    highlight def StatusLineModified           term=bold,reverse cterm=bold,reverse ctermfg=DarkRed   gui=bold,reverse guifg=DarkRed
-    highlight def StatusLineModifiedNC         term=reverse      cterm=reverse      ctermfg=LightRed  gui=reverse      guifg=LightRed
-    highlight def StatusLinePreview            term=bold,reverse cterm=bold,reverse ctermfg=Blue      gui=bold,reverse guifg=Blue
-    highlight def StatusLinePreviewNC          term=reverse      cterm=reverse      ctermfg=Blue      gui=reverse      guifg=Blue
-    highlight def StatusLineReadonly           term=bold,reverse cterm=bold,reverse ctermfg=Grey      gui=bold,reverse guifg=DarkGrey
-    highlight def StatusLineReadonlyNC         term=reverse      cterm=reverse      ctermfg=Grey      gui=reverse      guifg=DarkGrey
-    highlight def StatusLineSpecial            term=bold,reverse cterm=bold,reverse ctermfg=DarkGreen gui=bold,reverse guifg=DarkGreen
-    highlight def StatusLineSpecialNC          term=reverse      cterm=reverse      ctermfg=DarkGreen gui=reverse      guifg=DarkGreen
-    highlight def StatusLineUnmodifiable       term=bold,reverse cterm=bold,reverse ctermfg=Grey      gui=bold,reverse guifg=Grey
-    highlight def StatusLineUnmodifiableNC     term=reverse      cterm=reverse      ctermfg=Grey      gui=reverse      guifg=Grey
+  highlight def StatusLineModified       term=bold,reverse cterm=bold,reverse ctermfg=DarkRed   gui=bold,reverse guifg=DarkRed
+  highlight def StatusLineModifiedNC     term=reverse      cterm=reverse      ctermfg=LightRed  gui=reverse      guifg=LightRed
+  highlight def StatusLinePreview        term=bold,reverse cterm=bold,reverse ctermfg=Blue      gui=bold,reverse guifg=Blue
+  highlight def StatusLinePreviewNC      term=reverse      cterm=reverse      ctermfg=Blue      gui=reverse      guifg=Blue
+  highlight def StatusLineReadonly       term=bold,reverse cterm=bold,reverse ctermfg=Grey      gui=bold,reverse guifg=DarkGrey
+  highlight def StatusLineReadonlyNC     term=reverse      cterm=reverse      ctermfg=Grey      gui=reverse      guifg=DarkGrey
+  highlight def StatusLineSpecial        term=bold,reverse cterm=bold,reverse ctermfg=DarkGreen gui=bold,reverse guifg=DarkGreen
+  highlight def StatusLineSpecialNC      term=reverse      cterm=reverse      ctermfg=DarkGreen gui=reverse      guifg=DarkGreen
+  highlight def StatusLineUnmodifiable   term=bold,reverse cterm=bold,reverse ctermfg=Grey      gui=bold,reverse guifg=Grey
+  highlight def StatusLineUnmodifiableNC term=reverse      cterm=reverse      ctermfg=Grey      gui=reverse      guifg=Grey
 endfunction
 
 " }}}
