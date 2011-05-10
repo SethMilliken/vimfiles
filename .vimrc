@@ -142,6 +142,7 @@ set visualbell | set t_vb=          " ...nor see it
 set ignorecase                      " case ignored for searches
 set smartcase                       " override ignorecase for searches with uppercase
 set clipboard=unnamed               " share os pasteboard
+set cursorline                      " highlight current line
 
 let mapleader="\\"                  " <Leader>
 
@@ -1074,6 +1075,12 @@ augroup Cocoa
 augroup END
 
 " }}}
+" CSApprox: " {{{
+if &t_Co < 88
+    let g:CSApprox_loaded = 1
+endif
+
+" }}}
 " Tlib: " {{{
 augroup Tlib
     au! FileType tlibInputList map <buffer> <Tab> <Down>
@@ -1446,8 +1453,8 @@ map <Leader><S-CR> :call feedkeys("yyq:p\r", "n")<CR>
 
 " Automatic Behavior Per MacVim Instance: " {{{
 augroup Startup | au!
-    au GUIEnter * au! SwapExists * exe startup#handler().swapchoice() | set shortmess+=A | augroup! Startup
-    au GUIEnter * nested silent! call startup#handler().handle()
+    au VimEnter * au! SwapExists * exe startup#handler().swapchoice() | set shortmess+=A | augroup! Startup
+    au VimEnter * nested silent! call startup#handler().handle()
 augroup END
 " }}}
 
