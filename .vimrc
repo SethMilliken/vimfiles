@@ -1180,8 +1180,8 @@ endfunction
 
 " }}}
 " Todo Lists: " {{{
-augroup todolist
-    au! BufReadPost,FileReadPost *todo*,*list* doau FileType tst
+augroup todolist | au!
+    au BufReadPost,FileReadPost *todo*,*list* doau FileType tst
     au BufReadPost,FileReadPost *todo*,*list* set syntax+=.txt
     au BufReadPost,FileReadPost *todo*,*list* map <buffer> <silent> <C-p> ?=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
     au BufReadPost,FileReadPost *todo*,*list* map <buffer> <silent> <C-n> /=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
@@ -1189,12 +1189,12 @@ augroup END
 
 " }}}
 " Vimwiki: " {{{
-" Autocmds: " {{{
-augroup vimwiki
-    "au! BufReadPre *.wiki doau FileType txt
-    au! BufReadPost,FileReadPost,BufNewFile *.wiki doau FileType tst
-    au BufNew vimwiki set foldlevel=999
-    au FileType vimwiki set syntax=vimwiki.txt
+" Vimwiki Autocmds: " {{{
+augroup Vimwiki | au!
+    au BufReadPost,BufNewFile *.wiki doau FileType txt
+    au BufReadPost,BufNewFile *.wiki doau FileType tst
+    au FileType vimwiki set foldlevel=99
+    au FileType vimwiki set syntax=txt.vimwiki
     au FileType vimwiki map <buffer> <silent> <C-p> ?=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
     au FileType vimwiki map <buffer> <silent> <C-n> /=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
     au FileType *vimwiki* nmap <buffer> <silent> <CR> :call VimwikiFollowLinkMod()<CR>
@@ -1202,7 +1202,7 @@ augroup vimwiki
 augroup END
 
 " }}}
-" Configuration: " {{{
+" Vimwiki Configuration: " {{{
 "" let wiki.nested_syntaxes = {'python': 'python'}
 let g:vimwiki_hl_headers = 1                " hilight header colors
 let g:vimwiki_hl_cb_checked = 1             " hilight todo item colors
@@ -1323,7 +1323,8 @@ endfunction
 " }}}
 " Janrain:  " {{{
 
-map <D-j>w <Esc>:cd ~/sandbox/work/vm/rpx/ruby/rails/<CR>
+let g:engage_dir = "~/sandbox/work/vm/rpx/ruby/rails/"
+map <D-j>w <Esc>:exe 'cd' g:engage_dir \| pwd<CR>
 map <D-j>p <Esc>:cd ~/sandbox/personal/<CR>
 map <D-j>e <Esc>:GrepEngage<Space>
 command! -nargs=1 GrepEngage call GrepEngage(<f-args>)
@@ -1445,63 +1446,9 @@ map <Leader><S-CR> :call feedkeys("yyq:p\r", "n")<CR>
 
 " Automatic Behavior Per MacVim Instance: " {{{
 augroup Startup | au!
-    au GUIEnter * au! SwapExists * let v:swapchoice="a" | set shortmess+=A | augroup! Startup
-    au GUIEnter * nested silent! call StartupHandler()
+    au GUIEnter * au! SwapExists * exe startup#handler().swapchoice() | set shortmess+=A | augroup! Startup
+    au GUIEnter * nested silent! call startup#handler().handle()
 augroup END
-function! StartupHandler() " {{{
-    let startup = {}
-    fun startup.VimHelp() dict
-        help help
-    endfun
-    fun startup.TwitVim() dict
-        edit ~/.vim/twitcommands.vim
-        so %
-        let twitvim_count = 100
-        VimSearch
-        wincmd H
-        wincmd t
-        40wincmd  |
-    endfun
-    fun startup.Scratch() dict
-        edit ~/.vim/swap/scratch.scratch
-        call SmallWindow()
-    endfun
-    fun startup.MacVim() dict
-        call AdjustFont(-2)
-        edit ~/.vim/.vimrc
-        vsplit ~/.vim/.gvimrc | wincmd t | wincmd =
-    endfun
-    fun startup.VimWiki() dict
-        VimwikiIndex
-        set nolist
-        vsplit
-    endfun
-    fun startup.Tasks() dict
-        call AdjustFont(-2)
-        winsize 120 100
-        let host = text#strip(system('echo $SHORTHOST'))
-        if host == ""
-            redraw
-            echo "No host available."
-            return
-        elseif host == "SETH"
-            edit ~/sandbox/work/janrain.tst.txt
-        elseif host == "SAMSARA"
-            edit ~/sandbox/personal/todo/personal.tst.txt
-        elseif host == "LABORATORY"
-            edit ~/sandbox/personal/todo/laboratory.tst.txt
-        endif
-        normal ggzo
-    endfun
-    fun startup.handle() dict
-        let func_name = split(split($VIMRUNTIME, ".app")[0], '/')[1]
-        silent! call self[func_name]()
-    endfun
-
-    silent! call startup.handle()
-endfunction
-
-" }}}
 " }}}
 
 " Toggle number column: " {{{
