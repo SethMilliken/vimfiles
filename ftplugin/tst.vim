@@ -797,6 +797,14 @@ function! TaskstackNewItem() " {{{
 endfunction
 
 " }}}
+function! TaskstackNewItemFromPaste() " {{{
+    call timestamp#autoUpdateBypass()
+    call TaskstackMain()
+    exe "normal o- \<Esc>p_w"
+    call timestamp#autoUpdateEnable()
+endfunction
+
+" }}}
 function! TaskstackCompleteItem(prefix) " {{{
     call timestamp#autoUpdateBypass()
 

@@ -924,6 +924,7 @@ augroup TaskStack
     au FileType *tst* imap <buffer> XX <C-c>:call TaskstackCompleteItem(g:aborted_prefix)<CR>
     au FileType *tst* nmap <buffer> QQ :call TaskstackCompleteItem(g:completed_prefix)<CR>
     au FileType *tst* imap <buffer> QQ <C-c>:call TaskstackCompleteItem(g:completed_prefix)<CR>
+    au FileType *tst* nmap <buffer> Nn :call TaskstackNewItemFromPaste()<CR>
     au FileType *tst* nmap <buffer> NN :call TaskstackNewItem()<CR>
     au FileType *tst* imap <buffer> NN <C-c>:call TaskstackNewItem()<CR>
     au FileType *tst* nmap <buffer> ZZ :call TaskstackHide()<CR>
@@ -1217,7 +1218,7 @@ let g:vimwiki_list_ignore_newline = 0       " convert newlines to <br /> in list
 let g:vimwiki_folding = 1                   " outline folding
 let g:vimwiki_table_auto_fmt = 0            " don't use and conflicts with snipMate
 let g:vimwiki_fold_lists = 1                " folding of list subitems
-let g:vimwiki_file_exts = 'pdf,txt,doc,rtf,xls,php,zip,rar,7z,html,gz,vim,screen'
+let g:vimwiki_file_exts = 'pdf,txt,doc,rtf,xls,php,zip,rar,7z,html,gz,vim,screen,tst'
 let g:vimwiki_valid_html_tags='b,i,s,u,sub,sup,kbd,br,hr,font,a,div,span'
 let g:vimwiki_list = [
              \{'path': '~/sandbox/personal/vimwiki/',
