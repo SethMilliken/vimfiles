@@ -8,6 +8,6 @@ if getline(1) =~ '^DOING' " TODO: main node name should not be hardcoded
 endif
 
 " Default if filetype still was not recognized
-if &filetype == ""
-	set filetype=txt foldmethod=marker commentstring=
-endif
+"if &filetype == ""
+"	set filetype=txt foldmethod=marker commentstring=
+"endif
