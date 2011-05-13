@@ -4,3 +4,9 @@ bundle
 view
 .netrwhist
 doc/tags
+bundled_plugins
+colors/wombat.vim
+sessions
+sessions/*
+swap/*
+tags

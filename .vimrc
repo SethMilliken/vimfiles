@@ -141,6 +141,7 @@ set visualbell | set t_vb=          " ...nor see it
 set ignorecase                      " case ignored for searches
 set smartcase                       " override ignorecase for searches with uppercase
 set clipboard=unnamed               " share os pasteboard
+set cursorline                      " highlight current line
 
 let mapleader="\\"                  " <Leader>
 
@@ -922,6 +923,7 @@ augroup TaskStack
     au FileType *tst* imap <buffer> XX <C-c>:call TaskstackCompleteItem(g:aborted_prefix)<CR>
     au FileType *tst* nmap <buffer> QQ :call TaskstackCompleteItem(g:completed_prefix)<CR>
     au FileType *tst* imap <buffer> QQ <C-c>:call TaskstackCompleteItem(g:completed_prefix)<CR>
+    au FileType *tst* nmap <buffer> Nn :call TaskstackNewItemFromPaste()<CR>
     au FileType *tst* nmap <buffer> NN :call TaskstackNewItem()<CR>
     au FileType *tst* imap <buffer> NN <C-c>:call TaskstackNewItem()<CR>
     au FileType *tst* nmap <buffer> ZZ :call TaskstackHide()<CR>
@@ -1073,6 +1075,12 @@ augroup Cocoa
 augroup END
 
 " }}}
+" CSApprox: " {{{
+if &t_Co < 88
+    let g:CSApprox_loaded = 1
+endif
+
+" }}}
 " Tlib: " {{{
 augroup Tlib
     au! FileType tlibInputList map <buffer> <Tab> <Down>
@@ -1179,8 +1187,8 @@ endfunction
 
 " }}}
 " Todo Lists: " {{{
-augroup todolist
-    au! BufReadPost,FileReadPost *todo*,*list* doau FileType tst
+augroup todolist | au!
+    au BufReadPost,FileReadPost *todo*,*list* doau FileType tst
     au BufReadPost,FileReadPost *todo*,*list* set syntax+=.txt
     au BufReadPost,FileReadPost *todo*,*list* map <buffer> <silent> <C-p> ?=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
     au BufReadPost,FileReadPost *todo*,*list* map <buffer> <silent> <C-n> /=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
@@ -1188,12 +1196,12 @@ augroup END
 
 " }}}
 " Vimwiki: " {{{
-" Autocmds: " {{{
-augroup vimwiki
-    "au! BufReadPre *.wiki doau FileType txt
-    au! BufReadPost,FileReadPost,BufNewFile *.wiki doau FileType tst
-    au BufNew vimwiki set foldlevel=999
-    au FileType vimwiki set syntax=vimwiki.txt
+" Vimwiki Autocmds: " {{{
+augroup Vimwiki | au!
+    au BufReadPost,BufNewFile *.wiki doau FileType txt
+    au BufReadPost,BufNewFile *.wiki doau FileType tst
+    au FileType vimwiki set foldlevel=99
+    au FileType vimwiki set syntax=txt.vimwiki
     au FileType vimwiki map <buffer> <silent> <C-p> ?=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
     au FileType vimwiki map <buffer> <silent> <C-n> /=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
     au FileType *vimwiki* nmap <buffer> <silent> <CR> :call VimwikiFollowLinkMod()<CR>
@@ -1201,7 +1209,7 @@ augroup vimwiki
 augroup END
 
 " }}}
-" Configuration: " {{{
+" Vimwiki Configuration: " {{{
 "" let wiki.nested_syntaxes = {'python': 'python'}
 let g:vimwiki_hl_headers = 1                " hilight header colors
 let g:vimwiki_hl_cb_checked = 1             " hilight todo item colors
@@ -1209,7 +1217,7 @@ let g:vimwiki_list_ignore_newline = 0       " convert newlines to <br /> in list
 let g:vimwiki_folding = 1                   " outline folding
 let g:vimwiki_table_auto_fmt = 0            " don't use and conflicts with snipMate
 let g:vimwiki_fold_lists = 1                " folding of list subitems
-let g:vimwiki_file_exts = 'pdf,txt,doc,rtf,xls,php,zip,rar,7z,html,gz,vim,screen'
+let g:vimwiki_file_exts = 'pdf,txt,doc,rtf,xls,php,zip,rar,7z,html,gz,vim,screen,tst'
 let g:vimwiki_valid_html_tags='b,i,s,u,sub,sup,kbd,br,hr,font,a,div,span'
 let g:vimwiki_list = [
              \{'path': '~/sandbox/personal/vimwiki/',
@@ -1322,7 +1330,8 @@ endfunction
 " }}}
 " Janrain:  " {{{
 
-map <D-j>w <Esc>:cd ~/sandbox/work/vm/rpx/ruby/rails/<CR>
+let g:engage_dir = "~/sandbox/work/vm/rpx/ruby/rails/"
+map <D-j>w <Esc>:exe 'cd' g:engage_dir \| pwd<CR>
 map <D-j>p <Esc>:cd ~/sandbox/personal/<CR>
 map <D-j>e <Esc>:GrepEngage<Space>
 command! -nargs=1 GrepEngage call GrepEngage(<f-args>)
@@ -1444,63 +1453,9 @@ map <Leader><S-CR> :call feedkeys("yyq:p\r", "n")<CR>
 
 " Automatic Behavior Per MacVim Instance: " {{{
 augroup Startup | au!
-    au GUIEnter * au! SwapExists * let v:swapchoice="a" | set shortmess+=A | augroup! Startup
-    au GUIEnter * nested silent! call StartupHandler()
+    au VimEnter * au! SwapExists * exe startup#handler().swapchoice() | set shortmess+=A | augroup! Startup
+    au VimEnter * nested silent! call startup#handler().handle()
 augroup END
-function! StartupHandler() " {{{
-    let startup = {}
-    fun startup.VimHelp() dict
-        help help
-    endfun
-    fun startup.TwitVim() dict
-        edit ~/.vim/twitcommands.vim
-        so %
-        let twitvim_count = 100
-        VimSearch
-        wincmd H
-        wincmd t
-        40wincmd  |
-    endfun
-    fun startup.Scratch() dict
-        edit ~/.vim/swap/scratch.scratch
-        call SmallWindow()
-    endfun
-    fun startup.MacVim() dict
-        call AdjustFont(-2)
-        edit ~/.vim/.vimrc
-        vsplit ~/.vim/.gvimrc | wincmd t | wincmd =
-    endfun
-    fun startup.VimWiki() dict
-        VimwikiIndex
-        set nolist
-        vsplit
-    endfun
-    fun startup.Tasks() dict
-        call AdjustFont(-2)
-        winsize 120 100
-        let host = text#strip(system('echo $SHORTHOST'))
-        if host == ""
-            redraw
-            echo "No host available."
-            return
-        elseif host == "SETH"
-            edit ~/sandbox/work/janrain.tst.txt
-        elseif host == "SAMSARA"
-            edit ~/sandbox/personal/todo/personal.tst.txt
-        elseif host == "LABORATORY"
-            edit ~/sandbox/personal/todo/laboratory.tst.txt
-        endif
-        normal ggzo
-    endfun
-    fun startup.handle() dict
-        let func_name = split(split($VIMRUNTIME, ".app")[0], '/')[1]
-        silent! call self[func_name]()
-    endfun
-
-    silent! call startup.handle()
-endfunction
-
-" }}}
 " }}}
 
 " Toggle number column: " {{{
@@ -1543,16 +1498,16 @@ augroup StatusLineHighlightExtra | au!
 augroup END
 
 function! StatusHighlightColors() " {{{
-    highlight def StatusLineModified           term=bold,reverse cterm=bold,reverse ctermfg=DarkRed   gui=bold,reverse guifg=DarkRed
-    highlight def StatusLineModifiedNC         term=reverse      cterm=reverse      ctermfg=LightRed  gui=reverse      guifg=LightRed
-    highlight def StatusLinePreview            term=bold,reverse cterm=bold,reverse ctermfg=Blue      gui=bold,reverse guifg=Blue
-    highlight def StatusLinePreviewNC          term=reverse      cterm=reverse      ctermfg=Blue      gui=reverse      guifg=Blue
-    highlight def StatusLineReadonly           term=bold,reverse cterm=bold,reverse ctermfg=Grey      gui=bold,reverse guifg=DarkGrey
-    highlight def StatusLineReadonlyNC         term=reverse      cterm=reverse      ctermfg=Grey      gui=reverse      guifg=DarkGrey
-    highlight def StatusLineSpecial            term=bold,reverse cterm=bold,reverse ctermfg=DarkGreen gui=bold,reverse guifg=DarkGreen
-    highlight def StatusLineSpecialNC          term=reverse      cterm=reverse      ctermfg=DarkGreen gui=reverse      guifg=DarkGreen
-    highlight def StatusLineUnmodifiable       term=bold,reverse cterm=bold,reverse ctermfg=Grey      gui=bold,reverse guifg=Grey
-    highlight def StatusLineUnmodifiableNC     term=reverse      cterm=reverse      ctermfg=Grey      gui=reverse      guifg=Grey
+  highlight def StatusLineModified       term=bold,reverse cterm=bold,reverse ctermfg=DarkRed   gui=bold,reverse guifg=DarkRed
+  highlight def StatusLineModifiedNC     term=reverse      cterm=reverse      ctermfg=LightRed  gui=reverse      guifg=LightRed
+  highlight def StatusLinePreview        term=bold,reverse cterm=bold,reverse ctermfg=Blue      gui=bold,reverse guifg=Blue
+  highlight def StatusLinePreviewNC      term=reverse      cterm=reverse      ctermfg=Blue      gui=reverse      guifg=Blue
+  highlight def StatusLineReadonly       term=bold,reverse cterm=bold,reverse ctermfg=Grey      gui=bold,reverse guifg=DarkGrey
+  highlight def StatusLineReadonlyNC     term=reverse      cterm=reverse      ctermfg=Grey      gui=reverse      guifg=DarkGrey
+  highlight def StatusLineSpecial        term=bold,reverse cterm=bold,reverse ctermfg=DarkGreen gui=bold,reverse guifg=DarkGreen
+  highlight def StatusLineSpecialNC      term=reverse      cterm=reverse      ctermfg=DarkGreen gui=reverse      guifg=DarkGreen
+  highlight def StatusLineUnmodifiable   term=bold,reverse cterm=bold,reverse ctermfg=Grey      gui=bold,reverse guifg=Grey
+  highlight def StatusLineUnmodifiableNC term=reverse      cterm=reverse      ctermfg=Grey      gui=reverse      guifg=Grey
 endfunction
 
 " }}}
