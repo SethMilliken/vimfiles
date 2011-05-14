@@ -157,7 +157,7 @@ function! startup#LABORATORY()
     endfun
 
     fun! s:obj.TasksFile() dict
-        return "~/sandbox/personal/todo/laboratory.tst.txt"
+        return "~/sandbox/personal/todo/laboratory.tst"
     endfun
 
     return s:obj.New()

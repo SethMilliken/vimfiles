@@ -38,6 +38,7 @@ function refresh {
 #refresh    viki                 git://github.com/tomtom/viki_vim.git
 #refresh    vim-addon-signs      git://github.com/MarcWeber/vim-addon-signs.git
 #refresh    vimple               git://github.com/dahu/vimple.git
+refresh    .pathogen-raimondi   git://github.com/Raimondi/vim-pathogen.git
 refresh    abolish              git://github.com/tpope/vim-abolish.git
 refresh    ack                  git://github.com/vim-scripts/ack.vim.git                   'brew install ack'
 refresh    ansiesc              git://github.com/vim-scripts/AnsiEsc.vim.git
@@ -63,7 +64,7 @@ refresh    matrix               git://github.com/vim-scripts/matrix.vim--Yang.gi
 refresh    nerdcommenter        git://github.com/scrooloose/nerdcommenter.git
 refresh    nerdtree             git://github.com/scrooloose/nerdtree.git
 refresh    paster               git://github.com/weierophinney/paster.vim.git
-refresh    pathogen             git://github.com/Raimondi/vim-pathogen.git
+refresh    pathogen         git://github.com/tpope/vim-pathogen.git
 refresh    pickacolor           git://github.com/Raimondi/PickAColor.git
 refresh    project              git://github.com/shemerey/vim-project.git
 refresh    rails                git://github.com/tpope/vim-rails.git
