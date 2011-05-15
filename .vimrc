@@ -1018,8 +1018,8 @@ augroup END
 
 "}}}
 " Fuf: " {{{
-augroup FuzzyFinder
-    au! FileType fuf imap <buffer> <silent> <Tab> <Down>
+augroup FuzzyFinder | au!
+    au FileType fuf imap <buffer> <silent> <Tab> <Down>
     au FileType fuf imap <buffer> <silent> <S-Tab> <Up>
 augroup END
 
