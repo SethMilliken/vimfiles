@@ -64,7 +64,7 @@ refresh    matrix               git://github.com/vim-scripts/matrix.vim--Yang.gi
 refresh    nerdcommenter        git://github.com/scrooloose/nerdcommenter.git
 refresh    nerdtree             git://github.com/scrooloose/nerdtree.git
 refresh    paster               git://github.com/weierophinney/paster.vim.git
-refresh    pathogen         git://github.com/tpope/vim-pathogen.git
+refresh    pathogen             git://github.com/tpope/vim-pathogen.git
 refresh    pickacolor           git://github.com/Raimondi/PickAColor.git
 refresh    project              git://github.com/shemerey/vim-project.git
 refresh    rails                git://github.com/tpope/vim-rails.git
