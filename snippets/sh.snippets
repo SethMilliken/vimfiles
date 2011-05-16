@@ -26,3 +26,7 @@ snippet case
 		${2:pattern})
 			${3};;
 	esac
+snippet exists
+	if [[ -e ${1:filepath} ]]; then
+		${2}
+	fi
