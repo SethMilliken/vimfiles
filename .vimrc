@@ -1385,6 +1385,27 @@ function! RecursiveFileSearch(callback) " {{{
     end
 endf
 
+command! VimFiles call VimFiles()
+command! Scriptnames call Scriptnames()
+command! WikiPages call WikiPages()
+
+function! VimFiles() " {{{
+    call fuf#givenfile#launch('', '0', '>', split(glob('~/.vim/**/*.vim'), "\n"))
+endfunction
+
+" }}}
+function! Scriptnames() " {{{
+    let output = '' | redir => output | silent! scriptnames | redir END
+    call fuf#givenfile#launch('', '0', '>', split(output, "\n"))
+endfunction
+
+" }}}
+function! WikiPages() " {{{
+    call fuf#givenfile#launch('', '0', '>', split(glob('~/sandbox/personal/vimwiki/*'), "\n"))
+endfunction
+
+" }}}
+
 " }}}
 " }}}
 " }}}
