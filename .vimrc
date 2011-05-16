@@ -263,6 +263,7 @@ nmap <silent> <Leader>] :NERDTreeToggle<CR>
 nmap <silent> <Leader>[ :TagbarToggle<CR>
 nmap <silent> <Leader>- :GundoToggle<CR>
 nmap <silent> <Leader>s :TBrowseScriptnames<CR>
+nmap <silent> <Leader>b :call feedkeys(":TBrowseOutput\<Space>", "t")<CR>
 
 " }}}
 " Folds: " {{{
@@ -1139,15 +1140,18 @@ let g:sessionman_save_on_exit = 0
 " BufExplorer: " {{{
 map <silent> <C-Tab> :BufExplorer<CR>j
 map <silent> <C-S-Tab> :BufExplorer<CR>k
-augroup BufExplorerAdd
+" Unmap default bindings.
+if maparg("<Leader>be") =~ 'BufExplorer' | exe "nunmap <Leader>be" | endif
+if maparg("<Leader>bs") =~ 'BufExplorerHorizontalSplit' | exe "nunmap <Leader>bs" | endif
+if maparg("<Leader>bv") =~ 'BufExplorerVerticalSplit' | exe "nunmap <Leader>bv" | endif
+augroup BufExplorerAdd | au!
     if !exists("g:BufExploreAdd")
         let g:BufExploreAdd = 1
         au BufWinEnter \[BufExplorer\] map <buffer> <Tab> <CR>
-        " FIXME: Subsequent invocations fail with this autoselect for some reason.
         " Navigate to the file under the cursor when you let go of Tab
-        "au BufWinEnter \[BufExplorer\] set updatetime=1000
+        au BufWinEnter \[BufExplorer\] set updatetime=600
         " o is the BufExplorer command to select a file
-        "au! CursorHold \[BufExplorer\] normal o
+        au CursorHold \[BufExplorer\] call feedkeys("o", "m")
     endif
 augroup END
 
@@ -1369,12 +1373,15 @@ set foldtext=CleanFoldText()
 " }}}
 " FuzzyFinder: " {{{
 let g:fuf_dataDir = '~/swap/.vim-fuf-data'
-"let g:fuf_file_exclude = '\v\~$|\.(o|exe|dll|bak|orig|swp)$|(^|[/\\])\.(hg|git|bzr)($|[/\\])'
+let g:fuf_file_exclude = '\v\~$|\.(o|exe|dll|bak|orig|swp)$|(^|[/\\])\.(hg|git|bzr)($|[/\\])'
 let g:fuf_maxMenuWidth = 150
 map <C-e>e  :FufBuffer<CR>
+map <C-e><C-e>  :FufBuffer<CR>
 map <C-e>f  :call RecursiveFileSearch(":FufCoverageFile")<CR>
 map <C-e>t  :FufTag<CR>
-map <C-e>v  :call fuf#givenfile#launch('', 0, 'VimFiles>', split(glob('~/.vim/**/*.vim'), "\n"))<CR>
+map <C-e>v  :VimFiles<CR>
+map <C-e>s  :Scriptnames<CR>
+map <C-e>w  :WikiPages<CR>
 
 function! RecursiveFileSearch(callback) " {{{
     let bad_paths = '^\(' . expand('~') . '\|' . expand('/') .'\)$'
@@ -1390,18 +1397,18 @@ command! Scriptnames call Scriptnames()
 command! WikiPages call WikiPages()
 
 function! VimFiles() " {{{
-    call fuf#givenfile#launch('', '0', '>', split(glob('~/.vim/**/*.vim'), "\n"))
+    call fuf#givenfile#launch('', '0', 'VimFiles>', split(glob('~/.vim/**/*.vim'), "\n"))
 endfunction
 
 " }}}
 function! Scriptnames() " {{{
     let output = '' | redir => output | silent! scriptnames | redir END
-    call fuf#givenfile#launch('', '0', '>', split(output, "\n"))
+    call fuf#givenfile#launch('', '0', 'Scriptnames>', split(output, "\n"))
 endfunction
 
 " }}}
 function! WikiPages() " {{{
-    call fuf#givenfile#launch('', '0', '>', split(glob('~/sandbox/personal/vimwiki/*'), "\n"))
+    call fuf#givenfile#launch('', '0', 'WikiPages>', split(glob('~/sandbox/personal/vimwiki/*'), "\n"))
 endfunction
 
 " }}}
