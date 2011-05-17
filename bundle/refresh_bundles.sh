@@ -78,6 +78,7 @@ refresh    sparkup              git://github.com/kogakure/vim-sparkup.git
 refresh    statuslinehighlight  git://github.com/vim-scripts/StatusLineHighlight.git
 refresh    surround             git://github.com/vim-scripts/surround.vim.git
 refresh    syntastic            git://github.com/sjl/syntastic.git
+refresh    tabular              git://github.com/godlygeek/tabular.git
 refresh    tagbar               git://github.com/majutsushi/tagbar.git
 refresh    textobj-function     git://github.com/kana/vim-textobj-function.git
 refresh    textobj-rubyblock    git://github.com/nelstrom/vim-textobj-rubyblock.git

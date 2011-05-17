@@ -1083,9 +1083,10 @@ endif
 
 " }}}
 " Tlib: " {{{
-augroup Tlib
-    au! FileType tlibInputList map <buffer> <Tab> <Down>
+augroup Tlib | au!
+    au FileType tlibInputList map <buffer> <Tab> <Down>
     au FileType tlibInputList map <buffer> <S-Tab> <Up>
+    au FileType tlibInputList set ft=vim
 augroup END
 
 " }}}
@@ -1272,6 +1273,9 @@ endfunction
 " }}}
 " Xptemplate: " {{{
 let g:xptemplate_brace_complete = 0
+let g:xptemplate_vars="$author=Seth Milliken"
+let g:xptemplate_vars="$email=Seth Milliken <seth_vim@araxia.net>"
+call g:XPTaddBundle('vimwiki', 'jquery')
 
 " }}}
 " VimSheet: " {{{
@@ -1372,8 +1376,9 @@ endfunction "}}}
 set foldtext=CleanFoldText()
 " }}}
 " FuzzyFinder: " {{{
-let g:fuf_dataDir = '~/swap/.vim-fuf-data'
+let g:fuf_dataDir = '~/.vim/swap/.vim-fuf-data'
 let g:fuf_file_exclude = '\v\~$|\.(o|exe|dll|bak|orig|swp)$|(^|[/\\])\.(hg|git|bzr)($|[/\\])'
+let g:fuf_coveragefile_exclude = g:fuf_file_exclude
 let g:fuf_maxMenuWidth = 150
 map <C-e>e  :FufBuffer<CR>
 map <C-e><C-e>  :FufBuffer<CR>
@@ -1392,10 +1397,16 @@ function! RecursiveFileSearch(callback) " {{{
     end
 endf
 
+command! DotFiles call DotFiles()
 command! VimFiles call VimFiles()
 command! Scriptnames call Scriptnames()
 command! WikiPages call WikiPages()
 
+function! DotFiles() " {{{
+    call fuf#givenfile#launch('', '0', 'DotFiles>', split(glob('~/.**/*'), "\n"))
+endfunction
+
+" }}}
 function! VimFiles() " {{{
     call fuf#givenfile#launch('', '0', 'VimFiles>', split(glob('~/.vim/**/*.vim'), "\n"))
 endfunction
@@ -1403,6 +1414,7 @@ endfunction
 " }}}
 function! Scriptnames() " {{{
     let output = '' | redir => output | silent! scriptnames | redir END
+    let output = substitute(output, '\s\+[0-9]\+:\s\+', '', 'g')
     call fuf#givenfile#launch('', '0', 'Scriptnames>', split(output, "\n"))
 endfunction
 
