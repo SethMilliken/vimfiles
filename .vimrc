@@ -209,7 +209,7 @@ map Y y$
 
 " Undoable deletes in insert
 inoremap <C-w> <C-g>u<C-w>
-inoremap <C-u> <C-g>u<C-w>
+inoremap <C-u> <C-g>u<C-u>
 
 " Extended Navigation
 nmap <C-e>h :bnext<CR>
@@ -880,6 +880,8 @@ au BufNewFile,BufRead *.yaml,*.yml so ~/.vim/syntax/yaml.vim
 au FileType ruby set fdm=syntax
 au BufNewFile,BufRead *vimperatorrc*,*.vimp set filetype=vimperator
 au BufNewFile,BufRead *pentadactylrc*,*.penta set filetype=pentadactyl
+au BufNewFile,BufRead *.adium set filetype=adium
+au BufNewFile,BufRead *.colloquy set filetype=colloquy
 
 " Java: " {{{
 augroup java
@@ -1275,7 +1277,37 @@ endfunction
 let g:xptemplate_brace_complete = 0
 let g:xptemplate_vars="$author=Seth Milliken"
 let g:xptemplate_vars="$email=Seth Milliken <seth_vim@araxia.net>"
-call g:XPTaddBundle('vimwiki', 'jquery')
+"command! Xup call g:XPTaddBundle('vimwiki', 'snippets')
+" Set personal snippet folder location:
+let g:xptemplate_snippet_folders=['/Users/seth/.vim/xptemplates/']
+
+" Turn off automatic closing of quotes and braces:
+let g:xptemplate_brace_complete = 0
+
+" Snippet triggering key:
+"let g:xptemplate_key = '<F1>'
+
+" Open the pop-up menu:
+let g:xptemplate_key_pum_only = '<Leader><Tab>'
+
+" Clear current placeholder and jump to the next:
+imap <C-d> <Tab>
+let g:xptemplate_nav_cancel = '<C-d>'
+
+" Move to the next placeholder in a snippet:
+let g:xptemplate_nav_next = '<Tab>'
+
+" Go to the end of the current placeholder and in to insert mode:
+let g:xptemplate_to_right = '<C-/>'
+"
+" Move cursor back to last placeholder:
+let g:xptemplate_goback = '<S-Tab>'
+"
+" Use TAB/S-TAB to navigate through the pop-up menu:
+let g:xptemplate_pum_tab_nav = 1
+"
+" Reload xptemplate snippets without quitting vim.
+nmap <Leader>x :XPTreload<CR>
 
 " }}}
 " VimSheet: " {{{
@@ -1414,7 +1446,7 @@ endfunction
 " }}}
 function! Scriptnames() " {{{
     let output = '' | redir => output | silent! scriptnames | redir END
-    let output = substitute(output, '\s\+[0-9]\+:\s\+', '', 'g')
+    let output = substitute(output, '\s*[0-9]\+:\s\+', '', 'g')
     call fuf#givenfile#launch('', '0', 'Scriptnames>', split(output, "\n"))
 endfunction
 
@@ -1496,6 +1528,35 @@ augroup Startup | au!
     au VimEnter * au! SwapExists * exe startup#handler().swapchoice() | set shortmess+=A | augroup! Startup
     au VimEnter * nested silent! call startup#handler().handle()
 augroup END
+" }}}
+" Vim Interface to Adium: " {{{
+augroup Adium | au!
+    au FileType adium noremap <silent> <buffer> <CR> :let adium_message = printf(":Adium %s", getline(".")) \| exe adium_message \| call feedkeys('o', 't')<CR>
+    au FileType adium imap <buffer> <CR> <Esc><CR>
+    au FileType adium winsize 60 8
+    au FocusLost *.adium write
+augroup END
+
+command! -nargs=* Adium :call SendTextToFrontmostAdiumChat(<q-args>)
+function! SendTextToFrontmostAdiumChat(...)
+    let message = shellescape(join(a:000, " "))
+    silent! exe "!osascript ~/bin/adium_gateway.scpt " . message
+endfunction
+
+" }}}
+" Vim Interface to Colloquy: " {{{
+augroup Colloquy| au!
+    au FileType colloquy noremap <silent> <buffer> <CR> :let colloquy_message = printf(":Colloquy %s", getline(".")) \| exe colloquy_message \| call feedkeys('o', 't')<CR>
+    au FileType colloquy imap <CR> <Esc><CR>
+    au FileType colloquy winsize 120 4
+    au FocusLost *.colloquy write
+augroup END
+
+command! -nargs=* Colloquy :call SendTextToFrontmostColloquyChat(<q-args>)
+function! SendTextToFrontmostColloquyChat(text)
+    silent! exe "!osascript ~/bin/colloquy_gateway.scpt '" . a:text . "'"
+endfunction
+
 " }}}
 
 " Toggle number column: " {{{
