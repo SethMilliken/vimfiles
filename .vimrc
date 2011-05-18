@@ -1530,34 +1530,42 @@ augroup Startup | au!
     au VimEnter * nested silent! call startup#handler().handle()
 augroup END
 " }}}
+
+function! EscapedLine()
+    return escape(getline("."), '%"')
+endfunction
+
 " Vim Interface to Adium: " {{{
 augroup Adium | au!
-    au FileType adium noremap <silent> <buffer> <CR> :let adium_message = printf(":Adium %s", getline(".")) \| exe adium_message \| call feedkeys('o', 't')<CR>
+    au FileType adium noremap <silent> <buffer> <CR> :let adium_message = printf(":Adium \"%s\"", EscapedLine()) \| exe adium_message \| call feedkeys('o', 't')<CR>
     au FileType adium imap <buffer> <CR> <Esc><CR>
     au FileType adium winsize 60 8
     au FocusLost *.adium write
 augroup END
 
 command! -nargs=* Adium :call SendTextToFrontmostAdiumChat(<q-args>)
-function! SendTextToFrontmostAdiumChat(...)
-    let message = shellescape(join(a:000, " "))
-    silent! exe "!osascript ~/bin/adium_gateway.scpt " . message
+function! SendTextToFrontmostAdiumChat(text)
+    let message = escape(shellescape(a:text), '`')
+    silent! exe printf("!ssh samsara osascript ~/bin/%s_gateway.scpt %s", "adium", message)
 endfunction
 
 " }}}
 " Vim Interface to Colloquy: " {{{
 augroup Colloquy| au!
-    au FileType colloquy noremap <silent> <buffer> <CR> :let colloquy_message = printf(":Colloquy %s", getline(".")) \| exe colloquy_message \| call feedkeys('o', 't')<CR>
+    au FileType colloquy noremap <silent> <buffer> <CR> :let colloquy_message = printf(":Colloquy \'%s\'", getline(".")) \| exe colloquy_message \| call feedkeys('o', 't')<CR>
     au FileType colloquy imap <CR> <Esc><CR>
     au FileType colloquy winsize 120 4
+    au FileType colloquy set spell
     au FocusLost *.colloquy write
 augroup END
 
 command! -nargs=* Colloquy :call SendTextToFrontmostColloquyChat(<q-args>)
 function! SendTextToFrontmostColloquyChat(text)
-    silent! exe "!osascript ~/bin/colloquy_gateway.scpt '" . a:text . "'"
+    let message = escape(shellescape(a:text), '`')
+    silent! exe printf("!ssh samsara osascript ~/bin/%s_gateway.scpt %s", "colloquy", message)
 endfunction
 
+" }}}
 " }}}
 
 " Toggle number column: " {{{
