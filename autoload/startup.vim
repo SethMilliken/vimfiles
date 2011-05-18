@@ -57,6 +57,16 @@ function! startup#base()
         40wincmd  |
     endfun
 
+    fun s:obj.ColloquyVim() dict
+        call AdjustFont(-2)
+        edit ~/.vim/swap/transcript.colloquy
+    endfun
+
+    fun s:obj.AdiumVim() dict
+        call AdjustFont(-4)
+        edit ~/.vim/swap/transcript.adium
+    endfun
+
     fun s:obj.MacVim() dict
         call AdjustFont(-2)
         edit ~/.vim/.vimrc
