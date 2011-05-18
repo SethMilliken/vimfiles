@@ -1387,6 +1387,7 @@ map <C-e>t  :FufTag<CR>
 map <C-e>v  :VimFiles<CR>
 map <C-e>s  :Scriptnames<CR>
 map <C-e>w  :WikiPages<CR>
+nmap <silent><unique> <Leader>o :Scriptnames<CR>
 
 function! RecursiveFileSearch(callback) " {{{
     let bad_paths = '^\(' . expand('~') . '\|' . expand('/') .'\)$'
