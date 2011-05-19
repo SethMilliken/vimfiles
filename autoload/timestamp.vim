@@ -101,10 +101,13 @@ function! timestamp#isUpdateOkay(line) "{{{
         echo "No autotimestamp: line already has open foldmarker."
         return 0
     elseif match(a:line, "^@") > -1
-        echo "No autotimestamp: project fold"
+        echo "No autotimestamp: category fold"
         return 0
     elseif match(a:line, FoldMarkerClose()) > 0
         echo "No autotimestamp: line already has close foldmarker."
+        return 0
+    elseif match(a:line, "^\\s\\+") > -1
+        echo "No autotimestamp: line begins with whitespace."
         return 0
     elseif match(a:line, "^x\\s\\|^o\\s\\|\\sx\\s\\|\\so\\s") > -1
         echo "No autotimestamp: line contains completed marker."
