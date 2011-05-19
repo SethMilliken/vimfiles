@@ -945,10 +945,10 @@ function! TaskstackMoveItemToNode(item,node) " {{{
     let l:nodeline = FindNode(a:node)
     let l:result = ""
     if l:nodeline != 0
-        let l:result = ':' . a:item . 'm' . nodeline
-        exe l:result
+        exe ':' . a:item . 'm' . nodeline
     end
-    return l:result
+    let result_dict = { "start": split(a:item, ",")[0], "end": split(a:item, ",")[1], "destination": nodeline  }
+    return result_dict
 endfunction
 
 " }}}
@@ -1025,15 +1025,19 @@ function! TaskstackMoveItemToProject(project_name) "{{{
     let l:result_message = ""
     if l:group_lines != 0
             let l:move_result = TaskstackMoveItemToNode(l:group_lines,a:project_name)
-            if l:move_result == ""
+            if l:move_result == {}
                 let l:result_message = "Project \"@" . a:project_name . "\" not found."
             else
-                    let l:result_message = "Moved item to project \"@" . a:project_name . "\". (" . l:move_result . ")"
+                let l:result_message = printf("Moved item to project \"@%s\" (:%s,%sm%s)", a:project_name, l:move_result["start"], l:move_result["end"], l:move_result["destination"])
             endif
     else
             let l:result_message = "Can't move non-item."
     endif
     call winrestview(l:origview)
+    " Adjust for positioning offset caused by moving lines up
+    if line(".") > l:move_result["destination"]
+        exe printf("normal %sj", (l:move_result["end"] - l:move_result["start"]) + 1)
+    end
     return l:result_message
 endfunction
 
