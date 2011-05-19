@@ -978,9 +978,17 @@ endfunction
 
 " }}}
 function! TaskstackNavigateToProjectPrompted() " {{{
+    let first_visible = line("w0")
+    let last_visible = line("w$")
+    let original_line = line(".")
     let l:incoming = input("Navigate to: ", "", "custom,TaskstackProjectNameCompletion")
-    call FindNode("@" . l:incoming)
-    normal zv
+    let destination = FindNode("@" . l:incoming)
+    if index(range(first_visible, last_visible), destination) == -1
+        let offset_from_top = original_line - first_visible
+        call cursor(destination - offset_from_top, 0)
+        normal zt
+        call cursor(destination, 0)
+    end
 endfunction
 
 "}}}
@@ -992,7 +1000,7 @@ function! TaskstackMoveToProjectPrompt() " {{{
     endif
     let l:project_name = TaskstackPromptProjectName()
     call winrestview(l:origview)
-  return TaskstackMoveItemToProject(l:project_name)
+    return TaskstackMoveItemToProject(l:project_name)
 endfunction
 
 " }}}
