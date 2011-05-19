@@ -942,6 +942,7 @@ augroup TaskStack
     au FileType *tst* nmap <buffer> :w<CR> :call TaskstackSave()<CR>
     au FileType *tst* nmap <buffer> <silent> <C-x>x :call TaskstackGroups()<CR>
     au FileType *tst* nmap <buffer> K :echo TaskstackMoveToProjectPrompt()<CR>
+    au FileType *tst* nmap <buffer> <Leader>k :call TaskstackMoveItemToProject("@categorize")<CR>
     au FileType *tst* nmap <buffer> <C-e>/ :call TaskstackNavigateToProjectPrompted()<CR>
     au FileType *tst* nmap <buffer> <C-y>k :echo TaskstackMoveToProjectAutoDetect()<CR>
     au FileType *tst* nmap <buffer> <silent> <Tab> :call search("@.*\\\\|^[A-Z]\\+")<CR>
@@ -1543,6 +1544,7 @@ augroup Adium | au!
     au FocusLost *.adium write
 augroup END
 
+nmap <Leader>a :call feedkeys(":Adium \"", 't')<CR>
 command! -nargs=* Adium :call SendTextToFrontmostAdiumChat(<q-args>)
 function! SendTextToFrontmostAdiumChat(text)
     let message = escape(shellescape(a:text), '`')
@@ -1566,6 +1568,55 @@ function! SendTextToFrontmostColloquyChat(text)
 endfunction
 
 " }}}
+
+" Binding for entering key-notation " {{{
+imap <C-e><C-k> <C-r>=KeyBindingElementSequencePrompted()<CR>
+
+function! KeyBindingElementSequencePrompted() " {{{
+    call inputsave()
+    let input = input("Key: ")
+    call inputrestore()
+    let result = KeyBindingElementSequence(input)
+    return result
+endfunction
+
+" }}}
+function! KeyBindingElementSequence(input) " {{{
+    let elements = split(a:input, ",")
+    let result = join(map(elements, 'KeyBindingElement(v:val)'), '')
+    return result
+endfunction
+
+" }}}
+function! KeyBindingElement(input) " {{{
+    let elements = split(a:input, " ")
+    let elements[0] = toupper(elements[0])
+    if elements[0] == 'B'  | return "<Bar>"       | endif
+    if elements[0] == 'E'  | return "<Esc>"       | endif
+    if elements[0] == 'EN' | return "<End>"       | endif
+    if elements[0] == 'H'  | return "<Left>"      | endif
+    if elements[0] == 'HO' | return "<Home>"      | endif
+    if elements[0] == 'J'  | return "<Right>"     | endif
+    if elements[0] == 'K'  | return "<Up>"        | endif
+    if elements[0] == 'L'  | return "<Down>"      | endif
+    if elements[0] == 'LE' | return "<Leader>"    | endif
+    if elements[0] == 'LT' | return "<lt>"        | endif
+    if elements[0] == 'PD' | return "<PageUp>"    | endif
+    if elements[0] == 'PU' | return "<PageDown>"  | endif
+    if elements[0] == 'SP' | return "<Space>"     | endif
+    if elements[0] == 'T'  | return "<Tab>"       | endif
+    if len(elements) == 3
+        let elements[1] = toupper(elements[1])
+    endif
+    if len(elements) > 0
+        return "<" . join(elements, "-") . ">"
+    else
+        return ""
+    endif
+endfunction
+
+" }}}
+
 " }}}
 
 " Toggle number column: " {{{
@@ -1634,6 +1685,7 @@ function! MantisTicketFromEmail() " {{{
     echo printf("'%s' added to pasteboard.", text#strip(@*))
 endfunction
 
+" }}}
 " }}}
 " }}}
 
