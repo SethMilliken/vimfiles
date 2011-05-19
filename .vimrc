@@ -222,8 +222,8 @@ nmap <C-x>p :call system("ssh localhost pbcopy", getreg('*')) \| echo "Copied de
 
 " }}}
 " Reset: restore some default settings and redraw " {{{
-nnoremap <silent> <C-L> :call Reset() \| nohls<CR>
-imap <silent> <C-L> <Esc><C-L>a
+nnoremap <silent> <C-l> :call Reset() \| nohls<CR>
+imap <silent> <C-l> <Esc><C-l>
 
 " }}}
 " Custom: <C-y> prefixed custom commands " {{{
@@ -1618,6 +1618,20 @@ function! StatusHighlightColors() " {{{
   highlight def StatusLineSpecialNC      term=reverse      cterm=reverse      ctermfg=DarkGreen gui=reverse      guifg=DarkGreen
   highlight def StatusLineUnmodifiable   term=bold,reverse cterm=bold,reverse ctermfg=Grey      gui=bold,reverse guifg=Grey
   highlight def StatusLineUnmodifiableNC term=reverse      cterm=reverse      ctermfg=Grey      gui=reverse      guifg=Grey
+endfunction
+
+" }}}
+
+augroup MantisEmail
+    au FileType email map <silent> <buffer> <Leader>= :call MantisTicketFromEmail()<CR>
+augroup END
+function! MantisTicketFromEmail() " {{{
+    set buftype=nofile
+    silent! v/Issue [0-9]\+\|Summary:/d
+    silent! %s/Issue \([0-9]\+\).*\nSummary:\s\+\(.*\)/mt#\1: \2/
+    normal yy
+    winsize 120 4
+    echo printf("'%s' added to pasteboard.", text#strip(@*))
 endfunction
 
 " }}}
