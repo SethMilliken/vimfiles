@@ -1,5 +1,6 @@
+- <Leader>b to browse output of a command
 - try something different
-- do somthing new
+- do something new
 - use i_<C-t> and i_<C-d> for insert mode indentation
 - use Command-Shift-/ for menu navigation
 - use <C-m> for <CR>
@@ -9,4 +10,5 @@
 - use taskstack for queuing up todo items even if you're not actively doing them now
 #- replace only visual selection with s/\%Vregex\%V/foo/g
 - sit up straight
+- add a tip here
 # vim: set spell
