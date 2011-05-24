@@ -37,7 +37,6 @@ function refresh {
 #refresh    tlib-seth            git@github.com:SethMilliken/tlib_vim.git
 #refresh    viki                 git://github.com/tomtom/viki_vim.git
 #refresh    vim-addon-signs      git://github.com/MarcWeber/vim-addon-signs.git
-#refresh    vimple               git://github.com/dahu/vimple.git
 refresh    .pathogen-raimondi   git://github.com/Raimondi/vim-pathogen.git
 refresh    abolish              git://github.com/tpope/vim-abolish.git
 refresh    ack                  git://github.com/vim-scripts/ack.vim.git                   'brew install ack'
@@ -91,6 +90,7 @@ refresh    vim-addon-async      git://github.com/MarcWeber/vim-addon-async.git
 refresh    vim-javascript       git://github.com/pangloss/vim-javascript.git
 refresh    vim-ragtag           git://github.com/tpope/vim-ragtag.git
 refresh    vim-ruby             git://github.com/vim-ruby/vim-ruby.git
+refresh    vimple               git://github.com/dahu/vimple.git
 refresh    vimwiki              git://github.com/vim-scripts/vimwiki.git
 refresh    vundle               git://github.com/vim-scripts/vundle.git
 refresh    xml                  git://github.com/vim-scripts/xml.vim.git
