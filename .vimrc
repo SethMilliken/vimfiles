@@ -31,6 +31,9 @@
 " Pathogen: " {{{
 set rtp+=~/.vim/bundle/pathogen/
 call pathogen#infect()
+"let g:did_install_default_menus = 1 " disable default macvim menus
+let g:did_install_syntax_menu = 1
+let g:vimwiki_menu = ''
 
 " }}}
 
@@ -136,6 +139,7 @@ set foldmethod=marker               " use markers for the default foldmethod
 set foldopen+=jump                  " jumps open folds, too
 set display+=lastline               " always show as much of the last line as possible
 set guioptions+=c                   " always use console dialogs (faster)
+set guioptions-=m                   " no menu
 set noerrorbells                    " don't need to hear if i hit esc twice
 set visualbell | set t_vb=          " ...nor see it
 set ignorecase                      " case ignored for searches
@@ -195,11 +199,11 @@ command! W :w
 nmap <S-Space> <C-f>
 
 " c & p normalization
-nmap dD :normal 0y$"_dd<CR>
-vmap dD :normal gvygv"_x<CR>
-vmap <BS> :normal gv"_x<CR>
+nmap dD :normal! _y$"_dd<CR>
+vmap dD :normal! gvygv"_x<CR>
+vmap <BS> :normal! gv"_x<CR>
 vmap dC :normal gv"_xP<CR>
-nnoremap dd :normal! dd<CR>
+nnoremap dd :silent! normal! dd<CR>
 nnoremap d<Space> :normal! d<CR>
 nnoremap <Leader>p :call text#append_line(getreg("*"), "below")<CR>
 nnoremap <Leader>P :call text#append_line(getreg("*"), "above")<CR>
@@ -291,7 +295,7 @@ nmap <silent> <Leader>q :call FormatSqlStatement()<CR>
 " }}}
 " Completion: show completion preview, without actually completing " {{{
 inoremap <C-p> <C-r>=pumvisible() ? "\<lt>Up>" : "\<lt>C-o>:set completeopt+=menuone\<lt>CR>a\<lt>C-n>\<lt>C-p>"<CR>
-inoremap <C-n> <C-r>=pumvisible() ? "\<lt>Down>" : "\<lt>C-o>:set completeopt+=menuone\<lt>CR>a\<lt>C-p>\<lt>C-n>"<CR>
+"inoremap <C-n> <C-r>=pumvisible() ? "\<lt>Down>" : "\<lt>C-o>:set completeopt+=menuone\<lt>CR>a\<lt>C-p>\<lt>C-n>"<CR>
 
 " }}}
 " Help: help help help " {{{
@@ -1292,7 +1296,7 @@ let g:xptemplate_brace_complete = 0
 let g:xptemplate_key_pum_only = '<Leader><Tab>'
 
 " Clear current placeholder and jump to the next:
-imap <C-d> <Tab>
+" imap <C-d> <Tab>
 let g:xptemplate_nav_cancel = '<C-d>'
 
 " Move to the next placeholder in a snippet:
