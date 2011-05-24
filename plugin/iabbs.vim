@@ -19,5 +19,6 @@ iabb ia iabb
 iabb labo laboratory.local
 iabb sam samsaral.local
 iabb jan seth.local
+iabb wrt with respect to
 
 " }}}
