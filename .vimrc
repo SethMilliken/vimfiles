@@ -1554,7 +1554,7 @@ endfunction
 " }}}
 " Vim Interface to Colloquy: " {{{
 augroup Colloquy| au!
-    au FileType colloquy noremap <silent> <buffer> <CR> :let colloquy_message = printf(":Colloquy \'%s\'", getline(".")) \| exe colloquy_message \| call feedkeys('o', 't')<CR>
+    au FileType colloquy noremap <silent> <buffer> <CR> :let colloquy_message = printf(":colloquy \"%s\"", EscapedLine()) \| exe colloquy_message \| call feedkeys('o', 't')<CR>
     au FileType colloquy imap <CR> <Esc><CR>
     au FileType colloquy winsize 120 4
     au FileType colloquy set spell
@@ -1571,6 +1571,7 @@ endfunction
 
 " Binding for entering key-notation " {{{
 imap <C-e><C-k> <C-r>=KeyBindingElementSequencePrompted()<CR>
+imap ;; <Esc>:call keynotation#parse()<CR>a
 
 function! KeyBindingElementSequencePrompted() " {{{
     call inputsave()
