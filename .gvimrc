@@ -73,7 +73,6 @@ if has("gui_running")
     "set t_AF=[38;5;%dm                    " document this
     color araxia                            " hey, those are my colors!
     set guioptions-=T                       " no toolbar
-    set guioptions-=m                       " no menu
     "" Simple, informative gui tabs (dirty, number, name without path)
     set guitablabel=%m\ %N\ %t\ %r
     set tabpagemax=10                       " don't get ridiculous
@@ -100,8 +99,14 @@ if has("gui_macvim")
     nmap <silent> <D-w>     <Esc>:bd<CR>
     " NOTE: Have to unset menu commands in gvimrc
     " Free Command Key Bindings " {{{
-    macmenu File.Print key=<nop>
-    macmenu Window.Zoom key=<nop>
+  macm File.New\ Window				key=<D-n> action=newWindow:
+  macm File.New\ Tab				key=<D-t>
+  macm File.Close				key=<D-w> action=performClose:
+  macm File.Save<Tab>:w				key=<D-s>
+  macm File.Save\ All				key=<D-M-s> alt=YES
+  macm File.Save\ As\.\.\.<Tab>:sav		key=<D-S>
+"    macmenu File.Print key=<nop>
+"    macmenu Window.Zoom key=<nop>
     map <silent> <D-p> :ln <CR>
     map <silent> <D-P> :lp <CR>
     map <silent> <D-e> :cn <CR>
