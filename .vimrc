@@ -1514,6 +1514,12 @@ function! PluginInstall(plugin)
 endfunction
 
 " }}}
+" Hexhighlight: " {{{
+nmap <Leader>ht <Plug>HexHighlightToggle
+nmap <Leader>hr <Plug>HexHighlightRefresh
+nmap <Leader>hc <Plug>RefreshColorScheme
+
+" }}}
 " Vimple: " {{{
 let g:loaded_vimpreviewtag = 1
 
