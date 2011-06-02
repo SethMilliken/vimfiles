@@ -203,10 +203,10 @@ nmap dD :normal! _y$"_dd<CR>
 vmap dD :normal! gvygv"_x<CR>
 vmap <BS> :normal! gv"_x<CR>
 vmap dC :normal gv"_xP<CR>
-nnoremap dd :silent! normal! dd<CR>
-nnoremap d<Space> :normal! d<CR>
-nnoremap <Leader>p :call text#append_line(getreg("*"), "below")<CR>
-nnoremap <Leader>P :call text#append_line(getreg("*"), "above")<CR>
+"nnoremap <Leader>p :call text#append_line(getreg("*"), "below")<CR>
+"nnoremap <Leader>P :call text#append_line(getreg("*"), "above")<CR>
+nnoremap <Leader>p :put<CR>
+nnoremap <Leader>P :put!<CR>
 
 " sane-itize Y
 map Y y$
@@ -1672,6 +1672,7 @@ augroup END
 function! StatusHighlightColors() " {{{
   highlight def StatusLineModified       term=bold,reverse cterm=bold,reverse ctermfg=DarkRed   gui=bold,reverse guifg=DarkRed
   highlight def StatusLineModifiedNC     term=reverse      cterm=reverse      ctermfg=LightRed  gui=reverse      guifg=LightRed
+  highlight CursorColumn term=reverse      cterm=reverse      ctermfg=LightRed  gui=reverse      guifg=LightRed
   highlight def StatusLinePreview        term=bold,reverse cterm=bold,reverse ctermfg=Blue      gui=bold,reverse guifg=Blue
   highlight def StatusLinePreviewNC      term=reverse      cterm=reverse      ctermfg=Blue      gui=reverse      guifg=Blue
   highlight def StatusLineReadonly       term=bold,reverse cterm=bold,reverse ctermfg=Grey      gui=bold,reverse guifg=DarkGrey
