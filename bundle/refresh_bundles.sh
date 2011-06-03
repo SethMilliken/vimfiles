@@ -87,6 +87,7 @@ refresh    twitvim              git://github.com/vim-scripts/TwitVim.git
 refresh    vcscommand           git://github.com/vim-scripts/vcscommand.vim.git
 refresh    viki                 git://github.com/vim-scripts/VikiDeplate.git
 refresh    vim-addon-async      git://github.com/MarcWeber/vim-addon-async.git
+refresh    vim-addon-manager    git://github.com/MarcWeber/vim-addon-manager.git
 refresh    vim-addon-mw-utils   git://github.com/MarcWeber/vim-addon-mw-utils.git
 refresh    vim-javascript       git://github.com/pangloss/vim-javascript.git
 refresh    vim-ragtag           git://github.com/tpope/vim-ragtag.git
