@@ -994,7 +994,7 @@ function! ScratchCopy()
     if &modified == 1
         silent write
     endif
-    exec ":0,$y"
+    "exec ":0,$y"
 endfunction
 
 function! ScratchPaste()
