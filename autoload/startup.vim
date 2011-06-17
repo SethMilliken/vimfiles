@@ -57,6 +57,17 @@ function! startup#base()
         40wincmd  |
     endfun
 
+    fun s:obj.Todo() dict
+        call AdjustFont(-2)
+        edit ~/sandbox/personal/todo/todo.txt
+        vsplit | vsplit
+        tabnew ~/sandbox/personal/todo/techtodo.txt
+        vsplit | vsplit
+        tabnew ~/sandbox/personal/lists/readinglist.txt
+        vsplit ~/sandbox/personal/lists/videolist.txt
+        wincmd =
+    endfun
+
     fun s:obj.ColloquyVim() dict
         call AdjustFont(-2)
         edit ~/.vim/swap/transcript.colloquy

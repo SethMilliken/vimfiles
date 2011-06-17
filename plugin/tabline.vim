@@ -54,6 +54,9 @@ function! MyTabLine()
 endfunction
 
 function! MyTabLabel(n)
+        if exists("t:tabname")
+            return t:tabname
+        endif
 	let buflist = tabpagebuflist(a:n)
 	let winnr = tabpagewinnr(a:n)
 	let numtabs = tabpagenr('$')
@@ -68,7 +71,30 @@ function! MyTabLabel(n)
 	return tablabel
 endfunction
 
+command! SolicitTabName call SolicitTabName()
+
+function! SolicitTabName()
+    let tabname = input("Tab name: ")
+    call SetTabName(tabname)
+endfunction
+
+function! SetTabName(name)
+    if len(a:name) == 0
+        if exists("t:tabname")
+            unlet t:tabname
+        endif
+    else
+        let t:tabname = a:name
+    endif
+    normal gtgT
+endfunction
+
+function! MyGuiTabLabel()
+	return exists("t:tabname") ? "%N %{t:tabname} %m" : "%m %N %t %r"
+endfunction
+
 set tabline=%!MyTabLine()
+set guitablabel=%!MyGuiTabLabel()
 
 set showtabline=1 " 2=always
 autocmd GUIEnter * hi! TabLineFill term=underline cterm=underline gui=underline
