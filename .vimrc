@@ -1699,6 +1699,10 @@ endfunction
 
 " }}}
 " }}}
+
+" <M-S-t>
+nmap ˇ :call SolicitTabName()<CR>
+
 " }}}
 
 " let g:session_autoload = 1
