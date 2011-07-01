@@ -94,7 +94,7 @@ if has("gui_macvim")
     set guifont=Inconsolata:h15
     winsize 345 500                         " set a reasonable window size
     "" Map Cmd-t to new tab
-    exec "nmap <silent> <D-t>     <Esc>:" . &tabpagemax . "tabnew \| :SolicitTabName<CR>"
+    exec "nmap <silent> <D-t>     <Esc>:" . &tabpagemax . "tabnew | :SolicitTabName<CR>"
     "" Map Cmd-w to close buffer
     nmap <silent> <D-w>     <Esc>:bd<CR>
     " NOTE: Have to unset menu commands in gvimrc
