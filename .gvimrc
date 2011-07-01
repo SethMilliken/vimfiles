@@ -24,7 +24,6 @@ function! s:DefaultSettings.New()
         "" No toolbar, please.
         set guioptions-=T
         "" Simple, informative gui tabs (dirty, number, name without path)
-        set guitablabel=%m\ %N\ %t\ %r
         set tabpagemax=10
         " yank to system clipboard
         set clipboard=unnamed
@@ -71,10 +70,12 @@ if has("gui_running")
     "set t_Co=256
     "set t_AB=[48;5;%dm                    " document this
     "set t_AF=[38;5;%dm                    " document this
-    color araxia                            " hey, those are my colors!
-    set guioptions-=T                       " no toolbar
+    color araxia                             " hey, those are my colors!
+    " no toolbar, no scrollbars
+    for value in ['T','r','R','l','L']
+        exec "set guioptions -=" . value
+    endfor
     "" Simple, informative gui tabs (dirty, number, name without path)
-    set guitablabel=%m\ %N\ %t\ %r
     set tabpagemax=10                       " don't get ridiculous
 else
     if (&t_Co > 8)
