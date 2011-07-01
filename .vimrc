@@ -201,8 +201,8 @@ vmap <BS> :normal! gv"_x<CR>
 vmap dC :normal gv"_xP<CR>
 "nnoremap <Leader>p :call text#append_line(getreg("*"), "below")<CR>
 "nnoremap <Leader>P :call text#append_line(getreg("*"), "above")<CR>
-nnoremap <Leader>p :put<CR>
-nnoremap <Leader>P :put!<CR>
+nnoremap <expr> <Leader>p ':put ' . v:register . '<CR>'
+nnoremap <expr> <Leader>P ':put! ' . v:register . '<CR>'
 
 " sane-itize Y
 map Y y$
