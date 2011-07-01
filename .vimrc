@@ -129,7 +129,7 @@ set laststatus=2                    " always show the status line
 set diffopt+=vertical               " use vertical splits for diff
 set splitright                      " open vertical splits to the right
 set splitbelow                      " open horizonal splits below
-set winfixheight                    " keep existing window height when possible
+" set winfixheight                    " keep existing window height when possible
 set winminheight=0                  " minimized horizontal splits show only statusline
 set switchbuf=useopen               " when switching to a buffer, go to where it's already open
 set history=10000                   " keep craploads of command history
@@ -146,6 +146,7 @@ set ignorecase                      " case ignored for searches
 set smartcase                       " override ignorecase for searches with uppercase
 set clipboard=unnamed               " share os pasteboard
 set cursorline                      " highlight current line
+set wildmenu                        " show completion options
 
 let mapleader="\\"                  " <Leader>
 
@@ -163,10 +164,6 @@ set wildignore+=*.o,*.sw?,*.git,*.svn,*.hg,**/build,*.?ib,*.png,*.jpg,*.jpeg,
             \*.sqlite*,*.collection,*.qsindex,*.qsplugin,*.growlTicket,
             \*.part,*.ics,*.ico,**/iPhone\ Simulator,*.lock*,*.webbookmark
 
-" To transform wildignore into fuf_exclude...
-" s/\*\./\\\./g | s/,/|/g
-let g:fuf_coveragefile_exclude = '\v\~$|\.(o|exe|dll|bak|orig|swp)$|(^|[/\\])\.(hg|git|bzr)($|[/\\])|.gitignore|.DS_Store|.htaccess'
-
 " Tags: universal location
 set tags+=$HOME/sandbox/personal/tags
 set tags+=$HOME/.vim/tags
@@ -175,8 +172,7 @@ set tags+=$HOME/.vim/tags
 set directory=$HOME/.vim/swap//,~/vimfiles/swap//
 
 " Sessionopts: defaults are blank,buffers,curdir,folds,help,options,tabpages,winsize
-set ssop=folds,help,options,tabpages,winsize
-set ssop+=globals,sesdir,resize,winpos,unix
+set ssop=blank,buffers,curdir,folds,help,resize,slash,tabpages,unix,winpos,winsize
 
 " Statusline: TODO: annotate this status line
 set statusline=%<\(%n\)\ %m%y%r\ %f\ %=%-14.(%l,%c%V%)\ %P
@@ -1133,6 +1129,7 @@ let g:pickacolor_use_web_colors = 1
 " HTML: " {{{dd
 let g:no_html_tab_mapping=1
 let g:no_html_toolbar=1
+"let g:html_map_leader=':'
 
 " }}}
 " Minbufexplorer: " {{{
@@ -1413,9 +1410,11 @@ endfunction "}}}
 set foldtext=CleanFoldText()
 " }}}
 " FuzzyFinder: " {{{
-let g:fuf_dataDir = '~/.vim/swap/.vim-fuf-data'
-let g:fuf_file_exclude = '\v\~$|\.(o|exe|dll|bak|orig|swp)$|(^|[/\\])\.(hg|git|bzr)($|[/\\])'
+" To transform wildignore into fuf_exclude...
+" s/\*\./\\\./g | s/,/|/g
+let g:fuf_file_exclude='\v\~$|\.(o|exe|dll|bak|orig|swp)$|(^|[/\\])\.(hg|git|bzr)($|[/\\])|.gitignore|.DS_Store|.htaccess'
 let g:fuf_coveragefile_exclude = g:fuf_file_exclude
+let g:fuf_dataDir = '~/.vim/swap/.vim-fuf-data'
 let g:fuf_maxMenuWidth = 150
 map <C-e>e  :FufBuffer<CR>
 map <C-e><C-e>  :FufBuffer<CR>
@@ -1581,7 +1580,7 @@ endfunction
 
 " Binding for entering key-notation " {{{
 imap <C-e><C-k> <C-r>=KeyBindingElementSequencePrompted()<CR>
-imap ;; <Esc>:call keynotation#parse()<CR>a
+imap -- <Esc>:call keynotation#parse()<CR>a
 
 function! KeyBindingElementSequencePrompted() " {{{
     call inputsave()
