@@ -147,6 +147,7 @@ set smartcase                       " override ignorecase for searches with uppe
 set clipboard=unnamed               " share os pasteboard
 set cursorline                      " highlight current line
 set wildmenu                        " show completion options
+set autoread                        " automatically reread fs changed files *autoread*
 
 let mapleader="\\"                  " <Leader>
 
@@ -1531,8 +1532,9 @@ let g:loaded_vimpreviewtag = 1
 
 " Execute current line as an ex command.
 map <Leader><CR> 0"ty$:<C-r>t<CR>:echo "Executed: " . @t<CR>
+"vmap <Leader><CR> "ty \| exec ":call feedkeys(q:" . getreg("t") . ")"<CR>
 " Execute current line as an ex command (no status to allow echo).
-map <Leader><S-CR> :call feedkeys("yyq:p\r", "n")<CR>
+map <Leader><S-CR> :call feedkeys("\"tyyq:\"tp\r", "n")<CR>
 
 " Automatic Behavior Per MacVim Instance: " {{{
 augroup Startup | au!
@@ -1701,6 +1703,25 @@ endfunction
 
 " <M-S-t>
 nmap ˇ :call SolicitTabName()<CR>
+
+" Execute visual selection as function contents: {{{
+function! ExecuteSelection() abort
+    normal "ty
+    split +enew
+    let incoming = getreg("t")
+    let contents = ["function! TransientFunction() abort"]
+    let contents = extend(contents, split(incoming, '\n'))
+    let contents = extend(contents, ["endfunction"])
+    call append(0, contents)
+    exec "silent w " . tempname() . ".vim"
+    so %
+    bd
+    call TransientFunction()
+    function TransientFunction
+endfunction
+
+vmap <buffer> K "ty:call ExecuteSelection()<CR>
+" }}}
 
 " }}}
 
