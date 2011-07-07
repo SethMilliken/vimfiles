@@ -500,8 +500,13 @@ endfunction
 "}}}
 command! UnlinewiseMovement :call UnlinewiseMovement()
 function! UnlinewiseMovement() " {{{
-  nnoremap <buffer> j gj
-  nnoremap <buffer> k gk
+    if maparg("j") == "gj"
+        unmap <buffer> j
+        unmap <buffer> k
+    else
+        nnoremap <buffer> j gj
+        nnoremap <buffer> k gk
+    end
 endfunction
 
 " }}}
