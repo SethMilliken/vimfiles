@@ -1,0 +1,9 @@
+swap/
+bundle/
+sessions/
+.DS_Store
+.hg/
+.netrwhist
+bundled_plugins
+*tags*
+view/
