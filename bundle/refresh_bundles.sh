@@ -51,6 +51,7 @@ refresh    csapprox             git://github.com/godlygeek/csapprox.git
 refresh    extradite            git://github.com/int3/vim-extradite.git
 refresh    fugitive             git://github.com/tpope/vim-fugitive.git
 refresh    fuzzyfinder          git://github.com/vim-scripts/FuzzyFinder.git
+refresh    gitv                 git://github.com/gregsexton/gitv.git
 refresh    gundo                git://github.com/sjl/gundo.vim.git
 refresh    hexhighlight         git://github.com/yurifury/hexHighlight.git
 refresh    javaScriptLint       git://github.com/smith/javaScriptLint.vim.git               'brew install jsl'
