@@ -13,16 +13,14 @@ let twitvim_count = 100
 
 FriendsTwitter
 VimSearch
-SearchTwitter jemmons
-SearchTwitter jcblitz
-SearchTwitter uXuf
-SearchTwitter james_herdman
 SearchTwitter #MacVim
-SearchTwitter evanrkeller
-SearchTwitter mikelikesbikes
 SearchTwitter stevelosh
 SearchTwitter b4winckler
 SearchTwitter #rails
+SearchTwitter jemmons
+SearchTwitter james_herdman
+SearchTwitter evanrkeller
+SearchTwitter mikelikesbikes
 SearchTwitter cleverdevil
 SearchTwitter JonRowe
 SearchTwitter tungd
