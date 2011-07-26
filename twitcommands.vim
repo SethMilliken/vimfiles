@@ -14,6 +14,7 @@ let twitvim_count = 100
 FriendsTwitter
 VimSearch
 SearchTwitter #MacVim
+SearchTwitter #Lion
 SearchTwitter stevelosh
 SearchTwitter b4winckler
 SearchTwitter #rails
