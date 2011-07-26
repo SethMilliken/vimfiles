@@ -1543,8 +1543,8 @@ map <Leader><S-CR> :call feedkeys("\"tyyq:\"tp\r", "n")<CR>
 
 " Automatic Behavior Per MacVim Instance: " {{{
 augroup Startup | au!
-    au VimEnter * au! SwapExists * exe startup#handler().swapchoice() | set shortmess+=A | augroup! Startup
-    au VimEnter * nested silent! call startup#handler().handle()
+    au GuiEnter * au! SwapExists * exe startup#handler().swapchoice() | set shortmess+=A | augroup! Startup
+    au GuiEnter * nested silent! call startup#handler().handle()
 augroup END
 " }}}
 
