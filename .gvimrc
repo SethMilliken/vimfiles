@@ -81,7 +81,7 @@ else
     if (&t_Co > 8)
         color desert256                     " decent fallback if necessary
     else
-        color elflord                       " sigh
+        color araxia
     end
 end
 
@@ -95,13 +95,13 @@ if has("gui_macvim")
     set guifont=Inconsolata:h15
     winsize 345 500                         " set a reasonable window size
     "" Map Cmd-t to new tab
-    exec "nmap <silent> <D-t>     <Esc>:" . &tabpagemax . "tabnew | :SolicitTabName<CR>"
+    exec "nmap <silent> <D-t>     <Esc>:" . &tabpagemax . " tabnew \\| :SolicitTabName<CR>"
     "" Map Cmd-w to close buffer
     nmap <silent> <D-w>     <Esc>:bd<CR>
     " NOTE: Have to unset menu commands in gvimrc
     " Free Command Key Bindings " {{{
   macm File.New\ Window				key=<D-n> action=newWindow:
-  macm File.New\ Tab				key=
+  "macm File.New\ Tab				key=
   macm File.Close				key=<D-w> action=performClose:
   macm File.Save<Tab>:w				key=<D-s>
   macm File.Save\ All				key=<D-M-s> alt=YES
