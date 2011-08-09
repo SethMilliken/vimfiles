@@ -149,6 +149,8 @@ set cursorline                      " highlight current line
 set wildmenu                        " show completion options
 set autoread                        " automatically reread fs changed files *autoread*
 
+colorscheme araxia
+
 let mapleader="\\"                  " <Leader>
 
 "set foldcolumn=4                   " trying out fold indicator column
