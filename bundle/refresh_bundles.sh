@@ -31,8 +31,10 @@ function refresh {
     fi
 }
 
+#refresh    csapprox             git://github.com/godlygeek/csapprox.git
 #refresh    dbext                git://github.com/vim-scripts/dbext.vim.git
 #refresh    gundo                git@github.com:SethMilliken/gundo.vim.git
+#refresh    script-ed            ssh://seth@at.araxia.net/~/git/script-ed.git
 #refresh    tagbar               git@github.com:SethMilliken/tagbar.git
 #refresh    tlib-seth            git@github.com:SethMilliken/tlib_vim.git
 #refresh    viki                 git://github.com/tomtom/viki_vim.git
@@ -47,7 +49,6 @@ refresh    calendar             git://github.com/vim-scripts/calendar.vim--Matsu
 refresh    cocoa                git://github.com/msanders/cocoa.vim.git
 refresh    command-t            git://github.com/wincent/Command-T.git                     'Rebuild if necessary:\n\tpushd command-t/ruby/command-t/; ruby extconf.rb; make && popd'
 refresh    conque               git://github.com/rson/vim-conque.git
-refresh    csapprox             git://github.com/godlygeek/csapprox.git
 refresh    extradite            git://github.com/int3/vim-extradite.git
 refresh    fugitive             git://github.com/tpope/vim-fugitive.git
 refresh    fuzzyfinder          git://github.com/vim-scripts/FuzzyFinder.git
@@ -70,7 +71,6 @@ refresh    project              git://github.com/shemerey/vim-project.git
 refresh    rails                git://github.com/tpope/vim-rails.git
 refresh    ruby-matchit         git://github.com/vim-scripts/ruby-matchit.git
 refresh    screenshot           git://github.com/vim-scripts/ScreenShot.git
-refresh    script-ed            ssh://seth@at.araxia.net/~/git/script-ed.git
 refresh    sessionman           git://github.com/vim-scripts/sessionman.git
 refresh    snipmate             git://github.com/spf13/snipmate.vim.git
 refresh    space                git://github.com/spiiph/vim-space.git
