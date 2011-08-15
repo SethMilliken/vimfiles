@@ -179,6 +179,7 @@ set ssop=blank,buffers,curdir,folds,help,resize,slash,tabpages,unix,winpos,winsi
 
 " Statusline: TODO: annotate this status line
 set statusline=%<\(%n\)\ %m%y%r\ %f\ %=%-14.(%l,%c%V%)\ %P
+" wc:%{WordCount()}
 
 "}}}
 " MAPPINGS: " {{{
