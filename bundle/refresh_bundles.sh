@@ -19,7 +19,7 @@ function refresh {
         else
             echo ""
             pushd ${NAME} &> /dev/null
-            ${DEBUG} git upbase
+            ${DEBUG} git f && git in && git upbase
             popd &> /dev/null
         fi
     else
