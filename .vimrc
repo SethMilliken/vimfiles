@@ -883,6 +883,7 @@ endfunction
 "}}}
 " FILETYPES: " {{{
 
+au BufNewFile,BufRead *.scala setf scala
 au BufNewFile,BufRead *.applescript   setf applescript
 " au BufNewFile,BufRead *.tst.* set ft=_.txt.tst
 au BufNewFile,BufRead *.yaml,*.yml so ~/.vim/syntax/yaml.vim
