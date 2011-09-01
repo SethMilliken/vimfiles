@@ -70,6 +70,7 @@ refresh    pickacolor           git://github.com/Raimondi/PickAColor.git
 refresh    project              git://github.com/shemerey/vim-project.git
 refresh    rails                git://github.com/tpope/vim-rails.git
 refresh    ruby-matchit         git://github.com/vim-scripts/ruby-matchit.git
+refresh    scala                git://github.com/vim-scripts/scala.vim.git
 refresh    screenshot           git://github.com/vim-scripts/ScreenShot.git
 refresh    sessionman           git://github.com/vim-scripts/sessionman.git
 refresh    snipmate             git://github.com/spf13/snipmate.vim.git
