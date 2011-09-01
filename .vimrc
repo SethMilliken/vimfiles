@@ -1165,7 +1165,7 @@ augroup BufExplorerAdd | au!
         " Navigate to the file under the cursor when you let go of Tab
         au BufWinEnter \[BufExplorer\] set updatetime=600
         " o is the BufExplorer command to select a file
-        au CursorHold \[BufExplorer\] call feedkeys("o", "m")
+        "au CursorHold \[BufExplorer\] call feedkeys("o", "m")
     endif
 augroup END
 
