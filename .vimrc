@@ -441,7 +441,6 @@ endfor
 for n in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
     let k = n == "0" ? "10" : n
     for m in ["<C-w>"]
-        "exec printf("imap <silent> %s%s <Esc>%s%sa", m, n, m, n)
         exec printf("nmap <silent> %s%s :%swincmd w<CR>", m, n, k)
     endfor
 endfor
@@ -1044,6 +1043,12 @@ augroup FuzzyFinder
 augroup END
 
 " }}}
+" Twitvim: " {{{
+augroup Twitvim
+    au! FileType twitvim set nonu | :wincmd L | set rnu
+augroup END
+
+" }}}
 " Quickfix: " {{{
 augroup Quickfix
     au! FileType qf set nu | :wincmd L
@@ -1590,7 +1595,7 @@ endfunction
 
 " Binding for entering key-notation " {{{
 imap <C-e><C-k> <C-r>=KeyBindingElementSequencePrompted()<CR>
-imap -- <Esc>:call keynotation#parse()<CR>a
+imap kj <Esc>:call keynotation#parse()<CR>a
 
 function! KeyBindingElementSequencePrompted() " {{{
     call inputsave()
