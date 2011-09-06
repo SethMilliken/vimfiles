@@ -13,38 +13,54 @@
 
 "}}}
 " VARIABLES: " {{{
-let s:main_node_name = "DOING"
-let s:groups_node_name = "PROJECTS"
+
+let s:main_node_name      = "DOING"
+let s:groups_node_name    = "PROJECTS"
 let s:completed_node_name = "COMPLETED"
-let s:dates_node_name = "DATES"
-let s:notes_node_name = "SCRATCH"
+let s:dates_node_name     = "DATES"
+let s:notes_node_name     = "SCRATCH"
 
-"au FileType *tst* map <buffer> <Space> <Plug>ToggleLine
-au FileType *tst* map <buffer> Nc <Plug>CompleteLine
-au FileType *tst* map <buffer> Na <Plug>AbandonLine
+au FileType *tst* map <buffer> <C-Space> <Plug>ToggleLine
+au FileType *tst* map <buffer> QQ <Plug>CompleteItem
+au FileType *tst* map <buffer> Qx <Plug>AbandonItem
+au FileType *tst* map <buffer> Qr <Plug>ResetTogglers
 
-noremap <script> <Plug>AbandonLine <SID>AbandonLine
-noremap <SID>AbandonLine :call <SID>AbandonLine()<CR>
-function! s:AbandonLine()
+noremap <script> <Plug>AbandonItem <SID>AbandonItem
+noremap <SID>AbandonItem :call <SID>AbandonItem(line("."))<CR>
+function! s:AbandonItem(line)
     if !exists("s:statusabandoned") | let s:statusabandoned = NewStatusToggler("x") | end
-    call s:statusabandoned.toggle()
+    call s:statusabandoned.decorate(a:line)
+    call s:statusabandoned.toggle(a:line)
+    call TaskstackMoveItemToToday()
 endfunction
 
-noremap <script> <Plug>CompleteLine <SID>CompleteLine
-noremap <SID>CompleteLine :call <SID>CompleteLine()<CR>
-function! s:CompleteLine()
+noremap <script> <Plug>CompleteItem <SID>CompleteItem
+noremap <SID>CompleteItem :call <SID>CompleteItem(line("."))<CR>
+function! s:CompleteItem(line)
     if !exists("s:statuscomplete") | let s:statuscomplete = NewStatusToggler("o") | end
-    call s:statuscomplete.toggle()
+    call s:statuscomplete.decorate(a:line)
+    call s:statuscomplete.toggle(a:line)
+    call TaskstackMoveItemToToday()
 endfunction
 
 noremap <script> <Plug>ToggleLine <SID>ToggleLine
-noremap <SID>ToggleLine :call <SID>ToggleLine()<CR>
-function! s:ToggleLine()
+noremap <SID>ToggleLine :call <SID>ToggleLine(line("."))<CR>
+function! s:ToggleLine(line)
     if !exists("s:statustoggle") | let s:statustoggle = NewStatusToggler("-","o","x") | end
-    call s:statustoggle.toggle()
+    call s:statustoggle.toggle(a:line)
+endfunction
+
+noremap <script> <Plug>ResetTogglers <SID>ResetTogglers
+noremap <SID>ResetTogglers :call <SID>ResetTogglers()<CR>
+function! s:ResetTogglers()
+    if exists("s:statustoggle") | unlet s:statustoggle | end
+    if exists("s:statuscomplete") | unlet s:statuscomplete | end
+    if exists("s:statusabandoned") | unlet s:statusabandoned | end
+    echo "Togglers reset."
 endfunction
 
 "}}}
+"
 " SYNTAX: " {{{
 
 "}}}
@@ -596,7 +612,7 @@ endfu
 
 " Fold prototype " {{{
 let s:Fold = {}
-" functions 
+" functions
 function! s:Fold.locate() "{{{
         let l:openmarker = CommentedFoldMarkerOpen()
         let l:expression = self.header . "\\s*" . l:openmarker
@@ -609,7 +625,7 @@ endfunction
 " constructor
 function! s:Fold.New(header) " {{{
         let newFold = copy(self)
-        let newFold.header = a:header  
+        let newFold.header = a:header
         let newFold.upperpeer = []
         let newFold.lowerpeer = []
         let newFold.topline = -1
@@ -744,7 +760,7 @@ endfunction
 function! TaskstackDates() " {{{
     call timestamp#autoUpdateBypass()
     " silent! wincmd t
-    if FindNode(s:dates_node_name) == 0
+    if NodeLocation(s:dates_node_name) == 0
         call TaskstackCompleted()
         normal zo
         exe "normal o" . s:dates_node_name
@@ -758,18 +774,21 @@ endfunction
 " }}}
 function! TaskstackDate() "{{{
     let l:currentdate = timestamp#text('date')
-    if FindNode(l:currentdate) == 0
+    call TaskstackCreateDate(l:currentdate)
+    call OpenNode(l:currentdate)
+endfunction
+
+"}}}
+function! TaskstackCreateDate(date) "{{{
+    if NodeLocation(a:date) == 0
         let l:origview = winsaveview()
-                call TaskstackDates()
+        call TaskstackDates()
         call append(line("."), [""])
         normal j
-        call text#append(l:currentdate)
+        call text#append(a:date)
         call FoldWrap()
-        " normal zMzo
-        " silent! call TaskstackMain()
         call winrestview(l:origview)
     endif
-    call OpenNode(l:currentdate)
 endfunction
 
 "}}}
@@ -935,6 +954,14 @@ endfunction
 " }}}
 
 " Miscellaneous:
+function! TodayNode() " {{{
+    let l:currentdate = timestamp#text('date')
+    call TaskstackCreateDate(l:currentdate)
+    let l:nodeline = NodeLocation(l:currentdate)
+    return l:nodeline
+endfunction
+
+"}}}
 function! TaskstackDetectProjectName(line) " {{{
     let l:project_name = matchstr(getline(a:line),'^\(. \|@\)\zs\(\<\w*\>\s*\)\{,3}\ze:*')
     return l:project_name
@@ -942,13 +969,24 @@ endfunction
 
 " }}}
 function! TaskstackMoveItemToNode(item,node) " {{{
-    let l:nodeline = FindNode(a:node)
+    if type(a:node) == type(0)
+        let l:nodeline = a:node
+    else
+        let l:nodeline = NodeLocation(a:node)
+    end
     let l:result = ""
     if l:nodeline != 0
+        let save_cursor = getpos(".")
         exe ':' . a:item . 'm' . nodeline
+        call setpos(".", save_cursor)
     end
     let result_dict = { "start": split(a:item, ",")[0], "end": split(a:item, ",")[1], "destination": nodeline  }
     return result_dict
+endfunction
+
+" }}}
+function! TaskstackMoveItemToToday() " {{{
+    return TaskstackMoveItemToNode(TaskstackFindItemGroup(),TodayNode())
 endfunction
 
 " }}}
@@ -1051,18 +1089,24 @@ endfunction
 
 " }}}
 function! TaskstackFindItemGroup() "{{{
-    if IsAntiItem()
+    return TaskstackFindItemGroupLine(line("."))
+endfunction
+
+" }}}
+function! TaskstackFindItemGroupLine(line) "{{{
+    if IsAntiItemLine(a:line)
             return 0
     end
     let l:max_lines_without_warning = 5
-    let l:begin_line = line(".")
-    let l:end_line = line(".")
+    let l:begin_line = a:line
+    let l:end_line = a:line
+    let l:current_line = l:begin_line
     while l:end_line < line("$")
-        normal j
-        if IsItem() || IsAntiItem()
-                break
+        let l:current_line += 1
+        if IsItemLine(l:current_line) || IsAntiItemLine(l:current_line)
+            break
         endif
-        let l:end_line = line(".")
+        let l:end_line = l:current_line
     endwhile
 
     let l:lines_to_move = l:end_line - l:begin_line
@@ -1079,15 +1123,25 @@ endfunction
 
 " }}}
 function! IsItem() " {{{
+    return IsItemLine(getline("."))
+endfunction
+
+" }}}
+function! IsItemLine(line) " {{{
     let l:itemMatches = "^\[-ox?+@]\\s*"
-    let l:match_result = match(getline("."), l:itemMatches)
+    let l:match_result = match(getline(a:line), l:itemMatches)
     return l:match_result + 1
 endfunction
 
 " }}}
 function! IsAntiItem() " {{{
+    return IsAntiItemLine(getline("."))
+endfunction
+
+" }}}
+function! IsAntiItemLine(line) " {{{
     let boundaryMatches = "^" . text#strip(CommentStringOpen()) . "\\s*\\w*\\s*\[}{]"
-    return match(getline("."), boundaryMatches . "\\|" . "^$") + 1
+    return match(getline(a:line), boundaryMatches . "\\|" . "^$") + 1
 endfunction
 
 " }}}

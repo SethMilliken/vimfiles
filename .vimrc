@@ -517,14 +517,23 @@ endfunction
 
 " Folds: manipulation
 function! FindNode(label) "{{{
-        if a:label == ""
-                return 0
-        end
-        let l:openmarker = CommentedFoldMarkerOpen()
-        let l:expression = a:label . "\\s*" . l:openmarker
-        let l:matchline = search(l:expression, 'csw')
-        " echo printf("line: %2s had expression: %s", l:matchline, l:expression)
-        return l:matchline
+    let l:location = NodeLocation(a:label)
+    if l:location > 0
+        call setpos(".", [0, l:location, 0, 0])
+    end
+    return line(".")
+endfunction
+
+" }}}
+function! NodeLocation(label) "{{{
+    if a:label == ""
+        return 0
+    end
+    let l:openmarker = CommentedFoldMarkerOpen()
+    let l:expression = a:label . "\\s*" . l:openmarker
+    let l:matchline = search(l:expression, 'cwn')
+    " echo printf("line: %2s had expression: %s", l:matchline, l:expression)
+    return l:matchline
 endfunction
 
 " }}}
@@ -934,8 +943,8 @@ augroup TaskStack
     au! FileType *tst* set indentkeys-=o indentkeys-=0 showbreak=\ \  noai fdm=marker cms= sts=2 sw=2 isk+=#
     au FileType *tst* nmap <buffer> XX :call TaskstackCompleteItem(g:aborted_prefix)<CR>
     au FileType *tst* imap <buffer> XX <C-c>:call TaskstackCompleteItem(g:aborted_prefix)<CR>
-    au FileType *tst* nmap <buffer> QQ :call TaskstackCompleteItem(g:completed_prefix)<CR>
-    au FileType *tst* imap <buffer> QQ <C-c>:call TaskstackCompleteItem(g:completed_prefix)<CR>
+    "au FileType *tst* nmap <buffer> QQ :call TaskstackCompleteItem(g:completed_prefix)<CR>
+    "au FileType *tst* imap <buffer> QQ <C-c>:call TaskstackCompleteItem(g:completed_prefix)<CR>
     au FileType *tst* nmap <buffer> Nn :call TaskstackNewItemFromPaste()<CR>
     au FileType *tst* nmap <buffer> NN :call TaskstackNewItem()<CR>
     au FileType *tst* imap <buffer> NN <C-c>:call TaskstackNewItem()<CR>
