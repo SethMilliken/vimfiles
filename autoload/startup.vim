@@ -17,7 +17,11 @@
 "
 " Create proper object based on hostname. " {{{
 function! startup#handler()
-    let host = text#strip(system('echo $SHORTHOST'))
+    if has('win32')
+        let host = substitute(text#strip($USERDOMAIN), "-", "", "")
+    else
+        let host = text#strip(system('echo $SHORTHOST'))
+    end
     if host == ""
         return startup#base()
     else
@@ -105,6 +109,7 @@ function! startup#base()
     endfun
 
     fun s:obj.handle() dict
+        echo self.app()
         silent! call self[self.app()]()
     endfun
 
@@ -179,6 +184,33 @@ function! startup#LABORATORY()
 
     fun! s:obj.TasksFile() dict
         return "~/sandbox/personal/todo/laboratory.tst"
+    endfun
+
+    return s:obj.New()
+endfunction
+
+" }}}
+" Host SETH-PC " {{{
+function! startup#SETHPC()
+    let s:obj = startup#base()
+
+    fun! s:obj.class() dict
+        return "seth-pc.class"
+    endfun
+
+    fun! s:obj.TasksFile() dict
+        return "~/sandbox/personal/todo/wintodo.txt"
+    endfun
+
+    fun! s:obj.Default() dict
+        echo "default gvim instance"
+    endfun
+
+    fun! s:obj.app() dict
+        if !exists('g:vim_app_name')
+            let g:vim_app_name = "Default"
+        endif
+        return g:vim_app_name
     endfun
 
     return s:obj.New()
