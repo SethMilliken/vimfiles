@@ -30,6 +30,7 @@
 
 " Pathogen: " {{{
 set rtp+=~/.vim/bundle/pathogen/
+set rtp+=~/vimfiles/bundle/pathogen/
 call pathogen#infect()
 "let g:did_install_default_menus = 1 " disable default macvim menus
 let g:did_install_syntax_menu = 1
