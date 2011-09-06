@@ -20,10 +20,13 @@ let s:completed_node_name = "COMPLETED"
 let s:dates_node_name     = "DATES"
 let s:notes_node_name     = "SCRATCH"
 
-au FileType *tst* map <buffer> <C-Space> <Plug>ToggleLine
-au FileType *tst* map <buffer> QQ <Plug>CompleteItem
-au FileType *tst* map <buffer> Qx <Plug>AbandonItem
-au FileType *tst* map <buffer> Qr <Plug>ResetTogglers
+augroup TaskStack
+    au FileType *tst* map <buffer> <C-Space> <Plug>ToggleLine
+    au FileType *tst* map <buffer> QQ <Plug>CompleteItem
+    au FileType *tst* map <buffer> Qq <Plug>CompleteItem
+    au FileType *tst* map <buffer> Qx <Plug>AbandonItem
+    au FileType *tst* map <buffer> Qr <Plug>ResetTogglers
+augroup END
 
 noremap <script> <Plug>AbandonItem <SID>AbandonItem
 noremap <SID>AbandonItem :call <SID>AbandonItem(line("."))<CR>
@@ -963,7 +966,7 @@ endfunction
 
 "}}}
 function! TaskstackDetectProjectName(line) " {{{
-    let l:project_name = matchstr(getline(a:line),'^\(. \|@\)\zs\(\<\w*\>\s*\)\{,3}\ze:*')
+    let l:project_name = matchstr(getline(a:line),'^\(. \|@\)\zs\(\<\w*\>\.*\s*\)\{,3}\ze:')
     return l:project_name
 endfunction
 
@@ -991,41 +994,79 @@ endfunction
 
 " }}}
 
-function! ProjectRawMatchPattern() " {{{
-    return '^@\zs\(\<\w*\>\s*\)\{,3}\ze\s'
+function! CategoryRawMatchPattern() " {{{
+    return '^\zs\([A-Z]\{3,}\s*\)\{1,3}\ze\s\+'
 endfunction
 
 "}}}
-function! TaskstackProjectNameCompletion(A,L,P) " {{{
-      let l:origview = winsaveview()
-    let l:results = ""
-    g/^@/let l:results .= matchstr(getline("."), ProjectRawMatchPattern()) . "\n"
-    call winrestview(l:origview)
-    return l:results
+function! ProjectRawMatchPattern() " {{{
+    return '^@\zs\(\<\w*\>\.*\s*\)\{,3}\ze\s\+'
+endfunction
+
+"}}}
+function! TaskstackProjectNamesList() " {{{
+    let l:results = []
+    for line in getline(1,"$")
+        let l:candidate = matchstr(line, ProjectRawMatchPattern())
+        if len(l:candidate) > 0
+            call add(l:results, l:candidate)
+        end
+    endfor
+    return sort(l:results)
 endfunction
 
 " }}}
-function! TaskstackPromptProjectName() " {{{
+function! TaskstackProjectNameCompletion(A,L,P) " {{{
+    return join(TaskstackProjectNamesList(), "\n")
+endfunction
+
+" }}}
+function! TaskstackPromptProjectName(...) " {{{
     if !exists("s:last_selection")
         let s:last_selection = ""
     endif
-    let l:project_name = input("Project name: ", s:last_selection, "custom,TaskstackProjectNameCompletion")
+    let l:pre_populate = s:last_selection
+    if len(a:000) > 0
+      if index(TaskstackProjectNamesList(), a:000[0]) > 0
+        let l:pre_populate = a:000[0]
+      end
+    end
+    let l:project_name = input("Project name: ", l:pre_populate, "custom,TaskstackProjectNameCompletion")
     let s:last_selection = l:project_name
     return l:project_name
 endfunction
 
 " }}}
 function! TaskstackNavigateToProjectPrompted() " {{{
+    let l:incoming = input("Navigate to: ", "", "custom,TaskstackProjectNameCompletion")
+    let destination = NodeLocation("@" . l:incoming)
+    call BalancedMove([destination, 0])
+endfunction
+
+"}}}
+function! TaskstackNextProject(...) " {{{
+    let l:options = 'n'
+    if len(a:000) > 0
+        let l:options .= 'b'
+    end
+    let l:next_project = searchpos(ProjectRawMatchPattern() . '\|' . CategoryRawMatchPattern(), l:options)
+    if l:next_project != [0, 0]
+        call BalancedMove(l:next_project)
+    endif
+endfunction
+
+"}}}
+function! BalancedMove(destination) " {{{
     let first_visible = line("w0")
     let last_visible = line("w$")
     let original_line = line(".")
-    let l:incoming = input("Navigate to: ", "", "custom,TaskstackProjectNameCompletion")
-    let destination = FindNode("@" . l:incoming)
-    if index(range(first_visible, last_visible), destination) == -1
-        let offset_from_top = original_line - first_visible
-        call cursor(destination - offset_from_top, 0)
+    let in_range = index(range(first_visible, last_visible), a:destination[0])
+    " echo [[first_visible, last_visible], a:destination, in_range, original_line]
+    call cursor(a:destination)
+    if in_range == -1
+        "let offset_from_top = original_line - first_visible
+        "call cursor(a:destination - offset_from_top, 0)
         normal zt
-        call cursor(destination, 0)
     end
 endfunction
 
@@ -1036,7 +1077,7 @@ function! TaskstackMoveToProjectPrompt() " {{{
     if l:item_validity != ""
       return l:item_validity
     endif
-    let l:project_name = TaskstackPromptProjectName()
+    let l:project_name = TaskstackPromptProjectName(TaskstackDetectProjectName(line(".")))
     call winrestview(l:origview)
     return TaskstackMoveItemToProject(l:project_name)
 endfunction

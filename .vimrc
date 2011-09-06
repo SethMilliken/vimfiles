@@ -525,13 +525,18 @@ function! FindNode(label) "{{{
 endfunction
 
 " }}}
-function! NodeLocation(label) "{{{
+function! NodeLocation(label,...) "{{{
     if a:label == ""
         return 0
     end
+    if len(a:000) > 0
+        let l:options = 'n'
+    else
+        let l:options = 'cwn'
+    end
     let l:openmarker = CommentedFoldMarkerOpen()
     let l:expression = a:label . "\\s*" . l:openmarker
-    let l:matchline = search(l:expression, 'cwn')
+    let l:matchline = search(l:expression, l:options)
     " echo printf("line: %2s had expression: %s", l:matchline, l:expression)
     return l:matchline
 endfunction
@@ -938,11 +943,11 @@ endif
 " TaskStack: " {{{
 let g:aborted_prefix = "x"
 let g:completed_prefix = "o"
-augroup TaskStack
-    au! BufRead *.tst* set filetype=tst syntax=txt
-    au! FileType *tst* set indentkeys-=o indentkeys-=0 showbreak=\ \  noai fdm=marker cms= sts=2 sw=2 isk+=#
-    au FileType *tst* nmap <buffer> XX :call TaskstackCompleteItem(g:aborted_prefix)<CR>
-    au FileType *tst* imap <buffer> XX <C-c>:call TaskstackCompleteItem(g:aborted_prefix)<CR>
+augroup TaskStack | au!
+    au BufRead *.tst* set filetype=tst syntax=txt
+    au FileType *tst* set indentkeys-=o indentkeys-=0 showbreak=\ \  noai fdm=marker cms= sts=2 sw=2 isk+=#
+    "au FileType *tst* nmap <buffer> XX :call TaskstackCompleteItem(g:aborted_prefix)<CR>
+    "au FileType *tst* imap <buffer> XX <C-c>:call TaskstackCompleteItem(g:aborted_prefix)<CR>
     "au FileType *tst* nmap <buffer> QQ :call TaskstackCompleteItem(g:completed_prefix)<CR>
     "au FileType *tst* imap <buffer> QQ <C-c>:call TaskstackCompleteItem(g:completed_prefix)<CR>
     au FileType *tst* nmap <buffer> Nn :call TaskstackNewItemFromPaste()<CR>
@@ -961,15 +966,15 @@ augroup TaskStack
     au FileType *tst* nmap <buffer> :w<CR> :call TaskstackSave()<CR>
     au FileType *tst* nmap <buffer> <silent> <C-x>x :call TaskstackGroups()<CR>
     au FileType *tst* nmap <buffer> K :echo TaskstackMoveToProjectPrompt()<CR>
+    au FileType *tst* nmap <buffer> <C-y>k :echo TaskstackMoveToProjectAutoDetect()<CR>
     au FileType *tst* nmap <buffer> <Leader>k :call TaskstackMoveItemToProject("@categorize")<CR>
     au FileType *tst* nmap <buffer> <C-e>/ :call TaskstackNavigateToProjectPrompted()<CR>
-    au FileType *tst* nmap <buffer> <C-y>k :echo TaskstackMoveToProjectAutoDetect()<CR>
-    au FileType *tst* nmap <buffer> <silent> <Tab> :call search("@.*\\\\|^[A-Z]\\+")<CR>
-    au FileType *tst* nmap <buffer> <silent> <S-Tab> :call search("@.*\\\\|^[A-Z]\\+", 'b')<CR>
+    au FileType *tst* nmap <buffer> <silent> <Tab> :call TaskstackNextProject()<CR>
+    au FileType *tst* nmap <buffer> <silent> <S-Tab> :call TaskstackNextProject('b')<CR>
     au FileType *tst* if mapcheck('<CR>', 'n') == "" | nmap <unique> <buffer> <silent> <CR> "tyiW/<C-r>t<CR>ztzv<C-l> | end
     " Use <C-c> to avoid adding or updating a timestamp after editing.
-    au! InsertLeave *.tst.* :call timestamp#addOrUpdate("") " FIXME: External Dependency
-    au! FocusLost *.tst.* nested write
+    au InsertLeave *.tst.* :call timestamp#addOrUpdate("") " FIXME: External Dependency
+    au FocusLost *.tst.* nested write
 augroup END
 
 "}}}
