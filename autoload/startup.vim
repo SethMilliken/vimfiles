@@ -20,7 +20,7 @@ function! startup#handler()
     if has('win32')
         let host = substitute(text#strip($USERDOMAIN), "-", "", "")
     else
-        let host = text#strip(system('echo $SHORTHOST'))
+        let host = toupper(text#strip(system('hostname -s')))
     end
     if host == ""
         return startup#base()
