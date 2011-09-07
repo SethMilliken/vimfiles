@@ -6,13 +6,14 @@ endfunction
 " }}}
 function! timestamp#text(style) "{{{
     let l:iswindows = has("win16") || has("win32") || has("win64")
+    let l:dateformat = ""
     if l:iswindows
         if a:style == "long"
             let l:dateformat = strftime("%#x %H:%M:%S ")
         elseif a:style == "short"
             let l:dateformat = strftime("%Y-%m-%d %H:%M:%S ")
         endif
-        let l:dateformat .= substitute(strftime("%#z"), '[a-z]\+\($\| \)', '', 'g')
+        let l:dateformat .= substitute(strftime("%#z"), '\C[a-z]\+\($\| \)', '', 'g')
     else
         if a:style == "long"
             let l:dateformat = strftime("%Y %b %d %a %X %Z")
