@@ -125,7 +125,7 @@ end
 " Windows: " {{{
 if has("win32")
     "set guifont=Terminal:h6
-    set guifont=Inconsolata:h15
+    set guifont=Inconsolata:h12
     winsize 150 200                         " set a reasonable window size
 end
 

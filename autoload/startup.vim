@@ -198,6 +198,11 @@ function! startup#SETHPC()
         return "seth-pc.class"
     endfun
 
+    fun! s:obj.Vimwiki() dict
+        VimwikiIndex
+        set nolist
+    endfun
+
     fun! s:obj.TasksFile() dict
         return "~/sandbox/personal/todo/wintodo.txt"
     endfun
