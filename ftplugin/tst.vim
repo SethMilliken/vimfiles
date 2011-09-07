@@ -69,353 +69,318 @@ endfunction
 "}}}
 " OBJECTS: " {{{
 
-" BASEOBJECT OBJECT: v5 " {{{
-function! Super() dict " {{{
-   call self['parent']._init()
-   let self['inited'] += 1
+" NULL OBJECT: v6 " {{{
+function! NullObject()
+    let instance = {
+                        \ 'parent': {},
+                        \ 'class': "NullObject",
+                        \ 'contentlist': [""],
+                        \ 'start': 1,
+                        \ 'debug': 0,
+                        \ 'inited': 1,
+                        \ 'state': {},
+                        \ }
+    fu instance.foldsave() dict " {{{
+        echo "save"
+    endfu " }}}
+    fu instance.foldrest() dict " {{{
+        echo "rest"
+    endfu " }}}
+
+    return instance
 endfunction
 
 " }}}
-function! Noop() dict " {{{
+" BASE OBJECT: v6 " {{{
+function! NullObject() " {{{
+    let instance = {
+                        \ 'parent': {},
+                        \ 'class': "NullObject",
+                        \ 'contentlist': [""],
+                        \ 'start': 1,
+                        \ 'debug': 0,
+                        \ 'inited': 1,
+                        \ 'state': {},
+                        \ }
+    fu instance.foldsave() dict " {{{
+        echo "save"
+    endfu " }}}
+    fu instance.foldrest() dict " {{{
+        echo "rest"
+    endfu " }}}
+
+    return instance
 endfunction
 
 " }}}
-function! Alloc(...) dict " {{{
-    if len(a:000) == 1
-        let baseclass = a:000[0]
+function! BaseObject(...) " {{{
+    let instance = {
+                        \ 'parent': {},
+                        \ 'class': "BaseObject",
+                        \ 'contentlist': [""],
+                        \ 'start': 1,
+                        \ 'debug': 0,
+                        \ 'inited': 0,
+                        \ 'state': NullObject(),
+                        \ }
+    fu instance.New(...) dict " {{{
+        let l:new = self.Alloc()
+        if len(a:000) == 1
+            let initial_funct = a:000[0]
+            exec "call l:new." . initial_funct . "()"
+        endif
+        return l:new
+    endfu " }}}
+    fu instance.Alloc() dict " {{{
+        let baseclass = self['parent']
         if empty(baseclass)
-            let self['parent'] = {}
+            if self['class'] == "BaseObject"
+                let self['parent'] = {}
+            else
+                let self['parent'] = BaseObject().New()
+            endif
         else
             if type(baseclass) == type({})
-                exec "let self['parent'] = g:" . baseclass['class'] . ".New()"
+                exec "let self['parent'] = " . baseclass['class'] . "().New()"
             else
-                exec "let self['parent'] = " . baseclass . ".New()"
+                exec "let self['parent'] = " . baseclass . "().New()"
             endif
-        end
-    else
-        let self['parent'] = g:baseobject.New()
-    endif
-    let l:new = extend(deepcopy(self['parent']), deepcopy(self))
-    let l:new['Super'] = function("Super")
-    exec "call l:new._init()"
-    return l:new
-endfunction
-
-" }}}
-let g:nullObject = {}
-func nullObject.foldsave() dict " {{{
-    echo "save"
-endfunction
-
-" }}}
-func nullObject.foldrest() dict " {{{
-    echo "rest"
-endfunction
-
-" }}}
-
-let g:baseobject = {
-                    \ 'parent': {},
-                    \ 'class': "baseobject",
-                    \ 'contentlist': [""],
-                    \ 'start': 1,
-                    \ 'debug': 0,
-                    \ 'inited': 0,
-                    \ 'state': {},
-                    \ }
-func baseobject.New(...) dict " {{{
-    let self['Alloc'] = function("Alloc")
-    let self['state'] = g:nullObject
-    let l:new = self['Alloc'](self['parent'])
-    if len(a:000) == 1
-        let initial_funct = a:000[0]
-        exec "call l:new." . initial_funct . "()"
-    endif
-    return l:new
-endfunction
-
-" }}}
-func baseobject._name() dict " {{{
-    return "Generic Object"
-endfu
-
-" }}}
-fu baseobject.value() dict " {{{
-    return string(self)
-endfu
-
-" }}}
-func baseobject._init() dict " {{{
-   let self['inited'] = 1 
-endfunction
-
-" }}}
-func baseobject._debug(...) dict " {{{
-    if self['debug']
-        echo string(a:000)
-    end
-endfu
-
-" }}}
-fu baseobject._address() dict " {{{
-    if self._isvalid()
-        let issilent = "silent"
+        endif
+        let l:new = extend(deepcopy(self['parent']), deepcopy(self))
+        exec "call l:new._init()"
+        exec "call l:new._super()"
+        exec "let l:new['inited'] = 1"
+        return l:new
+    endfu " }}}
+    fu instance._noop() dict " {{{
+        return
+    endfu " }}}
+    fu instance._super() dict " {{{
+       if has_key(self['parent'], '_init')
+           call self['parent']._init()
+       endif
+    endfu " }}}
+    fu instance._name() dict " {{{
+        return "Generic Object"
+    endfu " }}}
+    fu instance.value() dict " {{{
+        return string(self)
+    endfu " }}}
+    fu instance._init() dict " {{{
+        return
+    endfu " }}}
+    fu instance._debug(...) dict " {{{
         if self['debug']
-            let issilent = ""
+            echo string(a:000)
         end
-        return ":" . issilent . self._start() . "," . self._end()
-    else
-        return ":\"" . "( Object: \"" . self._name() . "\" is invalid. )"
-    end
-endfu
-
-" }}}
-func baseobject._start() dict " {{{
-    let verifiedposition = self._verifyposition(self['start'])
-    if verifiedposition == 0
-        return self['start']
-    else
-        return verifiedposition
-    end
-endfu
-
-" }}}
-func baseobject._end() dict " {{{
-    return line("$")
-endfu
-
-" }}}
-fu baseobject._isvalid() dict " {{{
-    call self._refresh()
-    return !!self._start()
-endfu
-
-" }}}
-fu baseobject._refresh() dict " {{{
-        let self['start'] = self._verifyposition()
-endfu
-
-" }}}
-func baseobject._firstline() dict " {{{
-    return [ getline("1") ] 
-endfu
-
-" }}}
-func baseobject._lastline() dict " {{{
-    return [ getline("$") ]
-endfu
-
-" }}}
-func baseobject._contents() dict " {{{
-        return getbufline(getbuffer("%"), line("."), line("$"))
-endfu
-
-" }}}
-fu baseobject._verifyposition(...) dict " {{{
-    call self['state'].foldsave()
-    let foundposition = 0
-    let searchstring = get(self._firstline(), 0)
-    if len(a:000) == 0
-        " partial search
-        silent normal 10k
-        let foundposition = search(searchstring, 'cW', self._end())
-        if foundposition == 0
-            return self._verifyposition("full")
+    endfu " }}}
+    fu instance._address() dict " {{{
+        if self._isvalid()
+            let issilent = "silent"
+            if self['debug']
+                let issilent = ""
+            end
+            return ":" . issilent . self._start() . "," . self._end()
+        else
+            return ":\"" . "( Object: \"" . self._name() . "\" is invalid. )"
         end
-    else
-        " full search
-        let foundposition = search(searchstring, 'cw')
-    end
-    call self['state'].foldrest()
-    return foundposition
-endfu
+    endfu " }}}
+    fu instance._start() dict " {{{
+        let verifiedposition = self._verifyposition(self['start'])
+        if verifiedposition == 0
+            return self['start']
+        else
+            return verifiedposition
+        end
+    endfu " }}}
+    fu instance._end() dict " {{{
+        return line("$")
+    endfu " }}}
+    fu instance._isvalid() dict " {{{
+        call self._refresh()
+        return !!self._start()
+    endfu " }}}
+    fu instance._refresh() dict " {{{
+            let self['start'] = self._verifyposition()
+    endfu " }}}
+    fu instance._firstline() dict " {{{
+        return [ getline("1") ] 
+    endfu " }}}
+    fu instance._lastline() dict " {{{
+        return [ getline("$") ]
+    endfu " }}}
+    fu instance._contents() dict " {{{
+            return getbufline(getbuffer("%"), line("."), line("$"))
+    endfu " }}}
+    fu instance._verifyposition(...) dict " {{{
+        call self['state'].foldsave()
+        let foundposition = 0
+        let searchstring = get(self._firstline(), 0)
+        if len(a:000) == 0
+            " partial search
+            silent normal 10k
+            let foundposition = search(searchstring, 'cW', self._end())
+            if foundposition == 0
+                return self._verifyposition("full")
+            end
+        else
+            " full search
+            let foundposition = search(searchstring, 'cw')
+        end
+        call self['state'].foldrest()
+        return foundposition
+    endfu " }}}
 
-" }}}
-
-" }}}
-" STATEINFO OBJECT: v4 " {{{
-let g:stateinfo = {
-                \ 'parent': 'g:baseobject',
-                \ 'class': "stateinfo",
-                \ 'view':'myviewhere',
-                \ 'winsaveview': {},
-                \ 'getpos': []
-                \ }
-function stateinfo.New(...) dict " {{{
-    let self['Alloc'] = function("Alloc")
-    let l:new = self['Alloc'](self['parent'])
-    if len(a:000) == 1
-        let initial_funct = a:000[0]
-        exec "call l:new." . initial_funct . "()"
-    endif
-    return l:new
+    return instance
 endfunction
 
 " }}}
-function stateinfo._init() dict " {{{
-   call self.Super()
+" }}}
+" STATEINFO OBJECT: v6 " {{{
+function! StateInfo(...)
+    let instance = {
+                        \ 'parent': 'BaseObject',
+                        \ 'class': "StateInfo",
+                        \ 'view':'myviewhere',
+                        \ 'winsaveview': {},
+                        \ 'getpos': []
+                        \ }
+    fu instance.foldsave() dict " {{{
+        let b:original_vop = &vop
+        exec "let b:viewfile = " . "\"" . &viewdir . "/foldsave.vim" . "\""
+        set vop=folds,cursor
+        exec "silent mkview! " . b:viewfile
+        call self._fixview()
+    endfu " }}}
+    fu instance.foldrest() dict " {{{
+        if exists("b:original_vop") && exists("b:viewfile")
+            exec "silent! source " . b:viewfile
+            exec "set vop=" . b:original_vop
+            unlet b:original_vop
+            "unlet b:viewfile
+        endif
+    endfu " }}}
+    fu instance._fixview() dict " {{{
+      exe "vsplit " . b:viewfile
+      exe "%s/^edit /buffer /ge"
+      exe "g/SessionLoadPost/d"
+      silent write
+      close
+    endfun " }}}
+    fu instance.winsave() dict " {{{
+        let self['winsaveview'] = winsaveview()
+    endfu " }}}
+    fu instance.winrest() dict " {{{
+        if !empty(self['winsaveview']) && type(self['winsaveview']) == type({})
+            silent exec "call winrestview(" . string(self['winsaveview']) . ")"
+        endif
+    endfunction
+
+    " }}}
+    fu instance.possave() dict " {{{
+        if !empty(self['getpos'])
+            silent exec "set setpos(\".\"" . self['getpos'] . ")"
+        endif
+    endfu " }}}
+    fu instance.posrest() dict " {{{
+        let self['getpos'] = getpos(line("."))
+    endfu " }}}
+
+    return instance
 endfunction
 
 " }}}
-function stateinfo.foldsave() dict " {{{
-    let b:original_vop = &vop
-    exec "let b:viewfile = " . "\"" . &viewdir . "/foldsave.vim" . "\""
-    set vop=folds,cursor
-    exec "silent mkview! " . b:viewfile
-    call self._fixview()
+" FOLDCONTAINER OBJECT: v6 " {{{
+function! FoldContainer(...)
+    let instance = BaseObject().New()
+    let instance['header'] = ""
+    let instance['parent'] = "BaseObject"
+    let instance['class'] = "FoldContainer"
+     "let instance = {
+                         "\ 'parent': 'BaseObject',
+                         "\ 'class': "FoldContainer",
+                         "\ 'header': "",
+                         "\ }
+    fu! instance.New(header) dict " {{{
+        return self.for(a:header)
+    endfu " }}}
+    fu instance._new(header) dict " {{{
+        let l:new = self.Alloc()
+        let l:new['header'] = a:header
+        let l:new['state'] = StateInfo().New()
+        return l:new
+    endfu " }}}
+    fu instance.for(header) dict " {{{
+        " Class-scoped instance cache
+        if ! exists('g:foldcontainer_cache')
+            let g:foldcontainer_cache = {}
+            let g:foldcontainer_cache['ALL'] = {}
+        endif
+        if ! has_key(g:foldcontainer_cache, 'ALL') 
+            let g:foldcontainer_cache['ALL'] = {}
+        endif
+        if has_key(g:foldcontainer_cache['ALL'], a:header)
+            " echo "cache hit: " . string(self['ALL'][a:header])
+            return g:foldcontainer_cache['ALL'][a:header]
+        endif
+        let l:new = FoldContainer()._new(a:header)
+        call remove(l:new, 'ALL')
+        call remove(l:new, 'for')
+        let g:foldcontainer_cache['ALL'][a:header] = l:new
+        return l:new
+    endfu " }}}
+    fu instance._end() dict " {{{
+            " preserve folds
+            call self['state'].winsave()
+            normal $
+            let result = searchpair(FoldMarkerOpen(), "", FoldMarkerClose(), 'W')
+            call self['state'].winrest()
+            return result
+    endfu " }}}
+    fu instance._firstline() dict " {{{
+        " TODO: fix with FoldMarkerOpen()
+        return [ self['header'] . " " . " \" {{" . "{" ]
+    endfu " }}}
+    fu instance._lastline() dict " {{{
+        return [ "\" }}" . "}" ]
+    endfu " }}}
+    fu instance._contents() dict " {{{
+       return self._firstline() + self['contentlist'] + self._lastline()
+    endfu " }}}
+    fu instance._name() dict " {{{
+        return self['header']
+    endfu " }}}
+    fu instance.create_at(line) dict " {{{
+        if self._isvalid()
+            call self.move_to(a:line)
+        else
+            let self['start'] = a:line + 1
+            let contents = self._contents()
+            call append(a:line, contents)
+        end
+    endfu " }}}
+    fu instance.move_to(destination) dict " {{{
+        let fullcommand = self._address() . "m" . a:destination | exec fullcommand | return fullcommand
+    endfu " }}}
+    fu instance.move_into(target) dict " {{{
+        let targetline = a:target._start()
+        call self.move_to(targetline)
+    endfu " }}}
+    fu instance.move_under(target) dict " {{{
+        let targetline = a:target._end()
+        call self.move_to(targetline)
+    endfu " }}}
+    fu instance.move_above(target) dict " {{{
+        let targetline = a:target._start() - 1
+        call self.move_to(targetline)
+    endfu " }}}
+    fu instance.delete() dict " {{{
+        let fullcommand = self._address() . "d" | silent exec fullcommand | return fullcommand
+    endfu
+
+    " }}}
+    return instance
 endfunction
-
-" }}}
-function stateinfo.foldrest() dict " {{{
-    if exists("b:original_vop") && exists("b:viewfile")
-        exec "silent! source " . b:viewfile
-        exec "set vop=" . b:original_vop
-        unlet b:original_vop
-        "unlet b:viewfile
-    endif
-endfunction
-
-" }}}
-function stateinfo._fixview() dict " {{{
-  exe "vsplit " . b:viewfile
-  exe "%s/^edit /buffer /ge"
-  exe "g/SessionLoadPost/d"
-  silent write
-  close
-endfunction
-
-" }}}
-function stateinfo.winsave() dict " {{{
-    let self['winsaveview'] = winsaveview()
-endfunction
-
-" }}}
-function stateinfo.winrest() dict " {{{
-    if !empty(self['winsaveview']) && type(self['winsaveview']) == type({})
-        silent exec "call winrestview(" . string(self['winsaveview']) . ")"
-    endif
-endfunction
-
-" }}}
-function stateinfo.possave() dict " {{{
-    if !empty(self['getpos'])
-        silent exec "set setpos(\".\"" . self['getpos'] . ")"
-    endif
-endfunction
-
-" }}}
-function stateinfo.posrest() dict " {{{
-    let self['getpos'] = getpos(line("."))
-endfunction
-
-" }}}
-
-" }}}
-" FOLDCONTAINER OBJECT: v5 " {{{
-let g:foldcontainer = {
-                \ 'parent': 'g:baseobject',
-                \ 'class': "foldcontainer",
-                \ 'header': "",
-                \ }
-fu foldcontainer.New(header) dict " {{{
-    return foldercontainer.for(a:header)
-endfu
-
-" }}}
-fu foldcontainer.for(header) dict " {{{
-    " Class-scoped instance cache
-    if ! has_key(self, 'ALL') 
-        let self['ALL'] = {}
-    endif
-    if has_key(self['ALL'], a:header)
-        " echo "cache hit: " . string(self['ALL'][a:header])
-        return self['ALL'][a:header]
-    endif
-    let self['Alloc'] = function("Alloc")
-    let l:new = self['Alloc'](self['parent'])
-    let l:new['header'] = a:header
-    let l:new['state'] = g:stateinfo.New()
-    let self['ALL'][a:header] = l:new
-    call remove(l:new, 'ALL')
-    return l:new
-endfu
-
-" }}}
-fun foldcontainer._init() dict " {{{
-   call self.Super()
-endfu
-
-" }}}
-fun foldcontainer._end() dict " {{{
-        " preserve folds
-        call self['state'].winsave()
-        normal $
-        let result = searchpair(FoldMarkerOpen(), "", FoldMarkerClose(), 'W')
-        call self['state'].winrest()
-        return result
-endfu
-
-" }}}
-fun foldcontainer._firstline() dict " {{{
-    " TODO: fix with FoldMarkerOpen()
-    return [ self['header'] . " " . " \" {{" . "{" ]
-endfu
-
-" }}}
-fun foldcontainer._lastline() dict " {{{
-    return [ "\" }}" . "}" ]
-endfu
-
-" }}}
-fu foldcontainer._contents() dict " {{{
-         return self._firstline() + self['contentlist'] + self._lastline()
-endfu
-
-" }}}
-fun foldcontainer._name() dict " {{{
-    return self['header']
-endfu
-
-" }}}
-fu foldcontainer.create_at(line) dict " {{{
-    if self._isvalid()
-        call self.move_to(a:line)
-    else
-        let self['start'] = a:line + 1
-        let contents = self._contents()
-        call append(a:line, contents)
-    end
-endfu
-
-" }}}
-fu foldcontainer.move_to(destination) dict " {{{
-    let fullcommand = self._address() . "m" . a:destination | exec fullcommand | return fullcommand
-endfu
-
-" }}}
-fu foldcontainer.move_into(target) dict " {{{
-    let targetline = a:target._start()
-    call self.move_to(targetline)
-endfu
-
-" }}}
-fu foldcontainer.move_under(target) dict " {{{
-    let targetline = a:target._end()
-    call self.move_to(targetline)
-endfu
-
-" }}}
-fu foldcontainer.move_above(target) dict " {{{
-    let targetline = a:target._start() - 1
-    call self.move_to(targetline)
-endfu
-
-" }}}
-fu foldcontainer.delete() dict " {{{
-    let fullcommand = self._address() . "d" | silent exec fullcommand | return fullcommand
-endfu
-
-" }}}
 
 " }}}
 " TASKSTACK OBJECT: v5 " {{{
@@ -613,6 +578,8 @@ endfu
 
 " }}}
 
+" }}}
+
 " Fold prototype " {{{
 let s:Fold = {}
 " functions
@@ -689,6 +656,85 @@ function! s:Fold.render() " {{{
 endfunction " }}}
 " Fold }}}
 
+function! NewFoldAgent(...) " {{{
+    let foldagent = {}
+    let foldagent.begin = "^\\s*\\zs"
+    let foldagent.trail = "\\s"
+    let foldagent.custom_line = 0
+    fu! foldagent.line()
+      if self.custom_line > 0
+        return self.custom_line
+      else
+        return line(".")
+      end
+    endfu
+    fu! foldagent.getline()
+        return getline(self.line())
+    endfu
+    fu! foldagent.toggle(...) dict
+        if len(a:000) > 0
+          let self.custom_line = a:000[0]
+        end
+        if self._nexttoggle()
+          call self._setstatus(self.toggleset[0], self.toggleset[1])
+        end
+    endfu
+    fu! foldagent.debug(output)
+        if &verbose > 0
+            echo printf("%s: %s", expand("<sfile>"), a:output)
+        endif
+    endfu
+    fu! foldagent._setstatus(from,to)
+        let escapechars = '[]'
+        let from = escape(a:from, escapechars)
+        let to = escape(a:to, escapechars)
+        call self.debug(printf("match: \'%s\' with %s", match(self.getline(), self.begin . from . self.trail), self.begin . from . self.trail))
+        if match(self.getline(), self.begin . from . self.trail) > -1
+            call setline(self.line(), substitute(self.getline(), self.begin . from, to, ''))
+        endif
+    endfu
+    fu! foldagent.status_indicator()
+        let togglepattern = substitute(self.toggleset[0], ".", "[^\\\\\\\\s]", "g")
+        call self.debug(printf("togglepattern: %s", togglepattern))
+        let indicator = matchstr(self.getline(), self.begin . togglepattern)
+        call self.debug(printf("line: %s, begin: %s, pattern: %s", self.getline(), self.begin, togglepattern))
+        return indicator
+    endfu
+    fu! foldagent._nexttoggle()
+        let indicator = self.status_indicator()
+        if len(self.toggleset) == 1
+           call self._setstatus(indicator, self.toggleset[0])
+           return 0
+        end
+        let matchpos = match(self.toggleset, indicator)
+        if matchpos == -1
+            echo "No toggle match."
+        elseif matchpos > 0
+            call self._rotate_toggleset(matchpos)
+        end
+        return 1
+    endfu
+    fu! foldagent._rotate_toggleset(matchpos)
+        let swap = remove(self.toggleset, 0, a:matchpos - 1)
+        call extend(self.toggleset, swap)
+    endfu
+
+    fu! foldagent.decorate(...)
+        if len(a:000) > 0
+          let self.custom_line = a:000[0]
+        end
+        " prevent multiple-decoration
+        let l:enclosing_project = "" " detect this
+        if l:enclosing_project != "" | let l:enclosing_project .= ": " | end
+        let l:itemnostatus = substitute(self.getline(), '^\s*\(.\) ', '', '')
+        let l:result = printf("%s [%s] %s%s", self.status_indicator(), timestamp#text('short'), l:enclosing_project, l:itemnostatus)
+        call setline(self.line(), l:result)
+    endfu
+
+    return copy(foldagent)
+endfunction
+
+" }}}
 "}}}
 " FUNCTIONS: " {{{
 
