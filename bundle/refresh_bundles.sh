@@ -95,6 +95,7 @@ refresh    vim-addon-mw-utils   git://github.com/MarcWeber/vim-addon-mw-utils.gi
 refresh    vim-javascript       git://github.com/pangloss/vim-javascript.git
 refresh    vim-ragtag           git://github.com/tpope/vim-ragtag.git
 refresh    vim-ruby             git://github.com/vim-ruby/vim-ruby.git
+refresh    vim-traitor          git@github.com:SethMilliken/vim-traitor.git
 refresh    vimple               git://github.com/dahu/vimple.git
 refresh    vimwiki              git://github.com/vim-scripts/vimwiki.git
 refresh    vundle               git://github.com/vim-scripts/vundle.git
