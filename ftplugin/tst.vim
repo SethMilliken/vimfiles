@@ -56,9 +56,11 @@ endfunction
 noremap <script> <Plug>ResetTogglers <SID>ResetTogglers
 noremap <SID>ResetTogglers :call <SID>ResetTogglers()<CR>
 function! s:ResetTogglers()
-    if exists("s:statustoggle") | unlet s:statustoggle | end
-    if exists("s:statuscomplete") | unlet s:statuscomplete | end
-    if exists("s:statusabandoned") | unlet s:statusabandoned | end
+    for item in [ "s:statustoggle", "s:statuscomplete", "s:statusabandoned" ]
+        if exists(item)
+            exec "unlet " . item
+        endif
+    endfor
     echo "Togglers reset."
 endfunction
 
@@ -114,6 +116,9 @@ endfunction
 
 " }}}
 function! BaseObject(...) " {{{
+    if exists("g:baseobject_singleton")
+        return g:baseobject_singleton
+    end
     let instance = {
                         \ 'parent': {},
                         \ 'class': "BaseObject",
@@ -124,14 +129,16 @@ function! BaseObject(...) " {{{
                         \ 'state': NullObject(),
                         \ }
     fu instance.New(...) dict " {{{
-        let l:new = self.Alloc()
-        if len(a:000) == 1
-            let initial_funct = a:000[0]
-            exec "call l:new." . initial_funct . "()"
-        endif
-        return l:new
+         return self
+         let l:new = self.Alloc()
+         if len(a:000) == 1
+            "let initial_funct = a:000[0]
+            "exec "call l:new." . initial_funct . "()"
+         endif
+         return l:new
     endfu " }}}
     fu instance.Alloc() dict " {{{
+        return self
         let baseclass = self['parent']
         if empty(baseclass)
             if self['class'] == "BaseObject"
@@ -231,7 +238,8 @@ function! BaseObject(...) " {{{
         return foundposition
     endfu " }}}
 
-    return instance
+    let g:baseobject_singleton = instance
+    return BaseObject()
 endfunction
 
 " }}}
@@ -245,6 +253,7 @@ function! StateInfo(...)
                         \ 'winsaveview': {},
                         \ 'getpos': []
                         \ }
+    let instance = extend(deepcopy(BaseObject()), instance)
     fu instance.foldsave() dict " {{{
         let b:original_vop = &vop
         exec "let b:viewfile = " . "\"" . &viewdir . "/foldsave.vim" . "\""
@@ -292,15 +301,12 @@ endfunction
 " }}}
 " FOLDCONTAINER OBJECT: v6 " {{{
 function! FoldContainer(...)
-    let instance = BaseObject().New()
-    let instance['header'] = ""
-    let instance['parent'] = "BaseObject"
-    let instance['class'] = "FoldContainer"
-     "let instance = {
-                         "\ 'parent': 'BaseObject',
-                         "\ 'class': "FoldContainer",
-                         "\ 'header': "",
-                         "\ }
+    let instance = {
+                   \ 'parent': 'BaseObject',
+                   \ 'class': "FoldContainer",
+                   \ 'header': "",
+                   \ }
+    let instance = extend(deepcopy(BaseObject()), instance)
     fu! instance.New(header) dict " {{{
         return self.for(a:header)
     endfu " }}}
@@ -347,7 +353,7 @@ function! FoldContainer(...)
     fu instance._contents() dict " {{{
        return self._firstline() + self['contentlist'] + self._lastline()
     endfu " }}}
-    fu instance._name() dict " {{{
+    fu! instance._name() dict " {{{
         return self['header']
     endfu " }}}
     fu instance.create_at(line) dict " {{{
@@ -393,6 +399,7 @@ let g:taskstack = {
                 \ 'node_names': { 'main':'DOING', 'done':'COMPLETED','dates':'DATES','projects':'PROJECTS','scratch':'SCRATCH'},
                 \ 'layout': [ 'main', 'done', ['dates'], 'projects', 'scratch' ]
                 \ }
+    "let instance = extend(deepcopy(BaseObject()), instance)
 func taskstack.New(...) dict " {{{
     let self['Alloc'] = function("Alloc")
     let l:new = self['Alloc'](self['parent'])
