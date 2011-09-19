@@ -89,14 +89,12 @@ function! SetTabName(name)
     normal gtgT
 endfunction
 
+" Used in .gvimrc
 function! MyGuiTabLabel()
 	return exists("t:tabname") ? "%N %{t:tabname} %m" : "%m\ %N\ %t\ %r"
 endfunction
 
 set tabline=%!MyTabLine()
-if has("gui_running")
-    set guitablabel=%!MyGuiTabLabel()
-end
 
 set showtabline=1 " 2=always
 autocmd GUIEnter * hi! TabLineFill term=underline cterm=underline gui=underline

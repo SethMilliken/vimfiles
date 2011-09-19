@@ -155,5 +155,7 @@ endfunction
 
 "}}}
 
+set guitablabel=%!MyGuiTabLabel()
+
 "}}}
 " vim:ft=vim:fdm=marker:nospell:cms=\ \"\ %s
