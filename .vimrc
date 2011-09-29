@@ -240,6 +240,7 @@ nmap <C-y>s :SnipUp<CR>
 nmap <C-y>S :call feedkeys(":call OpenRelatedSnippetFileInVsplit()\r\<Tab>\<Tab>", 't')<CR>
 nmap <C-y>a :AbbUp<CR>
 nmap <C-y>A :vsplit ~/.vim/plugin/iabbs.vim<CR>
+nmap <C-y>w :%s/\s\+$//e<CR>:echo "Whitespace-b-gone."<CR>
 
 " File path to pasteboard
 map <Leader>f :call text#file_to_pasteboard()<CR>
