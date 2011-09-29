@@ -153,6 +153,7 @@ set autoread                        " automatically reread fs changed files *aut
 colorscheme araxia
 
 let mapleader="\\"                  " <Leader>
+"let mapleader="\<CR>"                  " <Leader>
 
 "set foldcolumn=4                   " trying out fold indicator column
 "set display+=uhex                  " show unprintable hex characters as <xx>
@@ -901,10 +902,11 @@ endfunction
 " FILETYPES: " {{{
 
 au BufNewFile,BufRead *.scala setf scala
+au BufNewFile,BufRead *.zsh-theme setf zsh
 au BufNewFile,BufRead *.applescript   setf applescript
 " au BufNewFile,BufRead *.tst.* set ft=_.txt.tst
 au BufNewFile,BufRead *.yaml,*.yml so ~/.vim/syntax/yaml.vim
-au FileType ruby set fdm=syntax
+au FileType ruby set fdm=syntax sts=2 sw=2 expandtab
 au BufNewFile,BufRead *vimperatorrc*,*.vimp set filetype=vimperator
 au BufNewFile,BufRead *pentadactylrc*,*.penta set filetype=pentadactyl
 au BufNewFile,BufRead *.adium set filetype=adium
@@ -1267,7 +1269,7 @@ let g:vimwiki_list = [
                 \'html_header': '~/sandbox/personal/vimwiki/header.tpl',
                 \'html_footer': '~/sandbox/personal/vimwiki/footer.tpl',
                 \},
-            \{'path': '~/sandbox/public/wiki',
+            \{'path': '~/sandbox/public/wiki/',
                 \'index': 'SethMilliken',
                 \'auto_export': 1,
                 \},
@@ -1275,6 +1277,14 @@ let g:vimwiki_list = [
                 \'index': 'SethMilliken',
                 \'html_header': '~/sandbox/work/wiki/header.tpl',
                 \'html_footer': '~/sandbox/personal/vimwiki/footer.tpl',
+                \'maxhi': 0,
+                \'auto_export': 1,
+                \},
+            \{'path': '~/sandbox/vimscriptdev.info/content/',
+                \'path_html': '~/sandbox/vimscriptdev.info/html/',
+                \'index': 'index',
+                \'html_header': '~/sandbox/vimscriptdev.info/content/header.tpl',
+                \'html_footer': '~/sandbox/vimscriptdev.info/content/footer.tpl',
                 \'maxhi': 0,
                 \'auto_export': 1,
                 \},
@@ -1664,30 +1674,28 @@ endfunction
 
 " Toggle number column: " {{{
 " <C-e>1 to toggle between nu and rnu
-if exists('+relativenumber')
-  nnoremap <expr> <C-e>1 ToggleNumberDisplay()
-  xnoremap <expr> <C-e>1 ToggleNumberDisplay()
-  onoremap <expr> <C-e>1 ToggleNumberDisplay()
+for mapmode in ["n", "x", "o"]
+    exe mapmode . "noremap <expr> <C-e>1 ToggleNumberDisplay()"
+endfor
 
-  function! ToggleNumberDisplay()
-      exe "setl" &l:nu ? "rnu" : &l:rnu ? "nornu" : "nu" | redraw
-  endfunction
-
-endif
+function! ToggleNumberDisplay()
+    if exists('+relativenumber')
+        exe "setl" &l:nu ? "rnu" : &l:rnu ? "nornu" : "nu"
+    else
+        setl nu!
+    endif
+endfunction
 
 " }}}
 " Toggle List: " {{{
 " <C-e>2 to toggle between list and nolist
-if exists('+relativenumber')
-  nnoremap <expr> <C-e>2 ToggleListDisplay()
-  xnoremap <expr> <C-e>2 ToggleListDisplay()
-  onoremap <expr> <C-e>2 ToggleListDisplay()
+for mapmode in ["n", "x", "o"]
+    exe mapmode . "noremap <expr> <C-e>2 ToggleListDisplay()"
+endfor
 
-  function! ToggleListDisplay()
-      exe "setl" &l:list? "nolist" : "list"
-  endfunction
-
-endif
+function! ToggleListDisplay()
+    exe "setl" &l:list? "nolist" : "list"
+endfunction
 
 " }}}
 " Diff of changes since opening file " {{{
@@ -1752,6 +1760,11 @@ function! ExecuteSelection() abort
 endfunction
 
 vmap <buffer> K "ty:call ExecuteSelection()<CR>
+
+function! MarkdownToHtml()
+    %s/`\([^`]*\)`/<code>\1<\/code>/g
+    " <p> in front of each paragraph. how to correctly detect?
+endfunction
 " }}}
 
 " }}}
