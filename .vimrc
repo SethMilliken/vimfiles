@@ -220,7 +220,7 @@ inoremap <C-u> <C-g>u<C-u>
 " Extended Navigation
 nmap <C-e>h :bnext<CR>
 nmap <C-e>l :bprev<CR>
-nmap <C-e>j :exec ":lcd " . expand("%:p:h") \| echo "cwd now: " . getcwd()<CR>
+nmap <C-e>j :Herenow<CR>
 nmap <C-e>k :exec ":lcd .." \| echo "cwd now: " . getcwd()<CR>
 
 map g$ :tablast<CR>
@@ -248,6 +248,9 @@ nmap <C-y>w :%s/\s\+$//e<CR>:echo "Whitespace-b-gone."<CR>
 " File path to pasteboard
 map <Leader>f :call text#file_to_pasteboard()<CR>
 map <Leader>F :call text#file_to_pasteboard(line("."))<CR>
+
+" Commit file
+map <Leader>o :call CheckinCheckup("show_prompt")<CR>
 
 " }}}
 " Utility: word count of current file " {{{
@@ -1149,8 +1152,8 @@ nnoremap <C-y>g :GundoToggle<CR>
 
 " }}}
 " Git Commit: " {{{
-augroup Gundo
-    au! FileType gitcommit nnoremap <buffer> <silent> <C-n> :DiffGitCached<CR>\|:wincmd L<CR>|:au FileType git nnoremap <buffer> <silent> <C-n> :hide<CR>
+augroup Gitcommit | au!
+    au FileType gitcommit nnoremap <buffer> <silent> <C-n> :DiffGitCached<CR>\|:wincmd L<CR>|:au FileType git nnoremap <buffer> <silent> <C-n> :hide<CR>
 augroup END
 
 " }}}
@@ -1189,7 +1192,7 @@ augroup BufExplorerAdd | au!
         let g:BufExploreAdd = 1
         au BufWinEnter \[BufExplorer\] map <buffer> <Tab> <CR>
         " Navigate to the file under the cursor when you let go of Tab
-        au BufWinEnter \[BufExplorer\] set updatetime=600
+        " au BufWinEnter \[BufExplorer\] set updatetime=600
         " o is the BufExplorer command to select a file
         "au CursorHold \[BufExplorer\] call feedkeys("o", "m")
     endif
@@ -1579,8 +1582,9 @@ map <Leader><S-CR> :call feedkeys("\"tyyq:\"tp\r", "n")<CR>
 
 " Automatic Behavior Per MacVim Instance: " {{{
 augroup Startup | au!
-    au GuiEnter * au! SwapExists * exe startup#handler().swapchoice() | set shortmess+=A | augroup! Startup
+    au GuiEnter * au! SwapExists * exe startup#handler().swapchoice() | set shortmess+=A
     au GuiEnter * nested silent! call startup#handler().handle()
+    au VimEnter * augroup! Startup
 augroup END
 " }}}
 
@@ -1765,6 +1769,45 @@ function! MarkdownToHtml()
     %s/`\([^`]*\)`/<code>\1<\/code>/g
     " <p> in front of each paragraph. how to correctly detect?
 endfunction
+" }}}
+
+command! Herenow :call Herenow()
+function! Herenow() " {{{
+    exec ":lcd " . expand("%:p:h")
+    echo "cwd now: " . getcwd()
+endfunction
+
+" }}}
+command! -nargs=* Checkin :call Checkin(<q-args>)
+function! Checkin(...) " {{{
+    let message =  a:000[0]
+    let g:last_commit_message = message
+    if CheckinCheckup()
+        call Herenow()
+        if len(message) > 0
+            exe ":Gcommit % -m\"" . message . "\""
+        else
+            exe ":Gcommit -v %" | wincmd T
+        endif
+    endif
+endfunction
+
+" }}}
+function! CheckinCheckup(...) " {{{
+    let show_prompt = len(a:000) > 0
+    if exists(":Gcommit")
+        if show_prompt
+            call feedkeys(":Checkin ")
+        else
+            return 1
+        endif
+    else
+        let currentfile = (len(expand("%:p")) > 0) ? expand("%") : "Unsaved buffer"
+        echo currentfile . " is not in a recognized vcs work tree."
+        return 0
+    endif
+endfunction
+
 " }}}
 
 " }}}
