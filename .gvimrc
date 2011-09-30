@@ -94,31 +94,51 @@ if has("gui_macvim")
     set antialias
     set guifont=Inconsolata:h15
     winsize 345 500                         " set a reasonable window size
-    "" Map Cmd-t to new tab
-    exec "nmap <silent> <D-t>     <Esc>:" . &tabpagemax . " tabnew \\| :SolicitTabName<CR>"
-    "" Map Cmd-w to close buffer
-    nmap <silent> <D-w>     <Esc>:bd<CR>
     " NOTE: Have to unset menu commands in gvimrc
     " Free Command Key Bindings " {{{
-  macm File.New\ Window				key=<D-n> action=newWindow:
-  "macm File.New\ Tab				key=
-  macm File.Close				key=<D-w> action=performClose:
-  macm File.Save<Tab>:w				key=<D-s>
-  macm File.Save\ All				key=<D-M-s> alt=YES
-  macm File.Save\ As\.\.\.<Tab>:sav		key=<D-S>
-"    macmenu File.Print key=<nop>
-"    macmenu Window.Zoom key=<nop>
-    map <silent> <D-p> :ln <CR>
-    map <silent> <D-P> :lp <CR>
-    map <silent> <D-e> :cn <CR>
-    map <silent> <D-E> :cp <CR>
-    map <silent> <D-i> :winsize 999 999 \| wincmd =<CR>
+    "macm File.Close                            key=<D-w> action=performClose:
+    "macm File.New\ Window                      key=<D-n> action=newWindow:
+    "macm File.Save                             key=<D-s>
+    "macm File.Save\ All                        key=<D-M-s> alt=YES
+    "macm File.Save\ As\.\.\.                   key=<D-S>
+    "macm File.Print                            key=<nop>
+    " frees <D-b>
+    "macm Tools.List\ Errors                    key=<nop>
+    " frees <D-l>
+    "macm Tools.Make                            key=<nop>
+    " frees <D-m>
+    "macm Window.Zoom                           key=<nop>
+    " frees <D-t>
+    macm File.New\ Tab                          key=<nop>
+    " frees <D-T>
+    macm File.Open\ Tab\.\.\.                   key=<D-M-t>  action=addNewTab:
+    " frees <D-f>
+    macm Edit.Find.Find\.\.\.                   key=<nop>
+    " }}}
 
-    " }}}
-    " Command-T " {{{
-    macmenu Edit.Find.Find\.\.\. key=<nop>
-    map <D-f> :CommandT<CR>
-    " }}}
+    "" Map Cmd-w to close buffer
+    nmap <silent> <D-w> <Esc>:bd<CR>
+
+    "" Location list and quickfix navigation
+    map  <silent> <D-p> :lne <CR>
+    map  <silent> <D-P> :lp  <CR>
+    map  <silent> <D-e> :cn  <CR>
+    map  <silent> <D-E> :cp  <CR>
+
+    "" Window resize
+    map  <silent> <D-i> :winsize 999 999 \| wincmd =<CR>
+
+    "" CommandT
+    " TODO: map conditionally
+    map <D-f>  :call RecursiveFileSearch(":CommandT")<CR>
+
+    " Tab-page ewly created with <D-t> shouldn't be in insert mode
+    " just because we happen to be in it on invocation.
+    "inoreme 10.295 &File.New\ Tab                          <Esc>:tabnew<CR>
+    "" Map Cmd-t to new tab, soliciting name
+    exec "nmap <silent> <D-t>     <Esc>:" . &tabpagemax . " tabnew \\| :SolicitTabName<CR>"
+    "" Map Cmd-Shift-t to rename tab
+    exec "nmap <silent> <D-T>   <Esc>:SolicitTabName<CR>"
 end
 
 " }}}
