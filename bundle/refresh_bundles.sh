@@ -49,7 +49,6 @@ function oldfork {
 }
 
 oldfork    gundo                git@github.com:SethMilliken/gundo.vim.git
-oldfork    script-ed            ssh://seth@at.araxia.net/~/git/script-ed.git
 oldfork    snipmate             git://github.com/spf13/snipmate.vim.git
 oldfork    tagbar               git@github.com:SethMilliken/tagbar.git
 oldfork    tlib-seth            git@github.com:SethMilliken/tlib_vim.git
@@ -110,8 +109,10 @@ refresh    vimple               git://github.com/dahu/vimple.git
 refresh    vimwiki              git://github.com/vim-scripts/vimwiki.git
 refresh    vundle               git://github.com/vim-scripts/vundle.git
 refresh    xml                  git://github.com/vim-scripts/xml.vim.git
-warning     conque               git://github.com/rson/vim-conque.git
+warning    conque               git://github.com/rson/vim-conque.git
 warning    csapprox             git://github.com/godlygeek/csapprox.git
 warning    dbext                git://github.com/vim-scripts/dbext.vim.git
+warning    script-ed            ssh://seth@at.araxia.net/~/git/script-ed.git
 warning    syntastic            git://github.com/sjl/syntastic.git
 warning    vim-addon-signs      git://github.com/MarcWeber/vim-addon-signs.git
+warning    vim-ragtag           na
