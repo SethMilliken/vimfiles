@@ -907,6 +907,7 @@ endfunction
 au BufNewFile,BufRead *.scala setf scala
 au BufNewFile,BufRead *.zsh-theme setf zsh
 au BufNewFile,BufRead *.applescript   setf applescript
+au BufNewFile,BufRead *.json setf javascript
 " au BufNewFile,BufRead *.tst.* set ft=_.txt.tst
 au BufNewFile,BufRead *.yaml,*.yml so ~/.vim/syntax/yaml.vim
 au FileType ruby set fdm=syntax sts=2 sw=2 expandtab
