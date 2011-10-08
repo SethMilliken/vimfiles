@@ -146,6 +146,32 @@ function! startup#SAMSARA()
 endfunction
 
 " }}}
+" Host NOTABLE " {{{
+function! startup#NOTABLE()
+    let s:obj = startup#base()
+
+    fun! s:obj.class() dict
+        return "notable.class"
+    endfun
+
+    fun! s:obj.Vimwiki() dict
+        VimwikiIndex
+        set nolist
+    endfun
+
+    fun! s:obj.SourceCode() dict
+        edit ~/sandbox/code/
+    endfun
+
+    fun! s:obj.TasksFile() dict
+        call AdjustFont(4)
+        return "~/sandbox/personal/todo/notable.tst"
+    endfun
+
+    return s:obj.New()
+endfunction
+
+" }}}
 " Host SETH " {{{
 function! startup#SETH()
     let s:obj = startup#base()
