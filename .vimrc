@@ -174,7 +174,7 @@ set tags+=$HOME/sandbox/personal/tags
 set tags+=$HOME/.vim/tags
 
 " Swap: centralized with unique names via //
-set directory=$HOME/.vim/swap//,~/vimfiles/swap//
+set directory=$HOME/.vim/swap//,$HOME/vimfiles/swap//
 
 " Sessionopts: defaults are blank,buffers,curdir,folds,help,options,tabpages,winsize
 set ssop=blank,buffers,curdir,folds,help,resize,slash,tabpages,unix,winpos,winsize
