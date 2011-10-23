@@ -30,6 +30,7 @@
 
 " Pathogen: " {{{
 set rtp+=~/.vim/bundle/pathogen/
+set rtp+=~/vimfiles
 set rtp+=~/vimfiles/bundle/pathogen/
 call pathogen#infect()
 "let g:did_install_default_menus = 1 " disable default macvim menus
@@ -149,6 +150,7 @@ set clipboard=unnamed               " share os pasteboard
 set cursorline                      " highlight current line
 set wildmenu                        " show completion options
 set autoread                        " automatically reread fs changed files *autoread*
+set shellslash                      " always use /
 
 colorscheme araxia
 
