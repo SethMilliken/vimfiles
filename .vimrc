@@ -1155,8 +1155,11 @@ nnoremap <C-y>g :GundoToggle<CR>
 
 " }}}
 " Git Commit: " {{{
-augroup Gitcommit | au!
-    au FileType gitcommit nnoremap <buffer> <silent> <C-n> :DiffGitCached<CR>\|:wincmd L<CR>|:au FileType git nnoremap <buffer> <silent> <C-n> :hide<CR>
+augroup Git | au!
+    au FileType gitcommit nnoremap <buffer> <silent> <C-n> :DiffGitCached<CR>
+    au FileType gitcommit\|gitconfig set nolist ts=4 sts=4 sw=4 | wincmd L
+    au FileType gitconfig set noet | wincmd L
+    au FileType gitrebase iab <buffer> na exec git commit --amend --author "Seth Milliken <seth@araxia.net>"<Left><Left><C-r>=getchar(0)?'':''<CR>
 augroup END
 
 " }}}
