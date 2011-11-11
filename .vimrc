@@ -927,7 +927,7 @@ augroup END
 " }}}
 " Extradite: " {{{
 augroup Extradite
-    au! FileType extradite set showbreak=⇒\ \ \  wrap
+    au! FileType extradite set showbreak=⇒\ \ \ \ \  wrap cpo+=n
 augroup END
 
 " }}}
@@ -956,7 +956,7 @@ let g:aborted_prefix = "x"
 let g:completed_prefix = "o"
 augroup TaskStack | au!
     au BufRead *.tst* set filetype=tst syntax=txt
-    au FileType *tst* set indentkeys-=o indentkeys-=0 showbreak=\ \  noai fdm=marker cms= sts=2 sw=2 isk+=#
+    au FileType *tst* set indentkeys-=o indentkeys-=0 showbreak=↳\ \ \ \ \   noai fdm=marker cms= sts=2 sw=2 isk+=# cpo+=n
     "au FileType *tst* nmap <buffer> XX :call TaskstackCompleteItem(g:aborted_prefix)<CR>
     "au FileType *tst* imap <buffer> XX <C-c>:call TaskstackCompleteItem(g:aborted_prefix)<CR>
     "au FileType *tst* nmap <buffer> QQ :call TaskstackCompleteItem(g:completed_prefix)<CR>
