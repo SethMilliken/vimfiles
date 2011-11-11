@@ -112,6 +112,7 @@ refresh    xml                  git://github.com/vim-scripts/xml.vim.git
 warning    conque               git://github.com/rson/vim-conque.git
 warning    csapprox             git://github.com/godlygeek/csapprox.git
 warning    dbext                git://github.com/vim-scripts/dbext.vim.git
+warning    delimitMate          git://github.com/Raimondi/delimitMate.git
 warning    script-ed            ssh://seth@at.araxia.net/~/git/script-ed.git
 warning    syntastic            git://github.com/sjl/syntastic.git
 warning    vim-addon-signs      git://github.com/MarcWeber/vim-addon-signs.git
