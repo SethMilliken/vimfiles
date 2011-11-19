@@ -151,6 +151,7 @@ set cursorline                      " highlight current line
 set wildmenu                        " show completion options
 set autoread                        " automatically reread fs changed files *autoread*
 set shellslash                      " always use /
+set undofile                        " experimental: will i actually use this?
 
 colorscheme araxia
 
@@ -177,6 +178,9 @@ set tags+=$HOME/.vim/tags
 
 " Swap: centralized with unique names via //
 set directory=$HOME/.vim/swap//,$HOME/vimfiles/swap//
+
+" Undo: centralized with unique names via //
+set undodir=$HOME/.vim/undo//,~/vimfiles/undo//
 
 " Sessionopts: defaults are blank,buffers,curdir,folds,help,options,tabpages,winsize
 set ssop=blank,buffers,curdir,folds,help,resize,slash,tabpages,unix,winpos,winsize
@@ -1078,6 +1082,7 @@ augroup END
 " Quickfix: " {{{
 augroup Quickfix
     au! FileType qf set nu | :wincmd L
+    au! FileType qf :wincmd L
 augroup END
 
 " }}}
@@ -1290,11 +1295,11 @@ let g:vimwiki_list = [
                 \'maxhi': 0,
                 \'auto_export': 1,
                 \},
-            \{'path': '~/sandbox/vimscriptdev.info/content/',
+            \{'path': '~/sandbox/vimscriptdev.info/admin/',
                 \'path_html': '~/sandbox/vimscriptdev.info/html/',
                 \'index': 'index',
-                \'html_header': '~/sandbox/vimscriptdev.info/content/header.tpl',
-                \'html_footer': '~/sandbox/vimscriptdev.info/content/footer.tpl',
+                \'html_header': '~/sandbox/vimscriptdev.info/admin/header.tpl',
+                \'html_footer': '~/sandbox/vimscriptdev.info/admin/footer.tpl',
                 \'maxhi': 0,
                 \'auto_export': 1,
                 \},
@@ -1802,6 +1807,10 @@ endfunction
 " }}}
 function! CheckinCheckup(...) " {{{
     let show_prompt = len(a:000) > 0
+    let currentfile = (len(expand("%:p")) > 0) ? expand("%") : "Unsaved buffer"
+    if (currentfile != "Unsaved buffer")
+        write
+    end
     if exists(":Gcommit")
         if show_prompt
             call feedkeys(":Checkin ")
@@ -1809,7 +1818,6 @@ function! CheckinCheckup(...) " {{{
             return 1
         endif
     else
-        let currentfile = (len(expand("%:p")) > 0) ? expand("%") : "Unsaved buffer"
         echo currentfile . " is not in a recognized vcs work tree."
         return 0
     endif
