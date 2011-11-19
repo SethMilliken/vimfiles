@@ -1797,7 +1797,7 @@ function! Checkin(...) " {{{
     if CheckinCheckup()
         call Herenow()
         if len(message) > 0
-            exe ":Gcommit % -m\"" . message . "\""
+            exe ":Gcommit % -m\'" . message . "\'"
         else
             exe ":Gcommit -v %" | wincmd T
         endif
