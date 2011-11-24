@@ -1591,7 +1591,7 @@ map <Leader><S-CR> :call feedkeys("\"tyyq:\"tp\r", "n")<CR>
 augroup Startup | au!
     au GuiEnter * au! SwapExists * exe startup#handler().swapchoice() | set shortmess+=A
     au GuiEnter * nested silent! call startup#handler().handle()
-    au VimEnter * augroup! Startup
+    "au VimEnter * augroup! Startup
 augroup END
 " }}}
 
