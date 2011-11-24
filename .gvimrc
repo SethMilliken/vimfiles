@@ -97,6 +97,7 @@ if has("gui_macvim")
     " NOTE: Have to unset menu commands in gvimrc
     " Free Command Key Bindings " {{{
     "macm File.Close                            key=<D-w> action=performClose:
+    macm File.Close                             key=<nop>
     "macm File.New\ Window                      key=<D-n> action=newWindow:
     "macm File.Save                             key=<D-s>
     "macm File.Save\ All                        key=<D-M-s> alt=YES
@@ -117,7 +118,8 @@ if has("gui_macvim")
     " }}}
 
     "" Map Cmd-w to close buffer
-    nmap <silent> <D-w> <Esc>:bd<CR>
+    "nmap <silent> <D-w> <Esc>:bd<CR>
+    nmap <silent> <D-w> <Esc>:tabclose<CR>
 
     "" Location list and quickfix navigation
     map  <silent> <D-p> :lne <CR>
