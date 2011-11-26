@@ -53,6 +53,7 @@ oldfork    snipmate             git://github.com/spf13/snipmate.vim.git
 oldfork    tagbar               git@github.com:SethMilliken/tagbar.git
 oldfork    tlib-seth            git@github.com:SethMilliken/tlib_vim.git
 refresh    .pathogen-raimondi   git://github.com/Raimondi/vim-pathogen.git
+refresh    tmux                 git://github.com/VimEz/Tmux.git
 refresh    abolish              git://github.com/tpope/vim-abolish.git
 refresh    ack                  git://github.com/vim-scripts/ack.vim.git                   'brew install ack'
 refresh    ansiesc              git://github.com/vim-scripts/AnsiEsc.vim.git
@@ -61,6 +62,7 @@ refresh    bufexplorer          git://github.com/vim-scripts/bufexplorer.zip.git
 refresh    calendar             git://github.com/vim-scripts/calendar.vim--Matsumoto.git
 refresh    cocoa                git://github.com/msanders/cocoa.vim.git
 refresh    command-t            git://github.com/wincent/Command-T.git                     'Rebuild if necessary:\n\tpushd command-t/ruby/command-t/; ruby extconf.rb; make && popd'
+refresh    ctrlp                git://github.com/kien/ctrlp.vim.git
 refresh    extradite            git://github.com/int3/vim-extradite.git
 refresh    fugitive             git://github.com/tpope/vim-fugitive.git
 refresh    fuzzyfinder          git://github.com/vim-scripts/FuzzyFinder.git
