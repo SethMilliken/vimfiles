@@ -109,6 +109,7 @@ endif " has("autocmd")
 "}}}
 " Seth Milliken additions
 " SETTINGS: " {{{
+set shell=bash                      " some issues with zsh
 set encoding=UTF-8                  " use UTF-8 encoding
 set fileencoding=UTF-8              " use UTF-8 encoding as default
 set shortmess+=I                    " don't show intro on start
