@@ -53,7 +53,6 @@ oldfork    snipmate             git://github.com/spf13/snipmate.vim.git
 oldfork    tagbar               git@github.com:SethMilliken/tagbar.git
 oldfork    tlib-seth            git@github.com:SethMilliken/tlib_vim.git
 refresh    .pathogen-raimondi   git://github.com/Raimondi/vim-pathogen.git
-refresh    tmux                 git://github.com/VimEz/Tmux.git
 refresh    abolish              git://github.com/tpope/vim-abolish.git
 refresh    ack                  git://github.com/vim-scripts/ack.vim.git                   'brew install ack'
 refresh    ansiesc              git://github.com/vim-scripts/AnsiEsc.vim.git
@@ -99,12 +98,14 @@ refresh    textobj-rubyblock    git://github.com/nelstrom/vim-textobj-rubyblock.
 refresh    textobj-user         git://github.com/kana/vim-textobj-user.git
 refresh    threesome            git://github.com/sjl/threesome.vim.git
 refresh    tlib                 git://github.com/tomtom/tlib_vim.git
+refresh    tmux                 git://github.com/VimEz/Tmux.git
 refresh    twitvim              git://github.com/vim-scripts/TwitVim.git
 refresh    viki                 git://github.com/tomtom/viki_vim.git
 refresh    vim-addon-async      git://github.com/MarcWeber/vim-addon-async.git
 refresh    vim-addon-manager    git://github.com/MarcWeber/vim-addon-manager.git
 refresh    vim-addon-mw-utils   git://github.com/MarcWeber/vim-addon-mw-utils.git
 refresh    vim-javascript       git://github.com/pangloss/vim-javascript.git
+refresh    vim-powerline        git://github.com/Lokaltog/vim-powerline.git
 refresh    vim-ruby             git://github.com/vim-ruby/vim-ruby.git
 refresh    vim-traitor          git@github.com:SethMilliken/vim-traitor.git
 refresh    vimple               git://github.com/dahu/vimple.git
