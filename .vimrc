@@ -38,6 +38,10 @@ let g:did_install_syntax_menu = 1
 let g:vimwiki_menu = ''
 
 " }}}
+" Powerline: " {{{
+let g:Powerline_symbols = 'fancy'
+
+" }}}
 
 "}}}
 " DEFAULTS: from example .vimrc " {{{
@@ -1100,8 +1104,9 @@ augroup END
 
 " }}}
 " Vimperator Y Pentadactyl: " {{{
-augroup VimperatorYPentadactyl
-    au! BufRead vimperator-*,pentadactyl-* nmap <buffer> <silent> ZZ :call FormFieldArchive() \| :silent write \| :bd \| :macaction hide:<CR>
+augroup VimperatorYPentadactyl | au!
+    au BufRead vimperator-*,pentadactyl-* set ft=form
+    au BufRead vimperator-*,pentadactyl-* nmap <buffer> <silent> ZZ :call FormFieldArchive() \| :silent write \| :bd \| :macaction hide:<CR>
     au BufRead vimperator-*,pentadactyl-* imap <buffer> <silent> ZZ <Esc>ZZ
     au BufRead vimperator-*,pentadactyl-* :macaction unhide:
 augroup END
@@ -1167,6 +1172,13 @@ augroup Git | au!
     au FileType gitcommit\|gitconfig set nolist ts=4 sts=4 sw=4 | wincmd L
     au FileType gitconfig set noet | wincmd L
     au FileType gitrebase iab <buffer> na exec git commit --amend --author "Seth Milliken <seth@araxia.net>"<Left><Left><C-r>=getchar(0)?'':''<CR>
+augroup END
+
+" }}}
+" Shell Scripts: " {{{
+augroup Shell | au!
+    au BufNewFile,BufRead *.functions setf zsh
+    au FileType zsh nnoremap <buffer> <silent> <C-n> :DiffGitCached<CR>
 augroup END
 
 " }}}
@@ -1827,6 +1839,9 @@ endfunction
 " }}}
 
 " }}}
+  fun SBT_JAR()
+    return "/usr/local/Cellar/sbt/0.11.2/libexec/sbt-launch.jar"
+  endfun
 
 " let g:session_autoload = 1
 " let g:session_autosave = 1
