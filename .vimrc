@@ -1105,10 +1105,10 @@ augroup END
 " }}}
 " Vimperator Y Pentadactyl: " {{{
 augroup VimperatorYPentadactyl | au!
-    au BufRead vimperator-*,pentadactyl-* set ft=form
-    au BufRead vimperator-*,pentadactyl-* nmap <buffer> <silent> ZZ :call FormFieldArchive() \| :silent write \| :bd \| :macaction hide:<CR>
-    au BufRead vimperator-*,pentadactyl-* imap <buffer> <silent> ZZ <Esc>ZZ
-    au BufRead vimperator-*,pentadactyl-* :macaction unhide:
+    au BufRead vimperator*,pentadactyl.txt set ft=form
+    au BufRead vimperator*,pentadactyl.txt nmap <buffer> <silent> ZZ :call FormFieldArchive() \| :silent write \| :bd \| :macaction hide:<CR>
+    au BufRead vimperator*,pentadactyl.txt imap <buffer> <silent> ZZ <Esc>ZZ
+    au BufRead vimperator*,pentadactyl.txt :macaction unhide:
 augroup END
 
 " }}}
