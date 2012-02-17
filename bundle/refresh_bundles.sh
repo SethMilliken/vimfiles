@@ -20,7 +20,7 @@ function refresh {
         else
             echo ""
             pushd ${NAME} &> /dev/null
-            ${DEBUG} git f && ${DEBUG} git in && ${DEBUG} git up
+            ${DEBUG} git f && ${DEBUG} git up
             popd &> /dev/null
         fi
     else
@@ -53,6 +53,7 @@ oldfork    snipmate             git://github.com/spf13/snipmate.vim.git
 oldfork    tagbar               git@github.com:SethMilliken/tagbar.git
 oldfork    tlib-seth            git@github.com:SethMilliken/tlib_vim.git
 refresh    .pathogen-raimondi   git://github.com/Raimondi/vim-pathogen.git
+refresh    .vim-powerline       git://github.com/Lokaltog/vim-powerline.git
 refresh    abolish              git://github.com/tpope/vim-abolish.git
 refresh    ack                  git://github.com/vim-scripts/ack.vim.git                   'brew install ack'
 refresh    ansiesc              git://github.com/vim-scripts/AnsiEsc.vim.git
@@ -105,7 +106,7 @@ refresh    vim-addon-async      git://github.com/MarcWeber/vim-addon-async.git
 refresh    vim-addon-manager    git://github.com/MarcWeber/vim-addon-manager.git
 refresh    vim-addon-mw-utils   git://github.com/MarcWeber/vim-addon-mw-utils.git
 refresh    vim-javascript       git://github.com/pangloss/vim-javascript.git
-refresh    vim-powerline        git://github.com/SethMilliken/vim-powerline.git
+refresh    vim-powerline        git@github.com:SethMilliken/vim-powerline.git
 refresh    vim-ruby             git://github.com/vim-ruby/vim-ruby.git
 refresh    vim-traitor          git@github.com:SethMilliken/vim-traitor.git
 refresh    vimple               git://github.com/dahu/vimple.git
