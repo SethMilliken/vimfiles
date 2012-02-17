@@ -105,7 +105,7 @@ refresh    vim-addon-async      git://github.com/MarcWeber/vim-addon-async.git
 refresh    vim-addon-manager    git://github.com/MarcWeber/vim-addon-manager.git
 refresh    vim-addon-mw-utils   git://github.com/MarcWeber/vim-addon-mw-utils.git
 refresh    vim-javascript       git://github.com/pangloss/vim-javascript.git
-refresh    vim-powerline        git://github.com/Lokaltog/vim-powerline.git
+refresh    vim-powerline        git://github.com/SethMilliken/vim-powerline.git
 refresh    vim-ruby             git://github.com/vim-ruby/vim-ruby.git
 refresh    vim-traitor          git@github.com:SethMilliken/vim-traitor.git
 refresh    vimple               git://github.com/dahu/vimple.git
