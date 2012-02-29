@@ -62,7 +62,6 @@ refresh    bufexplorer          git://github.com/vim-scripts/bufexplorer.zip.git
 refresh    calendar             git://github.com/vim-scripts/calendar.vim--Matsumoto.git
 refresh    cocoa                git://github.com/msanders/cocoa.vim.git
 refresh    command-t            git://github.com/wincent/Command-T.git                     'Rebuild if necessary:\n\tpushd command-t/ruby/command-t/; ruby extconf.rb; make && popd'
-refresh    ctrlp                git://github.com/kien/ctrlp.vim.git
 refresh    extradite            git://github.com/int3/vim-extradite.git
 refresh    fugitive             git://github.com/tpope/vim-fugitive.git
 refresh    fuzzyfinder          git://github.com/vim-scripts/FuzzyFinder.git
@@ -115,6 +114,7 @@ refresh    vundle               git://github.com/vim-scripts/vundle.git
 refresh    xml                  git://github.com/vim-scripts/xml.vim.git
 warning    conque               git://github.com/rson/vim-conque.git
 warning    csapprox             git://github.com/godlygeek/csapprox.git
+warning    ctrlp                git://github.com/kien/ctrlp.vim.git
 warning    dbext                git://github.com/vim-scripts/dbext.vim.git
 warning    delimitMate          git://github.com/Raimondi/delimitMate.git
 warning    script-ed            ssh://seth@at.araxia.net/~/git/script-ed.git
