@@ -83,7 +83,7 @@ refresh    pathogen             git://github.com/tpope/vim-pathogen.git
 refresh    pickacolor           git://github.com/Raimondi/PickAColor.git
 refresh    rails                git://github.com/tpope/vim-rails.git
 refresh    ruby-matchit         git://github.com/vim-scripts/ruby-matchit.git
-refresh    scala                git://github.com/vim-scripts/scala.vim.git
+refresh    vim-scala            git://github.com/derekwyatt/vim-scala.git
 refresh    screenshot           git://github.com/vim-scripts/ScreenShot.git
 refresh    sessionman           git://github.com/vim-scripts/sessionman.git
 refresh    snipmate             git://github.com/garbas/vim-snipmate.git
@@ -117,6 +117,7 @@ warning    csapprox             git://github.com/godlygeek/csapprox.git
 warning    ctrlp                git://github.com/kien/ctrlp.vim.git
 warning    dbext                git://github.com/vim-scripts/dbext.vim.git
 warning    delimitMate          git://github.com/Raimondi/delimitMate.git
+warning    scala                git://github.com/vim-scripts/scala.vim.git
 warning    script-ed            ssh://seth@at.araxia.net/~/git/script-ed.git
 warning    syntastic            git://github.com/sjl/syntastic.git
 warning    vim-addon-signs      git://github.com/MarcWeber/vim-addon-signs.git
