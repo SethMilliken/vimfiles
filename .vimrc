@@ -1842,6 +1842,24 @@ endfunction
     return "/usr/local/Cellar/sbt/0.11.2/libexec/sbt-launch.jar"
   endfun
 
+" scala
+
+let g:tagbar_type_scala = {
+    \ 'ctagstype' : 'Scala',
+    \ 'kinds'     : [
+        \ 'p:packages:1',
+        \ 'V:values',
+        \ 'v:variables',
+        \ 'T:types',
+        \ 't:traits',
+        \ 'o:objects',
+        \ 'a:aclasses',
+        \ 'c:classes',
+        \ 'r:cclasses',
+        \ 'm:methods'
+    \ ]
+\ }
+
 " let g:session_autoload = 1
 " let g:session_autosave = 1
 
