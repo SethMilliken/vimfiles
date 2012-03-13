@@ -39,11 +39,18 @@ function! startup#base()
         return "base.class"
     endfun
 
+    " Only run if subclass
+    " (avoids triggering behavior on generic vim instances)
+    fun s:obj.virtual() dict
+        if self.class() == "base.class" | return 1 | end
+    endfun
+
     fun s:obj.swapchoice() dict
+        if self.virtual() | return | end
         if self.app() == "Vimwiki"
-            return "let v:swapchoice='e'"
+            return "let v:swapchoice='e' \| set shortmess +=A"
         else
-            return "let v:swapchoice='a'"
+            return "let v:swapchoice='a' \| set shortmess +=A"
         endif
     endfun
 
@@ -52,6 +59,7 @@ function! startup#base()
     endfun
 
     fun s:obj.TwitVim() dict
+        if self.virtual() | return | end
         edit ~/.vim/twitcommands.vim
         so %
         let twitvim_count = 100
@@ -62,6 +70,7 @@ function! startup#base()
     endfun
 
     fun s:obj.Todo() dict
+        if self.virtual() | return | end
         call AdjustFont(-2)
         edit ~/sandbox/personal/todo/todo.txt
         vsplit | vsplit
@@ -73,16 +82,19 @@ function! startup#base()
     endfun
 
     fun s:obj.ColloquyVim() dict
+        if self.virtual() | return | end
         call AdjustFont(-2)
         edit ~/.vim/swap/transcript.colloquy
     endfun
 
     fun s:obj.AdiumVim() dict
+        if self.virtual() | return | end
         call AdjustFont(-4)
         edit ~/.vim/swap/transcript.adium
     endfun
 
     fun s:obj.MacVim() dict
+        if self.virtual() | return | end
         call AdjustFont(-2)
         edit ~/.vim/.vimrc
         vsplit ~/.vim/.gvimrc | wincmd t | wincmd =
@@ -119,7 +131,6 @@ function! startup#base()
         let newobj.fieldname = []
         return newobj
     endfun
-
 
     return s:obj.New()
 endfunction
@@ -184,6 +195,11 @@ function! startup#SETH()
         normal 3\ww
         set nolist
         call JanrainAbbreviations()
+    endfun
+
+    fun! s:obj.Todo() dict
+        call AdjustFont(-2)
+        edit ~/sandbox/work/projects.tst
     endfun
 
     fun! s:obj.SourceCode() dict
