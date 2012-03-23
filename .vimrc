@@ -913,20 +913,15 @@ endfunction
 
 "}}}
 " FILETYPES: " {{{
+" Extensions to existing filtypes only. See ~/.vim/filetype.vim for
+" definitions.
 
-au BufNewFile,BufRead *.applescript           setf applescript
-au BufNewFile,BufRead *.json                  setf javascript
-au BufNewFile,BufRead *.md                    setf markdown
-au BufNewFile,BufRead *.scala                 setf scala
-au BufNewFile,BufRead *.zsh-theme             setf zsh
-au BufNewFile,BufRead *.adium                 set  filetype=adium
-au BufNewFile,BufRead *.colloquy              set  filetype=colloquy
-au BufNewFile,BufRead *pentadactylrc*,*.penta set  filetype=pentadactyl
-au BufNewFile,BufRead *vimperatorrc*,*.vimp   set  filetype=vimperator
-au BufNewFile,BufRead *.yaml,*.yml            so ~/.vim/syntax/yaml.vim
-au FileType ruby set fdm=syntax sts=2 sw=2 expandtab
-" au BufNewFile,BufRead *.tst.* set ft=_.txt.tst
+" Ruby: " {{{
+augroup ruby
+    au FileType ruby set fdm=syntax sts=2 sw=2 expandtab
+augroup END
 
+" }}}
 " Java: " {{{
 augroup java
     au BufReadPre *.java setlocal foldmethod=syntax
