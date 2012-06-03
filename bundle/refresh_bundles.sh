@@ -83,12 +83,12 @@ refresh    pathogen             git://github.com/tpope/vim-pathogen.git
 refresh    pickacolor           git://github.com/Raimondi/PickAColor.git
 refresh    rails                git://github.com/tpope/vim-rails.git
 refresh    ruby-matchit         git://github.com/vim-scripts/ruby-matchit.git
-refresh    vim-scala            git://github.com/derekwyatt/vim-scala.git
 refresh    screenshot           git://github.com/vim-scripts/ScreenShot.git
 refresh    sessionman           git://github.com/vim-scripts/sessionman.git
 refresh    snipmate             git://github.com/garbas/vim-snipmate.git
 refresh    space                git://github.com/spiiph/vim-space.git
 refresh    sparkup              git://github.com/kogakure/vim-sparkup.git
+refresh    splice               git://github.com/sjl/splice.vim.git
 refresh    statuslinehighlight  git://github.com/vim-scripts/StatusLineHighlight.git
 refresh    surround             git://github.com/vim-scripts/surround.vim.git
 refresh    tabular              git://github.com/godlygeek/tabular.git
@@ -96,7 +96,6 @@ refresh    tagbar               git://github.com/majutsushi/tagbar.git
 refresh    textobj-function     git://github.com/kana/vim-textobj-function.git
 refresh    textobj-rubyblock    git://github.com/nelstrom/vim-textobj-rubyblock.git
 refresh    textobj-user         git://github.com/kana/vim-textobj-user.git
-refresh    threesome            git://github.com/sjl/threesome.vim.git
 refresh    tlib                 git://github.com/tomtom/tlib_vim.git
 refresh    tmux                 git://github.com/VimEz/Tmux.git
 refresh    twitvim              git://github.com/vim-scripts/TwitVim.git
@@ -107,6 +106,7 @@ refresh    vim-addon-mw-utils   git://github.com/MarcWeber/vim-addon-mw-utils.gi
 refresh    vim-javascript       git://github.com/pangloss/vim-javascript.git
 refresh    vim-powerline        git@github.com:SethMilliken/vim-powerline.git
 refresh    vim-ruby             git://github.com/vim-ruby/vim-ruby.git
+refresh    vim-scala            git://github.com/derekwyatt/vim-scala.git
 refresh    vim-traitor          git@github.com:SethMilliken/vim-traitor.git
 refresh    vimple               git://github.com/dahu/vimple.git
 refresh    vimwiki              git://github.com/vim-scripts/vimwiki.git
@@ -120,5 +120,6 @@ warning    delimitMate          git://github.com/Raimondi/delimitMate.git
 warning    scala                git://github.com/vim-scripts/scala.vim.git
 warning    script-ed            ssh://seth@at.araxia.net/~/git/script-ed.git
 warning    syntastic            git://github.com/sjl/syntastic.git
+warning    threesome            git://github.com/sjl/threesome.vim.git
 warning    vim-addon-signs      git://github.com/MarcWeber/vim-addon-signs.git
 warning    vim-ragtag           na
