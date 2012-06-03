@@ -438,8 +438,8 @@ nmap <silent> <Leader>sd :call timestamp#insert("date")<CR>
 nmap <silent> <Leader>sl :call timestamp#insert("long")<CR>
 nmap <silent> <Leader>fw :call FoldWrap()<CR>
 nmap <silent> <Leader>fi :call FoldInsert()<CR>
-nmap <silent> <Leader>ts :call InsertAnnotation("Started typing", "0")<CR>
-nmap <silent> <Leader>tf :call InsertAnnotation("Finished typing", "$")<CR>
+nmap <silent> <Leader>ts :call text#insert_annotation("Started typing", "0")<CR>
+nmap <silent> <Leader>tf :call text#insert_annotation("Finished typing", "$")<CR>
 nmap <silent> <Leader>ll o<Esc>:call timestamp#insert("short") \| call FoldWrap()<CR>
 " }}}
 " Tabs: switching " {{{
@@ -583,7 +583,7 @@ function! InsertNode(label) "{{{
     let l:origview = winsaveview()
     call append(line(".") - 1, [""])
     normal k
-    call AppendText(a:label)
+    call text#append(a:label)
     call FoldWrap()
     call OpenNode(a:label)
     call winrestview(l:origview)
@@ -1003,7 +1003,7 @@ endfunction
 
 function! EmitEmailAddress(Header, First, Last, Address)
     let Result = "\"" . a:First . " " . a:Last . "\" " . a:Address
-  call InsertLine(a:Header . l:Result)
+  call text#insert_line(a:Header . l:Result)
 endfunction
 
 function! SmallWindow()
@@ -1043,7 +1043,7 @@ endfunction
 
 command! -nargs=* -complete=custom,EmailAddressList To call EmitEmailAddress("To: ", <f-args>)
 command! -nargs=* -complete=custom,EmailAddressList Cc call EmitEmailAddress("Cc: ", <f-args>)
-command! -nargs=* Sub call InsertLine("Subject: " . <q-args>)
+command! -nargs=* Sub call text#insert_line("Subject: " . <q-args>)
 
 augroup VolatileScratch
     au! BufRead *.scratch call SmallWindow()
