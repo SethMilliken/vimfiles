@@ -31,7 +31,7 @@ augroup END
 noremap <script> <Plug>AbandonItem <SID>AbandonItem
 noremap <SID>AbandonItem :call <SID>AbandonItem(line("."))<CR>
 function! s:AbandonItem(line)
-    if !exists("s:statusabandoned") | let s:statusabandoned = NewStatusToggler("x") | end
+    if !exists("s:statusabandoned") | let s:statusabandoned = util#NewStatusToggler("x") | end
     call s:statusabandoned.decorate(a:line)
     call s:statusabandoned.toggle(a:line)
     call TaskstackMoveItemToToday()
@@ -40,7 +40,7 @@ endfunction
 noremap <script> <Plug>CompleteItem <SID>CompleteItem
 noremap <SID>CompleteItem :call <SID>CompleteItem(line("."))<CR>
 function! s:CompleteItem(line)
-    if !exists("s:statuscomplete") | let s:statuscomplete = NewStatusToggler("o") | end
+    if !exists("s:statuscomplete") | let s:statuscomplete = util#NewStatusToggler("o") | end
     call s:statuscomplete.decorate(a:line)
     call s:statuscomplete.toggle(a:line)
     call TaskstackMoveItemToToday()
@@ -49,7 +49,7 @@ endfunction
 noremap <script> <Plug>ToggleLine <SID>ToggleLine
 noremap <SID>ToggleLine :call <SID>ToggleLine(line("."))<CR>
 function! s:ToggleLine(line)
-    if !exists("s:statustoggle") | let s:statustoggle = NewStatusToggler("-","o","x") | end
+    if !exists("s:statustoggle") | let s:statustoggle = util#NewStatusToggler("-","o","x") | end
     call s:statustoggle.toggle(a:line)
 endfunction
 
