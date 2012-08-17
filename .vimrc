@@ -1438,14 +1438,14 @@ endfunction
 " }}}
 " Janrain:  " {{{
 
-let g:engage_dir = "~/sandbox/work/vm/rpx/ruby/rails/"
+let g:engage_dir = "~/sandbox/code/engage/rails/"
 map <D-j>w <Esc>:exe 'cd' g:engage_dir \| pwd<CR>
 map <D-j>p <Esc>:cd ~/sandbox/personal/<CR>
 map <D-j>e <Esc>:GrepEngage<Space>
 command! -nargs=1 GrepEngage call GrepEngage(<f-args>)
 function! GrepEngage(string)
     echo "Searching Engage codebase for \"" . a:string . "\"...."
-    let l:engage_path = "~/sandbox/work/vm/rpx/ruby/rails/**/*.rb"
+    let l:engage_path = g:engage_dir + "**/*.rb"
     exec ":Ack \"" . a:string . "\" " . l:engage_path
     copen
 endfunction
@@ -1718,7 +1718,7 @@ for mapmode in ["n", "x", "o"]
 endfor
 
 function! ToggleListDisplay()
-    exe "setl" &l:list? "nolist" : "list"
+    exe "setl" &l:list ? "nolist" : "list"
 endfunction
 
 " }}}
