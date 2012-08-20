@@ -1474,6 +1474,75 @@ function! CleanFoldText() "{{{
     return decoratedline
 endfunction "}}}
 set foldtext=CleanFoldText()
+
+" }}}
+" CtrlP: " {{{
+let g:ctrlp_map = ''
+let g:ctrlp_cmd = 'CtrlP'
+let g:ctrlp_match_window_bottom = 1
+let g:ctrlp_match_window_reversed = 1
+let g:ctrlp_max_height = 20
+let g:ctrlp_switch_buffer = 2
+let g:ctrlp_tabpage_position = 'al'
+let g:ctrlp_working_path_mode = 'c'
+let g:ctrlp_clear_cache_on_exit = 0
+let g:ctrlp_cache_dir = $HOME.'/.vim/swap/ctrlp'
+"let g:ctrlp_custom_ignore = ''
+let g:ctrlp_max_files = 1000
+let g:ctrlp_max_depth = 20
+let g:ctrlp_follow_symlinks = 1
+"let g:ctrlp_lazy_update = 250
+"let g:ctrlp_default_input = 1
+"let g:ctrlp_prompt_mappings = {
+"  \ 'PrtBS()':              ['<bs>', '<c-]>'],
+"  \ 'PrtDelete()':          ['<del>'],
+"  \ 'PrtDeleteWord()':      ['<c-w>'],
+"  \ 'PrtClear()':           ['<c-u>'],
+"  \ 'PrtSelectMove("j")':   ['<c-j>', '<down>'],
+"  \ 'PrtSelectMove("k")':   ['<c-k>', '<up>'],
+"  \ 'PrtSelectMove("t")':   ['<Home>', '<kHome>'],
+"  \ 'PrtSelectMove("b")':   ['<End>', '<kEnd>'],
+"  \ 'PrtSelectMove("u")':   ['<PageUp>', '<kPageUp>'],
+"  \ 'PrtSelectMove("d")':   ['<PageDown>', '<kPageDown>'],
+"  \ 'PrtHistory(-1)':       ['<c-n>'],
+"  \ 'PrtHistory(1)':        ['<c-p>'],
+"  \ 'AcceptSelection("e")': ['<cr>', '<2-LeftMouse>'],
+"  \ 'AcceptSelection("h")': ['<c-x>', '<c-cr>', '<c-s>'],
+"  \ 'AcceptSelection("t")': ['<c-t>'],
+"  \ 'AcceptSelection("v")': ['<c-v>', '<RightMouse>'],
+"  \ 'ToggleFocus()':        ['<s-tab>'],
+"  \ 'ToggleRegex()':        ['<c-r>'],
+"  \ 'ToggleByFname()':      ['<c-d>'],
+"  \ 'ToggleType(1)':        ['<c-f>', '<c-up>'],
+"  \ 'ToggleType(-1)':       ['<c-b>', '<c-down>'],
+"  \ 'PrtExpandDir()':       ['<tab>'],
+"  \ 'PrtInsert("c")':       ['<MiddleMouse>', '<insert>'],
+"  \ 'PrtInsert()':          ['<c-\>'],
+"  \ 'PrtCurStart()':        ['<c-a>'],
+"  \ 'PrtCurEnd()':          ['<c-e>'],
+"  \ 'PrtCurLeft()':         ['<c-h>', '<left>', '<c-^>'],
+"  \ 'PrtCurRight()':        ['<c-l>', '<right>'],
+"  \ 'PrtClearCache()':      ['<F5>'],
+"  \ 'PrtDeleteEnt()':       ['<F7>'],
+"  \ 'CreateNewFile()':      ['<c-y>'],
+"  \ 'MarkToOpen()':         ['<c-z>'],
+"  \ 'OpenMulti()':          ['<c-o>'],
+"  \ 'PrtExit()':            ['<esc>', '<c-c>', '<c-g>'],
+"  \ }
+
+let g:ctrlp_mruf_max = 250
+"let g:ctrlp_mruf_exclude = ''
+"let g:ctrlp_mruf_relative = 1
+"let g:ctrlp_mruf_default_order = 1
+
+
+let g:use_ctrlp = 1
+
+map <C-e>r :call RecursiveFileSearch(":CtrlPRoot")<CR>
+map <C-e><C-e>  :CtrlPBuffer<CR>
+map <C-e>f  :call RecursiveFileSearch(":CtrlP")<CR>
+
+" }}}
 " }}}
 " FuzzyFinder: " {{{
 " To transform wildignore into fuf_exclude...
@@ -1482,13 +1551,22 @@ let g:fuf_file_exclude='\v\~$|\.(o|exe|dll|bak|orig|swp)$|(^|[/\\])\.(hg|git|bzr
 let g:fuf_coveragefile_exclude = g:fuf_file_exclude
 let g:fuf_dataDir = '~/.vim/swap/.vim-fuf-data'
 let g:fuf_maxMenuWidth = 150
+if g:use_ctrlp == 0
 map <C-e>e  :FufBuffer<CR>
 map <C-e><C-e>  :FufBuffer<CR>
 map <C-e>f  :call RecursiveFileSearch(":FufCoverageFile")<CR>
+end
 map <C-e>t  :FufTag<CR>
 map <C-e>v  :VimFiles<CR>
 map <C-e>s  :Scriptnames<CR>
 map <C-e>w  :WikiPages<CR>
+
+" }}}
+" FILE SEARCH: " {{{
+command! DotFiles call DotFiles()
+command! VimFiles call VimFiles()
+command! Scriptnames call Scriptnames()
+command! WikiPages call WikiPages()
 
 function! RecursiveFileSearch(callback) " {{{
     let bad_paths = '^\(' . expand('~') . '\|' . expand('/') .'\)$'
@@ -1499,11 +1577,7 @@ function! RecursiveFileSearch(callback) " {{{
     end
 endf
 
-command! DotFiles call DotFiles()
-command! VimFiles call VimFiles()
-command! Scriptnames call Scriptnames()
-command! WikiPages call WikiPages()
-
+"}}}
 function! DotFiles() " {{{
     call fuf#givenfile#launch('', '0', 'DotFiles>', split(glob('~/.**/*'), "\n"))
 endfunction
@@ -1526,10 +1600,8 @@ function! WikiPages() " {{{
 endfunction
 
 " }}}
+" }}}
 
-" }}}
-" }}}
-" }}}
 " EXPERIMENTAL: " {{{
 
 function! SnippetFilesForCurrentBuffer(A,L,P) " {{{
