@@ -62,7 +62,6 @@ refresh    autotag              git://github.com/vim-scripts/AutoTag.git
 refresh    bufexplorer          git://github.com/vim-scripts/bufexplorer.zip.git
 refresh    calendar             git://github.com/vim-scripts/calendar.vim--Matsumoto.git
 refresh    cocoa                git://github.com/msanders/cocoa.vim.git
-refresh    command-t            git://github.com/wincent/Command-T.git                     'Rebuild if necessary:\n\tpushd command-t/ruby/command-t/; ruby extconf.rb; make && popd'
 refresh    ctrlp                git://github.com/kien/ctrlp.vim.git
 refresh    extradite            git://github.com/int3/vim-extradite.git
 refresh    fugitive             git://github.com/tpope/vim-fugitive.git
@@ -115,6 +114,7 @@ refresh    vimple               git://github.com/dahu/vimple.git
 refresh    vimwiki              git://github.com/vim-scripts/vimwiki.git
 refresh    vundle               git://github.com/vim-scripts/vundle.git
 refresh    xml                  git://github.com/vim-scripts/xml.vim.git
+warning    command-t            git://github.com/wincent/Command-T.git                     'Rebuild if necessary:\n\tpushd command-t/ruby/command-t/; ruby extconf.rb; make && popd'
 warning    conque               git://github.com/rson/vim-conque.git
 warning    csapprox             git://github.com/godlygeek/csapprox.git
 warning    dbext                git://github.com/vim-scripts/dbext.vim.git
