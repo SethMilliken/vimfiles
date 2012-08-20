@@ -54,6 +54,7 @@ oldfork    tagbar               git@github.com:SethMilliken/tagbar.git
 oldfork    tlib-seth            git@github.com:SethMilliken/tlib_vim.git
 refresh    .pathogen-raimondi   git://github.com/Raimondi/vim-pathogen.git
 refresh    .vim-powerline       git://github.com/Lokaltog/vim-powerline.git
+refresh    UltiSnips            git://github.com/vim-scripts/UltiSnips.git
 refresh    abolish              git://github.com/tpope/vim-abolish.git
 refresh    ack                  git://github.com/vim-scripts/ack.vim.git                   'brew install ack'
 refresh    ansiesc              git://github.com/vim-scripts/AnsiEsc.vim.git
@@ -62,6 +63,7 @@ refresh    bufexplorer          git://github.com/vim-scripts/bufexplorer.zip.git
 refresh    calendar             git://github.com/vim-scripts/calendar.vim--Matsumoto.git
 refresh    cocoa                git://github.com/msanders/cocoa.vim.git
 refresh    command-t            git://github.com/wincent/Command-T.git                     'Rebuild if necessary:\n\tpushd command-t/ruby/command-t/; ruby extconf.rb; make && popd'
+refresh    ctrlp                git://github.com/kien/ctrlp.vim.git
 refresh    extradite            git://github.com/int3/vim-extradite.git
 refresh    fugitive             git://github.com/tpope/vim-fugitive.git
 refresh    fuzzyfinder          git://github.com/vim-scripts/FuzzyFinder.git
@@ -74,6 +76,7 @@ refresh    javascript           git://github.com/serverhorror/javascript.vim.git
 refresh    jslint               git://github.com/vim-scripts/jslint.vim.git
 refresh    kellys               git://github.com/vim-scripts/kellys.git
 refresh    l9                   git://github.com/slack/vim-l9.git
+refresh    linediff             git://github.com/AndrewRadev/linediff.vim.git
 refresh    matchit              git://github.com/vim-scripts/matchit.zip.git
 refresh    matrix               git://github.com/vim-scripts/matrix.vim--Yang.git
 refresh    nerdcommenter        git://github.com/scrooloose/nerdcommenter.git
@@ -114,7 +117,6 @@ refresh    vundle               git://github.com/vim-scripts/vundle.git
 refresh    xml                  git://github.com/vim-scripts/xml.vim.git
 warning    conque               git://github.com/rson/vim-conque.git
 warning    csapprox             git://github.com/godlygeek/csapprox.git
-warning    ctrlp                git://github.com/kien/ctrlp.vim.git
 warning    dbext                git://github.com/vim-scripts/dbext.vim.git
 warning    delimitMate          git://github.com/Raimondi/delimitMate.git
 warning    scala                git://github.com/vim-scripts/scala.vim.git
