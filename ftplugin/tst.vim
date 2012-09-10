@@ -866,6 +866,7 @@ endfunction
 function! TaskstackNewItem() " {{{
     call timestamp#autoUpdateBypass()
     call TaskstackMain()
+    call TaskstackSkipSticky()
     exe "normal o- "
     startinsert!
     call timestamp#autoUpdateEnable()
@@ -877,6 +878,14 @@ function! TaskstackNewItemFromPaste() " {{{
     call TaskstackMain()
     exe "normal o- \<Esc>p_w"
     call timestamp#autoUpdateEnable()
+endfunction
+
+" }}}
+function! TaskstackSkipSticky() " {{{
+    while match(getline('.'), '^[A-Z]\+') > -1
+        normal j
+    endwhile
+    normal k
 endfunction
 
 " }}}

@@ -175,7 +175,8 @@ set wildignore+=*.o,*.sw?,*.git,*.svn,*.hg,**/build,*.?ib,*.png,*.jpg,*.jpeg,
             \*.rtf,*.pkg,*.developerprofile,*.xcodeproj,*.pdf,*.dmg,
             \*.db,*.otf,*.bz2,*.tiff,*.iso,*.jar,*.dat,**/Cache,*.cache,
             \*.sqlite*,*.collection,*.qsindex,*.qsplugin,*.growlTicket,
-            \*.part,*.ics,*.ico,**/iPhone\ Simulator,*.lock*,*.webbookmark
+            \*.part,*.ics,*.ico,**/iPhone\ Simulator,*.lock*,*.webbookmark,
+            \.DS_Store,tags
 
 " Tags: universal location
 set tags+=$HOME/sandbox/personal/tags
@@ -725,16 +726,16 @@ endfunction
 " }}}
 
 " Specialized:
+"unlet g:reloadvim_function_loaded
 if !exists("g:reloadvim_function_loaded") " {{{
-    " unlet g:reloadvim_function_loaded
+    let g:reloadvim_function_loaded = ""
     function! ReloadVimrc()
         silent update
-        silent source ~/.vimrc
-        silent edit
+        silent source $HOME/.vimrc
+        "silent edit
         redraw
         echo "Resourced .vimrc."
     endfunction
-    let g:reloadvim_function_loaded = ""
 end
 
 " }}}
@@ -1484,7 +1485,7 @@ let g:ctrlp_match_window_reversed = 1
 let g:ctrlp_max_height = 20
 let g:ctrlp_switch_buffer = 2
 let g:ctrlp_tabpage_position = 'al'
-let g:ctrlp_working_path_mode = 'c'
+let g:ctrlp_working_path_mode = '0'
 let g:ctrlp_clear_cache_on_exit = 0
 let g:ctrlp_cache_dir = $HOME.'/.vim/swap/ctrlp'
 "let g:ctrlp_custom_ignore = ''
@@ -1584,6 +1585,15 @@ endfunction
 
 " }}}
 function! VimFiles() " {{{
+    let original_wd = getcwd()
+    cd $HOME/.vim
+    "call fuf#givenfile#launch('', '0', 'VimFiles>', split(glob('~/.vim/**/*.vim'), "\n"))
+    call RecursiveFileSearch(":CtrlP")
+    exe "cd " . original_wd
+endfunction
+
+" }}}
+function! VimFilesFuf() " {{{
     call fuf#givenfile#launch('', '0', 'VimFiles>', split(glob('~/.vim/**/*.vim'), "\n"))
 endfunction
 
@@ -1906,7 +1916,7 @@ endfunction
 " }}}
 
 " }}}
-  fun SBT_JAR()
+  fun! SBT_JAR()
     return "/usr/local/Cellar/sbt/0.11.2/libexec/sbt-launch.jar"
   endfun
 
