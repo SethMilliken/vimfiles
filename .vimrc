@@ -1439,15 +1439,42 @@ endfunction
 " }}}
 " Janrain:  " {{{
 
+function! SetAckDefaultOptions()
+    let g:ackprg = 'ack'
+    let options = [
+                  \ '--no-color',
+                  \ '--no-group',
+                  \ '--type=nophp',
+                  \ '--type=nohtml',
+                  \ '--type=nojs',
+                  \ '--a'
+                  \ ]
+    for option in options
+        let g:ackprg .= '\ ' . option
+    endfor
+endfunction
+call SetAckDefaultOptions()
+
 let g:engage_dir = "~/sandbox/code/engage/rails/"
+let g:work_notes = "~/sandbox/work/"
+
 map <D-j>w <Esc>:exe 'cd' g:engage_dir \| pwd<CR>
 map <D-j>p <Esc>:cd ~/sandbox/personal/<CR>
 map <D-j>e <Esc>:GrepEngage<Space>
+map <D-j>n <Esc>:GrepWork<Space>
+map <Space>k <Esc>:cclose \| cnext<CR>
+map <Space>j <Esc>:cclose \| cprev<CR>
 command! -nargs=1 GrepEngage call GrepEngage(<f-args>)
 function! GrepEngage(string)
     echo "Searching Engage codebase for \"" . a:string . "\"...."
     let l:engage_path = g:engage_dir + "**/*.rb"
     exec ":Ack \"" . a:string . "\" " . l:engage_path
+    copen
+endfunction
+command! -nargs=1 GrepWork call GrepWork(<f-args>)
+function! GrepWork(string)
+    echo "Searching work notes for \"" . a:string . "\"...."
+    exec ":Ack --ignore-dir=wiki_html \"" . a:string . "\" " . g:work_notes
     copen
 endfunction
 command! JanrainAbbreviations call JanrainAbbreviations()
@@ -1488,10 +1515,10 @@ let g:ctrlp_tabpage_position = 'al'
 let g:ctrlp_working_path_mode = '0'
 let g:ctrlp_clear_cache_on_exit = 0
 let g:ctrlp_cache_dir = $HOME.'/.vim/swap/ctrlp'
-"let g:ctrlp_custom_ignore = ''
 let g:ctrlp_max_files = 1000
 let g:ctrlp_max_depth = 20
 let g:ctrlp_follow_symlinks = 1
+"let g:ctrlp_custom_ignore = ''
 "let g:ctrlp_lazy_update = 250
 "let g:ctrlp_default_input = 1
 "let g:ctrlp_prompt_mappings = {
@@ -1535,7 +1562,6 @@ let g:ctrlp_mruf_max = 250
 "let g:ctrlp_mruf_exclude = ''
 "let g:ctrlp_mruf_relative = 1
 "let g:ctrlp_mruf_default_order = 1
-
 
 let g:use_ctrlp = 1
 
@@ -1917,7 +1943,7 @@ endfunction
 
 " }}}
   fun! SBT_JAR()
-    return "/usr/local/Cellar/sbt/0.11.2/libexec/sbt-launch.jar"
+    return "/usr/local/Cellar/sbt/0.11.3/libexec/sbt-launch.jar"
   endfun
 
 " scala
@@ -1938,6 +1964,7 @@ let g:tagbar_type_scala = {
     \ ]
 \ }
 
+let $JS_CMD='node'
 " let g:session_autoload = 1
 " let g:session_autosave = 1
 
