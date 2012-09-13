@@ -83,6 +83,7 @@ refresh    nerdtree             git://github.com/scrooloose/nerdtree.git
 refresh    paster               git://github.com/weierophinney/paster.vim.git
 refresh    pathogen             git://github.com/tpope/vim-pathogen.git
 refresh    pickacolor           git://github.com/Raimondi/PickAColor.git
+refresh    puppet-syntax-vim    git://github.com/puppetlabs/puppet-syntax-vim.git
 refresh    rails                git://github.com/tpope/vim-rails.git
 refresh    ruby-matchit         git://github.com/vim-scripts/ruby-matchit.git
 refresh    screenshot           git://github.com/vim-scripts/ScreenShot.git
@@ -93,6 +94,7 @@ refresh    sparkup              git://github.com/kogakure/vim-sparkup.git
 refresh    splice               git://github.com/sjl/splice.vim.git
 refresh    statuslinehighlight  git://github.com/vim-scripts/StatusLineHighlight.git
 refresh    surround             git://github.com/vim-scripts/surround.vim.git
+refresh    syntastic            git://github.com/scrooloose/syntastic.git
 refresh    tabular              git://github.com/godlygeek/tabular.git
 refresh    tagbar               git://github.com/majutsushi/tagbar.git
 refresh    textobj-function     git://github.com/kana/vim-textobj-function.git
@@ -121,7 +123,7 @@ warning    dbext                git://github.com/vim-scripts/dbext.vim.git
 warning    delimitMate          git://github.com/Raimondi/delimitMate.git
 warning    scala                git://github.com/vim-scripts/scala.vim.git
 warning    script-ed            ssh://seth@at.araxia.net/~/git/script-ed.git
-warning    syntastic            git://github.com/sjl/syntastic.git
+#warning    syntastic            git://github.com/sjl/syntastic.git
 warning    threesome            git://github.com/sjl/threesome.vim.git
 warning    vim-addon-signs      git://github.com/MarcWeber/vim-addon-signs.git
 warning    vim-ragtag           na
