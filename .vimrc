@@ -300,7 +300,7 @@ nmap <silent> <Leader>c :call ScratchBuffer("scratch")<CR>
 " }}}
 " Open URIs: " {{{
 nmap <silent> <Leader>/ :call HandleURI()<CR>
-nmap <silent> <Leader>t :call HandleMantis()<CR>
+nmap <silent> <Leader>t :call HandleJIRA()<CR>
 
 " }}}
 " SQL: grab and format sql statement from current line " {{{
@@ -818,49 +818,59 @@ function! RandomHint() " {{{
 endfunction
 
 " }}}
+function! HandleJIRA() " {{{
+  " Keep in sync with ~/.vim/after/syntax/txt.vim
+  let l:expression = '\%([A-Z]\{3,}\)[:# -]\+[0-9]\+'
+  let l:ticket = matchstr(getline("."), l:expression)
+  let l:number = matchstr(l:ticket, '[0-9]\+')
+  let l:uri = ''
+  if l:ticket != "<Esc>:"
+    let l:uri = 'https://janrain.atlassian.net/browse/' . l:ticket
+  endif
+  call OpenURI(l:uri, l:ticket, "JIRA Ticket")
+endfunction
+
+" }}}
 function! HandleMantis() " {{{
   " Keep in sync with ~/.vim/after/syntax/txt.vim
   let l:expression = '\%(mt\|MT\|jr\|JR\|TS\|PF\|BUG\|FIXME\|STORY\)[:# ]\+[0-9]\+'
   let l:ticket = matchstr(getline("."), l:expression)
   let l:number = matchstr(l:ticket, '[0-9]\+')
+  let l:uri = ''
   if l:ticket != "<Esc>:"
     let l:uri = 'https://mantis.janrain.com/view.php?id=' . l:number
-    if has("win32")
-      exec "silent !start rundll32.exe url.dll,FileProtocolHandler " . l:uri
-    else
-      exec "silent !open \"" . l:uri . "\""
-    endif
-    echo "Opened Ticket: " . l:number
-  else
-      echo "No ticket found in line."
   endif
+  call OpenURI(l:uri, "Mantis Ticket" . l:number, "Mantis Ticket")
 endfunction
 
 " }}}
 function! HandleTS() " {{{
   let l:ticket = matchstr(getline("."), 'TS#[0-9]\+')
   let l:number = matchstr(l:ticket, '[0-9]\+')
+  let l:uri = ''
   if l:ticket != "<Esc>:"
-    let l:tsuri = 'http://trackstudio.nimblefish.com/task/' . l:number . '?thisframe=true'
-    exec "silent !start rundll32.exe url.dll,FileProtocolHandler " . l:tsuri
-    echo "Opened Ticket: " . l:number
-  else
-      echo "No TS ticket found in line."
+    let l:uri = 'http://trackstudio.nimblefish.com/task/' . l:number . '?thisframe=true'
   endif
+  call OpenURI(l:uri, "TS Ticket" . l:number, "TS Ticket")
 endfunction
 
 " }}}
 function! HandleURI() " {{{
   let l:uri = matchstr(getline("."), '[a-z]*:\/\/[^ >,;]*')
-  if l:uri != ""
+  call OpenURI(l:uri, "URI", "URI")
+endfunction
+
+" }}}
+function! OpenURI(uri, success, failure) " {{{
+  if a:uri != ""
       if has("win32")
-          exec "silent !start rundll32.exe url.dll,FileProtocolHandler " . l:uri
+          exec "silent !start rundll32.exe url.dll,FileProtocolHandler " . a:uri
       else
-          exec "silent !open \"" . l:uri . "\""
+          exec "silent !open \"" . a:uri . "\""
       endif
-      echo "Opened URI: " . l:uri
+      echo "Opened " . a:success  . ": " . a:uri
   else
-      echo "No URI found in line."
+      echo "No " . a:failure . " found in line."
   endif
 endfunction
 
@@ -1963,6 +1973,8 @@ let g:tagbar_type_scala = {
         \ 'm:methods'
     \ ]
 \ }
+
+let g:syntastic_puppet_lint_arguments = '--no-80chars-check '
 
 let $JS_CMD='node'
 " let g:session_autoload = 1
