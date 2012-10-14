@@ -264,5 +264,37 @@ function! startup#SETHPC()
 endfunction
 
 " }}}
+" Host ROCKBOX " {{{
+function! startup#ROCKBOX()
+    let s:obj = startup#base()
+
+    fun! s:obj.class() dict
+        return "rockbox.class"
+    endfun
+
+    fun! s:obj.Vimwiki() dict
+        VimwikiIndex
+        set nolist
+    endfun
+
+    fun! s:obj.TasksFile() dict
+        return "~/sandbox/personal/todo/laboratory.txt"
+    endfun
+
+    fun! s:obj.Default() dict
+        echo "default gvim instance"
+    endfun
+
+    fun! s:obj.app() dict
+        if !exists('g:vim_app_name')
+            let g:vim_app_name = "Default"
+        endif
+        return g:vim_app_name
+    endfun
+
+    return s:obj.New()
+endfunction
+
+" }}}
 
 " vim: set ft=vim fdm=marker fdl=0 cms=\ \"\ %s  :
