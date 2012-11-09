@@ -13,7 +13,7 @@ syntax match url /[a-z]*:\/\/[^ >]*/
 " ( ) ongoing with range
 syntax region duration start="^\s*(.)\|\%(^\|^\s\+\)+" end="\s\|$" oneline
 " TS#<####>, PF#<####>, BUG:, FIXME:, etc.
-syntax match bug /\%(mt\|MT\|jr\|JR\|TS\|PF\|BUG\|FIXME\|STORY\|[A-Z]\{3,}\)[:# -]\+[0-9]\+[ :.]/
+syntax match bug /\%(mt\|MT\|jr\|JR\|TS\|PF\|BUG\|FIXME\|STORY\|[A-Z]\{2,}\)[:# -]\+[0-9]\+[ :.]/
 " `quote`
 syntax match quotation /`.*`/
 " SECTION

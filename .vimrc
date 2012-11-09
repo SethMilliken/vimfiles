@@ -820,7 +820,7 @@ endfunction
 " }}}
 function! HandleJIRA() " {{{
   " Keep in sync with ~/.vim/after/syntax/txt.vim
-  let l:expression = '\%([A-Z]\{3,}\)[:# -]\+[0-9]\+'
+  let l:expression = '\%([A-Z]\{2,}\)[:# -]\+[0-9]\+'
   let l:ticket = matchstr(getline("."), l:expression)
   let l:number = matchstr(l:ticket, '[0-9]\+')
   let l:uri = ''
