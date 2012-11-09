@@ -149,6 +149,10 @@ function! startup#SAMSARA()
         set nolist
     endfun
 
+    fun! s:obj.Scratch() dict
+        edit ~/sandbox/personal/scratch.scratch
+    endfun
+
     fun! s:obj.SourceCode() dict
         edit ~/sandbox/code/
     endfun
@@ -200,6 +204,10 @@ function! startup#SETH()
     fun! s:obj.Todo() dict
         call AdjustFont(-2)
         edit ~/sandbox/work/projects.tst
+    endfun
+
+    fun! s:obj.Scratch() dict
+        edit ~/sandbox/work/scratch.scratch
     endfun
 
     fun! s:obj.SourceCode() dict
