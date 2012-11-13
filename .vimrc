@@ -277,7 +277,12 @@ nmap <Leader>\ :call CommitSession()<CR>
 
 " }}}
 " Journal: " {{{
-nmap <Leader>j :call JournalEntry()<CR>
+nmap <Leader>jj :call PagesEntry()<CR>
+command! Pages :call PagesEntry()
+
+" }}}
+" Journal: " {{{
+nmap <Leader>je :call JournalEntry()<CR>
 command! Journal :call JournalEntry()
 
 " }}}
@@ -441,7 +446,11 @@ nmap <silent> <Leader>fw :call FoldWrap()<CR>
 nmap <silent> <Leader>fi :call FoldInsert()<CR>
 nmap <silent> <Leader>ts :call text#insert_annotation("Started typing", "0")<CR>
 nmap <silent> <Leader>tf :call text#insert_annotation("Finished typing", "$")<CR>
+nmap <silent> -- :call append(line("."), text#divider("-"))<CR>
+nmap <silent> -= :call append(line("."), text#divider("="))<CR>
+nmap <silent> -p :call append(line("."), [text#divider('-'), "", string(getreg('*')), ""])<CR>
 nmap <silent> <Leader>ll o<Esc>:call timestamp#insert("short") \| call FoldWrap()<CR>
+
 " }}}
 " Tabs: switching " {{{
 " set Cmd-# on Mac and Alt-# elsewhere to switch tabs
@@ -761,6 +770,24 @@ function! AutoTagComplete() " {{{
         startinsert!
     else
         startinsert
+    endif
+endfunction
+
+" }}}
+function! PagesEntry() " {{{
+    let l:journaldir = $HOME . "/sandbox/personal/zaurus/zlog/"
+    let l:currentdate = timestamp#text('date')
+    let l:entry = l:journaldir . l:currentdate . ".txt"
+    let l:entryexists = filereadable(l:entry)
+    exec "lcd " . l:journaldir
+    exec "edit " . l:entry
+    if l:entryexists
+        normal G
+        echo "Entry " . l:currentdate . " already exists."
+    else
+        call text#insert_annotation("Started typing", 0)
+        call append(2, timestamp#text('journal') . ", CURRENT_LOCATION")
+        normal j$
     endif
 endfunction
 

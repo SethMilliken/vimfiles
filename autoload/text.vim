@@ -68,3 +68,8 @@ function! text#strip_front(string) "{{{
 endfunction
 
 "}}}
+function! text#divider(string) "{{{
+    return repeat(a:string, 80)
+endfunction
+
+"}}}
