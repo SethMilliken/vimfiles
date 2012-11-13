@@ -23,9 +23,10 @@ let s:notes_node_name     = "SCRATCH"
 augroup TaskStack
     au FileType *tst* map <buffer> <C-Space> <Plug>ToggleLine
     au FileType *tst* map <buffer> QQ <Plug>CompleteItem
-    au FileType *tst* map <buffer> Qq <Plug>CompleteItem
     au FileType *tst* map <buffer> Qx <Plug>AbandonItem
     au FileType *tst* map <buffer> Qr <Plug>ResetTogglers
+    au FileType *tst* map <buffer> Qq :call TaskstackMoveItemToProject("@queue")<CR>
+    au FileType *tst* map <buffer> Qt :call TaskstackMoveItemToProject("@active")<CR>
 augroup END
 
 noremap <script> <Plug>AbandonItem <SID>AbandonItem
