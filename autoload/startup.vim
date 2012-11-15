@@ -58,6 +58,10 @@ function! startup#base()
         help help
     endfun
 
+    fun s:obj.docroot() dict
+        return $HOME . "/sandbox/personal/"
+    endfun
+
     fun s:obj.TwitVim() dict
         if self.virtual() | return | end
         edit ~/.vim/twitcommands.vim
@@ -72,12 +76,12 @@ function! startup#base()
     fun s:obj.Todo() dict
         if self.virtual() | return | end
         call AdjustFont(-2)
-        edit ~/sandbox/personal/todo/todo.txt
+        exe 'edit' self.docroot() . "todo/todo.txt"
         vsplit | vsplit
-        tabnew ~/sandbox/personal/todo/techtodo.txt
+        exe 'tabnew' self.docroot() . "todo/techtodo.txt"
         vsplit | vsplit
-        tabnew ~/sandbox/personal/lists/readinglist.txt
-        vsplit ~/sandbox/personal/lists/videolist.txt
+        exe 'tabnew' self.docroot() . "lists/readinglist.txt"
+        exe 'vsplit' self.docroot() . "lists/videolist.txt"
         wincmd =
     endfun
 
@@ -113,7 +117,7 @@ function! startup#base()
     endfun
 
     fun s:obj.TasksFile() dict
-        return "~/sandbox/personal/todo/personal.tst.txt"
+        return self.docroot() . "todo/personal.tst.txt"
     endfun
 
     fun s:obj.app() dict
@@ -150,7 +154,7 @@ function! startup#SAMSARA()
     endfun
 
     fun! s:obj.Scratch() dict
-        edit ~/sandbox/personal/scratch.scratch
+        exe 'edit' self.docroot() . "scratch.scratch"
     endfun
 
     fun! s:obj.SourceCode() dict
@@ -180,7 +184,7 @@ function! startup#NOTABLE()
 
     fun! s:obj.TasksFile() dict
         call AdjustFont(4)
-        return "~/sandbox/personal/todo/notable.tst"
+        return self.docroot() . "todo/notable.tst"
     endfun
 
     return s:obj.New()
@@ -201,13 +205,17 @@ function! startup#SETH()
         call JanrainAbbreviations()
     endfun
 
+    fun! s:obj.docroot() dict
+        return $HOME . "/sandbox/work/"
+    endfun
+
     fun! s:obj.Todo() dict
         call AdjustFont(-2)
-        edit ~/sandbox/work/projects.tst
+        exe 'edit' self.docroot() . "projects.tst"
     endfun
 
     fun! s:obj.Scratch() dict
-        edit ~/sandbox/work/scratch.scratch
+        exe 'edit' self.docroot() . "scratch.scratch"
     endfun
 
     fun! s:obj.SourceCode() dict
@@ -217,7 +225,7 @@ function! startup#SETH()
     endfun
 
     fun! s:obj.TasksFile() dict
-        return "~/sandbox/work/janrain.tst.txt"
+        return self.docroot() . "janrain.tst.txt"
     endfun
 
     return s:obj.New()
@@ -233,7 +241,7 @@ function! startup#LABORATORY()
     endfun
 
     fun! s:obj.TasksFile() dict
-        return "~/sandbox/personal/todo/laboratory.tst"
+        return "self.docroot() . "todo/laboratory.tst"
     endfun
 
     return s:obj.New()
@@ -254,7 +262,7 @@ function! startup#SETHPC()
     endfun
 
     fun! s:obj.TasksFile() dict
-        return "~/sandbox/personal/todo/wintodo.txt"
+        return "self.docroot() . "todo/wintodo.txt"
     endfun
 
     fun! s:obj.Default() dict
@@ -286,7 +294,39 @@ function! startup#ROCKBOX()
     endfun
 
     fun! s:obj.TasksFile() dict
-        return "~/sandbox/personal/todo/laboratory.txt"
+        return "self.docroot() . "todo/laboratory.txt"
+    endfun
+
+    fun! s:obj.Default() dict
+        echo "default gvim instance"
+    endfun
+
+    fun! s:obj.app() dict
+        if !exists('g:vim_app_name')
+            let g:vim_app_name = "Default"
+        endif
+        return g:vim_app_name
+    endfun
+
+    return s:obj.New()
+endfunction
+
+" }}}
+" Host LOCALHOST " {{{
+function! startup#LOCALHOST()
+    let s:obj = startup#base()
+
+    fun! s:obj.class() dict
+        return "mobile.class"
+    endfun
+
+    fun! s:obj.Vimwiki() dict
+        VimwikiIndex
+        set nolist
+    endfun
+
+    fun! s:obj.TasksFile() dict
+        return self.docroot() . "todo/mobile.txt"
     endfun
 
     fun! s:obj.Default() dict
