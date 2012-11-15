@@ -1018,8 +1018,8 @@ augroup TaskStack | au!
     au FileType *tst* nmap <buffer> <silent> <S-Tab> ?^\([A-Z]\+ \)\{1,\}<CR>:nohls<CR>
     au FileType *tst* nmap <buffer> :w<CR> :call TaskstackSave()<CR>
     au FileType *tst* nmap <buffer> <silent> <C-x>x :call TaskstackGroups()<CR>
-    au FileType *tst* nmap <buffer> K :echo TaskstackMoveToProjectPrompt()<CR>
-    au FileType *tst* nmap <buffer> <C-y>k :echo TaskstackMoveToProjectAutoDetect()<CR>
+    au FileType *tst* nmap <buffer> K :call TaskstackMoveToProjectPrompt()<CR>
+    au FileType *tst* nmap <buffer> <C-y>k :call TaskstackMoveToProjectAutoDetect()<CR>
     au FileType *tst* nmap <buffer> <Leader>k :call TaskstackMoveItemToProject("@categorize")<CR>
     au FileType *tst* nmap <buffer> <C-e>/ :call TaskstackNavigateToProjectPrompted()<CR>
     au FileType *tst* nmap <buffer> <silent> <Tab> :call TaskstackNextProject()<CR>

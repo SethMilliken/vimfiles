@@ -25,8 +25,8 @@ augroup TaskStack
     au FileType *tst* map <buffer> QQ <Plug>CompleteItem
     au FileType *tst* map <buffer> Qx <Plug>AbandonItem
     au FileType *tst* map <buffer> Qr <Plug>ResetTogglers
-    au FileType *tst* map <buffer> Qq :call TaskstackMoveItemToProject("@queue")<CR>
-    au FileType *tst* map <buffer> Qt :call TaskstackMoveItemToProject("@active")<CR>
+    au FileType *tst* map <buffer> QW :call TaskstackMoveItemToProject("@queue")<CR>
+    au FileType *tst* map <buffer> QA :call TaskstackMoveItemToProject("@active")<CR>
 augroup END
 
 noremap <script> <Plug>AbandonItem <SID>AbandonItem
@@ -973,7 +973,7 @@ function! MoveFoldToDateNode(foldbounds, status) "{{{
         call setline(a:foldbounds[0], l:result)
         exec ":" . a:foldbounds[0] . "," . a:foldbounds[1] . "m" . moveto_line
         call l:state.foldrest()
-    echo "Item marked as completed and moved."
+    call Notify("Move", "Item marked as completed and moved.")
 endfunction
 
 "}}}
@@ -994,7 +994,7 @@ function! MoveItemToDateNode(text, status) "{{{
     endif
         call l:state.foldrest()
     normal zodd
-    echo "Item marked as completed and moved."
+    call Notify("Move", "Item marked as completed and moved.")
 endfunction
 
 "}}}
@@ -1142,7 +1142,7 @@ function! TaskstackMoveToProjectPrompt() " {{{
     endif
     let l:project_name = TaskstackPromptProjectName(TaskstackDetectProjectName(line(".")))
     call winrestview(l:origview)
-    return TaskstackMoveItemToProject(l:project_name)
+    call Notify("Project Move", TaskstackMoveItemToProject(l:project_name))
 endfunction
 
 " }}}
@@ -1154,7 +1154,7 @@ function! TaskstackMoveToProjectAutoDetect() " {{{
     endif
     let l:project_name = TaskstackDetectProjectName(line("."))
     call winrestview(l:origview)
-  return TaskstackMoveItemToProject(l:project_name)
+    call Notify("Auto Project Move", TaskstackMoveItemToProject(l:project_name))
 endfunction
 
 " }}}
@@ -1267,6 +1267,11 @@ function! TaskstackEOL() " {{{
     else
         normal g_
     end
+endfunction
+
+" }}}
+function! Notify(headline,contents) " {{{
+    silent! exec ':!notify taskstack "false" "' . a:contents. '" "' . a:headline . '"'
 endfunction
 
 " }}}
