@@ -17,7 +17,7 @@ syntax match bug /\%(mt\|MT\|jr\|JR\|TS\|PF\|BUG\|FIXME\|STORY\|[A-Z]\{2,}\)[:# 
 " `quote`
 syntax match quotation /`.*`/
 " SECTION
-syntax match section /^\([A-Z]\+ \)\{1,\}/
+syntax match section /^\([A-Z]\{2,}\([[:space:]]\|$\)\)\{1,\}/
 " @context
 syntax match context /\s\+\zs@\([0-9a-z.]\+\)\{1,\}/
 " @context header
@@ -32,6 +32,8 @@ syntax region done start="\%(^\|^\s\+\)[o] " end="\n" contains=bug,date,quotatio
 syntax region abandoned start="\%(^\|^\s\+\)[x] " end="\n" contains=bug,date,quotation,context,url oneline
 " $ costs money
 syntax match expense /\%(^\|^\s\+\)\$\s\+/
+" divider
+syntax match divider /^[^/[:space:]]\{30,}$/
 " modeline
 syntax region modeline start="^vim:" end="$" oneline
 " }}}
@@ -49,6 +51,7 @@ highlight default link section Directory
 highlight default link declaration Constant
 highlight default link undetermined Question
 highlight default link expense MoreMsg
+highlight default link divider PreProc
 highlight default link url Underlined
 highlight default link duration WarningMsg
 highlight default link date SpecialKey
