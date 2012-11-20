@@ -1029,7 +1029,7 @@ endfunction
 
 "}}}
 function! TaskstackDetectProjectName(line) " {{{
-    let l:project_name = matchstr(getline(a:line),'^\(. \|@\)\zs\(\<\w*\>\.*\s*\)\{,3}\ze:')
+    let l:project_name = matchstr(getline(a:line),'^\(. \|@\)\zs\(\<[-_.+[:alnum:]]*\>\.*\s*\)\{,3}\ze:')
     return l:project_name
 endfunction
 
@@ -1063,7 +1063,7 @@ endfunction
 
 "}}}
 function! ProjectRawMatchPattern() " {{{
-    return '^@\zs\(\<\w*\>\.*\s*\)\{,3}\ze\s\+'
+    return '^@\zs\(\<[-_.+[:alnum:]]*\>\.*\s*\)\{,3}\ze\s\+'
 endfunction
 
 "}}}

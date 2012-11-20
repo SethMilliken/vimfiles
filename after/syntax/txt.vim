@@ -19,9 +19,9 @@ syntax match quotation /`.*`/
 " SECTION
 syntax match section /^\([A-Z]\{2,}\([[:space:]]\|$\)\)\{1,\}/
 " @context
-syntax match context /\s\+\zs@\([0-9a-z.]\+\)\{1,\}/
+syntax match context /\s\+\zs@\([-_+.0-9a-z]\+\)\{1,\}\ze\(\s\+\|$\)/
 " @context header
-syntax match contextheader /^@\([0-9a-z.]\+ \)\{1,\}/me=e-1
+syntax match contextheader /^@\([-_+.0-9a-z]\+ \)\{1,\}/me=e-1
 " = statement
 syntax region declaration start="\%(^\|^\s\+\)= " end="\n" contains=bug,date,quotation,context,url,eoltimestamp oneline
 " ? question about item
