@@ -24,6 +24,9 @@ syntax match context /\s\+\zs@\([-_+.0-9a-z]\+\)\{1,\}\ze\(\s\+\|$\)/
 syntax match contextheader /^@\([-_+.0-9a-z]\+ \)\{1,\}/me=e-1
 " = statement
 syntax region declaration start="\%(^\|^\s\+\)= " end="\n" contains=bug,date,quotation,context,url,eoltimestamp oneline
+" ! caution
+"syntax region caution start="\%(^\|^\s\+\)! " end="\n" contains=bug,date,quotation,context,url,eoltimestamp oneline
+syntax region caution start="\%(^\|^\s\+\zs\)!" end="\ze\s\|$" oneline
 " ? question about item
 syntax region undetermined start="\%(^\|^\s\+\)? " end="\n" contains=bug,date,quotation,context,url,eoltimestamp oneline
 " o completed todo item
@@ -49,6 +52,7 @@ highlight default link contextheader DiffText
 highlight default link context Statement
 highlight default link section Directory
 highlight default link declaration Constant
+highlight default link caution Error
 highlight default link undetermined Question
 highlight default link expense MoreMsg
 highlight default link divider PreProc
