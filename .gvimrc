@@ -92,7 +92,8 @@ if has("gui_macvim")
     set fuopt=maxhorz,maxvert
     " set transparency=5
     set antialias
-    set guifont=Inconsolata:h15
+    " set guifont=Inconsolata:h15
+    set guifont=Inconsolata\ for\ Powerline:h13
     winsize 345 500                         " set a reasonable window size
     " NOTE: Have to unset menu commands in gvimrc
     " Free Command Key Bindings " {{{
