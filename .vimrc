@@ -40,6 +40,14 @@ let g:vimwiki_menu = ''
 " }}}
 " Powerline: " {{{
 let g:Powerline_symbols = 'fancy'
+let g:Powerline_cache_enabled = 0
+let g:Powerline_theme = "araxia"
+"call Pl#Theme#InsertSegment('wc:characters', 'after', 'filetype')
+"call Pl#Theme#ReplaceSegment('filetype', 'wc:characters')
+
+" }}}
+" Airline: " {{{
+let g:airline_powerline_fonts = 1
 
 " }}}
 
@@ -893,11 +901,15 @@ function! OpenURI(uri, success, failure) " {{{
       if has("win32")
           exec "silent !start rundll32.exe url.dll,FileProtocolHandler " . a:uri
       else
-          exec "silent !open \"" . a:uri . "\""
+          if len(matchstr(a:uri, '.*docs.google.com.*')) > 0
+              exec "silent !open -b com.google.Chrome \"" . a:uri . "\""
+          else
+              exec "silent !open \"" . a:uri . "\""
+          endif
       endif
-      echo "Opened " . a:success  . ": " . a:uri
+      echomsg "Opened " . a:success  . ": " . a:uri
   else
-      echo "No " . a:failure . " found in line."
+      echomsg "No " . a:failure . " found in line."
   endif
 endfunction
 
@@ -1484,7 +1496,7 @@ function! SetAckDefaultOptions()
                   \ '--type=nophp',
                   \ '--type=nohtml',
                   \ '--type=nojs',
-                  \ '--a'
+                  \ '--known-types'
                   \ ]
     for option in options
         let g:ackprg .= '\ ' . option
