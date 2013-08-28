@@ -48,12 +48,13 @@ function oldfork {
     ! [ true ] && echo "noop"
 }
 
+#refresh    vim-powerline        git@github.com:SethMilliken/vim-powerline.git
+#warning    syntastic            git://github.com/sjl/syntastic.git
 oldfork    gundo                git@github.com:SethMilliken/gundo.vim.git
 oldfork    snipmate             git://github.com/spf13/snipmate.vim.git
 oldfork    tagbar               git@github.com:SethMilliken/tagbar.git
 oldfork    tlib-seth            git@github.com:SethMilliken/tlib_vim.git
 refresh    .pathogen-raimondi   git://github.com/Raimondi/vim-pathogen.git
-refresh    .vim-powerline       git://github.com/Lokaltog/vim-powerline.git
 refresh    UltiSnips            git://github.com/vim-scripts/UltiSnips.git
 refresh    abolish              git://github.com/tpope/vim-abolish.git
 refresh    ack                  git://github.com/vim-scripts/ack.vim.git                   'brew install ack'
@@ -107,10 +108,11 @@ refresh    viki                 git://github.com/tomtom/viki_vim.git
 refresh    vim-addon-async      git://github.com/MarcWeber/vim-addon-async.git
 refresh    vim-addon-manager    git://github.com/MarcWeber/vim-addon-manager.git
 refresh    vim-addon-mw-utils   git://github.com/MarcWeber/vim-addon-mw-utils.git
+refresh    vim-airline          git@github.com:bling/vim-airline.git
 refresh    vim-javascript       git://github.com/pangloss/vim-javascript.git
-refresh    vim-powerline        git@github.com:SethMilliken/vim-powerline.git
 refresh    vim-ruby             git://github.com/vim-ruby/vim-ruby.git
 refresh    vim-scala            git://github.com/derekwyatt/vim-scala.git
+refresh    vim-signify          git@github.com:mhinz/vim-signify.git
 refresh    vim-traitor          git@github.com:SethMilliken/vim-traitor.git
 refresh    vimple               git://github.com/dahu/vimple.git
 refresh    vimwiki              git://github.com/vim-scripts/vimwiki.git
@@ -123,7 +125,7 @@ warning    dbext                git://github.com/vim-scripts/dbext.vim.git
 warning    delimitMate          git://github.com/Raimondi/delimitMate.git
 warning    scala                git://github.com/vim-scripts/scala.vim.git
 warning    script-ed            ssh://seth@at.araxia.net/~/git/script-ed.git
-#warning    syntastic            git://github.com/sjl/syntastic.git
 warning    threesome            git://github.com/sjl/threesome.vim.git
 warning    vim-addon-signs      git://github.com/MarcWeber/vim-addon-signs.git
+warning    vim-powerline        git://github.com/Lokaltog/vim-powerline.git
 warning    vim-ragtag           na
