@@ -38,12 +38,21 @@ let g:did_install_syntax_menu = 1
 let g:vimwiki_menu = ''
 
 " }}}
+function! IsNexus() " {{{
+    return match(system("uname -a"), "armv7l") > 0
+endfunction
+
+"}}}
 " Powerline: " {{{
-let g:Powerline_symbols = 'fancy'
-let g:Powerline_cache_enabled = 0
-let g:Powerline_theme = "araxia"
-"call Pl#Theme#InsertSegment('wc:characters', 'after', 'filetype')
-"call Pl#Theme#ReplaceSegment('filetype', 'wc:characters')
+if IsNexus()
+    let g:Powerline_symbols = 'simple'
+else
+    let g:Powerline_symbols = 'fancy'
+    let g:Powerline_cache_enabled = 0
+    let g:Powerline_theme = "araxia"
+    "call Pl#Theme#InsertSegment('wc:characters', 'after', 'filetype')
+    "call Pl#Theme#ReplaceSegment('filetype', 'wc:characters')
+end
 
 " }}}
 " Airline: " {{{
@@ -166,7 +175,11 @@ set autoread                        " automatically reread fs changed files *aut
 set shellslash                      " always use /
 set undofile                        " experimental: will i actually use this?
 
-colorscheme araxia
+if IsNexus()
+    colorscheme koehler
+else
+    colorscheme araxia
+end
 
 let mapleader="\\"                  " <Leader>
 "let mapleader="\<CR>"                  " <Leader>
@@ -200,10 +213,15 @@ set undodir=$HOME/.vim/undo//,~/vimfiles/undo//
 set ssop=blank,buffers,curdir,folds,help,resize,slash,tabpages,unix,winpos,winsize
 
 " Statusline: TODO: annotate this status line
-set statusline=%<\(%n\)\ %m%y%r\ %f\ %=%-14.(%l,%c%V%)\ %P
+set statusline=%<\(%n\)\ %m%y%r\ %f\ %=%-14.(%l,%c%V%)\ %{WC()}\ %P
 " wc:%{WordCount()}
 
 "}}}
+" WC {{{
+function! WC()
+    return string(split(system("wc -m " . shellescape(expand('%'))), "\\s")[0])
+endfunction
+" }}}
 " MAPPINGS: " {{{
 
 " Zaurus: <C-Space> (<C-k><C-Space>) to invoke command mode in both insert and normal mode " {{{
@@ -286,6 +304,7 @@ nmap <Leader>\ :call CommitSession()<CR>
 " }}}
 " Journal: " {{{
 nmap <Leader>jj :call PagesEntry()<CR>
+imap <Leader>jj <Esc><Leader>jj
 command! Pages :call PagesEntry()
 
 " }}}
@@ -449,11 +468,13 @@ nmap <silent> <C-y><C-y> :call timestamp#addOrUpdate("")<CR>
 nmap <silent> <C-y><C-t> :call timestamp#addOrUpdateSolicitingAnnotation()<CR>
 nmap <silent> <C-y><C-x> :call timestamp#remove()<CR>
 nmap <silent> <Leader>sd :call timestamp#insert("date")<CR>
+imap <silent> <Leader>sd <Esc><Leader>sd
 nmap <silent> <Leader>sl :call timestamp#insert("long")<CR>
 nmap <silent> <Leader>fw :call FoldWrap()<CR>
 nmap <silent> <Leader>fi :call FoldInsert()<CR>
 nmap <silent> <Leader>ts :call text#insert_annotation("Started typing", "0")<CR>
 nmap <silent> <Leader>tf :call text#insert_annotation("Finished typing", "$")<CR>
+imap <silent> <Leader>tf <Esc><Leader>tf
 nmap <silent> -- :call append(line("."), text#divider("-"))<CR>
 nmap <silent> -= :call append(line("."), text#divider("="))<CR>
 nmap <silent> -p :call append(line("."), [text#divider('-'), "", string(getreg('*')), ""])<CR>
@@ -2016,6 +2037,67 @@ let g:tagbar_type_scala = {
 let g:syntastic_puppet_lint_arguments = '--no-80chars-check '
 
 let $JS_CMD='node'
+
+" Morning Pages " {{{
+command! Writing :call WritingMappings()
+function! WritingMappings() " {{{
+    if bufname("%") == TocName()
+        set nocursorline nowrap nolist
+    else
+        set nocursorline wrap nolist spell
+    end
+    exec 'map Qq :call PagesToggle()<CR>'
+    exec 'imap Qq <esc>Qq'
+    exec 'map QQ :call NotesToggle()<CR>'
+    exec 'imap QQ <esc>QQ'
+    exec 'map kj :call TocToggle()<CR>'
+    exec 'imap kj <esc>kj'
+endfunction
+
+"}}}
+function! NotesToggle() " {{{
+    call BufferToggle("notes.txt")
+endfunction
+
+"}}}
+function! TocToggle() " {{{
+    call BufferToggle(TocName())
+endfunction
+
+"}}}
+function! PagesToggle() " {{{
+    call BufferToggle(timestamp#text("date") . ".txt")
+endfunction
+
+"}}}
+function! TocName() " {{{
+    return strftime("%Y-%m-index.txt")
+endfunction
+
+"}}}
+function! BufferToggle(bufname) " {{{
+    write
+    let l:origswb = &swb
+    set swb=usetab
+    let l:curnr = bufnr("%")
+    let l:curname = bufname("%")
+    if l:curname == a:bufname
+        if exists("g:orgnr")
+            exec "sbuffer " . g:orgnr
+        else
+            echo "No original buffer."
+        end
+    else
+        let g:orgnr = l:curnr
+        exec "sbuffer " . bufnr(a:bufname)
+    end
+    exec "set swb=" . l:origswb
+endfunction
+
+" }}}
+
+" }}}
+
 " let g:session_autoload = 1
 " let g:session_autosave = 1
 
