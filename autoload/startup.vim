@@ -114,6 +114,11 @@ function! startup#base()
         normal ggzo
     endfun
 
+    fun! s:obj.Vimwiki() dict
+        VimwikiIndex
+        set nolist
+    endfun
+
     fun s:obj.TasksFile() dict
         return self.docroot() . "todo/personal.tst.txt"
     endfun
@@ -146,11 +151,6 @@ function! startup#SAMSARA()
         return "samara.class"
     endfun
 
-    fun! s:obj.Vimwiki() dict
-        VimwikiIndex
-        set nolist
-    endfun
-
     fun! s:obj.Scratch() dict
         exe 'edit' self.docroot() . "scratch.scratch"
     endfun
@@ -169,11 +169,6 @@ function! startup#NOTABLE()
 
     fun! s:obj.class() dict
         return "notable.class"
-    endfun
-
-    fun! s:obj.Vimwiki() dict
-        VimwikiIndex
-        set nolist
     endfun
 
     fun! s:obj.SourceCode() dict
@@ -254,11 +249,6 @@ function! startup#SETHPC()
         return "seth-pc.class"
     endfun
 
-    fun! s:obj.Vimwiki() dict
-        VimwikiIndex
-        set nolist
-    endfun
-
     fun! s:obj.TasksFile() dict
         return self.docroot() . "todo/wintodo.txt"
     endfun
@@ -294,11 +284,6 @@ function! startup#ROCKBOX()
         return "rockbox.class"
     endfun
 
-    fun! s:obj.Vimwiki() dict
-        VimwikiIndex
-        set nolist
-    endfun
-
     fun! s:obj.TasksFile() dict
         return "self.docroot() . "todo/laboratory.txt"
     endfun
@@ -324,11 +309,6 @@ function! startup#LOCALHOST()
 
     fun! s:obj.class() dict
         return "mobile.class"
-    endfun
-
-    fun! s:obj.Vimwiki() dict
-        VimwikiIndex
-        set nolist
     endfun
 
     fun! s:obj.TasksFile() dict
