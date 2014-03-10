@@ -110,8 +110,6 @@ function! startup#base()
     endfun
 
     fun s:obj.Tasks() dict
-        call AdjustFont(-2)
-        winsize 120 100
         exe "edit " . self['TasksFile']()
         normal ggzo
     endfun
@@ -125,8 +123,8 @@ function! startup#base()
     endfun
 
     fun s:obj.handle() dict
-        echo self.app()
-        silent! call self[self.app()]()
+        "echo self.app()
+        call self[self.app()]()
     endfun
 
     " constructor
@@ -262,11 +260,19 @@ function! startup#SETHPC()
     endfun
 
     fun! s:obj.TasksFile() dict
-        return "self.docroot() . "todo/wintodo.txt"
+        return self.docroot() . "todo/wintodo.txt"
     endfun
 
     fun! s:obj.Default() dict
-        echo "default gvim instance"
+        "echo "default gvim instance"
+    endfun
+
+    fun s:obj.Dotfiles() dict
+        edit ~/vimfiles/.vimrc
+    endfun
+
+    fun s:obj.AutoHotkey() dict
+        edit ~/My Documents/AutoHotkey.ahk
     endfun
 
     fun! s:obj.app() dict
@@ -331,6 +337,11 @@ function! startup#LOCALHOST()
 
     fun! s:obj.Default() dict
         echo "default gvim instance"
+    endfun
+
+    fun! s:obj.AutoHotkey() dict
+        echo "AutoHotkey instance"
+        edit ~/My Documents/AutoHotkey.ahk
     endfun
 
     fun! s:obj.app() dict
