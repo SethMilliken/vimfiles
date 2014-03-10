@@ -12,7 +12,10 @@ let twitvim_count = 100
 " }}}
 
 FriendsTwitter
-VimSearch
+VimSearch \\| 40wincmd
+SearchTwitter sdecastelberg
+SearchTwitter baristapdx
+SearchTwitter @github
 SearchTwitter dotvimrc
 SearchTwitter #MacVim
 SearchTwitter #Lion
