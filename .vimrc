@@ -2039,6 +2039,8 @@ let g:syntastic_puppet_lint_arguments = '--no-80chars-check '
 let $JS_CMD='node'
 
 " Morning Pages " {{{
+let g:progress = glob("~/.vim/swap/reading_progress.txt")
+let g:pages_dir = glob("~/sandbox/personal/zaurus/zlog/")
 command! Writing :call WritingMappings()
 function! WritingMappings() " {{{
     if bufname("%") == TocName()
@@ -2055,6 +2057,43 @@ function! WritingMappings() " {{{
 endfunction
 
 "}}}
+command! Reading :call ReadingMappings()
+function! ReadingMappings() " {{{
+    if bufname("%") == TocName()
+        set nocursorline nowrap nolist
+    else
+        set nocursorline wrap nolist spell
+    end
+    exe "cd " . g:pages_dir
+    if ProgressFileExists()
+        let lines = readfile(g:progress)
+        let current_entry = lines[0]
+        if strwidth(current_entry) > 0
+            exe "edit " . g:pages_dir . lines[0]
+        end
+        exec 'map QQ :call UpdateReadingProgress()<CR>'
+    end
+endfunction
+
+"}}}
+command! UpdateReadingProgress :call UpdateReadingProgress()
+function! UpdateReadingProgress() " {{{
+    if ProgressFileExists()
+        let file_name = fnamemodify(expand("%"), ":p:t")
+        if strwidth(file_name) > 0 && IsPagesFile(file_name)
+            let lines = [file_name]
+            call writefile(lines, g:progress)
+            echo "Updated reading progress to: " . file_name
+        end
+    end
+endfunction
+
+"}}}
+function! ProgressFileExists() " {{{
+    return filereadable(g:progress)
+endfunction
+
+"}}}
 function! NotesToggle() " {{{
     call BufferToggle("notes.txt")
 endfunction
@@ -2067,6 +2106,11 @@ endfunction
 "}}}
 function! PagesToggle() " {{{
     call BufferToggle(timestamp#text("date") . ".txt")
+endfunction
+
+"}}}
+function! IsPagesFile(name) " {{{
+    return match(a:name, '[0-9]\{4}-[0-9]\{2}-[0-9]\{2}\.txt') > -1
 endfunction
 
 "}}}
