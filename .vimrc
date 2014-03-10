@@ -2069,7 +2069,11 @@ function! ReadingMappings() " {{{
         let lines = readfile(g:progress)
         let current_entry = lines[0]
         if strwidth(current_entry) > 0
-            exe "edit " . g:pages_dir . lines[0]
+            exe "edit " . g:pages_dir . current_entry
+            if exists(":NERDTreeToggle") == 2
+                NERDTreeToggle
+                call search(current_entry)
+            end
         end
         exec 'map QQ :call UpdateReadingProgress()<CR>'
     end
