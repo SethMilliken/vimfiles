@@ -97,7 +97,7 @@ function! startup#base()
         edit ~/.vim/swap/transcript.adium
     endfun
 
-    fun s:obj.MacVim() dict
+    fun s:obj.SourceCode() dict
         if self.virtual() | return | end
         call AdjustFont(-2)
         edit ~/.vim/.vimrc
