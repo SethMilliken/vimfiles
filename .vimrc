@@ -168,7 +168,7 @@ set noerrorbells                    " don't need to hear if i hit esc twice
 set visualbell | set t_vb=          " ...nor see it
 set ignorecase                      " case ignored for searches
 set smartcase                       " override ignorecase for searches with uppercase
-set clipboard=unnamed               " share os pasteboard
+"set clipboard=unnamed               " share os pasteboard
 set cursorline                      " highlight current line
 set wildmenu                        " show completion options
 set autoread                        " automatically reread fs changed files *autoread*
@@ -245,8 +245,11 @@ vmap <BS> :normal! gv"_x<CR>
 vmap dC :normal gv"_xP<CR>
 "nnoremap <Leader>p :call text#append_line(getreg("*"), "below")<CR>
 "nnoremap <Leader>P :call text#append_line(getreg("*"), "above")<CR>
-nnoremap <expr> <Leader>p ':put ' . v:register . '<CR>'
-nnoremap <expr> <Leader>P ':put! ' . v:register . '<CR>'
+"nnoremap <expr> <Leader>p ':put ' . v:register . '<CR>'
+"nnoremap <expr> <Leader>P ':put! ' . v:register . '<CR>'
+"nnoremap <Leader>y :call setreg("*", @0) \| echo "Pasteboard transferred to system clipboard."<CR>
+nnoremap <expr> <Leader>p ':set cb=unnamed \| :put * \| set cb=<CR>'
+nnoremap <expr> <Leader>P ':set cb=unnamed \| :put! * \| set cb=<CR>'
 
 " sane-itize Y
 map Y y$
@@ -2038,6 +2041,17 @@ let g:syntastic_puppet_lint_arguments = '--no-80chars-check '
 
 let $JS_CMD='node'
 
+" Dynamic 'cb' setting " {{{
+function! Clipboard()
+    if match(system("uname"), "Linux") > -1
+        set clipboard=
+    else
+        set clipboard=unnamed
+    endif
+endfunction
+call Clipboard()
+
+" }}}
 " Morning Pages " {{{
 let g:progress = glob("~/.vim/swap/reading_progress.txt")
 let g:pages_dir = glob("~/sandbox/personal/zaurus/zlog/")
