@@ -5,6 +5,7 @@
 "   Araxia on #vim irc.freenode.net
 
 " Version:
+" 1.1 " 2014-03-13 17:24:17 PDT
 " 1.0 " 2011-05-09 18:31:25 PDT
 
 " Notes:
@@ -47,14 +48,14 @@ function! startup#base()
 
     fun s:obj.swapchoice() dict
         if self.virtual() | return | end
-        if self.app() == "Vimwiki"
+        if self.app() == "vimwikiApp"
             return "let v:swapchoice='e' \| set shortmess +=A"
         else
             return "let v:swapchoice='a' \| set shortmess +=A"
         endif
     endfun
 
-    fun s:obj.VimHelp() dict
+    fun s:obj.vimhelpApp() dict
         help help
     endfun
 
@@ -62,7 +63,7 @@ function! startup#base()
         return $HOME . "/sandbox/personal/"
     endfun
 
-    fun s:obj.TwitVim() dict
+    fun s:obj.twitvimApp() dict
         if self.virtual() | return | end
         edit ~/.vim/twitcommands.vim
         so %
@@ -73,9 +74,8 @@ function! startup#base()
         40wincmd  |
     endfun
 
-    fun s:obj.Todo() dict
+    fun s:obj.todoApp() dict
         if self.virtual() | return | end
-        call AdjustFont(-2)
         exe 'edit' self.docroot() . "todo/todo.txt"
         vsplit | vsplit
         exe 'tabnew' self.docroot() . "todo/techtodo.txt"
@@ -85,50 +85,62 @@ function! startup#base()
         wincmd =
     endfun
 
-    fun s:obj.ColloquyVim() dict
+    fun s:obj.colloquyvimApp() dict
         if self.virtual() | return | end
         call AdjustFont(-2)
         edit ~/.vim/swap/transcript.colloquy
     endfun
 
-    fun s:obj.AdiumVim() dict
+    fun s:obj.adiumvimApp() dict
         if self.virtual() | return | end
         call AdjustFont(-4)
         edit ~/.vim/swap/transcript.adium
     endfun
 
-    fun s:obj.SourceCode() dict
+    fun s:obj.sourcecodeApp() dict
         if self.virtual() | return | end
-        call AdjustFont(-2)
         edit ~/.vim/.vimrc
         vsplit ~/.vim/.gvimrc | wincmd t | wincmd =
     endfun
 
-    fun s:obj.Scratch() dict
-        edit ~/.vim/swap/scratch.scratch
-        call SmallWindow()
+    fun! s:obj.scratchApp() dict
+        exe 'edit' self.docroot() . "scratch.scratch"
     endfun
 
-    fun s:obj.Tasks() dict
+    fun s:obj.tasksApp() dict
         exe "edit " . self['TasksFile']()
         normal ggzo
     endfun
 
-    fun! s:obj.Vimwiki() dict
+    fun! s:obj.vimwikiApp() dict
         VimwikiIndex
         set nolist
+    endfun
+
+    fun! s:obj.defaultApp() dict
+        "echo "default gvim instance"
+    endfun
+
+    fun! s:obj.app() dict
+        if !exists('g:vim_app_name')
+            if strlen(v:servername) > 0 && v:servername != "GVIM"
+                let g:vim_app_name = v:servername
+            else
+                if match($VIMRUNTIME, ".app") > 0
+                    let g:vim_app_name = split(split($VIMRUNTIME, ".app")[0], '/')[1]
+                else
+                    let g:vim_app_name = "default"
+                end
+            endif
+        endif
+        return tolower(g:vim_app_name) . "App"
     endfun
 
     fun s:obj.TasksFile() dict
         return self.docroot() . "todo/personal.tst.txt"
     endfun
 
-    fun s:obj.app() dict
-        return split(split($VIMRUNTIME, ".app")[0], '/')[1]
-    endfun
-
     fun s:obj.handle() dict
-        "echo self.app()
         call self[self.app()]()
     endfun
 
@@ -151,14 +163,6 @@ function! startup#SAMSARA()
         return "samara.class"
     endfun
 
-    fun! s:obj.Scratch() dict
-        exe 'edit' self.docroot() . "scratch.scratch"
-    endfun
-
-    fun! s:obj.SourceCode() dict
-        edit ~/sandbox/code/
-    endfun
-
     return s:obj.New()
 endfunction
 
@@ -169,10 +173,6 @@ function! startup#NOTABLE()
 
     fun! s:obj.class() dict
         return "notable.class"
-    endfun
-
-    fun! s:obj.SourceCode() dict
-        edit ~/sandbox/code/
     endfun
 
     fun! s:obj.TasksFile() dict
@@ -192,7 +192,7 @@ function! startup#SETH()
         return "seth.class"
     endfun
 
-    fun! s:obj.Vimwiki() dict
+    fun! s:obj.vimwikiApp() dict
         normal 3\ww
         set nolist
         call JanrainAbbreviations()
@@ -202,16 +202,16 @@ function! startup#SETH()
         return $HOME . "/sandbox/work/"
     endfun
 
-    fun! s:obj.Todo() dict
+    fun! s:obj.todoApp() dict
         call AdjustFont(-2)
         exe 'edit' self.docroot() . "projects.tst"
     endfun
 
-    fun! s:obj.Scratch() dict
+    fun! s:obj.scratchApp() dict
         exe 'edit' self.docroot() . "scratch.scratch"
     endfun
 
-    fun! s:obj.SourceCode() dict
+    fun! s:obj.sourcecodeApp() dict
         exe 'cd' g:engage_dir
         exe 'edit' g:engage_dir
         call JanrainAbbreviations()
@@ -234,7 +234,7 @@ function! startup#LABORATORY()
     endfun
 
     fun! s:obj.TasksFile() dict
-        return "self.docroot() . "todo/laboratory.tst"
+        return self.docroot() . "todo/laboratory.tst"
     endfun
 
     return s:obj.New()
@@ -249,27 +249,16 @@ function! startup#SETHPC()
         return "seth-pc.class"
     endfun
 
-    fun! s:obj.TasksFile() dict
-        return self.docroot() . "todo/wintodo.txt"
-    endfun
-
-    fun! s:obj.Default() dict
-        "echo "default gvim instance"
-    endfun
-
-    fun s:obj.Dotfiles() dict
+    fun s:obj.dotfilesApp() dict
         edit ~/vimfiles/.vimrc
     endfun
 
-    fun s:obj.AutoHotkey() dict
+    fun s:obj.autohotkeyApp() dict
         edit ~/My Documents/AutoHotkey.ahk
     endfun
 
-    fun! s:obj.app() dict
-        if !exists('g:vim_app_name')
-            let g:vim_app_name = "Default"
-        endif
-        return g:vim_app_name
+    fun! s:obj.TasksFile() dict
+        return self.docroot() . "todo/wintodo.txt"
     endfun
 
     return s:obj.New()
@@ -288,17 +277,6 @@ function! startup#ROCKBOX()
         return "self.docroot() . "todo/laboratory.txt"
     endfun
 
-    fun! s:obj.Default() dict
-        echo "default gvim instance"
-    endfun
-
-    fun! s:obj.app() dict
-        if !exists('g:vim_app_name')
-            let g:vim_app_name = "Default"
-        endif
-        return g:vim_app_name
-    endfun
-
     return s:obj.New()
 endfunction
 
@@ -311,24 +289,29 @@ function! startup#LOCALHOST()
         return "mobile.class"
     endfun
 
-    fun! s:obj.TasksFile() dict
-        return self.docroot() . "todo/mobile.txt"
-    endfun
-
-    fun! s:obj.Default() dict
-        echo "default gvim instance"
-    endfun
-
-    fun! s:obj.AutoHotkey() dict
+    fun! s:obj.autohotkeyApp() dict
         echo "AutoHotkey instance"
         edit ~/My Documents/AutoHotkey.ahk
     endfun
 
-    fun! s:obj.app() dict
-        if !exists('g:vim_app_name')
-            let g:vim_app_name = "Default"
-        endif
-        return g:vim_app_name
+    fun! s:obj.TasksFile() dict
+        return self.docroot() . "todo/mobile.txt"
+    endfun
+
+    return s:obj.New()
+endfunction
+
+" }}}
+" Host PIX " {{{
+function! startup#PIX()
+    let s:obj = startup#base()
+
+    fun! s:obj.class() dict
+        return "pix.class"
+    endfun
+
+    fun! s:obj.TasksFile() dict
+        return self.docroot() . "todo/pix.tst.txt"
     endfun
 
     return s:obj.New()
