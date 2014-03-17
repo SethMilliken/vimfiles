@@ -18,16 +18,21 @@
 "
 " Create proper object based on hostname. " {{{
 function! startup#handler()
+    exe "return startup#" . startup#host() . "()"
+endfunction
+
+"}}}
+" Determine hostname. " {{{
+function! startup#host()
     if has('win32')
         let host = substitute(text#strip($USERDOMAIN), "-", "", "")
     else
         let host = toupper(text#strip(system('hostname -s')))
     end
     if host == ""
-        return startup#base()
-    else
-        exe "return startup#" . host . "()"
+        let host = "base"
     endif
+    return host
 endfunction
 
 "}}}
@@ -101,6 +106,7 @@ function! startup#base()
         if self.virtual() | return | end
         edit ~/.vim/.vimrc
         vsplit ~/.vim/.gvimrc | wincmd t | wincmd =
+        tabnew ~/.vim/autoload/startup.vim | tabprev
     endfun
 
     fun! s:obj.scratchApp() dict
@@ -110,6 +116,19 @@ function! startup#base()
     fun s:obj.tasksApp() dict
         exe "edit " . self['TasksFile']()
         normal ggzo
+    endfun
+
+    fun! s:obj.pentadactylApp() dict
+        edit $HOME/.pentadactyl/.pentadactylrc
+        set nolist
+        vsplit $HOME/.pentadactyl/colors/araxia.penta
+        set nolist
+        wincmd t | wincmd =
+    endfun
+
+    fun! s:obj.tmuxApp() dict
+        exe "edit ~/.tmux/" . tolower(startup#host()) . ".tmux"
+        set nolist
     endfun
 
     fun! s:obj.vimwikiApp() dict
@@ -308,6 +327,19 @@ function! startup#PIX()
 
     fun! s:obj.class() dict
         return "pix.class"
+    endfun
+
+    fun! s:obj.awesomeApp() dict
+        edit ~/.config/awesome/rc.lua
+        vsplit ~/.config/awesome/themes/araxia/theme.lua
+        wincmd t | wincmd =
+    endfun
+
+    fun! s:obj.tasksApp() dict
+        exe "edit " . self['TasksFile']()
+        normal ggzo
+        vsplit ~/sandbox/personal/projects/pixel_setup.txt
+        wincmd t | wincmd =
     endfun
 
     fun! s:obj.TasksFile() dict
