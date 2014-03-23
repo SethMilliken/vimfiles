@@ -1104,6 +1104,9 @@ function! ScratchCopy()
     if &modified == 1
         silent write
     endif
+    if has("gui_macvim")
+        macaction hide:
+    endif
     "exec ":0,$y"
 endfunction
 
@@ -1124,8 +1127,8 @@ augroup VolatileScratch
     au! BufRead *.scratch call SmallWindow()
     au! BufRead *.scratch nmap <buffer> <silent> <C-m> :call SmallWindow()<CR>
     au BufRead *.scratch nmap <buffer> <silent> <C-y>g :exec "set lines=999 columns=" . (g:gundo_width + &columns) \| :GundoToggle<CR>
-    au BufRead *.scratch nmap <buffer> <silent> ZZ :wa \| :call ScratchCopy()<CR> \| :macaction hide:<CR>
-    au BufRead *.scratch nmap <buffer> <silent> ZZ :call ScratchCopy()<CR> \| :macaction hide:<CR>
+    au BufRead *.scratch nmap <buffer> <silent> ZZ :wa \| :call ScratchCopy()<CR>
+    au BufRead *.scratch nmap <buffer> <silent> ZZ :call ScratchCopy()<CR>
     au BufRead *.scratch nmap <buffer> <silent> :w<CR> :write \| :silent call ScratchCopy()<CR>
     au BufRead *.scratch imap <buffer> <silent> ZZ <Esc>ZZ
     au BufRead *.scratch vmap <buffer> <silent> ZZ <Esc>ZZ
