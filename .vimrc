@@ -164,6 +164,7 @@ set foldopen+=jump                  " jumps open folds, too
 set display+=lastline               " always show as much of the last line as possible
 set guioptions+=c                   " always use console dialogs (faster)
 set guioptions-=m                   " no menu
+set guioptions-=T                   " no menu
 set noerrorbells                    " don't need to hear if i hit esc twice
 set visualbell | set t_vb=          " ...nor see it
 set ignorecase                      " case ignored for searches
