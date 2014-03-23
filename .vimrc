@@ -1979,6 +1979,7 @@ endfunction
 command! Herenow :call Herenow()
 function! Herenow() " {{{
     exec ":lcd " . expand("%:p:h")
+    let b:git_dir = fugitive#extract_git_dir(expand('%:p'))
     echo "cwd now: " . getcwd()
 endfunction
 
@@ -1990,9 +1991,9 @@ function! Checkin(...) " {{{
     if CheckinCheckup()
         call Herenow()
         if len(message) > 0
-            exe ":Gcommit % -m\'" . message . "\'"
+            exe ":Gcommit %:p -m\'" . message . "\'"
         else
-            exe ":Gcommit -v %" | wincmd T
+            exe ":Gcommit -v %:p" | wincmd T
         endif
     endif
 endfunction
