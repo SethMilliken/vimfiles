@@ -1255,10 +1255,6 @@ augroup Shell | au!
 augroup END
 
 " }}}
-" Python Syntax: " {{{
-let python_highlight_all = 1
-
-" }}}
 " PickAColor: " {{{
 let g:pickacolor_use_web_colors = 1
 " }}}
@@ -1297,12 +1293,20 @@ augroup BufExplorerAdd | au!
 augroup END
 
 " }}}
-" Pydiction: " {{{
-let g:pydiction_location = '~/.vim/complete-dict'
-
-" }}}
 " Paster: " {{{
 let g:PASTER_BROWSER_COMMAND = 'open'
+
+" }}}
+" Python " {{{
+augroup Python | au!
+    au BufWritePost *.py if exists("*Flake8") == 1 | call Flake8() | endif
+augroup END
+" Python Syntax: " {{{
+let python_highlight_all = 1
+
+" }}}
+" Pydiction: " {{{
+let g:pydiction_location = '~/.vim/complete-dict'
 
 " }}}
 " Rope: " {{{
@@ -1311,6 +1315,13 @@ let g:PASTER_BROWSER_COMMAND = 'open'
 let $PATH .= ';C:\Python24\'
 let $PYTHONPATH = 'C:\Python24\'
 
+" }}}
+" Flake8: " {{{
+let g:flake8_max_line_length=99
+let g:flake8_quickfix_location="topleft"
+"let g:flake8_max_complexity=10
+
+" }}}
 " }}}
 " SnipMate: " {{{
 let g:snips_author = 'Seth Milliken'
@@ -2020,11 +2031,11 @@ endfunction
 " }}}
 
 " }}}
+" Scala {{{
   fun! SBT_JAR()
     return "/usr/local/Cellar/sbt/0.11.3/libexec/sbt-launch.jar"
   endfun
 
-" scala
 
 let g:tagbar_type_scala = {
     \ 'ctagstype' : 'Scala',
@@ -2041,6 +2052,8 @@ let g:tagbar_type_scala = {
         \ 'm:methods'
     \ ]
 \ }
+
+" }}}
 
 let g:syntastic_puppet_lint_arguments = '--no-80chars-check '
 
