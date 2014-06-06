@@ -115,6 +115,7 @@ refresh    vim-ruby             git://github.com/vim-ruby/vim-ruby.git
 refresh    vim-scala            git://github.com/derekwyatt/vim-scala.git
 refresh    vim-signify          git@github.com:mhinz/vim-signify.git
 refresh    vim-traitor          git@github.com:SethMilliken/vim-traitor.git
+refresh    vim-virtualenv       git@github.com:jmcantrell/vim-virtualenv.git
 refresh    vimple               git://github.com/dahu/vimple.git
 refresh    vimwiki              git://github.com/vim-scripts/vimwiki.git
 refresh    vundle               git://github.com/vim-scripts/vundle.git
@@ -130,4 +131,3 @@ warning    threesome            git://github.com/sjl/threesome.vim.git
 warning    vim-addon-signs      git://github.com/MarcWeber/vim-addon-signs.git
 warning    vim-powerline        git://github.com/Lokaltog/vim-powerline.git
 warning    vim-ragtag           na
-refresh    vim-virtualenv       git@github.com:jmcantrell/vim-virtualenv.git
