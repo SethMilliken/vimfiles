@@ -142,10 +142,10 @@ function! startup#base()
 
     fun! s:obj.app() dict
         if !exists('g:vim_app_name')
-			if match($VIMRUNTIME, '\.app') > 0
-				let g:vim_app_name = split(split($VIMRUNTIME, '\.app')[0], '/')[1]
-			elseif strlen(v:servername) > 0 && match(v:servername, "VIM") != -1
+			if strlen(v:servername) > 0 && !(match(v:servername, "VIM") > -1)
                 let g:vim_app_name = v:servername
+			elseif match($VIMRUNTIME, '\.app') > 0
+				let g:vim_app_name = split(split($VIMRUNTIME, '\.app')[0], '/')[1]
             else
 				let g:vim_app_name = "default"
             endif
@@ -228,9 +228,15 @@ function! startup#SETH()
         exe 'edit' self.docroot() . "scratch.scratch"
     endfun
 
+    fun! s:obj.slateApp() dict
+        exe 'edit' ".slate.js"
+        vsplit ~/.slate-layouts/office.js
+        vsplit ~/.slate-layouts/work-internal.js
+    endfun
+
     fun! s:obj.sourcecodeApp() dict
-        exe 'cd' g:engage_dir
-        exe 'edit' g:engage_dir
+        exe 'cd ~/sandbox/code/'
+        exe 'edit ~/sandbox/code/'
         call UaAbbreviations()
     endfun
 
