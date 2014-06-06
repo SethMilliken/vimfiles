@@ -142,14 +142,12 @@ function! startup#base()
 
     fun! s:obj.app() dict
         if !exists('g:vim_app_name')
-            if strlen(v:servername) > 0 && v:servername != "GVIM"
+			if match($VIMRUNTIME, '\.app') > 0
+				let g:vim_app_name = split(split($VIMRUNTIME, '\.app')[0], '/')[1]
+			elseif strlen(v:servername) > 0 && match(v:servername, "VIM") != -1
                 let g:vim_app_name = v:servername
             else
-                if match($VIMRUNTIME, ".app") > 0
-                    let g:vim_app_name = split(split($VIMRUNTIME, ".app")[0], '/')[1]
-                else
-                    let g:vim_app_name = "default"
-                end
+				let g:vim_app_name = "default"
             endif
         endif
         return tolower(g:vim_app_name) . "App"
@@ -214,7 +212,7 @@ function! startup#SETH()
     fun! s:obj.vimwikiApp() dict
         normal 3\ww
         set nolist
-        call JanrainAbbreviations()
+        call UaAbbreviations()
     endfun
 
     fun! s:obj.docroot() dict
@@ -233,11 +231,11 @@ function! startup#SETH()
     fun! s:obj.sourcecodeApp() dict
         exe 'cd' g:engage_dir
         exe 'edit' g:engage_dir
-        call JanrainAbbreviations()
+        call UaAbbreviations()
     endfun
 
     fun! s:obj.TasksFile() dict
-        return self.docroot() . "janrain.tst.txt"
+        return self.docroot() . "work.tst.txt"
     endfun
 
     return s:obj.New()
