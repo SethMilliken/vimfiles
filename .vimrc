@@ -164,11 +164,12 @@ set foldopen+=jump                  " jumps open folds, too
 set display+=lastline               " always show as much of the last line as possible
 set guioptions+=c                   " always use console dialogs (faster)
 set guioptions-=m                   " no menu
+set guioptions-=T                   " no menu
 set noerrorbells                    " don't need to hear if i hit esc twice
 set visualbell | set t_vb=          " ...nor see it
 set ignorecase                      " case ignored for searches
 set smartcase                       " override ignorecase for searches with uppercase
-set clipboard=unnamed               " share os pasteboard
+"set clipboard=unnamed               " share os pasteboard
 set cursorline                      " highlight current line
 set wildmenu                        " show completion options
 set autoread                        " automatically reread fs changed files *autoread*
@@ -245,8 +246,11 @@ vmap <BS> :normal! gv"_x<CR>
 vmap dC :normal gv"_xP<CR>
 "nnoremap <Leader>p :call text#append_line(getreg("*"), "below")<CR>
 "nnoremap <Leader>P :call text#append_line(getreg("*"), "above")<CR>
-nnoremap <expr> <Leader>p ':put ' . v:register . '<CR>'
-nnoremap <expr> <Leader>P ':put! ' . v:register . '<CR>'
+"nnoremap <expr> <Leader>p ':put ' . v:register . '<CR>'
+"nnoremap <expr> <Leader>P ':put! ' . v:register . '<CR>'
+"nnoremap <Leader>y :call setreg("*", @0) \| echo "Pasteboard transferred to system clipboard."<CR>
+nnoremap <expr> <Leader>p ':set cb=unnamed \| :put * \| set cb=<CR>'
+nnoremap <expr> <Leader>P ':set cb=unnamed \| :put! * \| set cb=<CR>'
 
 " sane-itize Y
 map Y y$
@@ -1100,6 +1104,9 @@ function! ScratchCopy()
     if &modified == 1
         silent write
     endif
+    if has("gui_macvim")
+        macaction hide:
+    endif
     "exec ":0,$y"
 endfunction
 
@@ -1120,8 +1127,8 @@ augroup VolatileScratch
     au! BufRead *.scratch call SmallWindow()
     au! BufRead *.scratch nmap <buffer> <silent> <C-m> :call SmallWindow()<CR>
     au BufRead *.scratch nmap <buffer> <silent> <C-y>g :exec "set lines=999 columns=" . (g:gundo_width + &columns) \| :GundoToggle<CR>
-    au BufRead *.scratch nmap <buffer> <silent> ZZ :wa \| :call ScratchCopy()<CR> \| :macaction hide:<CR>
-    au BufRead *.scratch nmap <buffer> <silent> ZZ :call ScratchCopy()<CR> \| :macaction hide:<CR>
+    au BufRead *.scratch nmap <buffer> <silent> ZZ :wa \| :call ScratchCopy()<CR>
+    au BufRead *.scratch nmap <buffer> <silent> ZZ :call ScratchCopy()<CR>
     au BufRead *.scratch nmap <buffer> <silent> :w<CR> :write \| :silent call ScratchCopy()<CR>
     au BufRead *.scratch imap <buffer> <silent> ZZ <Esc>ZZ
     au BufRead *.scratch vmap <buffer> <silent> ZZ <Esc>ZZ
@@ -1248,10 +1255,6 @@ augroup Shell | au!
 augroup END
 
 " }}}
-" Python Syntax: " {{{
-let python_highlight_all = 1
-
-" }}}
 " PickAColor: " {{{
 let g:pickacolor_use_web_colors = 1
 " }}}
@@ -1290,12 +1293,20 @@ augroup BufExplorerAdd | au!
 augroup END
 
 " }}}
-" Pydiction: " {{{
-let g:pydiction_location = '~/.vim/complete-dict'
-
-" }}}
 " Paster: " {{{
 let g:PASTER_BROWSER_COMMAND = 'open'
+
+" }}}
+" Python " {{{
+augroup Python | au!
+    au BufWritePost *.py if exists("*Flake8") == 1 | call Flake8() | endif
+augroup END
+" Python Syntax: " {{{
+let python_highlight_all = 1
+
+" }}}
+" Pydiction: " {{{
+let g:pydiction_location = '~/.vim/complete-dict'
 
 " }}}
 " Rope: " {{{
@@ -1304,6 +1315,13 @@ let g:PASTER_BROWSER_COMMAND = 'open'
 let $PATH .= ';C:\Python24\'
 let $PYTHONPATH = 'C:\Python24\'
 
+" }}}
+" Flake8: " {{{
+let g:flake8_max_line_length=99
+let g:flake8_quickfix_location="topleft"
+"let g:flake8_max_complexity=10
+
+" }}}
 " }}}
 " SnipMate: " {{{
 let g:snips_author = 'Seth Milliken'
@@ -1972,6 +1990,7 @@ endfunction
 command! Herenow :call Herenow()
 function! Herenow() " {{{
     exec ":lcd " . expand("%:p:h")
+    let b:git_dir = fugitive#extract_git_dir(expand('%:p'))
     echo "cwd now: " . getcwd()
 endfunction
 
@@ -1983,9 +2002,9 @@ function! Checkin(...) " {{{
     if CheckinCheckup()
         call Herenow()
         if len(message) > 0
-            exe ":Gcommit % -m\'" . message . "\'"
+            exe ":Gcommit %:p -m\'" . message . "\'"
         else
-            exe ":Gcommit -v %" | wincmd T
+            exe ":Gcommit -v %:p" | wincmd T
         endif
     endif
 endfunction
@@ -2012,11 +2031,11 @@ endfunction
 " }}}
 
 " }}}
+" Scala {{{
   fun! SBT_JAR()
     return "/usr/local/Cellar/sbt/0.11.3/libexec/sbt-launch.jar"
   endfun
 
-" scala
 
 let g:tagbar_type_scala = {
     \ 'ctagstype' : 'Scala',
@@ -2034,10 +2053,23 @@ let g:tagbar_type_scala = {
     \ ]
 \ }
 
+" }}}
+
 let g:syntastic_puppet_lint_arguments = '--no-80chars-check '
 
 let $JS_CMD='node'
 
+" Dynamic 'cb' setting " {{{
+function! Clipboard()
+    if match(system("uname"), "Linux") > -1
+        set clipboard=
+    else
+        set clipboard=unnamed
+    endif
+endfunction
+call Clipboard()
+
+" }}}
 " Morning Pages " {{{
 let g:progress = glob("~/.vim/swap/reading_progress.txt")
 let g:pages_dir = glob("~/sandbox/personal/zaurus/zlog/")

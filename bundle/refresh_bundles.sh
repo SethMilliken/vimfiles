@@ -20,7 +20,7 @@ function refresh {
         else
             echo ""
             pushd ${NAME} &> /dev/null
-            ${DEBUG} git f && ${DEBUG} git up
+            ${DEBUG} git fetch --all -q && (${DEBUG} git up &> /dev/null)
             popd &> /dev/null
         fi
     else
@@ -109,11 +109,13 @@ refresh    vim-addon-async      git://github.com/MarcWeber/vim-addon-async.git
 refresh    vim-addon-manager    git://github.com/MarcWeber/vim-addon-manager.git
 refresh    vim-addon-mw-utils   git://github.com/MarcWeber/vim-addon-mw-utils.git
 refresh    vim-airline          git@github.com:bling/vim-airline.git
+refresh    vim-flake8           git@github.com:nvie/vim-flake8.git                         'pip install flake8'
 refresh    vim-javascript       git://github.com/pangloss/vim-javascript.git
 refresh    vim-ruby             git://github.com/vim-ruby/vim-ruby.git
 refresh    vim-scala            git://github.com/derekwyatt/vim-scala.git
 refresh    vim-signify          git@github.com:mhinz/vim-signify.git
 refresh    vim-traitor          git@github.com:SethMilliken/vim-traitor.git
+refresh    vim-virtualenv       git@github.com:jmcantrell/vim-virtualenv.git
 refresh    vimple               git://github.com/dahu/vimple.git
 refresh    vimwiki              git://github.com/vim-scripts/vimwiki.git
 refresh    vundle               git://github.com/vim-scripts/vundle.git
