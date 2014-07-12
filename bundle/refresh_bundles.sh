@@ -5,6 +5,10 @@
 # -n only clones new additions, no updates.
 #
 # TODO: rewrite in ruby; check for present directories without a corresponding entry
+#
+# K to add entry for git clone URL on clipboard
+# \<CR> to sort selection
+#
 DEBUG=
 #DEBUG=echo
 ARG=$1
@@ -50,6 +54,7 @@ function oldfork {
 
 #refresh    vim-powerline        git@github.com:SethMilliken/vim-powerline.git
 #warning    syntastic            git://github.com/sjl/syntastic.git
+
 oldfork    gundo                git@github.com:SethMilliken/gundo.vim.git
 oldfork    snipmate             git://github.com/spf13/snipmate.vim.git
 oldfork    tagbar               git@github.com:SethMilliken/tagbar.git
@@ -116,6 +121,7 @@ refresh    vim-scala            git://github.com/derekwyatt/vim-scala.git
 refresh    vim-signify          git@github.com:mhinz/vim-signify.git
 refresh    vim-traitor          git@github.com:SethMilliken/vim-traitor.git
 refresh    vim-virtualenv       git@github.com:jmcantrell/vim-virtualenv.git
+refresh    vimpager             git@github.com:rkitover/vimpager.git
 refresh    vimple               git://github.com/dahu/vimple.git
 refresh    vimwiki              git://github.com/vim-scripts/vimwiki.git
 refresh    vundle               git://github.com/vim-scripts/vundle.git
