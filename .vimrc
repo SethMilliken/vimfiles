@@ -2057,7 +2057,16 @@ let g:tagbar_type_scala = {
 
 let g:syntastic_puppet_lint_arguments = '--no-80chars-check '
 
-let $JS_CMD='nodejs'
+function! ConfigureNodeJs()
+    for c in ['nodejs', 'node']
+        if filereadable(split(system('which ' . c), '\n', 1)[0])
+            let $JS_CMD = c
+            break
+        end
+    endfor
+    return $JS_CMD
+endfunction
+call ConfigureNodeJs()
 
 " Dynamic 'cb' setting " {{{
 function! Clipboard()
