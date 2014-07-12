@@ -142,12 +142,12 @@ function! startup#base()
 
     fun! s:obj.app() dict
         if !exists('g:vim_app_name')
-			if strlen(v:servername) > 0 && !(match(v:servername, "VIM") > -1)
+            if strlen(v:servername) > 0 && !(match(v:servername, "VIM") > -1)
                 let g:vim_app_name = v:servername
-			elseif match($VIMRUNTIME, '\.app') > 0
-				let g:vim_app_name = split(split($VIMRUNTIME, '\.app')[0], '/')[1]
+            elseif match($VIMRUNTIME, '\.app') > 0
+                let g:vim_app_name = split(split($VIMRUNTIME, '\.app')[0], '/')[1]
             else
-				let g:vim_app_name = "default"
+                let g:vim_app_name = "default"
             endif
         endif
         return tolower(g:vim_app_name) . "App"
@@ -348,6 +348,54 @@ function! startup#PIX()
 
     fun! s:obj.TasksFile() dict
         return self.docroot() . "todo/pix.tst.txt"
+    endfun
+
+    return s:obj.New()
+endfunction
+
+" }}}
+" Host UNNWORKABLE " {{{
+function! startup#UNWORKABLE()
+    let s:obj = startup#base()
+
+    fun! s:obj.class() dict
+        return "unworkable.class"
+    endfun
+
+    fun! s:obj.vimwikiApp() dict
+        VimwikiIndex
+        set nolist
+    endfun
+
+    fun! s:obj.tasksApp() dict
+        return self.docroot() . "ax/todo.txt"
+    endfun
+
+    fun! s:obj.defaultApp() dict
+        echo "default vim instance"
+    endfun
+
+    fun! s:obj.weechatpApp() dict
+        edit ~/.weechat_personal/weechat.conf
+        vsplit ~/.weechat_personal/irc.conf
+        vsplit ~/.weechat_personal/plugins.conf
+        wincmd t | wincmd =
+    endfun
+
+    fun! s:obj.weechatApp() dict
+        edit ~/.weechat/weechat.conf
+        vsplit ~/.weechat/irc.conf
+        vsplit ~/.weechat/plugins.conf
+        wincmd t | wincmd =
+    endfun
+
+    fun! s:obj.tmuxApp() dict
+        exe "edit ~/.tmux/" . toupper(startup#host()) . ".tmux"
+        split ~/.tmux/ua.tmux
+        split ~/.tmux.conf
+        wincmd L
+        wincmd t | wincmd =
+        set nolist
     endfun
 
     return s:obj.New()
