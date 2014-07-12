@@ -375,10 +375,22 @@ function! startup#UNWORKABLE()
         echo "default vim instance"
     endfun
 
+    fun! s:obj.notesApp() dict
+        edit ~/ax/ideas.txt
+        split ~/ax/setup.txt
+        split ~/ax/todo.tst.txt
+        wincmd H
+        wincmd t | wincmd =
+        vsplit ~/ax/weechat.txt
+        windo set nolist
+        wincmd t | wincmd =
+    endfun
+
     fun! s:obj.weechatpApp() dict
         edit ~/.weechat_personal/weechat.conf
         vsplit ~/.weechat_personal/irc.conf
         vsplit ~/.weechat_personal/plugins.conf
+        windo set nolist
         wincmd t | wincmd =
     endfun
 
@@ -386,6 +398,7 @@ function! startup#UNWORKABLE()
         edit ~/.weechat/weechat.conf
         vsplit ~/.weechat/irc.conf
         vsplit ~/.weechat/plugins.conf
+        windo set nolist
         wincmd t | wincmd =
     endfun
 
@@ -394,8 +407,8 @@ function! startup#UNWORKABLE()
         split ~/.tmux/ua.tmux
         split ~/.tmux.conf
         wincmd L
+        windo set nolist
         wincmd t | wincmd =
-        set nolist
     endfun
 
     return s:obj.New()
