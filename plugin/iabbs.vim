@@ -1,10 +1,14 @@
 " Abbreviations: " {{{
 
 " Computing:
-iabb krf KeyRemap4MacBook
-iabb mv MacVim
+iabb mvi MacVim
 
-" Janrain:
+" Urban Airship 
+iabb uac urbanairship.com
+iabb puac prod.urbanairship.com
+iabb uA Urban Airship
+
+" Auth:
 iabb oid OpenID
 iabb oso OpenSocial
 iabb oa OAuth
@@ -16,9 +20,9 @@ iabb hr =>
 iabb ia iabb
 
 " Personal
-iabb labo laboratory.local
-iabb sam samsaral.local
-iabb jan seth.local
+iabb lablo laboratory.local
+iabb samlo samsara.local
+iabb worklo seth.local
 iabb wrt with respect to
 
 " }}}
