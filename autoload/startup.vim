@@ -60,6 +60,12 @@ function! startup#base()
         endif
     endfun
 
+    fun! s:obj.vimApp() dict
+        edit ~/.vim/.vimrc
+        vsplit ~/.vim/.gvimrc | wincmd t | wincmd =
+        tabnew ~/.vim/autoload/startup.vim | tabprev
+    endfun
+
     fun s:obj.vimhelpApp() dict
         help help
     endfun
