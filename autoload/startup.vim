@@ -126,15 +126,16 @@ function! startup#base()
 
     fun! s:obj.pentadactylApp() dict
         edit $HOME/.pentadactyl/.pentadactylrc
-        set nolist
         vsplit $HOME/.pentadactyl/colors/araxia.penta
-        set nolist
+        windo set nolist
         wincmd t | wincmd =
     endfun
 
     fun! s:obj.tmuxApp() dict
         exe "edit ~/.tmux/" . tolower(startup#host()) . ".tmux"
-        set nolist
+        vsplit ~/.tmux.conf
+        windo set nolist
+        wincmd t | wincmd =
     endfun
 
     fun! s:obj.vimwikiApp() dict
