@@ -85,15 +85,20 @@ function! startup#base()
         40wincmd  |
     endfun
 
+    fun s:obj.listsApp() dict
+        if self.virtual() | return | end
+        exe 'edit' self.docroot() . "lists/readinglist.txt"
+        exe 'vsplit' self.docroot() . "lists/videolist.txt"
+        exe 'vsplit' self.docroot() . "lists/musiclist.txt"
+        exe 'vsplit' self.docroot() . "lists/wishlist.txt"
+        wincmd t | wincmd =
+    endfun
+
     fun s:obj.todoApp() dict
         if self.virtual() | return | end
         exe 'edit' self.docroot() . "todo/todo.txt"
-        vsplit | vsplit
-        exe 'tabnew' self.docroot() . "todo/techtodo.txt"
-        vsplit | vsplit
-        exe 'tabnew' self.docroot() . "lists/readinglist.txt"
-        exe 'vsplit' self.docroot() . "lists/videolist.txt"
-        wincmd =
+        exe 'vsplit' self.docroot() . "todo/techtodo.txt"
+        wincmd t | wincmd =
     endfun
 
     fun s:obj.colloquyvimApp() dict
@@ -141,6 +146,11 @@ function! startup#base()
     fun! s:obj.vimwikiApp() dict
         VimwikiIndex
         set nolist
+    endfun
+
+    fun! s:obj.writeApp() dict
+        exe 'cd' self.docroot() . "zaurus/zlog/"
+        Writing
     endfun
 
     fun! s:obj.defaultApp() dict
