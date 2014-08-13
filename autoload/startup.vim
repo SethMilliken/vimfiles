@@ -247,6 +247,15 @@ function! startup#SETH()
         call UaAbbreviations()
     endfun
 
+    fun! s:obj.tmuxApp() dict
+        exe "edit ~/.tmux/" . toupper(startup#host()) . ".tmux"
+        split ~/.tmux/.tmux
+        split ~/.tmux.conf
+        wincmd L
+        windo set nolist
+        wincmd t | wincmd =
+    endfun
+
     fun! s:obj.TasksFile() dict
         return self.docroot() . "work.tst.txt"
     endfun

@@ -94,7 +94,7 @@ if has("gui_macvim")
     set antialias
     " set guifont=Inconsolata:h15
     " set guifont=Inconsolata\ for\ Powerline:h13
-    set guifont=Ubuntu\ Mono\ derivative\ Powerline\ 10
+    set guifont=Ubuntu\ Mono\ derivative\ Powerline:h11
     " set guifont=Ubuntu\ Mono\ 12
     winsize 345 500                         " set a reasonable window size
     " NOTE: Have to unset menu commands in gvimrc
@@ -145,7 +145,7 @@ if has("gui_macvim")
     "" Map Cmd-Shift-t to rename tab
     exec "nmap <silent> <D-T>   <Esc>:SolicitTabName<CR>"
 else
-    set guifont=Ubuntu\ Mono\ derivative\ Powerline\ 12
+    set guifont=Ubuntu\ Mono\ derivative\ Powerline\:h12
 end
 
 " }}}
