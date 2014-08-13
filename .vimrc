@@ -1040,7 +1040,9 @@ augroup TaskStack | au!
     "au FileType *tst* imap <buffer> XX <C-c>:call TaskstackCompleteItem(g:aborted_prefix)<CR>
     "au FileType *tst* nmap <buffer> QQ :call TaskstackCompleteItem(g:completed_prefix)<CR>
     "au FileType *tst* imap <buffer> QQ <C-c>:call TaskstackCompleteItem(g:completed_prefix)<CR>
-    au FileType *tst* nmap <buffer> Nn :call TaskstackNewItemFromPaste()<CR>
+    au FileType *tst* nmap <buffer> Nn :call TaskstackNewProjectItem()<CR>
+    au FileType *tst* nmap <buffer> Np :call TaskstackNewProjectItemFromPaste()<CR>
+    au FileType *tst* nmap <buffer> NP :call TaskstackNewItemFromPaste()<CR>
     au FileType *tst* nmap <buffer> NN :call TaskstackNewItem()<CR>
     au FileType *tst* imap <buffer> NN <C-c>:call TaskstackNewItem()<CR>
     au FileType *tst* nmap <buffer> ZZ :call TaskstackHide()<CR>
