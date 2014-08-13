@@ -864,9 +864,15 @@ endfunction
 " }}}
 
 " Tasks: change status
-function! TaskstackNewItem() " {{{
+function! TaskstackNewProjectItem() " {{{
+    let l:project_name_line = TaskstackContainingProjectNameLine(line("."))
+    call TaskstackNewItemAt(l:project_name_line)
+endfunction
+
+" }}}
+function! TaskstackNewItemAt(line) " {{{
     call timestamp#autoUpdateBypass()
-    call TaskstackMain()
+    exe "normal " . (a:line + 1) . "G"
     call TaskstackSkipSticky()
     exe "normal o- "
     startinsert!
@@ -874,11 +880,23 @@ function! TaskstackNewItem() " {{{
 endfunction
 
 " }}}
-function! TaskstackNewItemFromPaste() " {{{
-    call timestamp#autoUpdateBypass()
+function! TaskstackNewItem() " {{{
     call TaskstackMain()
+    call TaskstackNewItemAt(line("."))
+endfunction
+
+" }}}
+function! TaskstackNewItemFromPasteAt(line) " {{{
+    call timestamp#autoUpdateBypass()
+    " TODO: detect if pasteboard is linewise and treat appropriately
     exe "normal o- \<Esc>p_w"
     call timestamp#autoUpdateEnable()
+endfunction
+
+" }}}
+function! TaskstackNewItemFromPaste() " {{{
+    call TaskstackMain()
+    call TaskstackNewItemFromPasteAt(line("."))
 endfunction
 
 " }}}
@@ -1028,6 +1046,21 @@ function! TodayNode() " {{{
 endfunction
 
 "}}}
+function! TaskstackContainingProjectNameLine(line) " {{{
+    let current = a:line
+    while current > 0 && !IsProjectHeaderLine(current)
+        let current = current - 1
+    endwhile
+    return current
+endfunction
+
+" }}}
+function! TaskstackDetectHeaderName(line) " {{{
+    let l:project_name = matchstr(getline(a:line), '\(' . ProjectRawMatchPattern() . '\|' . CategoryRawMatchPattern() . '\)')
+    return l:project_name
+endfunction
+
+" }}}
 function! TaskstackDetectProjectName(line) " {{{
     let l:project_name = matchstr(getline(a:line),'^\(. \|@\)\zs\(\<[-_.+[:alnum:]]*\>\.*\s*\)\{,3}\ze:')
     return l:project_name
@@ -1246,6 +1279,12 @@ endfunction
 function! IsAntiItemLine(line) " {{{
     let boundaryMatches = "^" . text#strip(CommentStringOpen()) . "\\s*\\w*\\s*\[}{]"
     return match(getline(a:line), boundaryMatches . "\\|" . "^$") + 1
+endfunction
+
+" }}}
+function! IsProjectHeaderLine(line) " {{{
+   let l:project = TaskstackDetectHeaderName(a:line)
+   return (len(l:project) > 0)
 endfunction
 
 " }}}
