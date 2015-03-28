@@ -124,6 +124,10 @@ function! startup#base()
         exe 'edit' self.docroot() . "scratch.scratch"
     endfun
 
+    fun! s:obj.slateApp() dict
+        exe 'edit' ".slate.js"
+    endfun
+
     fun s:obj.tasksApp() dict
         exe "edit " . self['TasksFile']()
         normal ggzo
@@ -195,6 +199,14 @@ function! startup#SAMSARA()
 
     fun! s:obj.class() dict
         return "samara.class"
+    endfun
+
+    fun! s:obj.slateApp() dict
+        exe 'edit' ".slate.js"
+        vsplit ~/.slate-layouts/office.js
+        vsplit ~/.slate-layouts/work-internal.js
+        windo set nolist
+        wincmd t | wincmd =
     endfun
 
     return s:obj.New()
