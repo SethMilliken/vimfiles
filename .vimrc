@@ -929,7 +929,12 @@ function! OpenURI(uri, success, failure) " {{{
           if len(matchstr(a:uri, '.*docs.google.com.*')) > 0
               exec "silent !open -b com.google.Chrome \"" . a:uri . "\""
           else
-              exec "silent !open \"" . a:uri . "\""
+              let l:urlier = glob("~/bin/urlier")
+              if filereadable(l:urlier)
+                exec "silent !~/bin/urlier -u \"" . a:uri . "\""
+              else
+                exec "silent !open \"" . a:uri . "\""
+              endif
           endif
       endif
       echomsg "Opened " . a:success  . ": " . a:uri
