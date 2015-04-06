@@ -1077,7 +1077,7 @@ augroup END
 "}}}
 " Scratch: " {{{
 let g:volatile_scratch_columns = 100
-let g:volatile_scratch_lines = 40
+let g:volatile_scratch_lines = 10
 
 function! EmailAddressList(ArgLead, CmdLine, CursorPos)
         return system("~/bin/addresses")
@@ -1130,19 +1130,33 @@ command! -nargs=* -complete=custom,EmailAddressList To call EmitEmailAddress("To
 command! -nargs=* -complete=custom,EmailAddressList Cc call EmitEmailAddress("Cc: ", <f-args>)
 command! -nargs=* Sub call text#insert_line("Subject: " . <q-args>)
 
-augroup VolatileScratch
-    au! BufRead *.scratch call SmallWindow()
-    au! BufRead *.scratch nmap <buffer> <silent> <C-m> :call SmallWindow()<CR>
+augroup VolatileScratch | au!
+    au BufRead *.scratch call SmallWindow()
+    au BufRead *.scratch nmap <buffer> <silent> <C-m> :call SmallWindow()<CR>
     au BufRead *.scratch nmap <buffer> <silent> <C-y>g :exec "set lines=999 columns=" . (g:gundo_width + &columns) \| :GundoToggle<CR>
     au BufRead *.scratch nmap <buffer> <silent> ZZ :wa \| :call ScratchCopy()<CR>
     au BufRead *.scratch nmap <buffer> <silent> ZZ :call ScratchCopy()<CR>
     au BufRead *.scratch nmap <buffer> <silent> :w<CR> :write \| :silent call ScratchCopy()<CR>
     au BufRead *.scratch imap <buffer> <silent> ZZ <Esc>ZZ
     au BufRead *.scratch vmap <buffer> <silent> ZZ <Esc>ZZ
-    au! FocusLost *.scratch call ScratchCopy()
-    au! FocusGained *.scratch call ScratchPaste()
-    au! VimResized *.scratch call SetColorColumnBorder() | :normal zz
+    au BufRead *.scratch doau FileType x.tst
+    au FocusLost *.scratch call ScratchCopy()
+    au FocusGained *.scratch call ScratchPaste()
+    au VimResized *.scratch call SetColorColumnBorder() | normal zz
 augroup END
+
+augroup Vimput | au!
+    au BufRead /private/var/folders/hf/* doau BufRead x.scratch
+    au BufRead /private/var/folders/hf/* startinsert
+    au FocusLost /private/var/folders/hf/* doau FocusLost x.scratch
+    au FocusGained /private/var/folders/hf/* doau FocusGained x.scratch
+    au VimResized /private/var/folders/hf/* doau VimResized x.scratch
+augroup END
+
+"augroup Vimput | au!
+    "au BufRead /private/var/folders/hf/* nested doau /private/var/folders/hf/*
+    "au BufRead /private/var/folders/hf/* call SmallWindow()
+"augroup END
 
 "}}}
 " Fuf: " {{{
