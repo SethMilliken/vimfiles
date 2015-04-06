@@ -1391,9 +1391,10 @@ augroup END
 let g:vimwiki_hl_headers = 1                " hilight header colors
 let g:vimwiki_hl_cb_checked = 1             " hilight todo item colors
 let g:vimwiki_list_ignore_newline = 0       " convert newlines to <br /> in list
-let g:vimwiki_folding = 1                   " outline folding
+let g:vimwiki_folding = 0                   " outline folding
 let g:vimwiki_table_auto_fmt = 0            " don't use and conflicts with snipMate
-let g:vimwiki_fold_lists = 1                " folding of list subitems
+let g:vimwiki_fold_lists = 0                " folding of list subitems
+let g:vimwiki_autowriteall = 0
 let g:vimwiki_file_exts = 'pdf,txt,doc,rtf,xls,php,zip,rar,7z,html,gz,vim,screen,tst'
 let g:vimwiki_valid_html_tags='b,i,s,u,sub,sup,kbd,br,hr,font,a,div,span'
 let g:vimwiki_list = [
@@ -1411,7 +1412,7 @@ let g:vimwiki_list = [
                 \'html_header': '~/sandbox/work/wiki/header.tpl',
                 \'html_footer': '~/sandbox/personal/vimwiki/footer.tpl',
                 \'maxhi': 0,
-                \'auto_export': 1,
+                \'auto_export': 0,
                 \},
             \{'path': '~/sandbox/vimscriptdev.info/admin/',
                 \'path_html': '~/sandbox/vimscriptdev.info/html/',
