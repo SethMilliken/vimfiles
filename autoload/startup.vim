@@ -236,6 +236,10 @@ function! startup#SETH()
         return $HOME . "/sandbox/work/"
     endfun
 
+    fun! s:obj.personalroot() dict
+        return $HOME . "/sandbox/personal/"
+    endfun
+
     fun! s:obj.todoApp() dict
         call AdjustFont(-2)
         exe 'edit' self.docroot() . "projects.tst"
@@ -243,6 +247,8 @@ function! startup#SETH()
 
     fun! s:obj.scratchApp() dict
         exe 'edit' self.docroot() . "scratch.scratch"
+        exe 'tabnew' self.personalroot() . "scratch.scratch"
+        tabfirst
     endfun
 
     fun! s:obj.slateApp() dict
