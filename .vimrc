@@ -1093,8 +1093,8 @@ function! SmallWindow()
     setlocal guioptions-=L
     setlocal guioptions-=r
     setlocal foldcolumn=0
-    setlocal guifont=Inconsolata:h13
-    setlocal transparency=15
+    setlocal guifont=Ubuntu\ Mono\ derivative\ Powerline:h16
+    setlocal transparency=0
     exec "set columns=" . g:volatile_scratch_columns . " lines=" . g:volatile_scratch_lines
     call SetColorColumnBorder()
     if exists('g:gundo_target_n')
