@@ -2104,6 +2104,13 @@ call Clipboard()
 " Morning Pages " {{{
 let g:progress = glob("~/.vim/swap/reading_progress.txt")
 let g:pages_dir = glob("~/sandbox/personal/zaurus/zlog/")
+
+augroup MorningPages | au!
+   if bufname("%") =~ '\d\d\d\d-\d\d-\(index\|\d\d\).txt'
+    au BufReadPost * call WritingMappings()
+   end
+augroup END
+
 command! Writing :call WritingMappings()
 function! WritingMappings() " {{{
     if bufname("%") == TocName()
