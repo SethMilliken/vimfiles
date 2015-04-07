@@ -750,34 +750,38 @@ endfunction
 function! CreateNodeUnderNodeIfMissing(nodename, previous_node_name) " {{{
     let l:origview = winsaveview()
     if FindNode(a:nodename) == 0
-            if a:previous_node_name != ""
-                    if FindNode(a:previous_node_name) == 0
-                            call CreateNodeUnderNodeIfMissing(a:previous_node_name, "")
-                    end
-                    call FoldUnfolded()
-                    normal o
-            else
-                    normal ggO
-                    normal k
+        if a:previous_node_name != ""
+            if FindNode(a:previous_node_name) == 0
+                call CreateNodeUnderNodeIfMissing(a:previous_node_name, "")
             end
-            exe "normal I" . a:nodename
-            call FoldWrap()
             call FoldUnfolded()
+            normal o
+        else
+            normal ggO
+            normal k
+        end
+        exe "normal I" . a:nodename
+        call FoldWrap()
+        call FoldUnfolded()
     end
     call winrestview(l:origview)
 endfunction
 
 " }}}
-function! TaskstackMain() " {{{
+function! TaskstackMain(...) " {{{
     " silent! wincmd t
-    if FindNode(s:main_node_name) == 0
-        normal gg
-        if len(getline(".")) == 0
-            call text#append(s:main_node_name)
+    if NodeLocation(s:main_node_name) == 0
+        if a:000[0] == "nocreate"
+            normal 1G
         else
-            exe "normal O" . s:main_node_name
+            normal gg
+            if len(getline(".")) == 0
+                call text#append(s:main_node_name)
+            else
+                exe "normal O" . s:main_node_name
+            end
+            call FoldWrap()
         end
-        call FoldWrap()
     end
     call FindNode(s:main_node_name)
     silent! normal zo
@@ -872,16 +876,22 @@ endfunction
 " }}}
 function! TaskstackNewItemAt(line) " {{{
     call timestamp#autoUpdateBypass()
-    exe "normal " . (a:line + 1) . "G"
-    call TaskstackSkipSticky()
-    exe "normal o- "
-    startinsert!
+    if a:line == 0
+        call append(0, [''])
+        normal 1G
+        exe 'normal O' | startinsert
+    else
+        exe "normal " . (a:line + 1) . "G"
+        call TaskstackSkipSticky()
+        exe "normal o- "
+        startinsert!
+    end
     call timestamp#autoUpdateEnable()
 endfunction
 
 " }}}
 function! TaskstackNewItem() " {{{
-    call TaskstackMain()
+    call TaskstackMain("nocreate")
     call TaskstackNewItemAt(line("."))
 endfunction
 
@@ -1056,7 +1066,7 @@ endfunction
 
 " }}}
 function! TaskstackDetectHeaderName(line) " {{{
-    let l:project_name = matchstr(getline(a:line), '\(' . ProjectRawMatchPattern() . '\|' . CategoryRawMatchPattern() . '\)')
+    let l:project_name = matchstr(getline(a:line), '\(' . ProjectRawMatchPattern() . '\|' . CategoryRawMatchPattern() . '\)' . FoldMarkerOpen())
     return l:project_name
 endfunction
 

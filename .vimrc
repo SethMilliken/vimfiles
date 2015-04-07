@@ -929,7 +929,12 @@ function! OpenURI(uri, success, failure) " {{{
           if len(matchstr(a:uri, '.*docs.google.com.*')) > 0
               exec "silent !open -b com.google.Chrome \"" . a:uri . "\""
           else
-              exec "silent !open \"" . a:uri . "\""
+              let l:urlier = glob("~/bin/urlier")
+              if filereadable(l:urlier)
+                exec "silent !~/bin/urlier -u \"" . a:uri . "\""
+              else
+                exec "silent !open \"" . a:uri . "\""
+              endif
           endif
       endif
       echomsg "Opened " . a:success  . ": " . a:uri
@@ -1072,7 +1077,7 @@ augroup END
 "}}}
 " Scratch: " {{{
 let g:volatile_scratch_columns = 100
-let g:volatile_scratch_lines = 40
+let g:volatile_scratch_lines = 10
 
 function! EmailAddressList(ArgLead, CmdLine, CursorPos)
         return system("~/bin/addresses")
@@ -1125,19 +1130,33 @@ command! -nargs=* -complete=custom,EmailAddressList To call EmitEmailAddress("To
 command! -nargs=* -complete=custom,EmailAddressList Cc call EmitEmailAddress("Cc: ", <f-args>)
 command! -nargs=* Sub call text#insert_line("Subject: " . <q-args>)
 
-augroup VolatileScratch
-    au! BufRead *.scratch call SmallWindow()
-    au! BufRead *.scratch nmap <buffer> <silent> <C-m> :call SmallWindow()<CR>
+augroup VolatileScratch | au!
+    au BufRead *.scratch call SmallWindow()
+    au BufRead *.scratch nmap <buffer> <silent> <C-m> :call SmallWindow()<CR>
     au BufRead *.scratch nmap <buffer> <silent> <C-y>g :exec "set lines=999 columns=" . (g:gundo_width + &columns) \| :GundoToggle<CR>
     au BufRead *.scratch nmap <buffer> <silent> ZZ :wa \| :call ScratchCopy()<CR>
     au BufRead *.scratch nmap <buffer> <silent> ZZ :call ScratchCopy()<CR>
     au BufRead *.scratch nmap <buffer> <silent> :w<CR> :write \| :silent call ScratchCopy()<CR>
     au BufRead *.scratch imap <buffer> <silent> ZZ <Esc>ZZ
     au BufRead *.scratch vmap <buffer> <silent> ZZ <Esc>ZZ
-    au! FocusLost *.scratch call ScratchCopy()
-    au! FocusGained *.scratch call ScratchPaste()
-    au! VimResized *.scratch call SetColorColumnBorder() | :normal zz
+    au BufRead *.scratch doau FileType x.tst
+    au FocusLost *.scratch call ScratchCopy()
+    au FocusGained *.scratch call ScratchPaste()
+    au VimResized *.scratch call SetColorColumnBorder() | normal zz
 augroup END
+
+augroup Vimput | au!
+    au BufRead /private/var/folders/hf/* doau BufRead x.scratch
+    au BufRead /private/var/folders/hf/* startinsert
+    au FocusLost /private/var/folders/hf/* doau FocusLost x.scratch
+    au FocusGained /private/var/folders/hf/* doau FocusGained x.scratch
+    au VimResized /private/var/folders/hf/* doau VimResized x.scratch
+augroup END
+
+"augroup Vimput | au!
+    "au BufRead /private/var/folders/hf/* nested doau /private/var/folders/hf/*
+    "au BufRead /private/var/folders/hf/* call SmallWindow()
+"augroup END
 
 "}}}
 " Fuf: " {{{
@@ -1372,9 +1391,10 @@ augroup END
 let g:vimwiki_hl_headers = 1                " hilight header colors
 let g:vimwiki_hl_cb_checked = 1             " hilight todo item colors
 let g:vimwiki_list_ignore_newline = 0       " convert newlines to <br /> in list
-let g:vimwiki_folding = 1                   " outline folding
+let g:vimwiki_folding = 0                   " outline folding
 let g:vimwiki_table_auto_fmt = 0            " don't use and conflicts with snipMate
-let g:vimwiki_fold_lists = 1                " folding of list subitems
+let g:vimwiki_fold_lists = 0                " folding of list subitems
+let g:vimwiki_autowriteall = 0
 let g:vimwiki_file_exts = 'pdf,txt,doc,rtf,xls,php,zip,rar,7z,html,gz,vim,screen,tst'
 let g:vimwiki_valid_html_tags='b,i,s,u,sub,sup,kbd,br,hr,font,a,div,span'
 let g:vimwiki_list = [
@@ -1392,7 +1412,7 @@ let g:vimwiki_list = [
                 \'html_header': '~/sandbox/work/wiki/header.tpl',
                 \'html_footer': '~/sandbox/personal/vimwiki/footer.tpl',
                 \'maxhi': 0,
-                \'auto_export': 1,
+                \'auto_export': 0,
                 \},
             \{'path': '~/sandbox/vimscriptdev.info/admin/',
                 \'path_html': '~/sandbox/vimscriptdev.info/html/',

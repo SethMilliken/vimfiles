@@ -163,7 +163,7 @@ function! startup#base()
 
     fun! s:obj.app() dict
         if !exists('g:vim_app_name')
-            if strlen(v:servername) > 0 && !(match(v:servername, "VIM") > -1)
+            if strlen(v:servername) > 0 && !match(v:servername, "^VIM$") == 0
                 let g:vim_app_name = v:servername
             elseif match($VIMRUNTIME, '\.app') > 0
                 let g:vim_app_name = split(split($VIMRUNTIME, '\.app')[0], '/')[1]
@@ -248,6 +248,10 @@ function! startup#SETH()
         return $HOME . "/sandbox/work/"
     endfun
 
+    fun! s:obj.personalroot() dict
+        return $HOME . "/sandbox/personal/"
+    endfun
+
     fun! s:obj.todoApp() dict
         call AdjustFont(-2)
         exe 'edit' self.docroot() . "projects.tst"
@@ -255,6 +259,8 @@ function! startup#SETH()
 
     fun! s:obj.scratchApp() dict
         exe 'edit' self.docroot() . "scratch.scratch"
+        exe 'tabnew' self.personalroot() . "scratch.scratch"
+        tabfirst
     endfun
 
     fun! s:obj.slateApp() dict
