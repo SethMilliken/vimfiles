@@ -1320,7 +1320,9 @@ endfunction
 
 " }}}
 function! Notify(headline,contents) " {{{
-    silent! exec ':!notify taskstack "false" "' . a:contents. '" "' . a:headline . '"'
+    let l:command = ':!notify taskstack "false" "' . a:contents. '" "' . a:headline . '"'
+    silent! exec l:command
+    redraw!
 endfunction
 
 " }}}
