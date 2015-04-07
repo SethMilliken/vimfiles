@@ -750,34 +750,38 @@ endfunction
 function! CreateNodeUnderNodeIfMissing(nodename, previous_node_name) " {{{
     let l:origview = winsaveview()
     if FindNode(a:nodename) == 0
-            if a:previous_node_name != ""
-                    if FindNode(a:previous_node_name) == 0
-                            call CreateNodeUnderNodeIfMissing(a:previous_node_name, "")
-                    end
-                    call FoldUnfolded()
-                    normal o
-            else
-                    normal ggO
-                    normal k
+        if a:previous_node_name != ""
+            if FindNode(a:previous_node_name) == 0
+                call CreateNodeUnderNodeIfMissing(a:previous_node_name, "")
             end
-            exe "normal I" . a:nodename
-            call FoldWrap()
             call FoldUnfolded()
+            normal o
+        else
+            normal ggO
+            normal k
+        end
+        exe "normal I" . a:nodename
+        call FoldWrap()
+        call FoldUnfolded()
     end
     call winrestview(l:origview)
 endfunction
 
 " }}}
-function! TaskstackMain() " {{{
+function! TaskstackMain(...) " {{{
     " silent! wincmd t
-    if FindNode(s:main_node_name) == 0
-        normal gg
-        if len(getline(".")) == 0
-            call text#append(s:main_node_name)
+    if NodeLocation(s:main_node_name) == 0
+        if a:000[0] == "nocreate"
+            normal 1G
         else
-            exe "normal O" . s:main_node_name
+            normal gg
+            if len(getline(".")) == 0
+                call text#append(s:main_node_name)
+            else
+                exe "normal O" . s:main_node_name
+            end
+            call FoldWrap()
         end
-        call FoldWrap()
     end
     call FindNode(s:main_node_name)
     silent! normal zo
@@ -864,21 +868,45 @@ endfunction
 " }}}
 
 " Tasks: change status
-function! TaskstackNewItem() " {{{
+function! TaskstackNewProjectItem() " {{{
+    let l:project_name_line = TaskstackContainingProjectNameLine(line("."))
+    call TaskstackNewItemAt(l:project_name_line)
+endfunction
+
+" }}}
+function! TaskstackNewItemAt(line) " {{{
     call timestamp#autoUpdateBypass()
-    call TaskstackMain()
-    call TaskstackSkipSticky()
-    exe "normal o- "
-    startinsert!
+    if a:line == 0
+        call append(0, [''])
+        normal 1G
+        exe 'normal O' | startinsert
+    else
+        exe "normal " . (a:line + 1) . "G"
+        call TaskstackSkipSticky()
+        exe "normal o- "
+        startinsert!
+    end
+    call timestamp#autoUpdateEnable()
+endfunction
+
+" }}}
+function! TaskstackNewItem() " {{{
+    call TaskstackMain("nocreate")
+    call TaskstackNewItemAt(line("."))
+endfunction
+
+" }}}
+function! TaskstackNewItemFromPasteAt(line) " {{{
+    call timestamp#autoUpdateBypass()
+    " TODO: detect if pasteboard is linewise and treat appropriately
+    exe "normal o- \<Esc>p_w"
     call timestamp#autoUpdateEnable()
 endfunction
 
 " }}}
 function! TaskstackNewItemFromPaste() " {{{
-    call timestamp#autoUpdateBypass()
     call TaskstackMain()
-    exe "normal o- \<Esc>p_w"
-    call timestamp#autoUpdateEnable()
+    call TaskstackNewItemFromPasteAt(line("."))
 endfunction
 
 " }}}
@@ -1028,6 +1056,21 @@ function! TodayNode() " {{{
 endfunction
 
 "}}}
+function! TaskstackContainingProjectNameLine(line) " {{{
+    let current = a:line
+    while current > 0 && !IsProjectHeaderLine(current)
+        let current = current - 1
+    endwhile
+    return current
+endfunction
+
+" }}}
+function! TaskstackDetectHeaderName(line) " {{{
+    let l:project_name = matchstr(getline(a:line), '\(' . ProjectRawMatchPattern() . '\|' . CategoryRawMatchPattern() . '\)' . FoldMarkerOpen())
+    return l:project_name
+endfunction
+
+" }}}
 function! TaskstackDetectProjectName(line) " {{{
     let l:project_name = matchstr(getline(a:line),'^\(. \|@\)\zs\(\<[-_.+[:alnum:]]*\>\.*\s*\)\{,3}\ze:')
     return l:project_name
@@ -1246,6 +1289,12 @@ endfunction
 function! IsAntiItemLine(line) " {{{
     let boundaryMatches = "^" . text#strip(CommentStringOpen()) . "\\s*\\w*\\s*\[}{]"
     return match(getline(a:line), boundaryMatches . "\\|" . "^$") + 1
+endfunction
+
+" }}}
+function! IsProjectHeaderLine(line) " {{{
+   let l:project = TaskstackDetectHeaderName(a:line)
+   return (len(l:project) > 0)
 endfunction
 
 " }}}

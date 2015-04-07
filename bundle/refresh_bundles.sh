@@ -5,6 +5,10 @@
 # -n only clones new additions, no updates.
 #
 # TODO: rewrite in ruby; check for present directories without a corresponding entry
+#
+# K to add entry for git clone URL on clipboard
+# \<CR> to sort selection
+#
 DEBUG=
 #DEBUG=echo
 ARG=$1
@@ -20,7 +24,7 @@ function refresh {
         else
             echo ""
             pushd ${NAME} &> /dev/null
-            ${DEBUG} git f && ${DEBUG} git up
+            ${DEBUG} git fetch --all -q && (${DEBUG} git up &> /dev/null)
             popd &> /dev/null
         fi
     else
@@ -50,10 +54,13 @@ function oldfork {
 
 #refresh    vim-powerline        git@github.com:SethMilliken/vim-powerline.git
 #warning    syntastic            git://github.com/sjl/syntastic.git
+
 oldfork    gundo                git@github.com:SethMilliken/gundo.vim.git
 oldfork    snipmate             git://github.com/spf13/snipmate.vim.git
+oldfork    sparkup              git://github.com/kogakure/vim-sparkup.git
 oldfork    tagbar               git@github.com:SethMilliken/tagbar.git
 oldfork    tlib-seth            git@github.com:SethMilliken/tlib_vim.git
+oldfork    tmux                 git://github.com/VimEz/Tmux.git
 refresh    .pathogen-raimondi   git://github.com/Raimondi/vim-pathogen.git
 refresh    UltiSnips            git://github.com/vim-scripts/UltiSnips.git
 refresh    abolish              git://github.com/tpope/vim-abolish.git
@@ -72,7 +79,6 @@ refresh    gitv                 git://github.com/gregsexton/gitv.git
 refresh    gundo                git://github.com/sjl/gundo.vim.git
 refresh    hexhighlight         git://github.com/yurifury/hexHighlight.git
 refresh    javaScriptLint       git://github.com/smith/javaScriptLint.vim.git               'brew install jsl'
-refresh    javascript           git://github.com/serverhorror/javascript.vim.git
 refresh    jslint               git://github.com/vim-scripts/jslint.vim.git
 refresh    kellys               git://github.com/vim-scripts/kellys.git
 refresh    l9                   git://github.com/slack/vim-l9.git
@@ -88,10 +94,10 @@ refresh    puppet-syntax-vim    git://github.com/puppetlabs/puppet-syntax-vim.gi
 refresh    rails                git://github.com/tpope/vim-rails.git
 refresh    ruby-matchit         git://github.com/vim-scripts/ruby-matchit.git
 refresh    screenshot           git://github.com/vim-scripts/ScreenShot.git
-refresh    sessionman           git://github.com/vim-scripts/sessionman.git
+refresh    sessionman           git://github.com/vim-scripts/sessionman.vim.git
 refresh    snipmate             git://github.com/garbas/vim-snipmate.git
 refresh    space                git://github.com/spiiph/vim-space.git
-refresh    sparkup              git://github.com/kogakure/vim-sparkup.git
+refresh    sparkup              git://github.com/rstacruz/sparkup.git
 refresh    splice               git://github.com/sjl/splice.vim.git
 refresh    statuslinehighlight  git://github.com/vim-scripts/StatusLineHighlight.git
 refresh    surround             git://github.com/vim-scripts/surround.vim.git
@@ -102,18 +108,23 @@ refresh    textobj-function     git://github.com/kana/vim-textobj-function.git
 refresh    textobj-rubyblock    git://github.com/nelstrom/vim-textobj-rubyblock.git
 refresh    textobj-user         git://github.com/kana/vim-textobj-user.git
 refresh    tlib                 git://github.com/tomtom/tlib_vim.git
-refresh    tmux                 git://github.com/VimEz/Tmux.git
+refresh    tmux                 git://github.com/Keithbsmiley/tmux.vim.git
 refresh    twitvim              git://github.com/vim-scripts/TwitVim.git
 refresh    viki                 git://github.com/tomtom/viki_vim.git
 refresh    vim-addon-async      git://github.com/MarcWeber/vim-addon-async.git
 refresh    vim-addon-manager    git://github.com/MarcWeber/vim-addon-manager.git
 refresh    vim-addon-mw-utils   git://github.com/MarcWeber/vim-addon-mw-utils.git
-refresh    vim-airline          git@github.com:bling/vim-airline.git
+refresh    vim-airline          git://github.com:bling/vim-airline.git
+refresh    vim-flake8           git://github.com/nvie/vim-flake8.git                         'pip install flake8'
+refresh    vim-javascript       git://github.com/pangloss/vim-javascript.git
 refresh    vim-javascript       git://github.com/pangloss/vim-javascript.git
 refresh    vim-ruby             git://github.com/vim-ruby/vim-ruby.git
 refresh    vim-scala            git://github.com/derekwyatt/vim-scala.git
-refresh    vim-signify          git@github.com:mhinz/vim-signify.git
+refresh    vim-signify          git://github.com/mhinz/vim-signify.git
 refresh    vim-traitor          git@github.com:SethMilliken/vim-traitor.git
+refresh    vim-vagrant          git://github.com/markcornick/vim-vagrant.git
+refresh    vim-virtualenv       git://github.com/jmcantrell/vim-virtualenv.git
+refresh    vimpager             git://github.com/rkitover/vimpager.git
 refresh    vimple               git://github.com/dahu/vimple.git
 refresh    vimwiki              git://github.com/vim-scripts/vimwiki.git
 refresh    vundle               git://github.com/vim-scripts/vundle.git
@@ -123,6 +134,7 @@ warning    conque               git://github.com/rson/vim-conque.git
 warning    csapprox             git://github.com/godlygeek/csapprox.git
 warning    dbext                git://github.com/vim-scripts/dbext.vim.git
 warning    delimitMate          git://github.com/Raimondi/delimitMate.git
+warning    javascript           git://github.com/serverhorror/javascript.vim.git
 warning    scala                git://github.com/vim-scripts/scala.vim.git
 warning    script-ed            ssh://seth@at.araxia.net/~/git/script-ed.git
 warning    threesome            git://github.com/sjl/threesome.vim.git

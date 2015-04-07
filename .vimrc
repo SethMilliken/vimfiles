@@ -164,11 +164,12 @@ set foldopen+=jump                  " jumps open folds, too
 set display+=lastline               " always show as much of the last line as possible
 set guioptions+=c                   " always use console dialogs (faster)
 set guioptions-=m                   " no menu
+set guioptions-=T                   " no menu
 set noerrorbells                    " don't need to hear if i hit esc twice
 set visualbell | set t_vb=          " ...nor see it
 set ignorecase                      " case ignored for searches
 set smartcase                       " override ignorecase for searches with uppercase
-set clipboard=unnamed               " share os pasteboard
+"set clipboard=unnamed               " share os pasteboard
 set cursorline                      " highlight current line
 set wildmenu                        " show completion options
 set autoread                        " automatically reread fs changed files *autoread*
@@ -245,8 +246,11 @@ vmap <BS> :normal! gv"_x<CR>
 vmap dC :normal gv"_xP<CR>
 "nnoremap <Leader>p :call text#append_line(getreg("*"), "below")<CR>
 "nnoremap <Leader>P :call text#append_line(getreg("*"), "above")<CR>
-nnoremap <expr> <Leader>p ':put ' . v:register . '<CR>'
-nnoremap <expr> <Leader>P ':put! ' . v:register . '<CR>'
+"nnoremap <expr> <Leader>p ':put ' . v:register . '<CR>'
+"nnoremap <expr> <Leader>P ':put! ' . v:register . '<CR>'
+"nnoremap <Leader>y :call setreg("*", @0) \| echo "Pasteboard transferred to system clipboard."<CR>
+nnoremap <expr> <Leader>p ':set cb=unnamed \| :put * \| set cb=<CR>'
+nnoremap <expr> <Leader>P ':set cb=unnamed \| :put! * \| set cb=<CR>'
 
 " sane-itize Y
 map Y y$
@@ -925,7 +929,12 @@ function! OpenURI(uri, success, failure) " {{{
           if len(matchstr(a:uri, '.*docs.google.com.*')) > 0
               exec "silent !open -b com.google.Chrome \"" . a:uri . "\""
           else
-              exec "silent !open \"" . a:uri . "\""
+              let l:urlier = glob("~/bin/urlier")
+              if filereadable(l:urlier)
+                exec "silent !~/bin/urlier -u \"" . a:uri . "\""
+              else
+                exec "silent !open \"" . a:uri . "\""
+              endif
           endif
       endif
       echomsg "Opened " . a:success  . ": " . a:uri
@@ -1036,7 +1045,9 @@ augroup TaskStack | au!
     "au FileType *tst* imap <buffer> XX <C-c>:call TaskstackCompleteItem(g:aborted_prefix)<CR>
     "au FileType *tst* nmap <buffer> QQ :call TaskstackCompleteItem(g:completed_prefix)<CR>
     "au FileType *tst* imap <buffer> QQ <C-c>:call TaskstackCompleteItem(g:completed_prefix)<CR>
-    au FileType *tst* nmap <buffer> Nn :call TaskstackNewItemFromPaste()<CR>
+    au FileType *tst* nmap <buffer> Nn :call TaskstackNewProjectItem()<CR>
+    au FileType *tst* nmap <buffer> Np :call TaskstackNewProjectItemFromPaste()<CR>
+    au FileType *tst* nmap <buffer> NP :call TaskstackNewItemFromPaste()<CR>
     au FileType *tst* nmap <buffer> NN :call TaskstackNewItem()<CR>
     au FileType *tst* imap <buffer> NN <C-c>:call TaskstackNewItem()<CR>
     au FileType *tst* nmap <buffer> ZZ :call TaskstackHide()<CR>
@@ -1066,7 +1077,7 @@ augroup END
 "}}}
 " Scratch: " {{{
 let g:volatile_scratch_columns = 100
-let g:volatile_scratch_lines = 40
+let g:volatile_scratch_lines = 10
 
 function! EmailAddressList(ArgLead, CmdLine, CursorPos)
         return system("~/bin/addresses")
@@ -1082,8 +1093,8 @@ function! SmallWindow()
     setlocal guioptions-=L
     setlocal guioptions-=r
     setlocal foldcolumn=0
-    setlocal guifont=Inconsolata:h13
-    setlocal transparency=15
+    setlocal guifont=Ubuntu\ Mono\ derivative\ Powerline:h16
+    setlocal transparency=0
     exec "set columns=" . g:volatile_scratch_columns . " lines=" . g:volatile_scratch_lines
     call SetColorColumnBorder()
     if exists('g:gundo_target_n')
@@ -1099,6 +1110,9 @@ endfunction
 function! ScratchCopy()
     if &modified == 1
         silent write
+    endif
+    if has("gui_macvim")
+        macaction hide:
     endif
     "exec ":0,$y"
 endfunction
@@ -1116,19 +1130,33 @@ command! -nargs=* -complete=custom,EmailAddressList To call EmitEmailAddress("To
 command! -nargs=* -complete=custom,EmailAddressList Cc call EmitEmailAddress("Cc: ", <f-args>)
 command! -nargs=* Sub call text#insert_line("Subject: " . <q-args>)
 
-augroup VolatileScratch
-    au! BufRead *.scratch call SmallWindow()
-    au! BufRead *.scratch nmap <buffer> <silent> <C-m> :call SmallWindow()<CR>
+augroup VolatileScratch | au!
+    au BufRead *.scratch call SmallWindow()
+    au BufRead *.scratch nmap <buffer> <silent> <C-m> :call SmallWindow()<CR>
     au BufRead *.scratch nmap <buffer> <silent> <C-y>g :exec "set lines=999 columns=" . (g:gundo_width + &columns) \| :GundoToggle<CR>
-    au BufRead *.scratch nmap <buffer> <silent> ZZ :wa \| :call ScratchCopy()<CR> \| :macaction hide:<CR>
-    au BufRead *.scratch nmap <buffer> <silent> ZZ :call ScratchCopy()<CR> \| :macaction hide:<CR>
+    au BufRead *.scratch nmap <buffer> <silent> ZZ :wa \| :call ScratchCopy()<CR>
+    au BufRead *.scratch nmap <buffer> <silent> ZZ :call ScratchCopy()<CR>
     au BufRead *.scratch nmap <buffer> <silent> :w<CR> :write \| :silent call ScratchCopy()<CR>
     au BufRead *.scratch imap <buffer> <silent> ZZ <Esc>ZZ
     au BufRead *.scratch vmap <buffer> <silent> ZZ <Esc>ZZ
-    au! FocusLost *.scratch call ScratchCopy()
-    au! FocusGained *.scratch call ScratchPaste()
-    au! VimResized *.scratch call SetColorColumnBorder() | :normal zz
+    au BufRead *.scratch doau FileType x.tst
+    au FocusLost *.scratch call ScratchCopy()
+    au FocusGained *.scratch call ScratchPaste()
+    au VimResized *.scratch call SetColorColumnBorder() | normal zz
 augroup END
+
+augroup Vimput | au!
+    au BufRead /private/var/folders/hf/* doau BufRead x.scratch
+    au BufRead /private/var/folders/hf/* startinsert
+    au FocusLost /private/var/folders/hf/* doau FocusLost x.scratch
+    au FocusGained /private/var/folders/hf/* doau FocusGained x.scratch
+    au VimResized /private/var/folders/hf/* doau VimResized x.scratch
+augroup END
+
+"augroup Vimput | au!
+    "au BufRead /private/var/folders/hf/* nested doau /private/var/folders/hf/*
+    "au BufRead /private/var/folders/hf/* call SmallWindow()
+"augroup END
 
 "}}}
 " Fuf: " {{{
@@ -1248,10 +1276,6 @@ augroup Shell | au!
 augroup END
 
 " }}}
-" Python Syntax: " {{{
-let python_highlight_all = 1
-
-" }}}
 " PickAColor: " {{{
 let g:pickacolor_use_web_colors = 1
 " }}}
@@ -1290,12 +1314,20 @@ augroup BufExplorerAdd | au!
 augroup END
 
 " }}}
-" Pydiction: " {{{
-let g:pydiction_location = '~/.vim/complete-dict'
-
-" }}}
 " Paster: " {{{
 let g:PASTER_BROWSER_COMMAND = 'open'
+
+" }}}
+" Python " {{{
+augroup Python | au!
+    au BufWritePost *.py if exists("*Flake8") == 1 | call Flake8() | endif
+augroup END
+" Python Syntax: " {{{
+let python_highlight_all = 1
+
+" }}}
+" Pydiction: " {{{
+let g:pydiction_location = '~/.vim/complete-dict'
 
 " }}}
 " Rope: " {{{
@@ -1304,6 +1336,13 @@ let g:PASTER_BROWSER_COMMAND = 'open'
 let $PATH .= ';C:\Python24\'
 let $PYTHONPATH = 'C:\Python24\'
 
+" }}}
+" Flake8: " {{{
+let g:flake8_max_line_length=99
+let g:flake8_quickfix_location="topleft"
+"let g:flake8_max_complexity=10
+
+" }}}
 " }}}
 " SnipMate: " {{{
 let g:snips_author = 'Seth Milliken'
@@ -1352,9 +1391,10 @@ augroup END
 let g:vimwiki_hl_headers = 1                " hilight header colors
 let g:vimwiki_hl_cb_checked = 1             " hilight todo item colors
 let g:vimwiki_list_ignore_newline = 0       " convert newlines to <br /> in list
-let g:vimwiki_folding = 1                   " outline folding
+let g:vimwiki_folding = 0                   " outline folding
 let g:vimwiki_table_auto_fmt = 0            " don't use and conflicts with snipMate
-let g:vimwiki_fold_lists = 1                " folding of list subitems
+let g:vimwiki_fold_lists = 0                " folding of list subitems
+let g:vimwiki_autowriteall = 0
 let g:vimwiki_file_exts = 'pdf,txt,doc,rtf,xls,php,zip,rar,7z,html,gz,vim,screen,tst'
 let g:vimwiki_valid_html_tags='b,i,s,u,sub,sup,kbd,br,hr,font,a,div,span'
 let g:vimwiki_list = [
@@ -1372,7 +1412,7 @@ let g:vimwiki_list = [
                 \'html_header': '~/sandbox/work/wiki/header.tpl',
                 \'html_footer': '~/sandbox/personal/vimwiki/footer.tpl',
                 \'maxhi': 0,
-                \'auto_export': 1,
+                \'auto_export': 0,
                 \},
             \{'path': '~/sandbox/vimscriptdev.info/admin/',
                 \'path_html': '~/sandbox/vimscriptdev.info/html/',
@@ -1780,7 +1820,7 @@ map <Leader><S-CR> :call feedkeys("\"tyyq:\"tp\r", "n")<CR>
 
 " Automatic Behavior Per MacVim Instance: " {{{
 augroup Startup | au!
-    au VimEnter * au! SwapExists * exe startup#handler().swapchoice()
+    au VimEnter * silent! exe startup#handler().swapchoice()
     au VimEnter * nested silent! call startup#handler().handle()
     au VimEnter * augroup! Startup
 augroup END
@@ -1972,6 +2012,7 @@ endfunction
 command! Herenow :call Herenow()
 function! Herenow() " {{{
     exec ":lcd " . expand("%:p:h")
+    let b:git_dir = fugitive#extract_git_dir(expand('%:p'))
     echo "cwd now: " . getcwd()
 endfunction
 
@@ -1983,9 +2024,9 @@ function! Checkin(...) " {{{
     if CheckinCheckup()
         call Herenow()
         if len(message) > 0
-            exe ":Gcommit % -m\'" . message . "\'"
+            exe ":Gcommit %:p -m\'" . message . "\'"
         else
-            exe ":Gcommit -v %" | wincmd T
+            exe ":Gcommit -v %:p" | wincmd T
         endif
     endif
 endfunction
@@ -2012,11 +2053,11 @@ endfunction
 " }}}
 
 " }}}
+" Scala {{{
   fun! SBT_JAR()
     return "/usr/local/Cellar/sbt/0.11.3/libexec/sbt-launch.jar"
   endfun
 
-" scala
 
 let g:tagbar_type_scala = {
     \ 'ctagstype' : 'Scala',
@@ -2034,11 +2075,35 @@ let g:tagbar_type_scala = {
     \ ]
 \ }
 
+" }}}
+
 let g:syntastic_puppet_lint_arguments = '--no-80chars-check '
 
-let $JS_CMD='node'
+function! ConfigureNodeJs()
+    for c in ['nodejs', 'node']
+        if filereadable(split(system('which ' . c), '\n', 1)[0])
+            let $JS_CMD = c
+            break
+        end
+    endfor
+    return $JS_CMD
+endfunction
+call ConfigureNodeJs()
 
+" Dynamic 'cb' setting " {{{
+function! Clipboard()
+    if match(system("uname"), "Linux") > -1
+        set clipboard=
+    else
+        set clipboard=unnamed
+    endif
+endfunction
+call Clipboard()
+
+" }}}
 " Morning Pages " {{{
+let g:progress = glob("~/.vim/swap/reading_progress.txt")
+let g:pages_dir = glob("~/sandbox/personal/zaurus/zlog/")
 command! Writing :call WritingMappings()
 function! WritingMappings() " {{{
     if bufname("%") == TocName()
@@ -2055,6 +2120,47 @@ function! WritingMappings() " {{{
 endfunction
 
 "}}}
+command! Reading :call ReadingMappings()
+function! ReadingMappings() " {{{
+    if bufname("%") == TocName()
+        set nocursorline nowrap nolist
+    else
+        set nocursorline wrap nolist spell
+    end
+    exe "cd " . g:pages_dir
+    if ProgressFileExists()
+        let lines = readfile(g:progress)
+        let current_entry = lines[0]
+        if strwidth(current_entry) > 0
+            exe "edit " . g:pages_dir . current_entry
+            if exists(":NERDTreeToggle") == 2
+                NERDTreeToggle
+                call search(current_entry)
+            end
+        end
+        exec 'map QQ :call UpdateReadingProgress()<CR>'
+    end
+endfunction
+
+"}}}
+command! UpdateReadingProgress :call UpdateReadingProgress()
+function! UpdateReadingProgress() " {{{
+    if ProgressFileExists()
+        let file_name = fnamemodify(expand("%"), ":p:t")
+        if strwidth(file_name) > 0 && IsPagesFile(file_name)
+            let lines = [file_name]
+            call writefile(lines, g:progress)
+            echo "Updated reading progress to: " . file_name
+        end
+    end
+endfunction
+
+"}}}
+function! ProgressFileExists() " {{{
+    return filereadable(g:progress)
+endfunction
+
+"}}}
 function! NotesToggle() " {{{
     call BufferToggle("notes.txt")
 endfunction
@@ -2067,6 +2173,11 @@ endfunction
 "}}}
 function! PagesToggle() " {{{
     call BufferToggle(timestamp#text("date") . ".txt")
+endfunction
+
+"}}}
+function! IsPagesFile(name) " {{{
+    return match(a:name, '[0-9]\{4}-[0-9]\{2}-[0-9]\{2}\.txt') > -1
 endfunction
 
 "}}}

@@ -7,3 +7,4 @@ sessions/
 bundled_plugins
 *tags*
 view/
+spell/*.spl

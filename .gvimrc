@@ -4,7 +4,7 @@
 if version < 700 || exists("g:loaded_gvimrc")
     finish
 end
-" let g:loaded_gvimrc = 1
+let g:loaded_gvimrc = 1
 
 " }}}
 
@@ -93,7 +93,9 @@ if has("gui_macvim")
     " set transparency=5
     set antialias
     " set guifont=Inconsolata:h15
-    set guifont=Inconsolata\ for\ Powerline:h13
+    " set guifont=Inconsolata\ for\ Powerline:h13
+    set guifont=Ubuntu\ Mono\ derivative\ Powerline:h11
+    " set guifont=Ubuntu\ Mono\ 12
     winsize 345 500                         " set a reasonable window size
     " NOTE: Have to unset menu commands in gvimrc
     " Free Command Key Bindings " {{{
@@ -142,6 +144,8 @@ if has("gui_macvim")
     exec "nmap <silent> <D-t>     <Esc>:" . &tabpagemax . " tabnew \\| :SolicitTabName<CR>"
     "" Map Cmd-Shift-t to rename tab
     exec "nmap <silent> <D-T>   <Esc>:SolicitTabName<CR>"
+else
+    set guifont=Ubuntu\ Mono\ derivative\ Powerline\:h12
 end
 
 " }}}
@@ -171,7 +175,7 @@ function! AdjustFont(increment) " {{{
     let columns = &columns
     let lines = &lines
     let replacement = 'submatch(0) + ' . a:increment
-    let &guifont = substitute( &guifont, ':h\zs\d\+', '\=eval(' .  replacement . ')', '')
+    let &guifont = substitute( &guifont, '\d\+$', '\=eval(' .  replacement . ')', '')
     "exe "set columns=" . (columns - (a:increment * 10))
     "exe "set lines=" . (lines - (a:increment * 7))
 endfunction
