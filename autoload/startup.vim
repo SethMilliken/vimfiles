@@ -141,8 +141,8 @@ function! startup#base()
     endfun
 
     fun! s:obj.tmuxApp() dict
-        exe "edit ~/.tmux/" . tolower(startup#host()) . ".tmux"
-        vsplit ~/.tmux.conf
+        exe "edit ~/.tmux/profiles/" . tolower(startup#host()) . ".tmux"
+        vsplit ~/.tmux/.tmux.conf
         windo set nolist
         wincmd t | wincmd =
     endfun
@@ -276,9 +276,9 @@ function! startup#SETH()
     endfun
 
     fun! s:obj.tmuxApp() dict
-        exe "edit ~/.tmux/" . toupper(startup#host()) . ".tmux"
-        split ~/.tmux/.tmux
-        split ~/.tmux.conf
+        exe "edit ~/.tmux/profiles/" . toupper(startup#host()) . ".tmux"
+        split ~/.tmux/main.tmux.conf
+        split ~/.tmux/.tmux.conf
         wincmd L
         windo set nolist
         wincmd t | wincmd =
@@ -447,9 +447,9 @@ function! startup#UNWORKABLE()
     endfun
 
     fun! s:obj.tmuxApp() dict
-        exe "edit ~/.tmux/" . toupper(startup#host()) . ".tmux"
-        split ~/.tmux/ua.tmux
-        split ~/.tmux.conf
+        exe "edit ~/.tmux/profiles/" . toupper(startup#host()) . ".tmux"
+        split ~/.tmux/profiles/ua.tmux
+        split ~/.tmux/.tmux.conf
         wincmd L
         windo set nolist
         wincmd t | wincmd =
