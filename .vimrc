@@ -53,10 +53,18 @@ else
     "call Pl#Theme#InsertSegment('wc:characters', 'after', 'filetype')
     "call Pl#Theme#ReplaceSegment('filetype', 'wc:characters')
 end
+"let g:Powerline_symbols = 'simple'
 
 " }}}
 " Airline: " {{{
 let g:airline_powerline_fonts = 1
+
+function! AirlineInit()
+    let spc = g:airline_symbols.space
+    call airline#parts#define_function('wc', 'WC')
+    let g:airline_section_z = airline#section#create(['windowswap', '%3p%%'.spc, 'linenr', ':%3v ', "(", 'wc', ")"])
+endfunction
+autocmd VimEnter * call AirlineInit()
 
 " }}}
 
@@ -220,8 +228,9 @@ set statusline=%<\(%n\)\ %m%y%r\ %f\ %=%-14.(%l,%c%V%)\ %{WC()}\ %P
 "}}}
 " WC {{{
 function! WC()
-    return string(split(system("wc -m " . shellescape(expand('%'))), "\\s")[0])
+    return substitute(string(split(system("wc -m " . shellescape(expand('%'))), "\\s")[0]), "'", "", "g")
 endfunction
+
 " }}}
 " MAPPINGS: " {{{
 
