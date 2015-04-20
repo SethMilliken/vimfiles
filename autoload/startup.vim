@@ -154,7 +154,16 @@ function! startup#base()
 
     fun! s:obj.writeApp() dict
         exe 'cd' self.docroot() . "zaurus/zlog/"
-        Writing
+        call EditCurrentEntry()
+        tabnew
+        call EditCurrentIndex()
+    endfun
+
+    fun! s:obj.missivesApp() dict
+        exe 'cd' self.docroot() . "writing/missives/"
+        exe 'edit' "scratchpad.tst"
+        exe 'vsplit' self.docroot() . "todo/write.tst"
+        wincmd t | wincmd =
     endfun
 
     fun! s:obj.defaultApp() dict
