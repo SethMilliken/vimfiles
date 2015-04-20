@@ -212,7 +212,7 @@ function! BaseObject(...) " {{{
             let self['start'] = self._verifyposition()
     endfu " }}}
     fu instance._firstline() dict " {{{
-        return [ getline("1") ] 
+        return [ getline("1") ]
     endfu " }}}
     fu instance._lastline() dict " {{{
         return [ getline("$") ]
@@ -323,7 +323,7 @@ function! FoldContainer(...)
             let g:foldcontainer_cache = {}
             let g:foldcontainer_cache['ALL'] = {}
         endif
-        if ! has_key(g:foldcontainer_cache, 'ALL') 
+        if ! has_key(g:foldcontainer_cache, 'ALL')
             let g:foldcontainer_cache['ALL'] = {}
         endif
         if has_key(g:foldcontainer_cache['ALL'], a:header)
@@ -555,7 +555,7 @@ fu taskstack._layout3(list, location) dict " {{{
     if type(nextitem) == type([])
         call self._layout(nextitem, { 'container': thisitem })
         call remove(fullist, 1)
-    endif 
+    endif
     call self._layout(fulllist, { 'peer': thisitem })
 endfu
 
@@ -628,7 +628,7 @@ function! s:Fold.calculateBottom() " {{{
         if l:loop == 0
                 let l:foo = input("Current: ", l:foldCounter)
                 normal zo
-        end 
+        end
         while l:foldCounter > 0
                 normal zc
                 let l:foldCounter -= 1
