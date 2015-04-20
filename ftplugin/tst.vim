@@ -1299,7 +1299,11 @@ endfunction
 
 " }}}
 function! TaskstackHide() " {{{
-    macaction hide:
+    if has("gui_macvim")
+        macaction hide:
+    else
+        exe "normal :x\<CR>"
+    endif
 endfunction
 
 " }}}
