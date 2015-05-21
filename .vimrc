@@ -802,6 +802,20 @@ if !exists("g:reloadvim_function_loaded") " {{{
 end
 
 " }}}
+noremap <F5> :call AutoSpellCorrect(0)<CR>
+inoremap <F5> <Esc>:call AutoSpellCorrect(1)<CR>
+function! AutoSpellCorrect(from_insert) " {{{
+    let l:save_position = getpos(".")
+    exec "normal i\<C-g>u"
+    normal [S
+    normal 1z=
+    call setpos('.', l:save_position)
+    if a:from_insert
+        startinsert!
+    endif
+endfunction
+
+" }}}
 function! AutoTagComplete() " {{{
     normal aa
     normal! r>
