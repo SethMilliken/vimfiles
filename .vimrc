@@ -848,7 +848,7 @@ function! PagesEntry() " {{{
     let l:entry = l:journaldir . l:currentdate . ".txt"
     let l:entryexists = filereadable(l:entry)
     exec "lcd " . l:journaldir
-    exec "edit " . l:entry
+    exec "tabedit " . l:entry
     if l:entryexists
         normal G
         echo "Entry " . l:currentdate . " already exists."
@@ -857,6 +857,7 @@ function! PagesEntry() " {{{
         call append(2, timestamp#text('journal') . ", CURRENT_LOCATION")
         normal j$
     endif
+    Writing
 endfunction
 
 " }}}
@@ -2221,7 +2222,7 @@ endfunction
 
 "}}}
 function! PagesToggle() " {{{
-    call BufferToggle(timestamp#text("date") . ".txt")
+    call BufferToggle(CurrentEntryName())
 endfunction
 
 "}}}
@@ -2235,14 +2236,46 @@ function! TocName() " {{{
 endfunction
 
 "}}}
+function! CurrentEntryName() " {{{
+    return timestamp#text("date") . ".txt"
+endfunction
+
+"}}}
+function! EditCurrentIndex() " {{{
+    let l:current = g:pages_dir . TocName()
+    " Switch to tab if one is opened with this file being edited
+    " Otherwise eidt it here
+    exec "edit " . l:current
+    Writing
+endfunction
+
+"}}}
+function! EditCurrentEntry() " {{{
+    let l:current = g:pages_dir . CurrentEntryName()
+    " Switch to tab if one is opened with this file being edited
+    " Otherwise eidt it here
+    exec "edit " . l:current
+    Writing
+endfunction
+
+"}}}
 function! BufferToggle(bufname) " {{{
     write
+    if buflisted(glob(a:bufname))
+        call BufferSwitch(a:bufname)
+    else
+        exec "tabedit " . a:bufname
+    end
+endfunction
+
+" }}}
+function! BufferSwitch(bufname) " {{{
     let l:origswb = &swb
     set swb=usetab
     let l:curnr = bufnr("%")
     let l:curname = bufname("%")
     if l:curname == a:bufname
-        if exists("g:orgnr")
+        if exists("g:orgnr") && buflisted(g:orgnr)
             exec "sbuffer " . g:orgnr
         else
             echo "No original buffer."
