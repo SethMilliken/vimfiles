@@ -486,14 +486,20 @@ nmap <silent> <C-y>Y :call timestamp#addOrUpdate("", "force")<CR>
 nmap <silent> <C-y><C-y> :call timestamp#addOrUpdate("")<CR>
 nmap <silent> <C-y><C-t> :call timestamp#addOrUpdateSolicitingAnnotation()<CR>
 nmap <silent> <C-y><C-x> :call timestamp#remove()<CR>
-nmap <silent> <Leader>sd :call timestamp#insert("date")<CR>
-imap <silent> <Leader>sd <Esc><Leader>sd
-nmap <silent> <Leader>sl :call timestamp#insert("long")<CR>
+nmap <silent> <Leader>td :call timestamp#insert("date")<CR>
+imap <silent> <Leader>td <Esc><Leader>td
+nmap <silent> <Leader>ts :call timestamp#insert("short")<CR>
+imap <silent> <Leader>ts <Esc><Leader>ts
+nmap <silent> <Leader>tt :call timestamp#insert("time")<CR>
+imap <silent> <Leader>tt <Esc><Leader>tt
+nmap <silent> <Leader>tl :call timestamp#insert("long")<CR>
+imap <silent> <Leader>tl <Esc><Leader>tl
 nmap <silent> <Leader>fw :call FoldWrap()<CR>
 nmap <silent> <Leader>fi :call FoldInsert()<CR>
-nmap <silent> <Leader>ts :call text#insert_annotation("Started typing", "0")<CR>
-nmap <silent> <Leader>tf :call text#insert_annotation("Finished typing", "$")<CR>
-imap <silent> <Leader>tf <Esc><Leader>tf
+nmap <silent> <Leader>wb :call text#insert_annotation("Started typing", "0")<CR>
+imap <silent> <Leader>wb <Esc><Leader>ws
+nmap <silent> <Leader>wf :call text#insert_annotation("Finished typing", "$")<CR>
+imap <silent> <Leader>wf <Esc><Leader>wf
 nmap <silent> -- :call append(line("."), text#divider("-"))<CR>
 nmap <silent> -= :call append(line("."), text#divider("="))<CR>
 nmap <silent> -p :call append(line("."), [text#divider('-'), "", string(getreg('*')), ""])<CR>
