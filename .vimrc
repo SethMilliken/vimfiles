@@ -59,12 +59,11 @@ end
 " Airline: " {{{
 let g:airline_powerline_fonts = 1
 
-function! AirlineInit()
+function! AirlineWcInit()
     let spc = g:airline_symbols.space
     call airline#parts#define_function('wc', 'WC')
     let g:airline_section_z = airline#section#create(['windowswap', '%3p%%'.spc, 'linenr', ':%3v ', "(", 'wc', ")"])
 endfunction
-autocmd VimEnter * call AirlineInit()
 
 " }}}
 
@@ -222,13 +221,20 @@ set undodir=$HOME/.vim/undo//,~/vimfiles/undo//
 set ssop=blank,buffers,curdir,folds,help,resize,slash,tabpages,unix,winpos,winsize
 
 " Statusline: TODO: annotate this status line
-set statusline=%<\(%n\)\ %m%y%r\ %f\ %=%-14.(%l,%c%V%)\ %{WC()}\ %P
-" wc:%{WordCount()}
+function! DefaultStatusLine()
+    set statusline=%<\(%n\)\ %m%y%r\ %f\ %=%-14.(%l,%c%V%)\ %{WC()}\ %P
+    " wc:%{WordCount()}
+endfunction
+"call DefaultStatusLine()
 
 "}}}
 " WC {{{
 function! WC()
-    return substitute(string(split(system("wc -m " . shellescape(expand('%'))), "\\s")[0]), "'", "", "g")
+    let file = expand('%:p')
+    if filereadable(file)
+        let results = split(system("wc -m " . file), "\\s")
+        return substitute(string(results[0]), "'", "", "g")
+    endif
 endfunction
 
 " }}}
@@ -2126,13 +2132,20 @@ function! WritingMappings() " {{{
         set nocursorline nowrap nolist
     else
         set nocursorline wrap nolist spell
+        set showbreak=
     end
+    "call DefaultStatusLine()
     exec 'map Qq :call PagesToggle()<CR>'
     exec 'imap Qq <esc>Qq'
     exec 'map QQ :call NotesToggle()<CR>'
     exec 'imap QQ <esc>QQ'
     exec 'map kj :call TocToggle()<CR>'
     exec 'imap kj <esc>kj'
+    "if !exists('g:airline_symbols')
+    "    let g:airline_symbols = {}
+    "endif
+    "let g:airline_symbols.space = "\ua0"
+    autocmd VimEnter * call AirWclineInit()
 endfunction
 
 "}}}
