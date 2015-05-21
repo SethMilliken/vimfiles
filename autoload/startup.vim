@@ -429,13 +429,8 @@ function! startup#UNWORKABLE()
     endfun
 
     fun! s:obj.notesApp() dict
-        edit ~/ax/ideas.txt
-        split ~/ax/setup.txt
-        split ~/ax/todo.tst.txt
-        wincmd H
-        wincmd t | wincmd =
-        vsplit ~/ax/weechat.txt
-        windo set nolist
+        exe "edit" self.docroot() . "todo/unworkable.tst"
+        exe "vsplit" self.docroot() . "todo/weechat.txt"
         wincmd t | wincmd =
     endfun
 
