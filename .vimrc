@@ -351,7 +351,6 @@ nmap <silent> <Leader>c :call ScratchBuffer("scratch")<CR>
 " }}}
 " Open URIs: " {{{
 nmap <silent> <Leader>/ :call HandleURI()<CR>
-nmap <silent> <Leader>t :call HandleJIRA()<CR>
 
 " }}}
 " SQL: grab and format sql statement from current line " {{{
@@ -911,43 +910,6 @@ function! RandomHint() " {{{
         return "Random hints not available."
     endtry
     return g:random_hint_list[hint]
-endfunction
-
-" }}}
-function! HandleJIRA() " {{{
-  " Keep in sync with ~/.vim/after/syntax/txt.vim
-  let l:expression = '\%([A-Z]\{2,}\)[:# -]\+[0-9]\+'
-  let l:ticket = matchstr(getline("."), l:expression)
-  let l:number = matchstr(l:ticket, '[0-9]\+')
-  let l:uri = ''
-  if l:ticket != "<Esc>:"
-    let l:uri = 'https://janrain.atlassian.net/browse/' . l:ticket
-  endif
-  call OpenURI(l:uri, l:ticket, "JIRA Ticket")
-endfunction
-
-" }}}
-function! HandleMantis() " {{{
-  " Keep in sync with ~/.vim/after/syntax/txt.vim
-  let l:expression = '\%(mt\|MT\|jr\|JR\|TS\|PF\|BUG\|FIXME\|STORY\)[:# ]\+[0-9]\+'
-  let l:ticket = matchstr(getline("."), l:expression)
-  let l:number = matchstr(l:ticket, '[0-9]\+')
-  let l:uri = ''
-  if l:ticket != "<Esc>:"
-    let l:uri = 'https://mantis.janrain.com/view.php?id=' . l:number
-  endif
-  call OpenURI(l:uri, "Mantis Ticket" . l:number, "Mantis Ticket")
-endfunction
-
-" }}}
-function! HandleTS() " {{{
-  let l:ticket = matchstr(getline("."), 'TS#[0-9]\+')
-  let l:number = matchstr(l:ticket, '[0-9]\+')
-  let l:uri = ''
-  if l:ticket != "<Esc>:"
-    let l:uri = 'http://trackstudio.nimblefish.com/task/' . l:number . '?thisframe=true'
-  endif
-  call OpenURI(l:uri, "TS Ticket" . l:number, "TS Ticket")
 endfunction
 
 " }}}
