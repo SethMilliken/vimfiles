@@ -37,7 +37,8 @@ endif
 "
 " TODO: take a function for postprocessing of redir buffer
 "
-map <buffer> K <Esc>:w<CR>:so %<CR>:Redir 
+" TODO: map this to something else.
+"map <buffer> K <Esc>:w<CR>:so %<CR>:Redir 
 
 command! -nargs=? -complete=command Redir  :call RedirectMessageOutputFromCommand(<f-args>)
 function! RedirectMessageOutputFromCommand(command) " {{{
