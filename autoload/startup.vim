@@ -159,6 +159,13 @@ function! startup#base()
         call EditCurrentIndex()
     endfun
 
+    fun! s:obj.readApp() dict
+        exe 'cd' self.docroot() . "zaurus/zlog/"
+        edit .
+        vsplit
+        wincmd t
+    endfun
+
     fun! s:obj.missivesApp() dict
         exe 'cd' self.docroot() . "writing/missives/"
         exe 'edit' "scratchpad.tst"
