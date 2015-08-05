@@ -3,7 +3,7 @@
 " Computing:
 iabb mvi MacVim
 
-" Urban Airship 
+" Urban Airship
 iabb uac urbanairship.com
 iabb puac prod.urbanairship.com
 iabb uA Urban Airship
@@ -24,5 +24,12 @@ iabb lablo laboratory.local
 iabb samlo samsara.local
 iabb worklo seth.local
 iabb wrt with respect to
+iabb teh the
+iabb Teh The
+iabb hte the
+iabb Hte The
+iabb jef 2426 Jefferson Ave
+iabb berk Berkeley
+iabb berkz Berkeley, CA  94703
 
 " }}}
