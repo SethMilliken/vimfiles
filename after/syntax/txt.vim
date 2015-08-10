@@ -12,8 +12,8 @@ syntax match url /[a-z]*:\/\/[^ >]*/
 " + ongoing todo item
 " ( ) ongoing with range
 syntax region duration start="^\s*(.)\|\%(^\|^\s\+\)+" end="\s\|$" oneline
-" TS#<####>, PF#<####>, BUG:, FIXME:, etc.
-syntax match bug /\%(mt\|MT\|jr\|JR\|TS\|PF\|BUG\|FIXME\|STORY\|[A-Z]\{2,}\)[:# -]\+[0-9]\+[ :.]/
+" Ticket: JIRAPROJECT-<#####> TS#<####>, PF#<####>, BUG:, FIXME:, etc.
+syntax match bug /[A-Z]\{3,}[:# -]\+[0-9]\+[ :.]/
 " `quote`
 syntax match quotation /`.*`/
 " SECTION
