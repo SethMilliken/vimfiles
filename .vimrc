@@ -351,6 +351,7 @@ nmap <silent> <Leader>c :call ScratchBuffer("scratch")<CR>
 " }}}
 " Open URIs: " {{{
 nmap <silent> <Leader>/ :call HandleURI()<CR>
+nmap <silent> <Leader>t :call HandleJIRA()<CR>
 
 " }}}
 " SQL: grab and format sql statement from current line " {{{
@@ -910,6 +911,19 @@ function! RandomHint() " {{{
         return "Random hints not available."
     endtry
     return g:random_hint_list[hint]
+endfunction
+
+" }}}
+function! HandleJIRA() " {{{
+  " Keep in sync with ~/.vim/after/syntax/txt.vim
+  let l:expression = '\%([A-Z]\{2,}\)[:# -]\+[0-9]\+'
+  let l:ticket = matchstr(getline("."), l:expression)
+  let l:number = matchstr(l:ticket, '[0-9]\+')
+  let l:uri = ''
+  if l:ticket != "<Esc>:"
+    let l:uri = 'https://tofurkey.urbanairship.com/browse/' . l:ticket
+  endif
+  call OpenURI(l:uri, l:ticket, "JIRA Ticket")
 endfunction
 
 " }}}
