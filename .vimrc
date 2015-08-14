@@ -46,29 +46,6 @@ function! IsNexus() " {{{
 endfunction
 
 "}}}
-" Powerline: " {{{
-if IsNexus()
-    let g:Powerline_symbols = 'simple'
-else
-    let g:Powerline_symbols = 'fancy'
-    let g:Powerline_cache_enabled = 0
-    let g:Powerline_theme = "araxia"
-    "call Pl#Theme#InsertSegment('wc:characters', 'after', 'filetype')
-    "call Pl#Theme#ReplaceSegment('filetype', 'wc:characters')
-end
-"let g:Powerline_symbols = 'simple'
-
-" }}}
-" Airline: " {{{
-let g:airline_powerline_fonts = 1
-
-function! AirlineWcInit()
-    let spc = g:airline_symbols.space
-    call airline#parts#define_function('wc', 'WC')
-    let g:airline_section_z = airline#section#create(['windowswap', '%3p%%'.spc, 'linenr', ':%3v ', "(", 'wc', ")"])
-endfunction
-
-" }}}
 
 "}}}
 " DEFAULTS: from example .vimrc " {{{
@@ -225,22 +202,10 @@ set ssop=blank,buffers,curdir,folds,help,resize,slash,tabpages,unix,winpos,winsi
 
 " Statusline: TODO: annotate this status line
 function! DefaultStatusLine()
-    set statusline=%<\(%n\)\ %m%y%r\ %f\ %=%-14.(%l,%c%V%)\ %{WC()}\ %P
-    " wc:%{WordCount()}
+    set statusline=%<\(%n\)\ %m%y%r\ %f\ %=%-14.(%l,%c%V%)\ %{CharacterCount()}\ %P
 endfunction
-"call DefaultStatusLine()
 
 "}}}
-" WC {{{
-function! WC()
-    let file = expand('%:p')
-    if filereadable(file)
-        let results = split(system("wc -m " . file), "\\s")
-        return substitute(string(results[0]), "'", "", "g")
-    endif
-endfunction
-
-" }}}
 " MAPPINGS: " {{{
 
 " Zaurus: <C-Space> (<C-k><C-Space>) to invoke command mode in both insert and normal mode " {{{
@@ -534,7 +499,39 @@ endfor
 
 "}}}
 " FUNCTIONS: " {{{
+" Character Count: " {{{
 
+function! CharacterCount()
+    return len(join(getline(1,'$'), "\n")) + 1
+endfunction
+
+augroup CharacterCount | au!
+    au BufRead * call AirlineCcInit()
+augroup END
+
+" }}}
+" Powerline: " {{{
+if IsNexus()
+    let g:Powerline_symbols = 'simple'
+else
+    let g:Powerline_symbols = 'fancy'
+    let g:Powerline_cache_enabled = 0
+    let g:Powerline_theme = "araxia"
+    "call Pl#Theme#InsertSegment('wc:characters', 'after', 'filetype')
+    "call Pl#Theme#ReplaceSegment('filetype', 'wc:characters')
+end
+
+" }}}
+" Airline: " {{{
+let g:airline_powerline_fonts = 1
+
+function! AirlineCcInit()
+    let spc = g:airline_symbols.space
+    call airline#parts#define_function('cc', 'CharacterCount')
+    let g:airline_section_z = airline#section#create(['windowswap', '%3p%%'.spc, 'linenr', ':%3v ', "(", 'cc', ")"])
+endfunction
+
+" }}}
 " Navigation:
 function! EscapeShiftUp(incoming) " {{{
     return substitute(a:incoming, "\\", "\\\\\\\\", "g")
@@ -2134,18 +2131,13 @@ function! WritingMappings() " {{{
         set nocursorline wrap nolist spell
         set showbreak=
     end
-    "call DefaultStatusLine()
     exec 'map Qq :call PagesToggle()<CR>'
     exec 'imap Qq <esc>Qq'
     exec 'map QQ :call NotesToggle()<CR>'
     exec 'imap QQ <esc>QQ'
     exec 'map kj :call TocToggle()<CR>'
     exec 'imap kj <esc>kj'
-    "if !exists('g:airline_symbols')
-    "    let g:airline_symbols = {}
-    "endif
-    "let g:airline_symbols.space = "\ua0"
-    autocmd VimEnter * call AirWclineInit()
+    doau CharacterCount
 endfunction
 
 "}}}
