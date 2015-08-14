@@ -39,7 +39,10 @@ let g:vimwiki_menu = ''
 
 " }}}
 function! IsNexus() " {{{
-    return match(system("uname -a"), "armv7l") > 0
+    if !exists('g:is_nexus')
+        let g:is_nexus = match(system("uname -a"), "armv7l") > 0
+    endif
+    return g:is_nexus
 endfunction
 
 "}}}
