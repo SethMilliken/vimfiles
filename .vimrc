@@ -2119,7 +2119,7 @@ let g:pages_dir = glob("~/sandbox/personal/zaurus/zlog/")
 
 augroup MorningPages | au!
    if bufname("%") =~ '\d\d\d\d-\d\d-\(index\|\d\d\).txt'
-    au BufReadPost * call WritingMappings()
+    au BufRead * call WritingMappings()
    end
 augroup END
 
