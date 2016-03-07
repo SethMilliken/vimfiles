@@ -279,10 +279,16 @@ function! startup#SETH()
         tabfirst
     endfun
 
-    fun! s:obj.slateApp() dict
-        exe 'edit' ".slate.js"
-        vsplit ~/.slate-layouts/office.js
-        vsplit ~/.slate-layouts/work-internal.js
+    fun! s:obj.wmApp() dict
+        exe 'edit' "$HOME/.hammerspoon/init.lua"
+        vsplit $HOME/.hammerspoon/bindings.lua
+        wincmd t | wincmd =
+        tabe $HOME/.slate.js
+        vsplit $HOME/.slate-layouts/office.js
+        vsplit $HOME/.slate-layouts/work-internal.js
+        windo set noro
+        wincmd t | wincmd =
+        tabfirst
     endfun
 
     fun! s:obj.sourcecodeApp() dict
@@ -295,8 +301,11 @@ function! startup#SETH()
         exe "edit ~/.tmux/profiles/" . toupper(startup#host()) . ".tmux"
         split ~/.tmux/main.tmux.conf
         split ~/.tmux/.tmux.conf
+        split ~/.tmux/profiles/chef.tmux
         wincmd L
+        split ~/.tmux/profiles/jenkins-vm.tmux
         windo set nolist
+        windo set noro
         wincmd t | wincmd =
     endfun
 
