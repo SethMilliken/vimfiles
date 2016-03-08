@@ -290,13 +290,13 @@ nmap <Leader>\ :call CommitSession()<CR>
 
 " }}}
 " Journal: " {{{
-nmap <Leader>jj :call PagesEntry()<CR>
+nmap <Leader>jj :Pages<CR>
 imap <Leader>jj <Esc><Leader>jj
 command! Pages :call PagesEntry()
 
 " }}}
 " Journal: " {{{
-nmap <Leader>je :call JournalEntry()<CR>
+nmap <Leader>je :Journal<CR>
 command! Journal :call JournalEntry()
 
 " }}}
@@ -848,40 +848,43 @@ endfunction
 
 " }}}
 function! PagesEntry() " {{{
-    let l:journaldir = $HOME . "/sandbox/personal/zaurus/zlog/"
     let l:currentdate = timestamp#text('date')
-    let l:entry = l:journaldir . l:currentdate . ".txt"
+    let l:entry = g:pages_dir . l:currentdate . ".txt"
     let l:entryexists = filereadable(l:entry)
-    exec "lcd " . l:journaldir
+    exec "lcd " . g:pages_dir
     exec "tabedit " . l:entry
     if l:entryexists
         normal G
         echo "Entry " . l:currentdate . " already exists."
     else
-        call text#insert_annotation("Started typing", 0)
-        call append(2, timestamp#text('journal') . ", CURRENT_LOCATION")
-        normal j$
+        call PagesHeader()
     endif
     Writing
 endfunction
 
 " }}}
+function! PagesHeader() " {{{
+    call text#insert_leading_annotation("Started typing")
+    call append(2, timestamp#text('journal') . ", CURRENT_LOCATION")
+    normal j$
+endfunction
+
+" }}}
 function! JournalEntry() " {{{
-    let l:journaldir = $HOME . "/sandbox/personal/zaurus/zlog/"
     let l:currentdate = timestamp#text('date')
-    let l:entry = l:journaldir . l:currentdate . ".txt"
+    let l:entry = g:pages_dir . l:currentdate . ".txt"
     let l:entryexists = filereadable(l:entry)
+    exec "lcd " . g:pages_dir
     exec "edit " . l:entry
-    exec "lcd " . l:journaldir
     if l:entryexists
+        " Check for "Finished typing" annotation and create newly indexed entry if it exists
+        call append("$", ["", timestamp#text('time'), ""])
         normal Go
-        normal o
-        exec "call setline(\".\", \"" . timestamp#text('time') . "\")"
+        startinsert
     else
-        exec "call setline(\".\", \"" . timestamp#text('journal') . "\")"
-        exec "silent !svn add " . l:entry
+        call PagesHeader()
     endif
-    normal o
+    Writing
 endfunction
 
 " }}}
@@ -2122,8 +2125,12 @@ call Clipboard()
 let g:progress = glob("~/.vim/swap/reading_progress.txt")
 let g:pages_dir = glob("~/sandbox/personal/zaurus/zlog/")
 
+function! IsPagesEntry(name)
+   return a:name =~ '\d\d\d\d-\d\d-\(index\|\d\d\)[[:alpha:]]*.txt'
+endfunction
+
 augroup MorningPages | au!
-   if bufname("%") =~ '\d\d\d\d-\d\d-\(index\|\d\d\).txt'
+   if IsPagesEntry(bufname("%"))
     au BufRead * call WritingMappings()
    end
 augroup END
