@@ -2272,6 +2272,9 @@ endfunction
 
 " }}}
 
+" Restore tmp directory that appears to get reaped by OpenBSD
+command! TmpdirRestore call mkdir(fnamemodify(tempname(),":p:h"),"",0700)
+
 " }}}
 
 " let g:session_autoload = 1
