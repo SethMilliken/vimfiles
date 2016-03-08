@@ -468,10 +468,15 @@ nmap <silent> <Leader>wb :call text#insert_leading_annotation("Started typing")<
 imap <silent> <Leader>wb <Esc><Leader>ws
 nmap <silent> <Leader>wf :call text#insert_trailing_annotation("Finished typing")<CR>
 imap <silent> <Leader>wf <Esc><Leader>wf
+nmap <silent> <Leader>ll o<Esc>:call timestamp#insert("short") \| call FoldWrap()<CR>
+
+" }}}
+" Tweaks: " {{{
 nmap <silent> -- :call append(line("."), text#divider("-"))<CR>
 nmap <silent> -= :call append(line("."), text#divider("="))<CR>
 nmap <silent> -p :call append(line("."), [text#divider('-'), "", string(getreg('*')), ""])<CR>
-nmap <silent> <Leader>ll o<Esc>:call timestamp#insert("short") \| call FoldWrap()<CR>
+nmap <silent> <Leader>ss :w<CR>
+imap <silent> <Leader>ss <Esc><Leader>ss
 
 " }}}
 " Tabs: switching " {{{
