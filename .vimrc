@@ -464,9 +464,9 @@ nmap <silent> <Leader>tl :call timestamp#insert("long")<CR>
 imap <silent> <Leader>tl <Esc><Leader>tl
 nmap <silent> <Leader>fw :call FoldWrap()<CR>
 nmap <silent> <Leader>fi :call FoldInsert()<CR>
-nmap <silent> <Leader>wb :call text#insert_annotation("Started typing", "0")<CR>
+nmap <silent> <Leader>wb :call text#insert_leading_annotation("Started typing")<CR>
 imap <silent> <Leader>wb <Esc><Leader>ws
-nmap <silent> <Leader>wf :call text#insert_annotation("Finished typing", "$")<CR>
+nmap <silent> <Leader>wf :call text#insert_trailing_annotation("Finished typing")<CR>
 imap <silent> <Leader>wf <Esc><Leader>wf
 nmap <silent> -- :call append(line("."), text#divider("-"))<CR>
 nmap <silent> -= :call append(line("."), text#divider("="))<CR>

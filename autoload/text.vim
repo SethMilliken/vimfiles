@@ -20,7 +20,6 @@ endfunction
 
 "}}}
 function! text#append_line(text, direction) "{{{
-    echo a:direction
     if a:direction == "above"
         let where = 1
     else
@@ -33,6 +32,18 @@ endfunction
 function! text#insert_annotation(label, line) "{{{
     let result = printf("[ %s: %s ]", a:label, timestamp#text("short"))
     call append(a:line, result)
+endfunction
+
+"}}}
+function! text#insert_leading_annotation(label) "{{{
+    call text#insert_annotation(a:label, "0")
+    call append(1, [""])
+endfunction
+
+"}}}
+function! text#insert_trailing_annotation(label) "{{{
+    call append("$", [""])
+    call text#insert_annotation(a:label, "$")
 endfunction
 
 "}}}
