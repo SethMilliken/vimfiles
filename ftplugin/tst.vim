@@ -27,6 +27,7 @@ augroup TaskStack
     au FileType *tst* map <buffer> Qr <Plug>ResetTogglers
     au FileType *tst* map <buffer> QW :call TaskstackMoveItemToProject("@queue")<CR>
     au FileType *tst* map <buffer> QA :call TaskstackMoveItemToProject("@active")<CR>
+    au WinLeave * write
 augroup END
 
 noremap <script> <Plug>AbandonItem <SID>AbandonItem
