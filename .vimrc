@@ -807,8 +807,8 @@ if !exists("g:reloadvim_function_loaded") " {{{
 end
 
 " }}}
-noremap <F5> :call AutoSpellCorrect(0)<CR>
-inoremap <F5> <Esc>:call AutoSpellCorrect(1)<CR>
+noremap <C-k> :call AutoSpellCorrect(0)<CR>
+inoremap <C-k> <Esc>:call AutoSpellCorrect(1)<CR>
 function! AutoSpellCorrect(from_insert) " {{{
     let l:save_position = getpos(".")
     exec "normal i\<C-g>u"
