@@ -2149,7 +2149,7 @@ function! WritingMappings() " {{{
     exec 'imap QQ <esc>QQ'
     exec 'map kj :call TocToggle()<CR>'
     exec 'imap kj <esc>kj'
-    doau CharacterCount
+    doau CharacterCount BufRead
 endfunction
 
 "}}}
