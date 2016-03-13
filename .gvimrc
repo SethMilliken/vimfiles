@@ -153,6 +153,8 @@ end
 if has("win32")
     "set guifont=Terminal:h6
     set guifont=Inconsolata:h12
+    "set guifont=Inconsolata:h12
+    set guifont=Ubuntu_Mono_derivative_Powerlin:h12:cANSI
     winsize 150 200                         " set a reasonable window size
 end
 
