@@ -267,7 +267,17 @@ nmap <C-y>v :call ReloadVimrc()<CR>
 nmap <C-y>s :call feedkeys(":call OpenRelatedSnippetFileInVsplit()\r\<Tab>\<Tab>", 't')<CR>
 nmap <C-y>a :AbbUp<CR>
 nmap <C-y>A :vsplit ~/.vim/plugin/iabbs.vim<CR>
-nmap <C-y>w :%s/\s\+$//e<CR>:echo "Whitespace-b-gone."<CR>
+imap <C-y>w <Esc><C-y>w
+nmap <C-y>w :call WhitespaceBGone()<CR>
+
+function! WhitespaceBGone()
+  let save_cursor = getpos(".")
+  exe ':%s/\s\+$//ge'
+  set nolist
+  silent! write
+  call setpos(".", save_cursor)
+  echo "Whitespace-b-gone."
+endfunction
 
 " File path to pasteboard
 map <Leader>f :call text#file_to_pasteboard()<CR>
