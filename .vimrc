@@ -474,9 +474,9 @@ nmap <silent> <Leader>tl :call timestamp#insert("long")<CR>
 imap <silent> <Leader>tl <Esc><Leader>tl
 nmap <silent> <Leader>fw :call FoldWrap()<CR>
 nmap <silent> <Leader>fi :call FoldInsert()<CR>
-nmap <silent> <Leader>wb :call text#insert_leading_annotation("Started typing")<CR>
+nmap <silent> <Leader>wb :call StartWriting()<CR>
 imap <silent> <Leader>wb <Esc><Leader>ws
-nmap <silent> <Leader>wf :call text#insert_trailing_annotation("Finished typing")<CR>
+nmap <silent> <Leader>wf :call FinishWriting()<CR>
 imap <silent> <Leader>wf <Esc><Leader>wf
 nmap <silent> <Leader>ll o<Esc>:call timestamp#insert("short") \| call FoldWrap()<CR>
 
@@ -857,6 +857,17 @@ function! AutoTagComplete() " {{{
 endfunction
 
 " }}}
+function! FinishWriting() " {{{
+    call text#insert_trailing_annotation("Finished typing")
+    normal G
+endfunction
+
+" }}}
+function! StartWriting() " {{{
+    call text#insert_leading_annotation("Started typing")
+endfunction
+
+" }}}
 function! PagesEntry() " {{{
     let l:currentdate = timestamp#text('date')
     let l:entry = g:pages_dir . l:currentdate . ".txt"
@@ -874,9 +885,9 @@ endfunction
 
 " }}}
 function! PagesHeader() " {{{
-    call text#insert_leading_annotation("Started typing")
-    call append(2, timestamp#text('journal') . ", CURRENT_LOCATION")
-    normal j$
+    call StartWriting()
+    call append(line("$"), timestamp#text('journal') . ", CURRENT_LOCATION")
+    normal G$
 endfunction
 
 " }}}
