@@ -114,7 +114,8 @@ refresh    viki                 git://github.com/tomtom/viki_vim.git
 refresh    vim-addon-async      git://github.com/MarcWeber/vim-addon-async.git
 refresh    vim-addon-manager    git://github.com/MarcWeber/vim-addon-manager.git
 refresh    vim-addon-mw-utils   git://github.com/MarcWeber/vim-addon-mw-utils.git
-refresh    vim-airline          git://github.com:bling/vim-airline.git
+refresh    vim-airline          git://github.com/vim-airline/vim-airline.git
+refresh    vim-airline-themes   git://github.com/vim-airline/vim-airline-themes.git
 refresh    vim-flake8           git://github.com/nvie/vim-flake8.git                         'pip install flake8'
 refresh    vim-javascript       git://github.com/pangloss/vim-javascript.git
 refresh    vim-javascript       git://github.com/pangloss/vim-javascript.git
