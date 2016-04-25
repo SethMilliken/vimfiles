@@ -279,6 +279,10 @@ function! WhitespaceBGone()
   echo "Whitespace-b-gone."
 endfunction
 
+" Saving is better than yet another window navigation variation
+map <C-w>w :write<CR>
+
+
 " File path to pasteboard
 map <Leader>f :call text#file_to_pasteboard()<CR>
 map <Leader>F :call text#file_to_pasteboard(line("."))<CR>
