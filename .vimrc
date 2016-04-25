@@ -539,6 +539,7 @@ end
 " }}}
 " Airline: " {{{
 let g:airline_powerline_fonts = 1
+let g:airline_theme='araxia'
 
 function! AirlineCcInit()
     let spc = g:airline_symbols.space
