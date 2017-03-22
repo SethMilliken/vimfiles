@@ -156,7 +156,7 @@ set noerrorbells                    " don't need to hear if i hit esc twice
 set visualbell | set t_vb=          " ...nor see it
 set ignorecase                      " case ignored for searches
 set smartcase                       " override ignorecase for searches with uppercase
-"set clipboard=unnamed               " share os pasteboard
+set clipboard=unnamed               " share os pasteboard
 set cursorline                      " highlight current line
 set wildmenu                        " show completion options
 set autoread                        " automatically reread fs changed files *autoread*
