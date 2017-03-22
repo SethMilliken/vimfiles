@@ -321,6 +321,8 @@ nmap <silent> <Leader>- :GundoToggle<CR>
 nmap <silent> <Leader>s :TBrowseScriptnames<CR>
 nmap <silent> <Leader>b :call feedkeys(":TBrowseOutput\<Space>", "t")<CR>
 
+nmap <silent> <C-w>` :wincmd =<CR>
+
 " }}}
 " Folds: " {{{
 nmap <silent> <Leader>= :call FoldDefaultNodes()<CR>:normal zv]z[zzt<CR><C-l>
