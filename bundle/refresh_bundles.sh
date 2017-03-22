@@ -55,6 +55,8 @@ function oldfork {
 #refresh    vim-powerline        git@github.com:SethMilliken/vim-powerline.git
 #warning    syntastic            git://github.com/sjl/syntastic.git
 
+#refresh    UltiSnips            git://github.com/vim-scripts/UltiSnips.git
+#refresh    vimple               git://github.com/dahu/vimple.git
 oldfork    gundo                git@github.com:SethMilliken/gundo.vim.git
 oldfork    snipmate             git://github.com/spf13/snipmate.vim.git
 oldfork    sparkup              git://github.com/kogakure/vim-sparkup.git
@@ -62,7 +64,6 @@ oldfork    tagbar               git@github.com:SethMilliken/tagbar.git
 oldfork    tlib-seth            git@github.com:SethMilliken/tlib_vim.git
 oldfork    tmux                 git://github.com/VimEz/Tmux.git
 refresh    .pathogen-raimondi   git://github.com/Raimondi/vim-pathogen.git
-refresh    UltiSnips            git://github.com/vim-scripts/UltiSnips.git
 refresh    abolish              git://github.com/tpope/vim-abolish.git
 refresh    ack                  git://github.com/vim-scripts/ack.vim.git                   'brew install ack'
 refresh    ansiesc              git://github.com/vim-scripts/AnsiEsc.vim.git
@@ -108,7 +109,7 @@ refresh    textobj-function     git://github.com/kana/vim-textobj-function.git
 refresh    textobj-rubyblock    git://github.com/nelstrom/vim-textobj-rubyblock.git
 refresh    textobj-user         git://github.com/kana/vim-textobj-user.git
 refresh    tlib                 git://github.com/tomtom/tlib_vim.git
-refresh    tmux                 git://github.com/Keithbsmiley/tmux.vim.git
+refresh    tmux                 git://github.com/keith/tmux.vim.git
 refresh    twitvim              git://github.com/vim-scripts/TwitVim.git
 refresh    viki                 git://github.com/tomtom/viki_vim.git
 refresh    vim-addon-async      git://github.com/MarcWeber/vim-addon-async.git
@@ -124,9 +125,9 @@ refresh    vim-scala            git://github.com/derekwyatt/vim-scala.git
 refresh    vim-signify          git://github.com/mhinz/vim-signify.git
 refresh    vim-traitor          git@github.com:SethMilliken/vim-traitor.git
 refresh    vim-vagrant          git://github.com/markcornick/vim-vagrant.git
+refresh    vim-velocity         git://github.com/lepture/vim-velocity.git
 refresh    vim-virtualenv       git://github.com/jmcantrell/vim-virtualenv.git
 refresh    vimpager             git://github.com/rkitover/vimpager.git
-refresh    vimple               git://github.com/dahu/vimple.git
 refresh    vimwiki              git://github.com/vim-scripts/vimwiki.git
 refresh    vundle               git://github.com/vim-scripts/vundle.git
 refresh    xml                  git://github.com/vim-scripts/xml.vim.git
