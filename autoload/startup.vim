@@ -155,7 +155,7 @@ function! startup#base()
     fun! s:obj.writeApp() dict
         exe 'cd' self.docroot() . "zaurus/zlog/"
         call EditCurrentEntry()
-        tabnew
+        vsplit
         call EditCurrentIndex()
     endfun
 
@@ -301,7 +301,7 @@ function! startup#SETH()
         exe "edit ~/.tmux/profiles/" . toupper(startup#host()) . ".tmux"
         split ~/.tmux/main.tmux.conf
         split ~/.tmux/.tmux.conf
-        split ~/.tmux/profiles/chef.tmux
+        split ~/.tmux/profiles/pass-be.tmux
         wincmd L
         split ~/.tmux/profiles/jenkins-vm.tmux
         windo set nolist
@@ -423,7 +423,7 @@ function! startup#PIX()
 endfunction
 
 " }}}
-" Host UNNWORKABLE " {{{
+" Host UNWORKABLE " {{{
 function! startup#UNWORKABLE()
     let s:obj = startup#base()
 
@@ -474,6 +474,81 @@ function! startup#UNWORKABLE()
         windo set nolist
         wincmd t | wincmd =
     endfun
+
+    return s:obj.New()
+endfunction
+
+" }}}
+" Host ARAXIA " {{{
+function! startup#ARAXIA()
+    let s:obj = startup#base()
+
+    fun! s:obj.class() dict
+        return "araxia.class"
+    endfun
+
+    fun! s:obj.vimwikiApp() dict
+        VimwikiIndex
+        set nolist
+    endfun
+
+    fun! s:obj.tasksApp() dict
+        return self.docroot() . "ax/todo.txt"
+    endfun
+
+    fun! s:obj.todoApp() dict
+        exe 'edit' self.docroot() . "todo/todo.txt"
+        exe 'vsplit' self.docroot() . "todo/techtodo.txt"
+        wincmd t | wincmd =
+        exe 'tabedit' self.docroot() . "todo/araxia.tst"
+    endfun
+
+    fun! s:obj.defaultApp() dict
+        echo "default vim instance"
+    endfun
+
+    fun! s:obj.notesApp() dict
+        exe "edit" self.docroot() . "todo/araxia.tst"
+        exe "vsplit" self.docroot() . "todo/weechat.txt"
+        wincmd t | wincmd =
+    endfun
+
+    fun! s:obj.qrithApp() dict
+        return self.docroot() . "projects/qrith.txt"
+    endfun
+
+    fun! s:obj.weechatpApp() dict
+        edit ~/.weechat_personal/weechat.conf
+        vsplit ~/.weechat_personal/irc.conf
+        vsplit ~/.weechat_personal/plugins.conf
+        windo set nolist
+        wincmd t | wincmd =
+    endfun
+
+    fun! s:obj.weechatApp() dict
+        edit ~/.weechat/weechat.conf
+        vsplit ~/.weechat/irc.conf
+        vsplit ~/.weechat/plugins.conf
+        windo set nolist
+        wincmd t | wincmd =
+    endfun
+
+    fun! s:obj.tmuxApp() dict
+        exe "edit ~/.tmux/profiles/" . toupper(startup#host()) . ".tmux"
+        vsplit ~/.tmux/profiles/ua.tmux
+        vsplit ~/.tmux/profiles/write.tmux
+        wincmd L
+        windo set nolist
+        wincmd t | wincmd =
+        tabedit ~/.tmux/functions/mode-app-keys.tmux
+        tabedit ~/.tmux/themes/araxia.theme.tmux
+        tabedit ~/.tmux/main.tmux
+        vsplit ~/.tmux/.tmux.conf
+        wincmd L
+        windo set nolist
+        wincmd t | wincmd =
+    endfun
+
 
     return s:obj.New()
 endfunction
