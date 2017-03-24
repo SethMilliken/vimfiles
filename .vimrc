@@ -1121,8 +1121,8 @@ augroup TaskStack | au!
     au FileType *tst* nmap <buffer> <silent> <S-Tab> :call TaskstackNextProject('b')<CR>
     au FileType *tst* if mapcheck('<CR>', 'n') == "" | nmap <unique> <buffer> <silent> <CR> "tyiW/<C-r>t<CR>ztzv<C-l> | end
     " Use <C-c> to avoid adding or updating a timestamp after editing.
-    au InsertLeave *.tst.* :call timestamp#addOrUpdate("") " FIXME: External Dependency
-    au FocusLost *.tst.* nested write
+    au InsertLeave *tst* :call timestamp#addOrUpdate("") " FIXME: External Dependency
+    au FocusLost *tst* nested write
 augroup END
 
 "}}}
