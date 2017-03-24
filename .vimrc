@@ -272,7 +272,8 @@ nmap <C-y>w :call WhitespaceBGone()<CR>
 
 function! WhitespaceBGone()
   let save_cursor = getpos(".")
-  exe ':%s/\s\+$//ge'
+  silent! %s/\s\+$//ge
+  silent! %s/\($\n\s*\)\+\%$//e
   set nolist
   silent! write
   call setpos(".", save_cursor)
