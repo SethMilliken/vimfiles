@@ -866,8 +866,10 @@ endfunction
 
 " }}}
 function! FinishWriting() " {{{
-    call text#insert_trailing_annotation("Finished typing")
+    call WhitespaceBGone()
     normal G
+    call text#insert_trailing_annotation("Finished typing")
+    write
 endfunction
 
 " }}}
@@ -2162,6 +2164,7 @@ augroup MorningPages | au!
    if IsPagesEntry(bufname("%"))
     au BufRead * call WritingMappings()
    end
+   au FocusLost * nested write
 augroup END
 
 command! Writing :call WritingMappings()
@@ -2230,6 +2233,8 @@ endfunction
 "}}}
 function! TocToggle() " {{{
     call BufferToggle(TocName())
+    silent! call WhitespaceBGone()
+    normal G$
 endfunction
 
 "}}}
