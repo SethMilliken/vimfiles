@@ -514,7 +514,7 @@ function! startup#ARAXIA()
     endfun
 
     fun! s:obj.qrithApp() dict
-        return self.docroot() . "projects/qrith.txt"
+        exe 'edit' self.docroot() . "projects/qrith.txt"
     endfun
 
     fun! s:obj.weechatpApp() dict
