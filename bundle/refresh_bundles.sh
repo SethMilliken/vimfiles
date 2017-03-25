@@ -130,6 +130,7 @@ refresh    vim-virtualenv       git://github.com/jmcantrell/vim-virtualenv.git
 refresh    vimpager             git://github.com/rkitover/vimpager.git
 refresh    vimwiki              git://github.com/vim-scripts/vimwiki.git
 refresh    vundle               git://github.com/vim-scripts/vundle.git
+refresh    tmux-focus-events    git://github.com/tmux-plugins/vim-tmux-focus-events.git    'set -g focus-events on in tmux'
 refresh    xml                  git://github.com/vim-scripts/xml.vim.git
 warning    command-t            git://github.com/wincent/Command-T.git                     'Rebuild if necessary:\n\tpushd command-t/ruby/command-t/; ruby extconf.rb; make && popd'
 warning    conque               git://github.com/rson/vim-conque.git
