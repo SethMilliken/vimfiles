@@ -904,7 +904,7 @@ endfunction
 function! JournalEntry() " {{{
     let l:currentdate = timestamp#text('date')
     let l:entry = g:pages_dir . l:currentdate . ".txt"
-    let l:entryexists = filereadable(l:entry)
+    let l:entryexists = getfsize(expand(l:entry)) > 1
     exec "lcd " . g:pages_dir
     exec "edit " . l:entry
     if l:entryexists
