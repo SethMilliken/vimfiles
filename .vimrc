@@ -828,10 +828,13 @@ end
 noremap <C-k> :call AutoSpellCorrect(0)<CR>
 inoremap <C-k> <Esc>:call AutoSpellCorrect(1)<CR>
 function! AutoSpellCorrect(from_insert) " {{{
+    let l:spell_setting = getbufvar('%', '&spell')
+    set spell
     let l:save_position = getpos(".")
     exec "normal i\<C-g>u"
     normal [S
     normal 1z=
+    call setbufvar('%', '&spell', l:spell_setting)
     call setpos('.', l:save_position)
     if a:from_insert
         startinsert!
