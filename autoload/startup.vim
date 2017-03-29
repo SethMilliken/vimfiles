@@ -437,7 +437,11 @@ function! startup#UNWORKABLE()
     endfun
 
     fun! s:obj.tasksApp() dict
-        return self.docroot() . "ax/todo.txt"
+        return self.docroot() . "todo/unworkable.tst"
+    endfun
+
+    fun! s:obj.fooApp() dict
+        exe "edit" . self.docroot()
     endfun
 
     fun! s:obj.defaultApp() dict
@@ -468,8 +472,12 @@ function! startup#UNWORKABLE()
 
     fun! s:obj.tmuxApp() dict
         exe "edit ~/.tmux/profiles/" . toupper(startup#host()) . ".tmux"
-        split ~/.tmux/profiles/ua.tmux
         split ~/.tmux/.tmux.conf
+        split ~/.tmux/main.tmux.conf
+        wincmd L
+        tabnew ~/.tmux/profiles/upkeep.tmux
+        split  ~/.tmux/profiles/ua.tmux
+        split ~/.tmux/openbsd.tmux.conf
         wincmd L
         windo set nolist
         wincmd t | wincmd =
