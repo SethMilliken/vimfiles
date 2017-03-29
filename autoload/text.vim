@@ -37,7 +37,7 @@ endfunction
 "}}}
 function! text#insert_leading_annotation(label) "{{{
     call text#insert_annotation(a:label, "0")
-    call append(1, [""])
+    "call append(1, [""])
 endfunction
 
 "}}}
