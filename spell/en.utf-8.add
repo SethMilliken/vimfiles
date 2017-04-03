@@ -53,6 +53,7 @@ AMC
 Amendola
 Americanah
 Amerson
+Amonkhet
 AmpKit
 Anafenza
 anarchotalk
@@ -398,6 +399,7 @@ Crimethinc
 Crispin
 Cromartie
 cron
+crontab
 Crossfit
 crossfit
 Crovax
@@ -678,6 +680,7 @@ frontmost
 Frostburn
 frou
 Fruitvale
+fstab
 FTL
 ftplugin
 FTW
@@ -1197,6 +1200,7 @@ meatspace
 Mechina
 Mechina's
 Meckfessel
+MedicalHost
 meds
 meetup
 megalomaniacal
@@ -1222,7 +1226,10 @@ Metallica
 metaprogramming
 Metreon
 mic
+Michener
+Michener's
 Michonne
+microaggressions
 micronaps
 MICROplate
 microservices
@@ -1459,6 +1466,7 @@ Pazzo
 PDFs
 PDX
 Peele
+Peele's
 Peema
 Pendlehaven
 pendulously
@@ -1635,6 +1643,7 @@ refactor
 refactored
 refactorings
 refamiliarizing
+reflog
 reimage
 reimaged
 reinvoke
@@ -1651,6 +1660,7 @@ replayability
 Repo
 repo
 repos
+reposync
 reprioritization
 reprioritizing
 repurpose
@@ -1687,6 +1697,7 @@ RFID
 Ridgescale
 Rief
 Rishadan
+Rishkar
 Ristretto
 Ritch
 Riverfall
@@ -1765,6 +1776,7 @@ scattershot
 ScheduledJob
 schlub
 Schumer
+Schumer's
 scorekeeping
 scotoma
 scottjab
@@ -1794,6 +1806,7 @@ servlet
 sessionstore
 seth
 Setheris
+Seveneves
 Sexualization
 sexualize
 SFO
@@ -1852,6 +1865,7 @@ Simic
 Simplenote
 Sinead
 sinkful
+Siphoner
 Siracusa
 Siracusa's
 siree
@@ -2094,6 +2108,7 @@ Trisolarians
 tron
 Trostani
 TrueType
+TSA
 Tsukiko
 tumblr
 tunnelblick
@@ -2132,6 +2147,7 @@ unassuageable
 unattracted
 unblockable
 UnBottle
+uncentered
 unclip
 uncommons
 uncounterable
@@ -2252,6 +2268,7 @@ vir
 Viridian
 VirtualBox
 virtualenv
+virtualenvwrapper
 VirtualHost
 virtualhost
 virtualhosts
@@ -2290,6 +2307,7 @@ webcam
 webcams
 WebDAV
 webform
+WebObjects
 weechat
 Welp
 Welty
@@ -2389,3 +2407,4 @@ Zootopia
 ZOpener
 Zosha
 zsh
+Zur
