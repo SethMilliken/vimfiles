@@ -562,5 +562,17 @@ function! startup#ARAXIA()
 endfunction
 
 " }}}
+" Host RETCONSOLE " {{{
+function! startup#RETCONSOLE()
+    let s:obj = startup#base()
+
+    fun! s:obj.class() dict
+        return "retconsole.class"
+    endfun
+
+    return s:obj.New()
+endfunction
+
+" }}}
 
 " vim: set ft=vim fdm=marker fdl=0 cms=\ \"\ %s  :
