@@ -162,6 +162,8 @@ set wildmenu                        " show completion options
 set autoread                        " automatically reread fs changed files *autoread*
 set shellslash                      " always use /
 set undofile                        " experimental: will i actually use this?
+set rnu
+set nu
 
 if IsNexus()
     colorscheme koehler
@@ -1186,7 +1188,7 @@ command! -nargs=* Sub call text#insert_line("Subject: " . <q-args>)
 
 augroup VolatileScratch | au!
     au BufRead *.scratch call SmallWindow()
-    au BufRead *.scratch nmap <buffer> <silent> <C-m> :call SmallWindow()<CR>
+    "au BufRead *.scratch nmap <buffer> <silent> <C-m> :call SmallWindow()<CR>
     au BufRead *.scratch nmap <buffer> <silent> <C-y>g :exec "set lines=999 columns=" . (g:gundo_width + &columns) \| :GundoToggle<CR>
     au BufRead *.scratch nmap <buffer> <silent> ZZ :wa \| :call ScratchCopy()<CR>
     au BufRead *.scratch nmap <buffer> <silent> ZZ :call ScratchCopy()<CR>
@@ -1194,7 +1196,7 @@ augroup VolatileScratch | au!
     au BufRead *.scratch imap <buffer> <silent> ZZ <Esc>ZZ
     au BufRead *.scratch vmap <buffer> <silent> ZZ <Esc>ZZ
     au BufRead *.scratch doau FileType x.tst
-    au FocusLost *.scratch call ScratchCopy()
+    "au FocusLost *.scratch call ScratchCopy()
     au FocusGained *.scratch call ScratchPaste()
     au VimResized *.scratch call SetColorColumnBorder() | normal zz
 augroup END
