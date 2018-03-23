@@ -569,6 +569,13 @@ function! startup#RETCONSOLE()
         return "retconsole.class"
     endfun
 
+    fun! s:obj.wmApp() dict
+        exe 'edit' "$HOME/.hammerspoon/init.lua"
+        vsplit $HOME/.hammerspoon/bindings.lua
+        windo set noro
+        wincmd t | wincmd =
+    endfun
+
     return s:obj.New()
 endfunction
 
