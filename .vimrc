@@ -1018,6 +1018,13 @@ function! FormatSqlStatement() " {{{
 endfunction
 
 " }}}
+function! WriteBufferIfWritable() " {{{
+    if filewritable(expand('%'))
+        write
+    end
+endfunction
+
+" }}}
 
 " Vimperator Y Pentadactyl:
 function! FormFieldArchive() " {{{
@@ -1127,7 +1134,7 @@ augroup TaskStack | au!
     au FileType *tst* if mapcheck('<CR>', 'n') == "" | nmap <unique> <buffer> <silent> <CR> "tyiW/<C-r>t<CR>ztzv<C-l> | end
     " Use <C-c> to avoid adding or updating a timestamp after editing.
     au InsertLeave *tst* :call timestamp#addOrUpdate("") " FIXME: External Dependency
-    au FocusLost *tst* nested write
+    au FocusLost *tst* nested call WriteBufferIfWritable()
 augroup END
 
 "}}}
@@ -1891,7 +1898,7 @@ augroup Adium | au!
     au FileType adium noremap <silent> <buffer> <CR> :let adium_message = printf(":Adium \"%s\"", EscapedLine()) \| exe adium_message \| call feedkeys('o', 't')<CR>
     au FileType adium imap <buffer> <CR> <Esc><CR>
     au FileType adium winsize 60 8
-    au FocusLost *.adium write
+    au FocusLost *.adium call WriteBufferIfWritable()
 augroup END
 
 nmap <Leader>a :call feedkeys(":Adium \"", 't')<CR>
@@ -1908,7 +1915,7 @@ augroup Colloquy| au!
     au FileType colloquy imap <CR> <Esc><CR>
     au FileType colloquy winsize 120 4
     au FileType colloquy set spell
-    au FocusLost *.colloquy write
+    au FocusLost *.colloquy call WriteBufferIfWritable()
 augroup END
 
 command! -nargs=* Colloquy :call SendTextToFrontmostColloquyChat(<q-args>)
@@ -2169,7 +2176,7 @@ augroup MorningPages | au!
    if IsPagesEntry(bufname("%"))
     au BufRead * call WritingMappings()
    end
-   au FocusLost * nested write
+   au FocusLost * nested call WriteBufferIfWritable()
 augroup END
 
 command! Writing :call WritingMappings()
