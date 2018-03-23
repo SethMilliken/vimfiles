@@ -1,4 +1,6 @@
 # vap!sort -fs | uniq
+# or !ssh ax sort -fs | uniq
+# since coreutils sort is apparently not consistent between versions
 A25
 A97
 Abunas
