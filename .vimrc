@@ -901,7 +901,7 @@ endfunction
 " }}}
 function! PagesHeader() " {{{
     call StartWriting()
-    call append(line("$"), timestamp#text('journal') . ", CURRENT_LOCATION")
+    call setline(line("$"), ["" ,timestamp#text("journal") . ", CURRENT_LOCATION"])
     normal G$
 endfunction
 
