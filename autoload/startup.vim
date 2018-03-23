@@ -161,8 +161,7 @@ function! startup#base()
 
     fun! s:obj.readApp() dict
         exe 'cd' self.docroot() . "zaurus/zlog/"
-        edit .
-        vsplit
+        exe "Reading"
         wincmd t
     endfun
 
