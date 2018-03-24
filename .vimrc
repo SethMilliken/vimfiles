@@ -1019,7 +1019,7 @@ endfunction
 
 " }}}
 function! WriteBufferIfWritable() " {{{
-    if filewritable(expand('%'))
+    if filewritable(expand('%')) && !(&l:readonly)
         write
     end
 endfunction
