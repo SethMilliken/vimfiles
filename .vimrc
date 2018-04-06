@@ -2114,6 +2114,15 @@ function! CheckinCheckup(...) " {{{
 endfunction
 
 " }}}
+command! TransformDraftLogToPool :call TransformDraftLogToPool()
+function! TransformDraftLogToPool() "{{{
+    silent! 1,/----/d
+    silent! v/--> /d
+    silent! % s/--> //
+    silent! % !sort
+endfunction
+
+"}}}
 
 " }}}
 " Scala {{{
@@ -2168,10 +2177,11 @@ call Clipboard()
 let g:progress = glob("~/.vim/swap/reading_progress.txt")
 let g:pages_dir = glob("~/sandbox/personal/zaurus/zlog/")
 
-function! IsPagesEntry(name)
+function! IsPagesEntry(name) " {{{
    return a:name =~ '\d\d\d\d-\d\d-\(index\|\d\d\)[[:alpha:]]*.txt'
 endfunction
 
+"}}}
 augroup MorningPages | au!
    if IsPagesEntry(bufname("%"))
     au BufRead * call WritingMappings()
