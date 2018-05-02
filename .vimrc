@@ -2120,6 +2120,11 @@ function! TransformDraftLogToPool() "{{{
     silent! v/--> /d
     silent! % s/--> //
     silent! % !sort
+    silent! normal ggVGy
+    silent! undo
+    silent! tabnew
+    silent! normal P
+    set nornu nonu
 endfunction
 
 "}}}
