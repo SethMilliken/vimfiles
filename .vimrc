@@ -2114,20 +2114,6 @@ function! CheckinCheckup(...) " {{{
 endfunction
 
 " }}}
-command! TransformDraftLogToPool :call TransformDraftLogToPool()
-function! TransformDraftLogToPool() "{{{
-    silent! 1,/----/d
-    silent! v/--> /d
-    silent! % s/--> //
-    silent! % !sort
-    silent! normal ggVGy
-    silent! undo
-    silent! tabnew
-    silent! normal P
-    set nornu nonu
-endfunction
-
-"}}}
 
 " }}}
 " Scala {{{
