@@ -832,8 +832,7 @@ noremap <C-k> :call AutoSpellCorrect(0)<CR>
 inoremap <C-k> <Esc>:call AutoSpellCorrect(1)<CR>
 function! AutoSpellCorrect(from_insert) " {{{
     set spelllang=en,mtg
-    set dictionary=~/.vim/spell/en.utf-8.add,~/.vim/spell/mtg.utf-8.add
-    set spellfile=~/.vim/spell/en.utf-8.add,~/.vim/spell/mtg.utf-8.add
+    set dictionary=spell
     set complete+=k
     let l:spell_setting = getbufvar('%', '&spell')
     set spell
