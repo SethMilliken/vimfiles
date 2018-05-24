@@ -255,7 +255,7 @@ endfunction
 function! startup#SETH()
     let s:obj = startup#base()
 
-    fun! s:obj.myname() dict
+    fun! s:obj.class() dict
         return "seth.class"
     endfun
 
