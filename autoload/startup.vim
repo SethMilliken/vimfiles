@@ -68,7 +68,9 @@ function! startup#base()
         if self.virtual() | return | end
         edit ~/.vim/.vimrc
         vsplit ~/.vim/.gvimrc | wincmd t | wincmd =
-        tabnew ~/.vim/autoload/startup.vim | tabprev
+        tabnew ~/.vim/autoload/startup.vim
+        tab help
+        tabfirst
     endfun
 
     fun s:obj.vimhelpApp() dict
