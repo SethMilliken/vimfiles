@@ -181,12 +181,16 @@ function! startup#base()
         "echo "default gvim instance"
     endfun
 
+    fun! s:obj.macvimApp() dict
+        " echo "default MacVim instance"
+    endfun
+
     fun! s:obj.app() dict
         if !exists('g:vim_app_name')
             if strlen(v:servername) > 0 && !match(v:servername, "^VIM$") == 0
                 let g:vim_app_name = v:servername
             elseif match($VIMRUNTIME, '\.app') > 0
-                let g:vim_app_name = split(split($VIMRUNTIME, '\.app')[0], '/')[1]
+                let g:vim_app_name = split(split($VIMRUNTIME, '\.app')[0], '/')[-1]
             else
                 let g:vim_app_name = "default"
             endif
