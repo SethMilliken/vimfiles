@@ -51,13 +51,11 @@ function! startup#base()
         if self.class() == "base.class" | return 1 | end
     endfun
 
-    fun s:obj.swapchoice() dict
+    " Used to suppress swap file warnings
+    fun s:obj.swaphandle() dict
         if self.virtual() | return | end
-        if self.app() == "vimwikiApp"
-            return "let v:swapchoice='e' \| set shortmess +=A"
-        else
-            return "let v:swapchoice='a' \| set shortmess +=A"
-        endif
+        let v:swapchoice='e'
+        set shortmess +=A
     endfun
 
     fun! s:obj.vimApp() dict
@@ -194,6 +192,7 @@ function! startup#base()
     endfun
 
     fun s:obj.handle() dict
+        call self.swaphandle()
         call self[self.app()]()
     endfun
 

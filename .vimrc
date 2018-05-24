@@ -1902,9 +1902,9 @@ map <Leader><S-CR> :call feedkeys("\"tyyq:\"tp\r", "n")<CR>
 
 " Automatic Behavior Per MacVim Instance: " {{{
 augroup Startup | au!
-    au VimEnter * silent! exe startup#handler().swapchoice()
-    au VimEnter * nested silent! call startup#handler().handle()
-    au VimEnter * augroup! Startup
+    au VimEnter * nested call startup#handler().handle()
+    au VimEnter * silent! augroup! Startup
+    " Technically deletes the group while it is still in use, so silent! suppresses an error.
 augroup END
 " }}}
 
