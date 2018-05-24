@@ -41,12 +41,18 @@ endfunction
 function! startup#base()
     let s:obj = {}
 
+    " Always override this in subclasses.
     fun s:obj.class() dict
         return "base.class"
     endfun
 
     " Only run if subclass
+    "
     " (avoids triggering behavior on generic vim instances)
+    " Add to beginning of methods to protect:
+    "
+    "  if self.virtual() | return | end
+    "
     fun s:obj.virtual() dict
         if self.class() == "base.class" | return 1 | end
     endfun
@@ -59,6 +65,7 @@ function! startup#base()
     endfun
 
     fun! s:obj.vimApp() dict
+        if self.virtual() | return | end
         edit ~/.vim/.vimrc
         vsplit ~/.vim/.gvimrc | wincmd t | wincmd =
         tabnew ~/.vim/autoload/startup.vim | tabprev
