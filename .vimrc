@@ -96,27 +96,22 @@ if has("autocmd")
     filetype plugin indent on
 
     " Put these in an autocmd group, so that we can delete them easily.
-    augroup vimrcEx
-    au!
+    augroup VimrcEx au!
 
-    " For all text files set 'textwidth' to 78 characters.
-    " autocmd FileType text setlocal textwidth=78
-    " Ummmmm...no! --Seth
-
-    " When editing a file, always jump to the last known cursor position.
-    " Don't do it when the position is invalid or when inside an event handler
-    " (happens when dropping a file on gvim).
-    autocmd BufReadPost *
-      \ if line("'\"") > 0 && line("'\"") <= line("$") |
-      \   exe "normal g`\"" |
-      \ endif
+        " When editing a file, always jump to the last known cursor position.
+        " Don't do it when the position is invalid or when inside an event handler
+        " (happens when dropping a file on gvim).
+        autocmd BufReadPost *
+                    \ if line("'\"") > 0 && line("'\"") <= line("$") |
+                    \   exe "normal g`\"" |
+                    \ endif
 
     augroup END
-    set autoindent      " always set autoindenting on
 endif " has("autocmd")
 "}}}
 " Seth Milliken additions
 " SETTINGS: " {{{
+set autoindent                      " always set autoindenting on
 set shell=bash                      " some issues with zsh
 set encoding=UTF-8                  " use UTF-8 encoding
 set fileencoding=UTF-8              " use UTF-8 encoding as default
@@ -162,14 +157,16 @@ set wildmenu                        " show completion options
 set autoread                        " automatically reread fs changed files *autoread*
 set shellslash                      " always use /
 set undofile                        " experimental: will i actually use this?
-set rnu
-set nu
+set rnu                             " turn on relative line numbers with current line number
+set nu                              " but show current absolute line number
+set showbreak=↳\ \ \ \              " show breaks and line up next line with previous
+set cpo+=n                          " use line number columns for wrapped text
 
-if IsNexus()
-    colorscheme koehler
-else
+try
     colorscheme araxia
-end
+catch
+    colorscheme koehler
+endtry
 
 let mapleader="\\"                  " <Leader>
 "let mapleader="\<CR>"                  " <Leader>
@@ -283,20 +280,12 @@ function! WhitespaceBGone()
   echo "Whitespace-b-gone."
 endfunction
 
-" Saving is better than yet another window navigation variation
-map <C-w>w :write<CR>
-
-
 " File path to pasteboard
 map <Leader>f :call text#file_to_pasteboard()<CR>
 map <Leader>F :call text#file_to_pasteboard(line("."))<CR>
 
 " Commit file
 map <Leader>o :call CheckinCheckup("show_prompt")<CR>
-
-" }}}
-" Utility: word count of current file " {{{
-nmap <silent> <Leader>w :!wc -w %<CR>
 
 " }}}
 " Manual Tail: reload buffer from disk and go to end " {{{
@@ -338,8 +327,8 @@ nmap <silent> <Leader>c :call ScratchBuffer("scratch")<CR>
 
 " }}}
 " Open URIs: " {{{
-nmap <silent> <Leader>/ :call HandleURI()<CR>
-nmap <silent> <Leader>t :call HandleJIRA()<CR>
+" nmap <silent> <Leader>/ :call HandleURI()<CR>
+" nmap <silent> <Leader>t :call HandleJIRA()<CR>
 
 " }}}
 " SQL: grab and format sql statement from current line " {{{
@@ -495,8 +484,6 @@ nmap <silent> <Leader>ll o<Esc>:call timestamp#insert("short") \| call FoldWrap(
 nmap <silent> -- :call append(line("."), text#divider("-"))<CR>
 nmap <silent> -= :call append(line("."), text#divider("="))<CR>
 nmap <silent> -p :call append(line("."), [text#divider('-'), "", string(getreg('*')), ""])<CR>
-nmap <silent> <Leader>ss :w<CR>
-imap <silent> <Leader>ss <Esc><Leader>ss
 
 " }}}
 " Tabs: switching " {{{
@@ -845,21 +832,6 @@ function! AutoSpellCorrect(from_insert) " {{{
     if a:from_insert
         startinsert!
     endif
-endfunction
-
-" }}}
-function! RemoveCorrectlySpelledWords() range " {{{
-    set spell
-    let l:lines = getline(a:firstline, a:lastline)
-    let l:bad_words = []
-    for l:line in l:lines
-        let l:candidate = spellbadword(l:line)
-        if !empty(l:candidate[0])
-           call add(l:bad_words, l:line)
-        endif
-    endfor
-    exec a:firstline + 1 . "," . a:lastline . "d"
-    call setline(a:firstline, l:bad_words)
 endfunction
 
 " }}}
@@ -2162,7 +2134,7 @@ let g:tagbar_type_scala = {
 let g:syntastic_puppet_lint_arguments = '--no-80chars-check '
 
 function! ConfigureNodeJs()
-    for c in ['nodejs', 'node']
+    for c in ['node', 'nodejs', 'jslint']
         if filereadable(split(system('which ' . c . ' | grep -v "not found"'), '\n', 1)[0])
             let $JS_CMD = c
             break
