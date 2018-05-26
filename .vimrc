@@ -1697,6 +1697,7 @@ map <C-e>t  :FufTag<CR>
 map <C-e>v  :VimFiles<CR>
 map <C-e>s  :Scriptnames<CR>
 map <C-e>w  :WikiPages<CR>
+imap <silent> <C-e>m  <Esc>:MTGNames<CR>
 
 " }}}
 " FILE SEARCH: " {{{
@@ -1704,6 +1705,7 @@ command! DotFiles call DotFiles()
 command! VimFiles call VimFiles()
 command! Scriptnames call Scriptnames()
 command! WikiPages call WikiPages()
+command! MTGNames silent! call MTGNames()
 
 function! RecursiveFileSearch(callback) " {{{
     let bad_paths = '^\(' . expand('~') . '\|' . expand('/') .'\)$'
@@ -1743,6 +1745,29 @@ endfunction
 " }}}
 function! WikiPages() " {{{
     call fuf#givenfile#launch('', '0', 'WikiPages>', split(glob('~/sandbox/personal/vimwiki/*'), "\n"))
+endfunction
+
+" }}}
+function! MTGNames() " {{{
+    let mtgListener = {}
+    fun! mtgListener.onComplete(item, method)
+        echo "You selected: " . a:item . " with method: " . a:method
+        call setreg('c', a:item)
+        normal "cp
+        set virtualedit=onemore
+        startinsert
+        call cursor(line('.'), col('.') + 1)
+    endfun
+    fun! mtgListener.onAbort()
+    endfun
+    fun! mtgListener.completions()
+        if !exists('g:mtg_card_completions')
+            let completion_file = '~/.vim/bundle/vim-mtg-spell/mtg-cardname-completion-list'
+            let g:mtg_card_completions = readfile(expand(completion_file))
+        endif
+        return g:mtg_card_completions
+    endfun
+    call fuf#callbackitem#launch('', 0, 'MTG> ', mtgListener, mtgListener.completions(), 0)
 endfunction
 
 " }}}
