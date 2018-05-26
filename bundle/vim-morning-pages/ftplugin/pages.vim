@@ -18,13 +18,15 @@ function! WritingMappings() " {{{
     else
         set nocursorline wrap nolist spell
         set showbreak=
+        set cpo-=n
     end
-    exec 'map Qq :call PagesToggle()<CR>'
-    exec 'imap Qq <esc>Qq'
-    exec 'map QQ :call NotesToggle()<CR>'
-    exec 'imap QQ <esc>QQ'
-    exec 'map kj :call TocToggle()<CR>'
-    exec 'imap kj <esc>kj'
+    map  <buffer> Qq :call PagesToggle()<CR>
+    imap <buffer> rq <esc>Qq
+    map  <buffer> QQ :call NotesToggle()<CR>
+    imap <buffer> QQ <esc>QQ
+    map  <buffer> kj :call TocToggle()<CR>
+    imap <buffer> kj <esc>kj
+
     doau CharacterCount BufRead
 endfunction
 
