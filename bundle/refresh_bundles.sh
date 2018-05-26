@@ -80,7 +80,6 @@ refresh    gitv                 git://github.com/gregsexton/gitv.git
 refresh    gundo                git://github.com/sjl/gundo.vim.git
 refresh    hexhighlight         git://github.com/yurifury/hexHighlight.git
 refresh    javaScriptLint       git://github.com/smith/javaScriptLint.vim.git               'brew install jsl'
-refresh    jslint               git://github.com/vim-scripts/jslint.vim.git
 refresh    kellys               git://github.com/vim-scripts/kellys.git
 refresh    l9                   git://github.com/slack/vim-l9.git
 refresh    linediff             git://github.com/AndrewRadev/linediff.vim.git
@@ -119,7 +118,7 @@ refresh    vim-airline          git://github.com/vim-airline/vim-airline.git
 refresh    vim-airline-themes   git://github.com/vim-airline/vim-airline-themes.git
 refresh    vim-flake8           git://github.com/nvie/vim-flake8.git                         'pip install flake8'
 refresh    vim-javascript       git://github.com/pangloss/vim-javascript.git
-refresh    vim-javascript       git://github.com/pangloss/vim-javascript.git
+refresh    vim-mtg-spell        git@github.com:SethMilliken/vim-mtg-spell.git
 refresh    vim-ruby             git://github.com/vim-ruby/vim-ruby.git
 refresh    vim-scala            git://github.com/derekwyatt/vim-scala.git
 refresh    vim-signify          git://github.com/mhinz/vim-signify.git
@@ -138,6 +137,7 @@ warning    csapprox             git://github.com/godlygeek/csapprox.git
 warning    dbext                git://github.com/vim-scripts/dbext.vim.git
 warning    delimitMate          git://github.com/Raimondi/delimitMate.git
 warning    javascript           git://github.com/serverhorror/javascript.vim.git
+warning    jslint               git://github.com/vim-scripts/jslint.vim.git
 warning    scala                git://github.com/vim-scripts/scala.vim.git
 warning    script-ed            ssh://seth@at.araxia.net/~/git/script-ed.git
 warning    threesome            git://github.com/sjl/threesome.vim.git
