@@ -18,16 +18,24 @@
 "
 " Create proper object based on hostname. " {{{
 function! startup#handler()
-    exe "return startup#" . startup#host() . "()"
+    let l:host = startup#host()
+    if exists("*startup#" . l:host)
+        exe "return startup#" . l:host . "()"
+    else
+        exe "return startup#base()"
+    endif
 endfunction
 
 "}}}
-" Determine hostname. " {{{
+" Determine hostname: " {{{
 function! startup#host()
     if has('win32')
         let host = substitute(text#strip($USERDOMAIN), "-", "", "")
     else
         let host = toupper(text#strip(system('hostname -s')))
+    end
+    if host =~ 'UA-.*'
+        let host = "UA"
     end
     if host == ""
         let host = "base"
