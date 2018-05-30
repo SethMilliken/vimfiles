@@ -5,7 +5,7 @@
 "   Araxia on #vim irc.freenode.net
 
 " Version:
-" 0.1 " 2018-05-09 16:24:08 PDT 
+" 0.1 " 2018-05-09 16:24:08 PDT
 
 " Notes:
 
@@ -23,7 +23,6 @@ let s:sideboard_annotation = "// Sideboard"
 " }}}
 " AUGROUP: " {{{
 augroup DecList | au!
-    au BufNewFile,BufRead *.dec set filetype=dec
     au FileType *dec* map <buffer> QQ <Plug>MoveToMainTop
     au FileType *dec* map <buffer> Qq <Plug>MoveToSideboard
     au FileType *dec* map <buffer> Qx <Plug>MoveToSideboard
@@ -34,35 +33,40 @@ augroup END
 
 " }}}
 " FUNCTIONS: " {{{
-function! s:TransformDraftLogToPool() "{{{
-    let l:is_draftlog = search(s:draftlog_sentinel, 'wcn')
-    if l:is_draftlog
-        silent! set readonly
-        silent! normal ggVGygg
-        silent! vnew
-        silent! normal p
-        silent! g/Time: /normal "aY
-        silent! 1,/----/d
-        silent! v/--> /d
-        silent! % s/--> //
-        silent! % !sort
-        " silent! normal gg"aP
-        silent! g/^\(Island\|Plains\|Forest\|Swamp\|Mountain\)$/d
-        let timestamp = substitute(getreg("a"), "Time:    ", "", "")
-        let timestamp = substitute(timestamp, "[ :]", "-", "g")
-        call append(line("0"), "// Maindeck " . timestamp)
-        call append(line("$"), ["", "// Sideboard"])
-        exec "saveas " . tempname() . "_" . timestamp . ".dec"
-        set nornu nonu
-    else
-        echo "This does not look like a draft log."
-    end
-endfunction
+if !exists("*s:TransformDraftLogToPool")
+    function! s:TransformDraftLogToPool() "{{{
+        let l:is_draftlog = search(s:draftlog_sentinel, 'wcn')
+        if l:is_draftlog
+            silent! set readonly
+            silent! normal ggVGygg
+            silent! vnew
+            silent! normal p
+            silent! g/Time: /normal "aY
+            silent! 1,/----/d
+            silent! v/--> /d
+            silent! % s/--> //
+            silent! % !sort
+            " silent! normal gg"aP
+            silent! g/^\(Island\|Plains\|Forest\|Swamp\|Mountain\)$/d
+            let timestamp = substitute(getreg("a"), "Time:    ", "", "")
+            let timestamp = substitute(timestamp, "[ :]", "-", "g")
+            call append(line("0"), "// Maindeck " . timestamp)
+            call append(line("$"), ["", "// Sideboard"])
+            exec "saveas " . tempname() . "_" . timestamp . ".dec"
+            set nornu nonu
+        else
+            echo "This does not look like a draft log."
+        end
+    endfunction
+endif
 command! TransformDraftLogToPool :call TransformDraftLogToPool()
 noremap <SID>TransformDraftLogToPool :call <SID>TransformDraftLogToPool()<CR>
 noremap <script> <Plug>TransformDraftLogToPool <SID>TransformDraftLogToPool
 
 " }}}
+
+" }}}
+" Movement: {{{
 function! s:MoveToSideboard(line) " {{{
     call s:MoveBelowText(s:sideboard_annotation)
 endfunction
@@ -81,12 +85,12 @@ noremap <SID>MoveToMainTop :call <SID>MoveToMainTop(line("."))<CR>
 function! s:MoveBelowText(text) " {{{
     let target = search(a:text, 'wcn')
     if target > 0
-        call MoveToLine(target)
+        call <SID>MoveToLine(target)
     endif
 endfunction
 
 " }}}
-function! MoveToLine(line) " {{{
+function! s:MoveToLine(line) " {{{
     let l:dest = a:line
     let l:save_position = getpos(".")
     if a:line > line("$")
@@ -103,10 +107,8 @@ endfunction
 
 " }}}
 
-" }}}
 
-" Movement: {{{
-function! MoveItemDown() range " {{{
+function! s:MoveItemDown() range " {{{
     let l:motion = a:lastline - a:firstline
     if line(".") < line("$")
         let l:contents = getline(line("."))
@@ -115,12 +117,12 @@ function! MoveItemDown() range " {{{
         normal j
     end
 endfunction
-noremap <silent> <SID>MoveItemDown :call MoveItemDown()<CR>
+noremap <silent> <SID>MoveItemDown :call <SID>MoveItemDown()<CR>
 noremap <script> <Plug>MoveItemDown <SID>MoveItemDown
 
 "
 " }}}
-function! MoveItemUp() range " {{{
+function! s:MoveItemUp() range " {{{
     let l:motion = a:lastline - a:firstline
     if line(".") > 1
         let l:is_last_line = line(".") == line("$")
@@ -135,7 +137,7 @@ function! MoveItemUp() range " {{{
         normal k
     end
 endfunction
-noremap <silent> <SID>MoveItemUp :call MoveItemUp()<CR>
+noremap <silent> <SID>MoveItemUp :call <SID>MoveItemUp()<CR>
 noremap <script> <Plug>MoveItemUp <SID>MoveItemUp
 
 "
