@@ -1697,7 +1697,8 @@ map <C-e>t  :FufTag<CR>
 map <C-e>v  :VimFiles<CR>
 map <C-e>s  :Scriptnames<CR>
 map <C-e>w  :WikiPages<CR>
-imap <silent> <C-e>m  <Esc>:MTGNames<CR>
+imap <silent> <C-e>m <Esc>:call MTGNames('i')<CR>
+map <silent> <C-e>m :call MTGNames('n')<CR>
 
 " }}}
 " FILE SEARCH: " {{{
@@ -1705,7 +1706,7 @@ command! DotFiles call DotFiles()
 command! VimFiles call VimFiles()
 command! Scriptnames call Scriptnames()
 command! WikiPages call WikiPages()
-command! MTGNames silent! call MTGNames()
+command! MTGNames silent! call MTGNames('c')
 
 function! RecursiveFileSearch(callback) " {{{
     let bad_paths = '^\(' . expand('~') . '\|' . expand('/') .'\)$'
@@ -1748,17 +1749,25 @@ function! WikiPages() " {{{
 endfunction
 
 " }}}
-function! MTGNames() " {{{
-    let mtgListener = {}
+function! MTGNames(mode) " {{{
+    let was_whitespace = 0
+    let mtgListener = {"wrap": '', "mode": a:mode}
     fun! mtgListener.onComplete(item, method)
-        echo "You selected: " . a:item . " with method: " . a:method
-        call setreg('c', a:item)
-        normal "cp
-        set virtualedit=onemore
-        startinsert
-        call cursor(line('.'), col('.') + 1)
+        " echo "You selected: " . a:item . " with method: " . a:method
+        call setreg('c', self["wrap"] . a:item . self["wrap"])
+        normal viw"cgp
+        if (self.isInsertMode())
+            startinsert
+            call cursor(line('.'), col('.') + 1)
+        elseif (len(self["wrap"]) == 0)
+            normal l
+        endif
     endfun
     fun! mtgListener.onAbort()
+        " TODO: restore original cursorposition
+    endfun
+    fun! mtgListener.isInsertMode()
+        return self["mode"] == 'i'
     endfun
     fun! mtgListener.completions()
         if !exists('g:mtg_card_completions')
@@ -1767,7 +1776,23 @@ function! MTGNames() " {{{
         endif
         return g:mtg_card_completions
     endfun
-    call fuf#callbackitem#launch('', 0, 'MTG> ', mtgListener, mtgListener.completions(), 0)
+    fun! mtgListener.start()
+        set virtualedit=all
+        if (self.isInsertMode())
+            call cursor(line('.'), col('.') - 1)
+        endif
+        " gobwarc elvishb llanoelv
+        let @c = substitute(getline('.')[col('.') - 1], ' ', '', '')
+        if (@c == '')
+            let was_whitespace = 1
+            let @c = ''
+            let mtgListener["wrap"] = " "
+        else
+            normal "cyiw
+        endif
+        call fuf#callbackitem#launch(@c, 0, 'MTG> ', self, self.completions(), 0)
+    endfun
+    call mtgListener.start()
 endfunction
 
 " }}}
