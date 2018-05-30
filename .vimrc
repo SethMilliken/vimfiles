@@ -956,7 +956,7 @@ endfunction
 
 " }}}
 function! WriteBufferIfWritable() " {{{
-    if filewritable(expand('%')) && !(&l:readonly)
+    if filewritable(expand('%')) && !exists('readonly') && !exists('buftype')
         write
     end
 endfunction
