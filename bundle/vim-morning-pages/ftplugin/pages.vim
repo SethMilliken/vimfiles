@@ -67,21 +67,23 @@ function! PagesHeader() " {{{
 endfunction
 
 " }}}
-function! JournalEntry() " {{{
-    let l:currentdate = timestamp#text('date')
-    let l:entry = g:pages_dir . l:currentdate . ".txt"
-    let l:entryexists = getfsize(expand(l:entry)) > 1
-    exec "lcd " . g:pages_dir
-    exec "edit " . l:entry
-    if l:entryexists
-        " Check for "Finished typing" annotation and create newly indexed entry if it exists
-        call append("$", ["", timestamp#text('time'), ""])
-        normal Go
-        startinsert
-    else
-        call PagesHeader()
-    endif
-    Writing
-endfunction
+if !exists("*JournalEntry")
+    function! JournalEntry() " {{{
+        let l:currentdate = timestamp#text('date')
+        let l:entry = g:pages_dir . l:currentdate . ".txt"
+        let l:entryexists = getfsize(expand(l:entry)) > 1
+        exec "lcd " . g:pages_dir
+        exec "edit " . l:entry
+        if l:entryexists
+            " Check for "Finished typing" annotation and create newly indexed entry if it exists
+            call append("$", ["", timestamp#text('time'), ""])
+            normal Go
+            startinsert
+        else
+            call PagesHeader()
+        endif
+        Writing
+    endfunction
+endif
 
 " }}}
