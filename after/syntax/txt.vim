@@ -67,7 +67,7 @@ syntax match divider /^[^/[:space:]]\{30,}$/
 syntax region modeline start="^vim:" end="$" oneline
 
 " underline
-syntax match italic "_[^_]\+_"
+syntax match italic "_[^_]\{-}_"
 
 " }}}
 " highlights {{{
