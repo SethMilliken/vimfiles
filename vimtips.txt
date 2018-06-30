@@ -1,3 +1,4 @@
+- add a new tip to ~/.vim/vimtips.txt
 - <Leader>b to browse output of a command
 - try something different
 - do something new
@@ -5,10 +6,10 @@
 - use Command-Shift-/ for menu navigation
 - use <C-m> for <CR>
 - use <C-h> for <Del>
+- use <C-c> for <Esc> (ish)
 - practice using i_C-[, i_C-o, and i_C-c
-- use taskstack to quickly record notes to be moved elsewhere later
+- use scratch to quickly record notes to be moved elsewhere later
 - use taskstack for queuing up todo items even if you're not actively doing them now
-#- replace only visual selection with s/\%Vregex\%V/foo/g
 - sit up straight
-- add a tip here
-# vim: set spell
+#- replace only visual selection with s/\%Vregex\%V/foo/g
+# vim:spell

@@ -883,15 +883,28 @@ function! RandomHint() " {{{
                 let g:hint_filename = $HOME . "/.vim/vimtips.txt"
             endif
             let g:random_hint_list = readfile(g:hint_filename, '')
+            let comment_character = '#'
             call filter(g:random_hint_list, 'strpart(v:val, 0, 1) != comment_character')
         endif
         let hint_count = len(g:random_hint_list)
-        exec "ruby random_line = rand(" . hint_count . ")"
-        ruby VIM::command("let hint = #{random_line}")
+        if has("python") || has("python3")
+            pyx import random
+            exec 'let hint_number = pyxeval("random.randrange(1, ' .  hint_count . ')")'
+        else
+            " if can't random, just cycle through all tips
+            if !exists("g:hint_counter")
+                let g:hint_counter = 0
+            endif
+            let g:hint_counter += 1
+            if g:hint_counter == hint_count
+                let g:hint_counter = 0
+            endif
+            let hint_number = g:hint_counter
+        endif
     catch
         return "Random hints not available."
     endtry
-    return g:random_hint_list[hint]
+    return g:random_hint_list[hint_number]
 endfunction
 
 " }}}
