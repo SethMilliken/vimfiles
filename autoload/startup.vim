@@ -22,7 +22,7 @@ function! startup#handler()
     if exists("*startup#" . l:host)
         exe "return startup#" . l:host . "()"
     else
-        exe "return startup#base()"
+        exe "return startup#defaults()"
     endif
 endfunction
 
