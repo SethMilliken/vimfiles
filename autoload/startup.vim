@@ -316,6 +316,10 @@ function! startup#UA()
         return "ua"
     endfun
 
+    fun! s:obj.docroot() dict
+        return $HOME . "/sandbox/work/"
+    endfun
+
     fun! s:obj.vimwikiApp() dict
         normal 3\ww
         set nolist
