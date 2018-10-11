@@ -2437,7 +2437,7 @@ warn(
 warn_explicit(
 warnpy3k(
 
---- import imp ---
+--- import importlib ---
 imp.C_BUILTIN
 imp.C_EXTENSION
 imp.IMP_HOOK
@@ -2471,7 +2471,7 @@ imp.new_module(
 imp.release_lock(
 imp.reload(
 
---- from imp import * ---
+--- from importlib import * ---
 C_BUILTIN
 C_EXTENSION
 IMP_HOOK
