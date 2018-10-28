@@ -322,6 +322,8 @@ nmap <silent> <Leader>b :call feedkeys(":TBrowseOutput\<Space>", "t")<CR>
 
 nmap <silent> <C-w>` :wincmd =<CR>
 
+nmap <silent> <C-w>V :vnew<CR>
+
 " }}}
 " Folds: " {{{
 nmap <silent> <Leader>= :call FoldDefaultNodes()<CR>:normal zv]z[zzt<CR><C-l>
