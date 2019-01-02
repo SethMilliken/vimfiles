@@ -199,11 +199,12 @@ function! startup#defaults()
         normal ggzo
     endfun
 
-    fun! s:obj.pentadactylApp() dict
+    fun! s:obj.dactylApp() dict
         edit $HOME/.pentadactyl/.pentadactylrc
         vsplit $HOME/.pentadactyl/colors/araxia.penta
         windo set nolist
         wincmd t | wincmd =
+        tabedit $HOME/.tridactylrc
     endfun
 
     fun! s:obj.tmuxApp() dict
