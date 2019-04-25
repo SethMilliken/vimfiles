@@ -135,8 +135,8 @@ function! startup#defaults()
 
     fun! s:obj.vimApp() dict
         if self.virtual() | return | end
-        edit ~/.vim/.vimrc
-        vsplit ~/.vim/.gvimrc | wincmd t | wincmd =
+        edit ~/.vim/vimrc
+        vsplit ~/.vim/gvimrc | wincmd t | wincmd =
         tabnew ~/.vim/autoload/startup.vim
         tab help
         tabfirst
@@ -181,8 +181,8 @@ function! startup#defaults()
     endfun
 
     fun s:obj.sourcecodeApp() dict
-        edit ~/.vim/.vimrc
-        vsplit ~/.vim/.gvimrc | wincmd t | wincmd =
+        edit ~/.vim/vimrc
+        vsplit ~/.vim/gvimrc | wincmd t | wincmd =
         tabnew ~/.vim/autoload/startup.vim | tabprev
     endfun
 
@@ -430,7 +430,7 @@ function! startup#SETHPC()
     endfun
 
     fun s:obj.dotfilesApp() dict
-        edit ~/vimfiles/.vimrc
+        edit ~/vimfiles/vimrc
     endfun
 
     fun s:obj.autohotkeyApp() dict
