@@ -269,6 +269,7 @@ imap <silent> <C-l> <Esc><C-l>
 imap <C-y>v <Esc><C-y>v
 nmap <C-y>v :call ReloadVimrc()<CR>
 " Show snippets
+nmap <C-y>m :call MTGOListCleanup()<CR>
 nmap <C-y>s :call feedkeys(":call OpenRelatedSnippetFileInVsplit()\r\<Tab>\<Tab>", 't')<CR>
 nmap <C-y>a :AbbUp<CR>
 nmap <C-y>A :vsplit ~/.vim/plugin/iabbs.vim<CR>
@@ -2297,6 +2298,31 @@ endfunction
 
 " Restore tmp directory that appears to get reaped by OpenBSD
 command! TmpdirRestore call mkdir(fnamemodify(tempname(),":p:h"),"",0700)
+
+function! MTGOMatchPattern() " {{{
+    g/PucaBot/d
+    let list = map(getline(1,'$'), 'substitute(v:val, ''. \([0-9]\{1,}\)x \(.*\) \([A-Z0-9]\{3,3}\) [A-Z0-9]\{0,4}/[A-Z0-9]\{0,4}'', ''\=submatch(1) . " " . submatch(2) . " " . submatch(3)'', "g")')
+    call setline(1, list)
+    g/^\s\{0,}$/d
+    "let filename = timestamp#text("filename") . "_" . "MTGO_Search_Tool" . ".csv"
+    "let desktop = glob("~/Desktop/")
+    "let filepath = desktop . filename
+    "exec "saveas " . filepath
+endfunction
+
+" }}}
+function! MTGOListCleanup() " {{{
+    g/PucaBot/d
+    let list = map(getline(1,'$'), 'substitute(v:val, ''. \([0-9]\{1,}\)x \(.*\) \([A-Z0-9]\{3,}\) [A-Z0-9]\{0,4}/[A-Z0-9]\{0,4}'', ''\=submatch(1) . " " . submatch(2)'', "g")')
+    call setline(1, list)
+    g/^\s\{0,}$/d
+    let filename = timestamp#text("filename") . "_" . "MTGO_Search_Tool" . ".csv"
+    let desktop = glob("~/Desktop/")
+    let filepath = desktop . filename
+    exec "saveas " . filepath
+endfunction
+
+" }}}
 
 " }}}
 
