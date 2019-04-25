@@ -40,7 +40,11 @@ let g:vimwiki_menu = ''
 " }}}
 function! IsNexus() " {{{
     if !exists('g:is_nexus')
-        let g:is_nexus = match(system("uname -a"), "armv7l") > 0
+        if has("win32")
+            let g:is_nexus = 0
+        else
+            let g:is_nexus = match(system("uname -a"), "armv7l") > 0
+        endif
     endif
     return g:is_nexus
 endfunction
@@ -96,7 +100,8 @@ if has("autocmd")
     filetype plugin indent on
 
     " Put these in an autocmd group, so that we can delete them easily.
-    augroup VimrcEx au!
+    augroup VimrcEx
+    au!
 
         " When editing a file, always jump to the last known cursor position.
         " Don't do it when the position is invalid or when inside an event handler
@@ -539,9 +544,11 @@ let g:airline_powerline_fonts = 1
 let g:airline_theme='araxia'
 
 function! AirlineCcInit()
-    let spc = g:airline_symbols.space
-    call airline#parts#define_function('cc', 'CharacterCount')
-    let g:airline_section_z = airline#section#create(['windowswap', '%3p%%'.spc, 'linenr', ':%3v ', "(", 'cc', ")"])
+    if exists("g:airline_symbols")
+        let spc = g:airline_symbols.space
+        call airline#parts#define_function('cc', 'CharacterCount')
+        let g:airline_section_z = airline#section#create(['windowswap', '%3p%%'.spc, 'linenr', ':%3v ', "(", 'cc', ")"])
+    end
 endfunction
 
 " }}}
@@ -2155,10 +2162,10 @@ call ConfigureNodeJs()
 
 " Dynamic 'cb' setting " {{{
 function! Clipboard()
-    if match(system("uname"), "Linux") > -1
-        set clipboard=
-    else
+    if has("win32") || !(match(system("uname"), "Linux") > -1)
         set clipboard=unnamed
+    else
+        set clipboard=
     endif
 endfunction
 call Clipboard()
