@@ -1,13 +1,11 @@
-" vim-airline theme based on ubaryd
-" based on ubaryd
-" (https://github.com/Donearm/araxia)
+" araxia  vim-airline theme
 
 " Normal mode
-let s:N1 = [ '#242424' , '#F4F4F4' , 232 , 252 ] " clean NORMAL fg & bg
+let s:N1 = [ '#242424' , '#F4F4F4' , '232' , '252', '' ] " clean NORMAL fg & bg
 
-let s:N2 = [ '#FA0000' , '#242424' , 252, 238 ] " dirty NORMAL fg; dirty filename bg
+let s:N2 = [ '#FA0000' , '#242424' , '252', '238', '' ] " dirty NORMAL fg; dirty filename bg
 " also clean encoding and lb fg & bg
-let s:N3 = [ '#FACA33' , '#242424' , 137, 235 ] " toffee & darkgravel
+let s:N3 = [ '#FACA33' , '#242424' , '137', '235', '' ] " toffee & darkgravel
 let s:N4 = [ '#A4A4A4' , 243 ] " dirty file NORMAL bg
 
 " Insert mode
@@ -17,10 +15,19 @@ let s:I3 = [ '#f4cf86' , '#020202' , 222 , 235 ] " lighttannedskin & darkgravel
 let s:I4 = [ '#FA0000' , '#020202' , 222 , 235 ] " lighttannedskin & darkgravel
 
 " Visual mode
-let s:V1 = [ '#FFFFFF' , '#FA0000' , 233 , 88 ] " blackgravel & warmadobe
-let s:V2 = [ '#000000' , '#88633f' , 16 , 95 ] " coal & cappuccino
-let s:V3 = [ '#88633f' , '#FACCCC' , 95 , 252 ] " cappuccino & bleaksand
-let s:V4 = [ '#FFFFFF' , '#FA0000' , 233 , 88 ] " blackgravel & warmadobe
+" let s:V1 = [ '#FFFFFF' , '#FA0000' , '233' , '88'  ] " blackgravel & warmadobe
+" let s:V2 = [ '#000000' , '#88633f' , '16' ,  '95'  ] " coal & cappuccino
+" let s:V3 = [ '#88633f' , '#FACCCC' , '95' ,  '252' ] " cappuccino & bleaksand
+" let s:V4 = [ '#FFFFFF' , '88'  ]                     " blackgravel & warmadobe
+let s:V1 = [ '#0087ff' , '#ffffff','33','231']
+let s:V2 = [ '#005faf' , '#5fafff','25','75']
+let s:V3 = [ '#87d7ff' , '#005faf','117','25']
+
+" Tabline
+let s:TN  = s:N2 " normal buffers
+let s:TM  = [ '#870000', '#ff8700',  88, 208, 'bold' ] " modified buffers
+let s:TMU = [ '#ff8700', '#870000', 208,  88, 'bold' ] " modified unselected buffers
+let s:TH  = [ s:N1[1], s:N1[0], s:N1[3], s:N1[2] ]     " hidden buffers
 
 " Replace mode
 let s:RE = [ '#c7915b' , 173 ] " nut
@@ -28,6 +35,10 @@ let s:RE = [ '#c7915b' , 173 ] " nut
 " Paste mode
 let s:PA = [ '#f9ef6d' , 154 ] " bleaklemon
 
+" Info modified
+let s:IM = [ '#242321' , 235 ]
+
+" Inactive mode
 let s:IA = [ s:N2[1], s:N3[1], s:N2[3], s:N3[3], '' ]
 
 let g:airline#themes#araxia#palette = {}
@@ -60,9 +71,15 @@ let g:airline#themes#araxia#palette.replace_modified = g:airline#themes#araxia#p
 
 
 let g:airline#themes#araxia#palette.visual = airline#themes#generate_color_map(s:V1, s:V2, s:V3)
-let g:airline#themes#araxia#palette.visual_modified = {
-      \ 'airline_c' : [ s:V3[0] , s:V4[0] , s:V3[2] , s:V4[1] , '' ] }
+" let g:airline#themes#araxia#palette.visual_modified = {
+"       \ 'airline_c' : [ s:V3[0] , s:V3[0] , s:V3[2] , s:V3[1] , '' ] }
 
 let g:airline#themes#araxia#palette.inactive = airline#themes#generate_color_map(s:IA, s:IA, s:IA)
 let g:airline#themes#araxia#palette.inactive_modified = {
       \ 'airline_c' : [ s:V1[1] , ''      , s:V1[3] , ''      , '' ] }
+
+let g:airline#themes#araxia#palette.tabline = {
+      \ 'airline_tab': s:TH,
+      \ 'airline_tabmod': s:TM,
+      \ 'airline_tabmod_unsel': s:TMU,
+      \ 'airline_tabhid': s:TN }
