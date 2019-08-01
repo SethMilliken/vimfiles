@@ -26,16 +26,22 @@ iabb teh the
 iabb Teh The
 iabb hte the
 iabb Hte The
-iabb couldnt' couldn't
-iabb didnt' didn't
-iabb doesnt' doesn't
-iabb dont' don't
-iabb wont' won't
-iabb wouldnt' wouldn't
+iabb couldnt couldn't
 iabb didnt didn't
 iabb doesnt doesn't
 iabb dont don't
 iabb wouldnt wouldn't
+iabb couldnt' couldn't
+iabb didnt' didn't
+iabb doesnt' doesn't
+iabb dont' don't
+iabb wouldnt' wouldn't
+iabb couldn't' couldn't 
+iabb didn't' didn't 
+iabb doesn't' doesn't 
+iabb don't' don't 
+iabb won't' won't 
+iabb wouldn't' wouldn't 
 iabb jef 2426 Jefferson Ave
 iabb berk Berkeley
 iabb berkz Berkeley, CA  94703
