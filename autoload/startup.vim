@@ -229,6 +229,8 @@ function! startup#defaults()
     fun! s:obj.readApp() dict
         exe 'cd' self.personalroot() . "zaurus/zlog/"
         exe "Reading"
+        exe "NERDTree"
+        normal G
         wincmd t
     endfun
 
