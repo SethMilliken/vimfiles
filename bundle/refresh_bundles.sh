@@ -24,7 +24,8 @@ function refresh {
         else
             echo ""
             pushd ${NAME} &> /dev/null
-            ${DEBUG} git fetch --all -q && (${DEBUG} git up &> /dev/null)
+            # ${DEBUG} git fetch --all -q && (${DEBUG} git up &> /dev/null)
+            ${DEBUG} git fetch --all -q && (${DEBUG} git up)
             popd &> /dev/null
         fi
     else
