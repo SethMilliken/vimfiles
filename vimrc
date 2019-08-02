@@ -817,10 +817,10 @@ if !exists("g:reloadvim_function_loaded") " {{{
     let g:reloadvim_function_loaded = ""
     function! ReloadVimrc()
         silent update
-        silent source $HOME/.vimrc
+        silent source $MYVIMRC
         "silent edit
         redraw
-        echo "Resourced .vimrc."
+        echo "Resourced " . $MYVIMRC
     endfunction
 end
 
