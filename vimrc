@@ -1156,7 +1156,7 @@ command! -nargs=* -complete=custom,EmailAddressList Cc call EmitEmailAddress("Cc
 command! -nargs=* Sub call text#insert_line("Subject: " . <q-args>)
 
 augroup VolatileScratch | au!
-    au BufRead *.scratch call SmallWindow()
+    "au BufRead *.scratch call SmallWindow()
     "au BufRead *.scratch nmap <buffer> <silent> <C-m> :call SmallWindow()<CR>
     au BufRead *.scratch nmap <buffer> <silent> <C-y>g :exec "set lines=999 columns=" . (g:gundo_width + &columns) \| :GundoToggle<CR>
     au BufRead *.scratch nmap <buffer> <silent> ZZ :wa \| :call ScratchCopy()<CR>
