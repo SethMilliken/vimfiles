@@ -2328,6 +2328,12 @@ endfunction
 
 " }}}
 
+command! WorkScratch call WorkScratch()
+function! WorkScratch() " {{{
+    e scp://seth@araxia.net/sandbox/work/ua/scratch.scratch
+endfunction
+" }}}
+
 " }}}
 
 " let g:session_autoload = 1
