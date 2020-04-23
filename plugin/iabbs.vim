@@ -18,6 +18,7 @@ iabb hr =>
 iabb ia iabb
 
 " Personal
+iabb ono one-on-one
 iabb lablo laboratory.local
 iabb samlo samsara.local
 iabb worklo seth.local
