@@ -241,6 +241,18 @@ function! startup#defaults()
         wincmd t | wincmd =
     endfun
 
+    fun! s:obj.dairecApp() dict
+        exe 'cd' self.personalroot() . "dairec/"
+        exe 'edit' "summ.txt"
+        normal Gk$
+        exe 'split' "stat.txt"
+        normal ggjw
+        tabnew ~/.vim/bundle/vim-daily-record/ftplugin/dairec.vim
+        vsplit ~/.vim/bundle/vim-daily-record/ftdetect/dairec.vim
+        wincmd h
+        1tabn
+    endfun
+
     fun! s:obj.defaultApp() dict
         "echo "default gvim instance"
     endfun
