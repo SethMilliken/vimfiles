@@ -1529,6 +1529,9 @@ augroup END
 
 function! AddNewRefreshBundleEntry() " {{{
     let repo = text#strip(@*)
+    if len(repo) == 0
+        let repo = text#strip(@")
+    end
     if match(repo, ".git$") == -1
         echo "Is there a git repo URL on the pasteboard?"
         return 0
