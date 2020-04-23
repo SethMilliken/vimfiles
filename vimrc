@@ -522,7 +522,7 @@ endfor
 " Character Count: " {{{
 
 function! CharacterCount()
-    return len(join(getline(1,'$'), "\n")) + 1
+    return len(join(getline(1,'$'), " "))
 endfunction
 
 augroup CharacterCount | au!
