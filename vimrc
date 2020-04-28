@@ -2337,6 +2337,11 @@ function! WorkScratch() " {{{
     e scp://seth@araxia.net/sandbox/work/ua/scratch.scratch
 endfunction
 " }}}
+command! WorkTodo call WorkTodo()
+function! WorkTodo() " {{{
+    e scp://seth@araxia.net/sandbox/work/ua/work.tst
+endfunction
+" }}}
 
 " }}}
 

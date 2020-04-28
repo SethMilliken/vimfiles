@@ -190,6 +190,15 @@ function! startup#defaults()
         exe 'edit' self.docroot() . "scratch.scratch"
     endfun
 
+    fun! s:obj.workscratchApp() dict
+        exe ':WorkScratch'
+    endfun
+
+    fun! s:obj.worktodoApp() dict
+        exe ':WorkTodo'
+    endfun
+
+
     fun! s:obj.slateApp() dict
         exe 'edit' ".slate.js"
     endfun
@@ -200,10 +209,10 @@ function! startup#defaults()
     endfun
 
     fun! s:obj.dactylApp() dict
-        edit $HOME/.pentadactyl/.pentadactylrc
-        vsplit $HOME/.pentadactyl/colors/araxia.penta
-        windo set nolist
-        wincmd t | wincmd =
+        " edit $HOME/.pentadactyl/.pentadactylrc
+        " vsplit $HOME/.pentadactyl/colors/araxia.penta
+        " windo set nolist
+        " wincmd t | wincmd =
         tabedit $HOME/.tridactylrc
     endfun
 
