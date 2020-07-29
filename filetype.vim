@@ -16,7 +16,8 @@ augroup filetypedetect | au!
     au BufNewFile,BufRead *.plt,*.gnuplot         setfiletype gnuplot
     au BufNewFile,BufRead *.pp                    setfiletype puppet
     au BufNewFile,BufRead svn-commit.*            setfiletype svn
-    au BufNewFile,BufRead *.yaml,*.yml            so ~/.vim/syntax/yaml.vim
+    au BufNewFile,BufRead */gcp-*.yaml            setfiletype gcpyaml
+    au BufNewFile,BufRead *.yaml,*.yml            setfiletype yaml
 augroup END
 " See .vim/after/scripts.vim for filetype detection based on file contents and
 " default filetype.
