@@ -34,8 +34,8 @@ function! startup#host()
     else
         let host = toupper(text#strip(system('hostname -s')))
     end
-    if host =~ 'UA-.*'
-        let host = "UA"
+    if host =~ 'A-.*'
+        let host = "AIRSHIP"
     end
     if host == ""
         let host = "base"
@@ -332,8 +332,8 @@ function! startup#NOTABLE()
 endfunction
 
 " }}}
-" Host UA " {{{
-function! startup#UA()
+" Host AIRSHIP" {{{
+function! startup#AIRSHIP()
     let s:obj = startup#defaults()
 
     fun! s:obj.class() dict
@@ -388,6 +388,12 @@ function! startup#UA()
         windo set nolist
         windo set noro
         wincmd t | wincmd =
+    endfun
+
+    fun! s:obj.gcpApp() dict
+        exe 'edit' "services/wallet.yaml"
+        exe 'vsplit' "services/wallet-callbacks.yaml"
+        wincmd h
     endfun
 
     fun! s:obj.TasksFile() dict
