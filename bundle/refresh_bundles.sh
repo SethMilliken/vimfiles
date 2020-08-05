@@ -68,7 +68,6 @@ refresh    .pathogen-raimondi   git://github.com/Raimondi/vim-pathogen.git
 refresh    abolish              git://github.com/tpope/vim-abolish.git
 refresh    ack                  git://github.com/vim-scripts/ack.vim.git                   'brew install ack'
 refresh    ansiesc              git://github.com/vim-scripts/AnsiEsc.vim.git
-refresh    autotag              git://github.com/vim-scripts/AutoTag.git
 refresh    bufexplorer          git://github.com/vim-scripts/bufexplorer.zip.git
 refresh    calendar             git://github.com/vim-scripts/calendar.vim--Matsumoto.git
 refresh    cocoa                git://github.com/msanders/cocoa.vim.git
@@ -91,7 +90,6 @@ refresh    nerdtree             git://github.com/scrooloose/nerdtree.git
 refresh    paster               git://github.com/weierophinney/paster.vim.git
 refresh    pathogen             git://github.com/tpope/vim-pathogen.git
 refresh    pickacolor           git://github.com/Raimondi/PickAColor.git
-refresh    puppet-syntax-vim    git://github.com/puppetlabs/puppet-syntax-vim.git
 refresh    rails                git://github.com/tpope/vim-rails.git
 refresh    ruby-matchit         git://github.com/vim-scripts/ruby-matchit.git
 refresh    screenshot           git://github.com/vim-scripts/ScreenShot.git
@@ -110,7 +108,6 @@ refresh    textobj-rubyblock    git://github.com/nelstrom/vim-textobj-rubyblock.
 refresh    textobj-user         git://github.com/kana/vim-textobj-user.git
 refresh    tlib                 git://github.com/tomtom/tlib_vim.git
 refresh    tmux                 git://github.com/keith/tmux.vim.git
-refresh    twitvim              git://github.com/vim-scripts/TwitVim.git
 refresh    viki                 git://github.com/tomtom/viki_vim.git
 refresh    vim-addon-async      git://github.com/MarcWeber/vim-addon-async.git
 refresh    vim-addon-manager    git://github.com/MarcWeber/vim-addon-manager.git
@@ -125,7 +122,6 @@ refresh    vim-scala            git://github.com/derekwyatt/vim-scala.git
 refresh    vim-signify          git://github.com/mhinz/vim-signify.git
 refresh    vim-traitor          git@github.com:SethMilliken/vim-traitor.git
 refresh    tmux-focus-events    git://github.com/tmux-plugins/vim-tmux-focus-events.git    'set -g focus-events on in tmux'
-refresh    vim-vagrant          git://github.com/markcornick/vim-vagrant.git
 refresh    vim-velocity         git://github.com/lepture/vim-velocity.git
 refresh    vim-virtualenv       git://github.com/jmcantrell/vim-virtualenv.git
 refresh    vim-virtualenv       https://github.com/plytophogy/vim-virtualenv.git
@@ -133,6 +129,7 @@ refresh    vimpager             git://github.com/rkitover/vimpager.git
 refresh    vimwiki              git://github.com/vim-scripts/vimwiki.git
 refresh    vundle               git://github.com/vim-scripts/vundle.git
 refresh    xml                  git://github.com/vim-scripts/xml.vim.git
+warning    autotag              git://github.com/vim-scripts/AutoTag.git
 warning    command-t            git://github.com/wincent/Command-T.git                     'Rebuild if necessary:\n\tpushd command-t/ruby/command-t/; ruby extconf.rb; make && popd'
 warning    conque               git://github.com/rson/vim-conque.git
 warning    csapprox             git://github.com/godlygeek/csapprox.git
@@ -140,9 +137,12 @@ warning    dbext                git://github.com/vim-scripts/dbext.vim.git
 warning    delimitMate          git://github.com/Raimondi/delimitMate.git
 warning    javascript           git://github.com/serverhorror/javascript.vim.git
 warning    jslint               git://github.com/vim-scripts/jslint.vim.git
+warning    puppet-syntax-vim    git://github.com/puppetlabs/puppet-syntax-vim.git
 warning    scala                git://github.com/vim-scripts/scala.vim.git
 warning    script-ed            ssh://seth@at.araxia.net/~/git/script-ed.git
 warning    threesome            git://github.com/sjl/threesome.vim.git
+warning    twitvim              git://github.com/vim-scripts/TwitVim.git
 warning    vim-addon-signs      git://github.com/MarcWeber/vim-addon-signs.git
 warning    vim-powerline        git://github.com/Lokaltog/vim-powerline.git
 warning    vim-ragtag           na
+warning    vim-vagrant          git://github.com/markcornick/vim-vagrant.git
