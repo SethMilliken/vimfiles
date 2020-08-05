@@ -23,6 +23,7 @@ iabb lablo laboratory.local
 iabb samlo samsara.local
 iabb worklo seth.local
 iabb wrt with respect to
+iabb ot to
 iabb teh the
 iabb Teh The
 iabb hte the
