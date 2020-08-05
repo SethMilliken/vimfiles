@@ -2262,6 +2262,7 @@ endfunction
 
 "}}}
 function! EditCurrentEntry() " {{{
+    "call pages#editCurrentEntry()
     let l:current = g:pages_dir . CurrentEntryName()
     " Switch to tab if one is opened with this file being edited
     " Otherwise eidt it here
@@ -2284,7 +2285,7 @@ function! BufferSwitch(bufname) " {{{
     let l:origswb = &swb
     set swb=usetab
     let l:curnr = bufnr("%")
-    let l:curname = bufname("%")
+    let l:curname = expand("%:t")
     if l:curname == a:bufname
         if exists("g:orgnr") && buflisted(g:orgnr)
             exec "sbuffer " . g:orgnr
