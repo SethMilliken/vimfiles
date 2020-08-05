@@ -302,15 +302,11 @@ nmap <silent> <C-e>0 :e<CR>G
 nmap <Leader>\ :call CommitSession()<CR>
 
 " }}}
-" Journal: " {{{
-nmap <Leader>jj :Pages<CR>
-imap <Leader>jj <Esc><Leader>jj
-command! Pages :call PagesEntry()
-
-" }}}
-" Journal: " {{{
-nmap <Leader>je :Journal<CR>
-command! Journal :call JournalEntry()
+" Pages: " {{{
+nmap <Leader>je :echo "Use <Leader>pp (menmonic pages)"<CR>
+nmap <Leader>jy :echo "Use <Leader>po (mnemonic pages old)"<CR>
+nmap <Leader>pp :Pages<CR>
+nmap <Leader>po :Pages timestamp#yesterday()<CR>
 
 " }}}
 " Misc: " {{{
