@@ -146,6 +146,17 @@ function! startup#defaults()
         help help
     endfun
 
+    fun s:obj.shfApp() dict
+        e ~/.shell-functions
+    endfun
+
+    fun s:obj.zappApp() dict
+        e ~/.shell-functions
+        /function zapp()
+        normal zz
+    endfun
+
+
     fun s:obj.twitvimApp() dict
         edit ~/.vim/twitcommands.vim
         so %
@@ -229,10 +240,11 @@ function! startup#defaults()
     endfun
 
     fun! s:obj.writeApp() dict
-        exe 'cd' self.personalroot() . "zaurus/zlog/"
         call EditCurrentEntry()
         vsplit
         call EditCurrentIndex()
+        exe 'cd' pages#root()
+        wincmd h | wincmd =
     endfun
 
     fun! s:obj.readApp() dict
@@ -258,6 +270,23 @@ function! startup#defaults()
         normal ggjw
         tabnew ~/.vim/bundle/vim-daily-record/ftplugin/dairec.vim
         vsplit ~/.vim/bundle/vim-daily-record/ftdetect/dairec.vim
+        wincmd h
+        1tabn
+    endfun
+
+    fun! s:obj.mailApp() dict
+        exe 'cd' "$HOME/.procmail/"
+        exe 'edit' "priority_moderate"
+        exe 'vsplit' "priority_impersonal"
+        exe 'vsplit' "priority_receipt"
+        exe 'vsplit' "priority_high"
+        exe 'split' "valid_addresses"
+        exe 'tabnew' "prescreen.rc"
+        exe 'split' "highlight.rc"
+        exe 'tabnew' "lists.rc"
+        exe 'tabnew' "blacklist"
+        exe 'vsplit' "blacklines"
+        exe 'split' "strictdomains"
         wincmd h
         1tabn
     endfun
@@ -547,14 +576,39 @@ function! startup#ARAXIA()
     fun! s:obj.todoApp() dict
         exe 'edit' self.docroot() . "todo/todo.txt"
         exe 'vsplit' self.docroot() . "todo/techtodo.txt"
-        wincmd t | wincmd =
+        wincmd h
+        exe 'tabedit' self.docroot() . "lists/readinglist.txt"
+        exe 'vsplit' self.docroot() . "lists/videolist.txt"
+        wincmd h
         exe 'tabedit' self.docroot() . "todo/araxia.tst"
+        exe 'vsplit' self.docroot() . "todo/wintodo.txt"
+        1tabn
     endfun
 
     fun! s:obj.notesApp() dict
         exe "edit" self.docroot() . "todo/araxia.tst"
         exe "vsplit" self.docroot() . "todo/weechat.txt"
         wincmd t | wincmd =
+    endfun
+
+    fun! s:obj.scratchApp() dict
+        exe 'edit' self.personalroot() . "scratch.scratch"
+        exe 'vsplit' "todo/weechat.txt"
+        wincmd h
+        exe 'tabnew' "projects/guitar.txt"
+        1tabn
+    endfun
+
+    fun! s:obj.qrithApp() dict
+        exe 'cd' self.personalroot() . "qrith-player-notes/season3"
+        exe 'edit' "ongoing.txt"
+        exe 'vsplit' "inventory.txt"
+        exe 'split' "unanswered_questions.txt"
+        wincmd h
+        exe 'tabnew' "."
+        " open last few session notes in vsplits
+        normal GGkkkgskgskgskgs
+        1tabn
     endfun
 
     fun! s:obj.weechatpApp() dict
