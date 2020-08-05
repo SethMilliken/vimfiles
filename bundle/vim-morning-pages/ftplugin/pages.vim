@@ -76,10 +76,8 @@ if !exists("*pages#editPagesEntry")
         let requested = pages#factory().New(a:time)
         let previous = requested.before()
         if previous.exists()
-            "echo "edit requested: " . requested.date()
             call requested.editHere()
         else
-            "echo "edit previous: " . previous.date()
             call previous.editHere()
         endif
     endfunction
@@ -88,13 +86,13 @@ endif
 " }}}
 " Prototype for Pages Entry " {{{
 function! pages#factory()
-    let s:obj = {}
-    let s:obj["timeField"] = "time unset"
-    let s:obj["dateField"] = "date unset"
-
     let s:oneDay = 24 * 60 * 60
     let s:dateformat = "%Y-%m-%d"
     let s:timeformat = "%H:%M:%S %Z"
+
+    let s:obj = {}
+    let s:obj["timeField"] = "time unset"
+    let s:obj["dateField"] = "date unset"
 
     fun! s:obj.setTime(time) dict
         let self["timeField"] = a:time
@@ -141,28 +139,31 @@ function! pages#factory()
         Writing
     endfun
 
-    " constructor
-    fun! s:obj.New(time = localtime()) dict
-        let newobj = copy(self)
-        call newobj.setTime(a:time)
-        return newobj
-    endfun
-
     func! s:obj.before()
         let l:beforeEntryTime = self["timeField"] - s:oneDay
-        return pages#factory().New(l:beforeEntryTime)
+        return s:factory.New(l:beforeEntryTime)
     endfunc
 
     func! s:obj.after()
         let l:afterEntryTime = self["timeField"] + s:oneDay
-        return pages#factory().New(l:afterEntryTime)
+        return s:factory.New(l:afterEntryTime)
     endfunc
 
-    fun! s:obj.me() dict
-       return self
-   endfun
 
-    "return s:obj.New()
-    return s:obj.me()
+   " Is there any point to a separate dict for the factory itself? Why not
+   " just return New()?  This could have additional methods added to it that
+   " are only available from the factory instance. Like what, though? How
+   " about `New()` itself?  In this case, does it even need to have any of the
+   " other methods?  Probably not. So that keeps a nice separation.
+   " let s:factory = copy(s:obj)
+   let s:factory = {}
+    " constructor
+    fun! s:factory.New(time = localtime()) dict
+        let newobj = copy(s:obj)
+        call newobj.setTime(a:time)
+        return newobj
+    endfun
+
+   return s:factory
 endfunction
 " }}}
