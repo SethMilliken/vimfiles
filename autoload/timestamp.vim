@@ -4,29 +4,35 @@ function! timestamp#insert(style) "{{{
 endfunction
 
 " }}}
-function! timestamp#text(style) "{{{
+function! timestamp#yesterday() "{{{
+    let l:day = 24 * 60 * 60
+    return localtime() - l:day
+endfunction
+
+" }}}
+function! timestamp#text(style, time = localtime()) "{{{
     let l:iswindows = has("win16") || has("win32") || has("win64")
     let l:dateformat = ""
     if l:iswindows
         if a:style == "long"
-            let l:dateformat = strftime("%#x %H:%M:%S ")
+            let l:dateformat = strftime("%#x %H:%M:%S ", a:time)
         elseif a:style == "short"
-            let l:dateformat = strftime("%Y-%m-%d %H:%M:%S ")
+            let l:dateformat = strftime("%Y-%m-%d %H:%M:%S ", a:time)
         endif
-        let l:dateformat .= substitute(strftime("%#z"), '\C[a-z]\+\($\| \)', '', 'g')
+        let l:dateformat .= substitute(strftime("%#z", a:time), '\C[a-z]\+\($\| \)', '', 'g')
     else
         if a:style == "long"
-            let l:dateformat = strftime("%Y %b %d %a %X %Z")
+            let l:dateformat = strftime("%Y %b %d %a %X %Z", a:time)
         elseif a:style == "journal"
-            let l:dateformat = strftime("%A, %B %d, %Y %H:%M:%S %Z")
+            let l:dateformat = strftime("%A, %B %d, %Y %H:%M:%S %Z", a:time)
         elseif a:style == "short"
-            let l:dateformat = strftime("%Y-%m-%d %H:%M:%S %Z")
+            let l:dateformat = strftime("%Y-%m-%d %H:%M:%S %Z", a:time)
         elseif a:style == "time"
-            let l:dateformat = strftime("%H:%M:%S %Z")
+            let l:dateformat = strftime("%H:%M:%S %Z", a:time)
         endif
     endif
     if a:style == "date"
-        let l:dateformat = strftime("%Y-%m-%d")
+        let l:dateformat = strftime("%Y-%m-%d", a:time)
     endif
     return l:dateformat
 endfunction
