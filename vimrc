@@ -225,6 +225,8 @@ imap <F1> <Esc>:Help<CR>
 command! W :w
 " Handy but doesn't work in terminal
 nmap <S-Space> <C-f>
+" Why would I ever want to insert a ^Z?
+imap <C-z> <Esc><C-z>
 
 " c & p normalization
 nmap dD :normal! _y$"_dd<CR>
