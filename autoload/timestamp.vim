@@ -1,6 +1,6 @@
 " Timestamp Functions
-function! timestamp#insert(style) "{{{
-    call text#append(timestamp#text(a:style) . " ")
+function! timestamp#insert(style, time = localtime()) "{{{
+    call text#append(timestamp#text(a:style, a:time) . " ")
 endfunction
 
 " }}}

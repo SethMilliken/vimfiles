@@ -469,6 +469,8 @@ nmap <silent> <C-y><C-t> :call timestamp#addOrUpdateSolicitingAnnotation()<CR>
 nmap <silent> <C-y><C-x> :call timestamp#remove()<CR>
 nmap <silent> <Leader>td :call timestamp#insert("date")<CR>
 imap <silent> <Leader>td <Esc><Leader>td
+nmap <silent> <Leader>ty :call timestamp#insert("date", timestamp#yesterday())<CR>
+imap <silent> <Leader>ty <Esc><Leader>ty
 nmap <silent> <Leader>ts :call timestamp#insert("short")<CR>
 imap <silent> <Leader>ts <Esc><Leader>ts
 nmap <silent> <Leader>tt :call timestamp#insert("time")<CR>
