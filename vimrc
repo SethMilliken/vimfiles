@@ -2155,6 +2155,9 @@ let g:tagbar_type_scala = {
 let g:syntastic_puppet_lint_arguments = '--no-80chars-check '
 
 function! ConfigureNodeJs()
+    if has("win32")
+        return
+    end
     for c in ['node', 'nodejs', 'jslint']
         if filereadable(split(system('which ' . c . ' | grep -v "not found"'), '\n', 1)[0])
             let $JS_CMD = c

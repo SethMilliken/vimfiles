@@ -97,7 +97,6 @@ function! startup#base()
     " constructor
     fun s:obj.New() dict
         let newobj = copy(self)
-        let newobj.fieldname = []
         return newobj
     endfun
 
@@ -133,11 +132,15 @@ function! startup#defaults()
         wincmd t | wincmd =
     endfun
 
+    fun! s:vimhome() dict
+        return "~/.vim/"
+    endfun
+
     fun! s:obj.vimApp() dict
         if self.virtual() | return | end
-        edit ~/.vim/vimrc
-        vsplit ~/.vim/gvimrc | wincmd t | wincmd =
-        tabnew ~/.vim/autoload/startup.vim
+        exe "edit " . self.vimhome() . "vimrc"
+        exe "vsplit " . self.vimhome() . "gvimrc | wincmd t | wincmd ="
+        exec "tabnew " . self.vimhome() . "autoload/startup.vim"
         tab help
         tabfirst
     endfun
@@ -487,11 +490,35 @@ function! startup#SETHPC()
         return "seth-pc"
     endfun
 
-    fun s:obj.dotfilesApp() dict
-        edit ~/vimfiles/vimrc
+    fun! s:obj.vimhome() dict
+        return "~/vimfiles/"
     endfun
 
-    fun s:obj.autohotkeyApp() dict
+    fun s:obj.ahkApp() dict
+        edit ~/My Documents/AutoHotkey.ahk
+    endfun
+
+    fun! s:obj.TasksFile() dict
+        return self.docroot() . "todo/wintodo.txt"
+    endfun
+
+    return s:obj.New()
+endfunction
+
+" }}}
+" Host KSANTI " {{{
+function! startup#KSANTI()
+    let s:obj = startup#defaults()
+
+    fun! s:obj.class() dict
+        return "ksanti"
+    endfun
+
+    fun! s:obj.vimhome() dict
+        return "~/vimfiles/"
+    endfun
+
+    fun! s:obj.ahkApp() dict
         edit ~/My Documents/AutoHotkey.ahk
     endfun
 
@@ -509,27 +536,6 @@ function! startup#ROCKBOX()
 
     fun! s:obj.class() dict
         return "rockbox"
-    endfun
-
-    return s:obj.New()
-endfunction
-
-" }}}
-" Host LOCALHOST " {{{
-function! startup#LOCALHOST()
-    let s:obj = startup#defaults()
-
-    fun! s:obj.class() dict
-        return "mobile"
-    endfun
-
-    fun! s:obj.autohotkeyApp() dict
-        echo "AutoHotkey instance"
-        edit ~/My Documents/AutoHotkey.ahk
-    endfun
-
-    fun! s:obj.TasksFile() dict
-        return self.docroot() . "todo/mobile.txt"
     endfun
 
     return s:obj.New()
