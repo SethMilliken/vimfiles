@@ -379,18 +379,30 @@ function! startup#AIRSHIP()
     fun! s:obj.vimwikiApp() dict
         normal 3\ww
         set nolist
-        call UaAbbreviations()
+        " call UaAbbreviations()
     endfun
 
     fun! s:obj.todoApp() dict
-        call AdjustFont(-2)
-        exe 'edit' self.docroot() . "projects.tst"
+        silent! PersonalTodo
+        call AdjustFont(+5)
     endfun
 
     fun! s:obj.scratchApp() dict
-        exe 'edit' self.docroot() . "scratch.scratch"
-        exe 'tabnew' self.personalroot() . "scratch.scratch"
-        tabfirst
+        silent! PersonalScratch
+        call AdjustFont(+5)
+        " call UaAbbreviations()
+    endfun
+
+    fun! s:obj.worktodoApp() dict
+        silent! WorkTodo
+        call AdjustFont(+5)
+        " call UaAbbreviations()
+    endfun
+
+    fun! s:obj.workscratchApp() dict
+        silent! WorkScratch
+        call AdjustFont(+5)
+        " call UaAbbreviations()
     endfun
 
     fun! s:obj.wmApp() dict
@@ -408,7 +420,7 @@ function! startup#AIRSHIP()
     fun! s:obj.sourcecodeApp() dict
         exe 'cd ~/sandbox/code/'
         exe 'edit ~/sandbox/code/'
-        call UaAbbreviations()
+        " call UaAbbreviations()
     endfun
 
     fun! s:obj.tmuxApp() dict
@@ -423,6 +435,7 @@ function! startup#AIRSHIP()
     endfun
 
     fun! s:obj.gcpApp() dict
+        exe 'cd ~/sandbox/code/gcp-infrastructure'
         exe 'edit' "services/wallet.yaml"
         exe 'vsplit' "services/wallet-callbacks.yaml"
         wincmd h
