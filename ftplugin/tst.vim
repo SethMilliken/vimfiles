@@ -1308,10 +1308,13 @@ function! TaskstackHide() " {{{
 endfunction
 
 " }}}
-function! TaskstackSave() " {{{
-    silent write
-    call CommitSession() " FIXME: External Dependency
-endfunction
+if !exists("g:taskstacksave_loaded") " {{{
+    let g:taskstacksave_loaded = ""
+    function! TaskstackSave()
+        silent write
+        " call CommitSession() " FIXME: External Dependency
+    endfunction
+endif
 
 " }}}
 function! TaskstackEOL() " {{{
