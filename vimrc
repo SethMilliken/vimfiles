@@ -2348,6 +2348,17 @@ function! WorkTodo() " {{{
     e scp://seth@araxia.net/sandbox/work/ua/work.tst
 endfunction
 " }}}
+command! PersonalTodo call PersonalTodo()
+function! PersonalTodo() " {{{
+    e scp://seth@araxia.net/sandbox/personal/todo/todo.txt
+    tabe scp://seth@araxia.net/sandbox/personal/todo/techtodo.txt
+endfunction
+" }}}
+command! PersonalScratch call PersonalScratch()
+function! PersonalScratch() " {{{
+    e scp://seth@araxia.net/sandbox/personal/scratch.scratch
+endfunction
+" }}}
 
 " }}}
 
