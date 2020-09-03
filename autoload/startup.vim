@@ -132,7 +132,7 @@ function! startup#defaults()
         wincmd t | wincmd =
     endfun
 
-    fun! s:vimhome() dict
+    fun! s:obj.vimhome() dict
         return "~/.vim/"
     endfun
 
