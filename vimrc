@@ -333,8 +333,8 @@ nmap <silent> <Leader>c :call ScratchBuffer("scratch")<CR>
 
 " }}}
 " Open URIs: " {{{
-" nmap <silent> <Leader>/ :call HandleURI()<CR>
-" nmap <silent> <Leader>t :call HandleJIRA()<CR>
+nmap <silent> <Leader>/ :call HandleURI()<CR>
+nmap <silent> <Leader>ji :call HandleJIRA()<CR>
 
 " }}}
 " SQL: grab and format sql statement from current line " {{{
@@ -928,7 +928,8 @@ function! HandleJIRA() " {{{
   let l:number = matchstr(l:ticket, '[0-9]\+')
   let l:uri = ''
   if l:ticket != "<Esc>:"
-    let l:uri = 'https://tofurkey.urbanairship.com/browse/' . l:ticket
+    let l:base_url= "https://urbanairship.atlassian.net/browse/"
+    let l:uri = l:base_url . l:ticket
   endif
   call OpenURI(l:uri, l:ticket, "JIRA Ticket")
 endfunction
@@ -956,6 +957,7 @@ function! OpenURI(uri, success, failure) " {{{
               endif
           endif
       endif
+      let @+ = a:uri
       echomsg "Opened " . a:success  . ": " . a:uri
   else
       echomsg "No " . a:failure . " found in line."
