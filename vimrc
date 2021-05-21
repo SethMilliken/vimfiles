@@ -278,6 +278,8 @@ nmap <C-y>v :call ReloadVimrc()<CR>
 nmap <C-y>m :call MTGOListCleanup()<CR>
 nmap <C-y>s :call feedkeys(":call OpenRelatedSnippetFileInVsplit()\r\<Tab>\<Tab>", 't')<CR>
 nmap <C-y>a :AbbUp<CR>
+nmap <C-y>r :call EditCurrentReading()<CR>
+nmap <C-y>d :call InsertDreams()<CR>
 nmap <C-y>A :vsplit ~/.vim/plugin/iabbs.vim<CR>
 imap <C-y>w <Esc><C-y>w
 nmap <C-y>w :call WhitespaceBGone()<CR>
