@@ -179,8 +179,7 @@ function! startup#defaults()
     endfun
 
     fun s:obj.todoApp() dict
-        exe 'edit' self.docroot() . "todo/todo.txt"
-        exe 'vsplit' self.docroot() . "todo/techtodo.txt"
+        silent! PersonalTodo
         wincmd t | wincmd =
     endfun
 
@@ -662,6 +661,12 @@ function! startup#RETCONSOLE()
         exe 'edit' "$HOME/.hammerspoon/init.lua"
         vsplit $HOME/.hammerspoon/bindings.lua
         windo set noro
+        wincmd t | wincmd =
+    endfun
+
+    fun s:obj.todoApp() dict
+        call AdjustFont(+5)
+        silent! PersonalTodo
         wincmd t | wincmd =
     endfun
 
