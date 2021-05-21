@@ -14,7 +14,8 @@ augroup END
 command! Writing :call WritingMappings()
 function! WritingMappings() " {{{
     if bufname("%") == TocName()
-        set nocursorline nowrap nolist
+        set nocursorline wrap nolist
+        map <buffer> NN :call pages#nextDate()<CR>
     else
         set nocursorline wrap nolist spell
         set showbreak=
@@ -46,13 +47,22 @@ endfunction
 " }}}
 function! PagesHeader() " {{{
     call StartWriting()
-    call setline(line("$"), ["" ,timestamp#text("journal") . ", CURRENT_LOCATION"])
+    call setline(line("$"), ["" , timestamp#text("journal") . ", CURRENT_LOCATION"])
     normal G$
 endfunction
 
 " }}}
 function! pages#root() " {{{
     return g:pages_dir
+endfunction
+
+"}}}
+function! pages#nextDate() " {{{
+    normal G
+    let l:extdate = timestamp#dateFactory().extractFirstDateFromLine()
+    call setline(line('$'), [ getline('$'), l:extdate.next().date() . " " ])
+    normal G$
+    startinsert!
 endfunction
 
 "}}}
@@ -129,6 +139,7 @@ function! pages#factory()
         endif
         if self.exists()
             " Check for "Finished typing" annotation and create newly indexed entry if it exists
+            silent! call WhitespaceBGone()
             call append("$", ["", strftime(s:timeformat), ""])
             normal Go
             startinsert
