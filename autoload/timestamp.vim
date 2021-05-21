@@ -1,3 +1,12 @@
+" Time Constants "{{{
+let s:DAY_SECONDS = 24 * 60 * 60
+let s:DATE_FORMAT = {}
+let s:DATE_FORMAT["short"] = "%Y-%m-%d"
+let s:DATE_FORMAT["long_win"] = "%#x %H:%M:%S"
+let s:TIME_FORMAT = "%H:%M:%S %Z"
+" let s:DATE_FACTORY = timestamp#dateFactory()
+
+"}}}
 " Timestamp Functions
 function! timestamp#insert(style, time = localtime()) "{{{
     call text#append(timestamp#text(a:style, a:time) . " ")
@@ -5,8 +14,7 @@ endfunction
 
 " }}}
 function! timestamp#yesterday() "{{{
-    let l:day = 24 * 60 * 60
-    return localtime() - l:day
+    return localtime() - s:DAY_SECONDS
 endfunction
 
 " }}}
@@ -179,3 +187,68 @@ EOF
 endfunction
 endif
 " }}}
+function! timestamp#date(time = localtime()) "{{{
+    return timestamp#dateFactory().New(a:time)
+endfunction
+"}}}
+function! timestamp#dateFactory() "{{{
+    let s:dateFormat = "%Y-%m-%d"
+    let s:dateRegexp = '[1-2][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]'
+    let s:daySeconds = 60 * 60 * 24
+
+    let s:obj = {}
+    let s:obj["timeField"] = "unset"
+    let s:obj["dateField"] = "unset"
+
+    fun! s:obj.date() dict
+        return self["dateField"]
+    endfun
+
+    fun! s:obj.time() dict
+        return self["timeField"]
+    endfun
+
+    fun! s:obj.abb() dict
+        return strftime("%c", self.time())->strpart(0,3)
+    endfun
+
+    fun! s:obj.next(days = 1) dict
+        let l:next_date_seconds = self["timeField"] + (s:daySeconds * a:days)
+        return s:factory.New(l:next_date_seconds)
+    endfun
+
+    fun! s:obj.setTime(time) dict
+        let self["timeField"] = a:time
+        let self["dateField"] = strftime(s:dateFormat, a:time)
+        return self
+    endfun
+
+    let s:factory = {}
+
+    func! s:factory.extractFirstDateFromLine() dict
+        let l:extdate = self.extractAllDatesFromLine()->get(0)
+        return self.fromDateString(l:extdate)
+    endfun
+
+    func! s:factory.fromDateString(date) dict
+        let l:date_epoch = strptime(s:dateFormat, a:date)
+        if (l:date_epoch == 0)
+            let l:date_epoch = localtime()
+        endif
+        return self.New(l:date_epoch)
+    endfun
+
+    func! s:factory.extractAllDatesFromLine(text = getline('.'), match_idx = 0) dict
+        return matchlist(a:text, s:dateRegexp)
+    endfun
+
+    func! s:factory.New(time = localtime()) dict
+       let newobj = copy(s:obj)
+       call newobj.setTime(a:time)
+       return newobj
+    endfun
+
+    return s:factory
+endfunction
+
+"}}}
