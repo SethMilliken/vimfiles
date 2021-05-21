@@ -2338,15 +2338,46 @@ endfunction
 
 " }}}
 
+function! RemotePath() " {{{
+    return "scp://seth@araxia.net/sandbox/"
+endfunction
+" }}}
 command! WorkScratch call WorkScratch()
 function! WorkScratch() " {{{
-    e scp://seth@araxia.net/sandbox/work/ua/scratch.scratch
+    exe "e " . RemotePath() . "work/ua/scratch.scratch"
 endfunction
 " }}}
 command! WorkTodo call WorkTodo()
 function! WorkTodo() " {{{
-    e scp://seth@araxia.net/sandbox/work/ua/work.tst
+    exe "e " . RemotePath() . "work/ua/work.tst"
 endfunction
+
+" }}}
+command! PersonalTodo call PersonalTodo()
+function! PersonalTodo() " {{{
+    exe "edit " . RemotePath() . "personal/todo/todo.txt"
+    exe "vsplit " . RemotePath() . "personal/todo/techtodo.txt"
+endfunction
+
+" }}}
+let g:current_reading_file = $HOME . "/sandbox/personal/lists/current_reading.txt"
+function! CurrentReading(entry = 0) " {{{
+    let l:file_lines = g:current_reading_file->readfile()
+    return l:file_lines->get(a:entry)
+endfunction
+
+" }}}
+function! EditCurrentReading() " {{{
+    exe "silent! tabnew " . g:current_reading_file
+    set noro
+endfunction
+
+" }}}
+let g:dream_file = $HOME . "/sandbox/personal/dream.txt"
+function! InsertDreams() " {{{
+    exe ":read " . g:dream_file
+endfunction
+
 " }}}
 command! PersonalTodo call PersonalTodo()
 function! PersonalTodo() " {{{
