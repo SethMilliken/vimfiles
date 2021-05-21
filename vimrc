@@ -1380,6 +1380,7 @@ let g:flake8_quickfix_location="topleft"
 " }}}
 " SnipMate: " {{{
 let g:snips_author = 'Seth Milliken'
+let g:snippets_dir= '~/.vim/snippets/'
 command! SnipUp call UpdateSnippetsForBuffer()
 function! UpdateSnippetsForBuffer()
     call ResetAllSnippets()
