@@ -180,7 +180,6 @@ function! startup#defaults()
 
     fun s:obj.todoApp() dict
         silent! PersonalTodo
-        wincmd t | wincmd =
     endfun
 
     fun s:obj.colloquyvimApp() dict
@@ -506,7 +505,7 @@ function! startup#SETHPC()
         return "~/vimfiles/"
     endfun
 
-    fun s:obj.ahkApp() dict
+    fun! s:obj.ahkApp() dict
         edit ~/My Documents/AutoHotkey.ahk
     endfun
 
@@ -524,6 +523,10 @@ function! startup#KSANTI()
 
     fun! s:obj.class() dict
         return "ksanti"
+    endfun
+
+    fun! s:obj.dotfilesApp() dict
+        edit ~/vimfiles/vimrc
     endfun
 
     fun! s:obj.vimhome() dict
@@ -664,10 +667,9 @@ function! startup#RETCONSOLE()
         wincmd t | wincmd =
     endfun
 
-    fun s:obj.todoApp() dict
-        call AdjustFont(+5)
+    fun! s:obj.todoApp() dict
         silent! PersonalTodo
-        wincmd t | wincmd =
+        call AdjustFont(+5)
     endfun
 
     return s:obj.New()
