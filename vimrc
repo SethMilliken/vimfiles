@@ -395,19 +395,19 @@ nmap <C-e>P :call SectionHeadNav(-1, 1)<CR>
 function! SectionHeadNav(count, mode) " {{{
     " TODO: mb preserve hls value and restore it?
     if a:count > 0
-        let a:searchdirection = "/"
+        let l:searchdirection = "/"
     else
-        let a:searchdirection = "?"
+        let l:searchdirection = "?"
     end
     if a:mode > 0
         " Matches ^MAJORHEADER:
-        let a:modematch = "[[:upper:][:space:]]\\{1,}:*.*" . FoldMarkerOpen()
+        let l:modematch = "[[:upper:][:space:]]\\{1,}:*.*" . FoldMarkerOpen()
     else
         " Matches ^Minorheader:
-        let a:modematch = "[[:upper:]]\\{1,}[^:]*:*"
+        let l:modematch = "[[:upper:]]\\{1,}[^:]*:*"
     end
     set nohls
-    exec a:searchdirection . "^" .  ExpandedCommentString() . a:modematch
+    exec l:searchdirection . "^" .  ExpandedCommentString() . l:modematch
     normal zz
     set hls
 endfunction
