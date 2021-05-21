@@ -2100,7 +2100,7 @@ endfunction
 command! Herenow :call Herenow()
 function! Herenow() " {{{
     exec ":lcd " . expand("%:p:h")
-    let b:git_dir = fugitive#extract_git_dir(expand('%:p'))
+    let b:git_dir = FugitiveExtractGitDir(expand('%:p'))
     echo "cwd now: " . getcwd()
 endfunction
 
