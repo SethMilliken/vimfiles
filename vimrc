@@ -227,6 +227,10 @@ command! W :w
 nmap <S-Space> <C-f>
 " Why would I ever want to insert a ^Z?
 imap <C-z> <Esc><C-z>
+" Undo prases, not entire insert sessions
+imap . .<C-g>u
+imap ; ;<C-g>u
+imap , ,<C-g>u
 
 " c & p normalization
 nmap dD :normal! _y$"_dd<CR>
