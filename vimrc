@@ -265,6 +265,27 @@ map g$ :tablast<CR>
 map <C-x>p :call system("ssh localhost pbcopy", getreg('*')) \| echo "Copied default register to pasteboard."<CR>
 map <silent> <C-x>y :call system("netcopy", getreg('"')) \| echo "Copied unnamed register to local pasteboard."<CR>
 
+map <silent> <C-y>y :call CopyToTmux()<CR>
+map <silent> <C-y>x :call CutToTmux()<CR>
+map <silent> <C-y>p :call PasteFromTmux()<CR>
+
+function! CopyToTmux() range " {{{
+    silent! normal gv"py
+    call system("tmux set-buffer -b vim " . shellescape(getreg('p')))
+    echo "Copied selection to tmux vim paste buffer."
+endfunction
+" }}}
+function! CutToTmux() range " {{{
+    silent! normal gv"px
+    call system("tmux set-buffer -b vim " . shellescape(getreg('p')))
+    echo "Cut selection to tmux vim paste buffer."
+endfunction
+" }}}
+function! PasteFromTmux() " {{{
+    let @p = system("tmux show-buffer -b vim")
+    normal "pp
+endfunction
+" }}}
 " }}}
 " Reset: restore some default settings and redraw " {{{
 nnoremap <silent> <C-l> :call Reset() \| nohls<CR>
