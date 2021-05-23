@@ -258,6 +258,7 @@ nmap <C-e>l :bprev<CR>
 nmap <C-e>j :Herenow<CR>
 nmap <C-e>k :exec ":lcd .." \| echo "cwd now: " . getcwd()<CR>
 
+map g0 :tabfirst<CR>
 map g$ :tablast<CR>
 
 " tmux copy/paste issue in mac os x workaround
