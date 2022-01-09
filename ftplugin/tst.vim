@@ -20,14 +20,14 @@ let s:completed_node_name = "COMPLETED"
 let s:dates_node_name     = "DATES"
 let s:notes_node_name     = "SCRATCH"
 
-augroup TaskStack
+augroup TaskStack | au!
     au FileType *tst* map <buffer> <C-Space> <Plug>ToggleLine
     au FileType *tst* map <buffer> QQ <Plug>CompleteItem
     au FileType *tst* map <buffer> Qx <Plug>AbandonItem
     au FileType *tst* map <buffer> Qr <Plug>ResetTogglers
     au FileType *tst* map <buffer> QW :call TaskstackMoveItemToProject("@queue")<CR>
     au FileType *tst* map <buffer> QA :call TaskstackMoveItemToProject("@active")<CR>
-    au WinLeave * call WriteBufferIfWritable()
+    au WinLeave,FocusLost * nested silent! call WriteBufferIfWritable()
 augroup END
 
 noremap <script> <Plug>AbandonItem <SID>AbandonItem

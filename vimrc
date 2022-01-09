@@ -1012,8 +1012,10 @@ endfunction
 
 " }}}
 function! WriteBufferIfWritable() " {{{
-    if filewritable(expand('%')) && !exists('readonly') && !exists('buftype')
-        write
+    if !exists('readonly') && !exists('buftype')
+        if filewritable(expand('%')) || match(expand('%'), "scp") == 0
+            write
+        end
     end
 endfunction
 
