@@ -425,7 +425,7 @@ function! startup#AIRSHIP()
         exe "edit ~/.tmux/profiles/" . toupper(startup#host()) . ".tmux"
         split ~/.tmux/main.tmux
         split ~/.tmux/.tmux.conf
-        split ~/.tmux/profiles/pass-be.tmux
+        split ~/.tmux/profiles/wallet.tmux
         wincmd L
         windo set nolist
         windo set noro
