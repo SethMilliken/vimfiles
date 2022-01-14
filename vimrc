@@ -498,15 +498,15 @@ nmap <silent> <C-y><C-y> :call timestamp#addOrUpdate("")<CR>
 nmap <silent> <C-y><C-t> :call timestamp#addOrUpdateSolicitingAnnotation()<CR>
 nmap <silent> <C-y><C-x> :call timestamp#remove()<CR>
 nmap <silent> <Leader>td :call timestamp#insert("date")<CR>
-imap <silent> <Leader>td <Esc><Leader>td
+imap <silent> <Leader>td <C-r>=timestamp#text("date")<CR>
 nmap <silent> <Leader>ty :call timestamp#insert("date", timestamp#yesterday())<CR>
-imap <silent> <Leader>ty <Esc><Leader>ty
+imap <silent> <Leader>ty <C-r>=timestamp#text("date", timestamp#yesterday())<CR>
 nmap <silent> <Leader>ts :call timestamp#insert("short")<CR>
-imap <silent> <Leader>ts <Esc><Leader>ts
+imap <silent> <Leader>ts <C-r>=timestamp#text("short")<CR>
 nmap <silent> <Leader>tt :call timestamp#insert("time")<CR>
-imap <silent> <Leader>tt <Esc><Leader>tt
+imap <silent> <Leader>tt <C-r>=timestamp#text("time")<CR>
 nmap <silent> <Leader>tl :call timestamp#insert("long")<CR>
-imap <silent> <Leader>tl <Esc><Leader>tl
+imap <silent> <Leader>tl <C-r>=timestamp#text("long")<CR>
 nmap <silent> <Leader>fw :call FoldWrap()<CR>
 nmap <silent> <Leader>fi :call FoldInsert()<CR>
 nmap <silent> <Leader>wb :call StartWriting()<CR>
