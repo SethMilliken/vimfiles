@@ -65,5 +65,6 @@ iabb cread4 <C-g>u_<C-r>=CurrentReading(3)<CR>_
 iabb babb <C-g>u_<C-r>=CurrentReading(0)<CR>_
 iabb aiptb <C-g>u_<C-r>=CurrentReading(1)<CR>_
 iabb ebbcb <C-g>u_<C-r>=CurrentReading(2)<CR>_
+iabb techb <C-g>u_<C-r>=CurrentReading(3)<CR>_
 
 " }}}
