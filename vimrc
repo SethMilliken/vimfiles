@@ -263,10 +263,10 @@ map g$ :tablast<CR>
 
 " tmux copy/paste issue in mac os x workaround
 map <C-x>p :call system("ssh localhost pbcopy", getreg('*')) \| echo "Copied default register to pasteboard."<CR>
-map <silent> <C-x>y :call system("netcopy", getreg('"')) \| echo "Copied unnamed register to local pasteboard."<CR>
+map <silent> <C-y>y :call system("netcopy", getreg('"')) \| echo "Copied unnamed register to local pasteboard."<CR>
 
-map <silent> <C-y>y :call CopyToTmux()<CR>
-map <silent> <C-y>x :call CutToTmux()<CR>
+map <silent> <C-x>y :call CopyToTmux()<CR>
+map <silent> <C-x>x :call CutToTmux()<CR>
 map <silent> <C-y>p :call PasteFromTmux()<CR>
 
 function! CopyToTmux() range " {{{
