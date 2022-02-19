@@ -2345,13 +2345,6 @@ function! WorkTodo() " {{{
 endfunction
 
 " }}}
-command! PersonalTodo call PersonalTodo()
-function! PersonalTodo() " {{{
-    exe "edit " . RemotePath() . "personal/todo/todo.txt"
-    exe "vsplit " . RemotePath() . "personal/todo/techtodo.txt"
-endfunction
-
-" }}}
 let g:current_reading_file = $HOME . "/sandbox/personal/lists/current_reading.txt"
 function! CurrentReading(entry = 0) " {{{
     let l:file_lines = g:current_reading_file->readfile()
@@ -2373,8 +2366,9 @@ endfunction
 " }}}
 command! PersonalTodo call PersonalTodo()
 function! PersonalTodo() " {{{
-    e scp://seth@araxia.net/sandbox/personal/todo/todo.txt
-    tabe scp://seth@araxia.net/sandbox/personal/todo/techtodo.txt
+    exe "edit " . RemotePath() . "personal/todo/todo.txt"
+    exe "tabe " . RemotePath() . "personal/todo/techtodo.txt"
+    wincmd t | wincmd =
 endfunction
 " }}}
 command! PersonalScratch call PersonalScratch()
