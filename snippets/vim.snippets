@@ -33,37 +33,52 @@ snippet ife
 	    ${3}
 	endif
 
-snippet class An vimscript OOP prototype-based object
+snippet class A vimscript OOP prototype-based object
 	" ${1:classname} prototype " {{{
-	let s:$1 = {}
-	" constructor
-	function! s:$1.New() " {{{
-	    let new$1 = copy(self)
-	    let new$1.${2:fieldname} = []
-	    return new$1
-	endfunction " }}}
-	" functions
-	function! s:$1.${3:functionName}(${4:argument}) " {{{
-	    call add(self.$2, a:$4)
-	    ${5:your code here}
-	endfunction " }}}
+	function! $1Factory()
+	    let s:factory = {}
+	    let s:proto = {}
+
+	    " constructor
+	    func! s:factory.New() dict
+	        let new$1 = copy(s:proto)
+	        let new$1.${2:fieldname} = []
+	        return new$1
+	    endfunc
+
+	    " methods
+	    fu! s:proto.set${3:functionName}(${4:argument}) dict
+	        call add(self.$2, a:$4)
+	    endfu
+
+	    fu! s:proto.get$3() dict
+	        return self.$2->get(0)
+	    endfu
+
+	    fu! s:proto.${5:yourmethodname}() dict
+	        ${6:yourcode}
+	    endfu
+
+	    return s:factory
+	endfunction
+
 	" $1 }}}
 
 snippet method A vimscript OOP prototype-based object method
-	function! s:${1}.${2:functionName}(${3:argument}) " {{{
+	fu! s:${1}.${2:functionName}(${3:argument}) dict
 	    ${4:your code here}
-	endfunction " }}}
+	endfu
 
-snippet sfu Object public function
-	fu ${1:objectname}.${2:functionname}() dict " {{{
+snippet popm Prototype object public method
+	fu! ${1:objectname}.${2:functionname}() dict
 	    $3
 	endfu
-	" }}}
-snippet sfp Object private function
-	fu ${1:objectname}._${2:functionname}() dict " {{{
+
+snippet popr Prototype object private method
+	fu! ${1:objectname}._${2:functionname}() dict
 	    $3
 	endfu
-	" }}}
+
 snippet s_
 	self._${1:private_function}()
 snippet s.
