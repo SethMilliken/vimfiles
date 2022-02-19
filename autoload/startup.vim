@@ -248,6 +248,14 @@ function! startup#defaults()
         wincmd h | wincmd =
     endfun
 
+    fun! s:obj.newwriteApp() dict
+        call pages#editCurrentEntry()
+        vsplit
+        call pages#editCurrentIndex()
+        exe 'cd' pages#root()
+        wincmd h | wincmd =
+    endfun
+
     fun! s:obj.readApp() dict
         exe 'cd' self.personalroot() . "zaurus/zlog/"
         exe "Reading"
@@ -318,6 +326,10 @@ function! startup#defaults()
         wincmd L
         windo set nolist
         wincmd t | wincmd =
+    endfun
+
+    fun! s:obj.evoApp() dict
+        exe "edit scp://seth@araxia.net/sandbox/personal/projects/evony.tst"
     endfun
 
     return s:obj.New()
