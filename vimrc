@@ -1093,46 +1093,6 @@ if &verbose > 0
 endif
 
 " }}}
-" TaskStack: " {{{
-let g:aborted_prefix = "x"
-let g:completed_prefix = "o"
-augroup TaskStack | au!
-    au BufRead *.tst* set filetype=tst syntax=txt
-    au FileType *tst* set indentkeys-=o indentkeys-=0 showbreak=↳\ \ \ \ \   noai fdm=marker cms= sts=2 sw=2 isk+=# cpo+=n
-    "au FileType *tst* nmap <buffer> XX :call TaskstackCompleteItem(g:aborted_prefix)<CR>
-    "au FileType *tst* imap <buffer> XX <C-c>:call TaskstackCompleteItem(g:aborted_prefix)<CR>
-    "au FileType *tst* nmap <buffer> QQ :call TaskstackCompleteItem(g:completed_prefix)<CR>
-    "au FileType *tst* imap <buffer> QQ <C-c>:call TaskstackCompleteItem(g:completed_prefix)<CR>
-    au FileType *tst* nmap <buffer> Nn :call TaskstackNewProjectItem()<CR>
-    au FileType *tst* nmap <buffer> Np :call TaskstackNewProjectItemFromPaste()<CR>
-    au FileType *tst* nmap <buffer> NP :call TaskstackNewItemFromPaste()<CR>
-    au FileType *tst* nmap <buffer> NN :call TaskstackNewItem()<CR>
-    au FileType *tst* imap <buffer> NN <C-c>:call TaskstackNewItem()<CR>
-    au FileType *tst* nmap <buffer> ZZ :call TaskstackHide()<CR>
-    au FileType *tst* imap <buffer> ZZ <C-c>:call TaskstackHide()<CR>
-    au FileType *tst* nmap <buffer> LL :call TaskstackScratch()<CR>
-    au FileType *tst* nmap <buffer> <silent> $ :call TaskstackEOL()<CR>
-    au FileType *tst* nmap <buffer> <silent> <C-j> :call TaskstackMoveItemDown()<CR>
-    au FileType *tst* nmap <buffer> <silent> <C-k> :call TaskstackMoveItemUp()<CR>
-    au FileType *tst* nmap <buffer> <silent> <C-p> ?^@.* {\{3\}<CR>:nohls<CR>
-    au FileType *tst* nmap <buffer> <silent> <C-n> /^@.* {\{3\}<CR>:nohls<CR>
-    au FileType *tst* nmap <buffer> <silent> <Tab> /^\([A-Z]\+ \)\{1,\}<CR>:nohls<CR>
-    au FileType *tst* nmap <buffer> <silent> <S-Tab> ?^\([A-Z]\+ \)\{1,\}<CR>:nohls<CR>
-    au FileType *tst* nmap <buffer> :w<CR> :call TaskstackSave()<CR>
-    au FileType *tst* nmap <buffer> <silent> <C-x>x :call TaskstackGroups()<CR>
-    au FileType *tst* nmap <buffer> K :call TaskstackMoveToProjectPrompt()<CR>
-    au FileType *tst* nmap <buffer> <C-y>k :call TaskstackMoveToProjectAutoDetect()<CR>
-    au FileType *tst* nmap <buffer> <Leader>k :call TaskstackMoveItemToProject("@categorize")<CR>
-    au FileType *tst* nmap <buffer> <C-e>/ :call TaskstackNavigateToProjectPrompted()<CR>
-    au FileType *tst* nmap <buffer> <silent> <Tab> :call TaskstackNextProject()<CR>
-    au FileType *tst* nmap <buffer> <silent> <S-Tab> :call TaskstackNextProject('b')<CR>
-    au FileType *tst* if mapcheck('<CR>', 'n') == "" | nmap <unique> <buffer> <silent> <CR> "tyiW/<C-r>t<CR>ztzv<C-l> | end
-    " Use <C-c> to avoid adding or updating a timestamp after editing.
-    au InsertLeave *tst* :call timestamp#addOrUpdate("") " FIXME: External Dependency
-    au FocusLost *tst* nested call WriteBufferIfWritable()
-augroup END
-
-"}}}
 " Scratch: " {{{
 let g:volatile_scratch_columns = 100
 let g:volatile_scratch_lines = 10

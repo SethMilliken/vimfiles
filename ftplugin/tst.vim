@@ -6,10 +6,52 @@
 
 " Version:
 " 0.1 " 2010-09-06 05:04:26 EDT
-
+" 0.2 " 2022-02-18 08:43:05 PST
+"     - moved mappings
+"     - added ftdetect
+"
 " Notes:
 
 " Todo:
+
+"}}}
+command! TaskStack :call TaskStackMappings()
+function! TaskStackMappings() " {{{
+    let b:aborted_prefix = "x"
+    let b:completed_prefix = "o"
+    set indentkeys-=o indentkeys-=0 showbreak=↳\ \ \ \ \   noai fdm=marker cms= sts=2 sw=2 isk+=# cpo+=n
+
+    map <buffer> <C-Space> <Plug>ToggleLine
+    map <buffer> QQ <Plug>CompleteItem
+    map <buffer> Qx <Plug>AbandonItem
+    map <buffer> Qr <Plug>ResetTogglers
+    map <buffer> QW :call TaskstackMoveItemToProject("@queue")<CR>
+    map <buffer> QA :call TaskstackMoveItemToProject("@active")<CR>
+    nmap <buffer> Nn :call TaskstackNewProjectItem()<CR>
+    nmap <buffer> Np :call TaskstackNewProjectItemFromPaste()<CR>
+    nmap <buffer> NP :call TaskstackNewItemFromPaste()<CR>
+    nmap <buffer> NN :call TaskstackNewItem()<CR>
+    imap <buffer> NN <C-c>:call TaskstackNewItem()<CR>
+    nmap <buffer> ZZ :call TaskstackHide()<CR>
+    imap <buffer> ZZ <C-c>:call TaskstackHide()<CR>
+    nmap <buffer> LL :call TaskstackScratch()<CR>
+    nmap <buffer> <silent> $ :call TaskstackEOL()<CR>
+    nmap <buffer> <silent> <C-j> :call TaskstackMoveItemDown()<CR>
+    nmap <buffer> <silent> <C-k> :call TaskstackMoveItemUp()<CR>
+    nmap <buffer> <silent> <C-p> ?^@.* {\{3\}<CR>:nohls<CR>
+    nmap <buffer> <silent> <C-n> /^@.* {\{3\}<CR>:nohls<CR>
+    nmap <buffer> <silent> <Tab> /^\([A-Z]\+ \)\{1,\}<CR>:nohls<CR>
+    nmap <buffer> <silent> <S-Tab> ?^\([A-Z]\+ \)\{1,\}<CR>:nohls<CR>
+    nmap <buffer> :w<CR> :call TaskstackSave()<CR>
+    nmap <buffer> <silent> <C-x>x :call TaskstackGroups()<CR>
+    nmap <buffer> K :call TaskstackMoveToProjectPrompt()<CR>
+    nmap <buffer> <C-y>k :call TaskstackMoveToProjectAutoDetect()<CR>
+    nmap <buffer> <Leader>k :call TaskstackMoveItemToProject("@categorize")<CR>
+    nmap <buffer> <C-e>/ :call TaskstackNavigateToProjectPrompted()<CR>
+    nmap <buffer> <silent> <Tab> :call TaskstackNextProject()<CR>
+    nmap <buffer> <silent> <S-Tab> :call TaskstackNextProject('b')<CR>
+    if mapcheck('<CR>', 'n') == "" | nmap <unique> <buffer> <silent> <CR> "tyiW/<C-r>t<CR>ztzv<C-l> | end
+endfunction
 
 "}}}
 " VARIABLES: " {{{
@@ -21,13 +63,9 @@ let s:dates_node_name     = "DATES"
 let s:notes_node_name     = "SCRATCH"
 
 augroup TaskStack | au!
-    au FileType *tst* map <buffer> <C-Space> <Plug>ToggleLine
-    au FileType *tst* map <buffer> QQ <Plug>CompleteItem
-    au FileType *tst* map <buffer> Qx <Plug>AbandonItem
-    au FileType *tst* map <buffer> Qr <Plug>ResetTogglers
-    au FileType *tst* map <buffer> QW :call TaskstackMoveItemToProject("@queue")<CR>
-    au FileType *tst* map <buffer> QA :call TaskstackMoveItemToProject("@active")<CR>
     au WinLeave,FocusLost * nested silent! call WriteBufferIfWritable()
+    " Use <C-c> to avoid adding or updating a timestamp after editing.
+    au InsertLeave *tst* :call timestamp#addOrUpdate("") " FIXME: External Dependency
 augroup END
 
 noremap <script> <Plug>AbandonItem <SID>AbandonItem
