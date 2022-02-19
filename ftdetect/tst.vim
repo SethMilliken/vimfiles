@@ -1,1 +1,1 @@
-au BufNewFile,BufRead *tst* set filetype=tst syntax=txt | call TaskStackMappings() "2022-02-18 11:23:20 PST
+au BufNewFile,BufRead *.tst*,*.scratch set filetype=tst syntax=txt | call TaskStackMappings()
