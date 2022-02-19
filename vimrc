@@ -857,7 +857,7 @@ end
 
 " }}}
 noremap <C-k> :call AutoSpellCorrect(0)<CR>
-inoremap <C-k> <Esc>:call AutoSpellCorrect(1)<CR>
+imap <C-k> <Esc>:call AutoSpellCorrect(1)<CR>
 function! AutoSpellCorrect(from_insert) " {{{
     set spelllang=en,mtg
     set dictionary=spell
