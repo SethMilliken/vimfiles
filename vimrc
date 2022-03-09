@@ -2368,6 +2368,7 @@ command! PersonalTodo call PersonalTodo()
 function! PersonalTodo() " {{{
     exe "edit " . RemotePath() . "personal/todo/todo.txt"
     exe "tabe " . RemotePath() . "personal/todo/techtodo.txt"
+    exe "tabe " . RemotePath() . "personal/projects/191-grosvenor.txt"
     wincmd t | wincmd =
 endfunction
 " }}}
