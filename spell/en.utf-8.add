@@ -1,6 +1,7 @@
 # vap!sort -fs | uniq
 # or !ssh ax sort -fs | uniq
 # since coreutils sort is apparently not consistent between versions
+A19
 A25
 A97
 AAF
@@ -30,9 +31,11 @@ adulting
 AEP
 Aeropress
 Aerosmith
+Aethelflaed
 Aetna
 Affleck's
 AFK
+Afrobeat
 AgileBits
 Ahern
 ahi
@@ -51,6 +54,7 @@ AirPort
 airshield
 Airshipper
 AirTag
+AirTags
 AiTP
 Aiwa
 Akai
@@ -67,6 +71,7 @@ alfred's
 Algernon
 Alienware
 Alina
+Alita
 Alka
 Allegretti
 allium
@@ -90,6 +95,7 @@ AMC
 Amendola
 Americanah
 Amerson
+Amia
 Amica
 Aminos
 aminos
@@ -121,6 +127,7 @@ apache2
 ApiResponse
 API's
 apperception
+Applebees
 AppleScript
 appspecs
 aquick
@@ -135,10 +142,12 @@ Ariekei
 Arienrhod
 Arlo
 Armitage
+Arnason
 arpeggiated
 ArrayList
 Arteloth
 arthroscopically
+Arushi
 Arya
 Arya's
 asexualization
@@ -154,6 +163,7 @@ aspies
 assed
 assery
 asshat
+asshats
 Asta
 Astronoid
 Astronoid's
@@ -171,6 +181,7 @@ Atticus
 Atwater's
 audibled
 Audiobus
+Audre
 augroup
 auth
 autocmd
@@ -188,6 +199,7 @@ autowired
 autowires
 autowiring
 avahi
+Avandra
 Aviva
 avoidant
 AWD
@@ -222,6 +234,7 @@ Barak
 barcade
 Bardo
 Barlean's
+barmitzvah
 Barrowman
 BARTable
 Bartelby
@@ -230,6 +243,7 @@ bashrc
 batshit
 BattleHawks
 Battlestar
+Bayley
 BCW
 beadboard
 Bebb
@@ -242,6 +256,8 @@ Bellson
 Bellson's
 Belter
 Belters
+Beltik
+benefitted
 Benicia
 Benjen
 Bentz
@@ -254,7 +270,9 @@ BFFs
 BiConsumer
 Biergarten
 biergarten
+Biester
 BigTable
+Bigtable
 BikeLink
 Bikelink
 bikeshed
@@ -306,6 +324,7 @@ Bonning
 Bookchin
 BootCamp
 Borchard
+Borchard's
 borderless
 borderpost
 Borthwick
@@ -342,6 +361,7 @@ Bucc's
 bufferbloat
 bugfix
 bugginess
+BuildKit
 bullshittery
 Bunnicula
 buproprion
@@ -350,6 +370,7 @@ Buscemi
 buylist
 buylisting
 BW
+BWI
 c3p0
 Cacaphony
 Cadie
@@ -381,6 +402,7 @@ Canyonlands
 capistrano
 cappella
 CapsLock
+Captown
 car2go
 carabiner
 carabiners
@@ -394,6 +416,7 @@ Cari
 Carin
 Carpathia
 Carplay
+CarPlay
 Carrock
 cartoonish
 cartoonishly
@@ -418,6 +441,7 @@ CBZ
 CEC
 Celiac
 Cenac's
+centeredness
 Centio
 CentOS
 Centos
@@ -432,6 +456,7 @@ CFL
 Chabot
 Chadd
 chai
+chainable
 Chalamet
 changelist
 changelists
@@ -440,6 +465,7 @@ Chantae's
 Chapin
 Chapin's
 Charly
+Charrière
 Chassar
 chatail
 Chauvin
@@ -457,6 +483,7 @@ chiclet
 Chidi
 Chieng
 Chika
+Chipotle
 Chitty
 Choate
 Choi
@@ -495,6 +522,7 @@ classpath
 classpaths
 cli
 clickies
+clickiness
 clicky
 Clif
 Clockroaches
@@ -527,6 +555,7 @@ colo
 colocated
 color256
 colorscheme
+colorschemes
 Colossopede
 Colson
 Colten
@@ -540,11 +569,13 @@ Communic
 CompletableFuture
 completionist
 composable
+compunctious
 Comstock
 conf
 confd
 config
 configs
+conformant
 Connally
 Connor
 consensuality
@@ -562,6 +593,7 @@ Corchran
 Corcoran
 Cordura
 coreium
+Corne
 Cortazar
 Cortez
 Cotogna
@@ -576,18 +608,22 @@ coworking
 coz
 Crabtree
 craigslist
+craniosacral
 Crappuchette's
 creamsicle
 creeped
 creepster
 Crenshaw
 Crimethinc
+cringeworthy
 cringey
 Crispin
+Cristo
 Cromartie
 crontab
 Crossfit
 crossfit
+Crowdstrike
 Crutcher
 Csevet
 CSI
@@ -644,6 +680,8 @@ declutter
 decluttered
 Decluttering
 decluttering
+declutters
+decontextualized
 Decrypto
 deduplicating
 deduplication
@@ -652,8 +690,10 @@ Delerium
 Delerium's
 Deliboard
 delisted
+Dench
 Dennison
 denormalization
+Denton
 Deponia
 deprioritize
 deprioritized
@@ -664,7 +704,9 @@ Desean
 deserialization
 deserialize
 deserialized
+deserializer
 deserializers
+deserializes
 deserializing
 Deshaun
 Desi
@@ -679,6 +721,7 @@ DeVos
 devprod
 devtools
 DeWalt
+dewpoint
 Dex
 D'Garrak
 DHCP
@@ -699,6 +742,7 @@ DiskWarrior
 dismissiveness
 DisplayLink
 DisplayPort
+displeasingly
 disqualifier
 Disqus
 distractive
@@ -735,6 +779,7 @@ Draymore's
 Dremel
 Drex
 dribblings
+driftless
 DRM
 DRMed
 DRMing
@@ -755,6 +800,7 @@ Dunstans
 Dupin
 Dupre
 Durak
+Durock
 DVI
 Dymo
 DynamoDB
@@ -772,6 +818,7 @@ ec2
 ECDHE
 Echopraxia
 eclim
+eco
 EdgeRouter
 EDH
 EDI
@@ -800,6 +847,8 @@ Emmons
 emojii
 enby
 Encinal
+Englund
+Englund's
 ENIAC
 Enshine
 entendre
@@ -815,6 +864,7 @@ Epica's
 Epocrasites
 epub
 equippable
+Erdrich
 Eremont
 Eremot
 Ergotron
@@ -826,6 +876,7 @@ Esc
 Esra
 Essad
 Essryn
+Estefany
 ETB
 Etheria
 ethernet
@@ -840,6 +891,7 @@ Eustachia
 EventGhost
 Everfair
 Everfair's
+Evergrey
 Evony
 exe
 Expedia
@@ -855,6 +907,7 @@ F4
 F6
 facebook
 Facetime
+FaceTime
 factionless
 Fage
 fallbacks
@@ -889,8 +942,10 @@ FFS
 fi
 Fibbage
 Fieldhouse
+Fiennes
 FileMaker
 filesystem
+filetype
 Fillion
 FirefoxDeveloperEdition
 FirefoxFix
@@ -901,15 +956,20 @@ Flacco
 flatlining
 flatMap
 Fleetwood
+flic
 Flickerwisps
+flics
 Flipboard
+Florian
 fluentd
 Fluump
 Fluxx
 Fn
 FNM
 FocusLost
+Fokir
 foldLeft
+foley
 fooding
 foosball
 footpedals
@@ -991,9 +1051,11 @@ Geesh
 GeForce
 gelato
 Gelderloos
+Gelet
 Geminid
 Gemma
 Gendry
+genericize
 Genio
 geomancer
 Geomancer's
@@ -1002,6 +1064,7 @@ Gerbert's
 GFCI
 GG
 Ghazi
+Ghosh
 Ghoulies
 Ghz
 Gigi
@@ -1013,6 +1076,7 @@ Gillen's
 Gitea
 github
 Glascock
+Glenwood
 Gloomhaven
 glutes
 glycemic
@@ -1029,6 +1093,8 @@ golem
 Goode
 GoodReader
 Goodreads
+googlechat
+goosebump
 Gooseneck
 gooseneck
 Goosenecks
@@ -1038,6 +1104,8 @@ Goree
 Gorman
 Gorsuch
 Goss
+Gotye's
+Gource
 gp
 Graeber
 Graeber's
@@ -1045,9 +1113,11 @@ grafana
 Grannan
 Grassblade
 grayscale
+Graziano
 GRE
 Greasemonkey
 greenlight
+greenlit
 Greenport
 Griefo
 grift
@@ -1108,10 +1178,12 @@ harshing
 Hassan
 Hasselhoff
 Hatrakord
+Hau
 Haus
 Havenevik
 Havengarth
 Hayne
+HBase
 headdesk
 headful
 headspace
@@ -1149,9 +1221,11 @@ HOA
 Hodor
 Hoffmann
 Hoffmann's
+Holmesian
 Holoh
 Homebrew
 homebrew
+Homebridge
 Homegoing
 HomeKit
 HomePod
@@ -1179,6 +1253,7 @@ Houle
 Howett
 Howey
 Hoyer
+hrefs
 htop
 HTTParty
 Huffington
@@ -1190,7 +1265,9 @@ HVAC
 Hwae
 hyaluronic
 hydronic
+hyperattenuated
 hyperaware
+HyperSQL
 hypervisor
 hypotheticals
 iabbs
@@ -1208,6 +1285,7 @@ Ildis
 Ildus
 Iller
 IM
+iMacs
 Imajika
 IMDb
 Imhoff
@@ -1271,6 +1349,8 @@ jackalope
 Jacklin
 Jacot
 Jaffe's
+Jahan's
+Jahar
 jailbroken
 Jakub
 Jamerson
@@ -1301,19 +1381,23 @@ Jeevan
 Jeffs
 Jekk's
 Jemisin
+Jemisin's
 Jenga
 jenkins
 JenkinsJob
 Jenn
 Jenn's
 Jenya
+Jerrett
 Jerusha
 JetBrains
 jetway
 Jhumpa
+Jibaro
 Jiki
 Jima
 Jindeok
+Jindeok's
 Jingletown
 JIRA
 JJ
@@ -1330,6 +1414,7 @@ Jono
 Joost's
 Jorah
 Jorgen
+Jorgen's
 Joshu
 jour
 JP's
@@ -1339,8 +1424,10 @@ JRuby
 JRue
 JSON
 json
+Jsoup
 JTMS
 judgy
+Judi
 Jughead
 Jughead's
 Jumpman
@@ -1357,6 +1444,7 @@ K3
 K6
 K8
 Ka
+Kaçanik
 kad
 kad's
 Kaepernick
@@ -1364,11 +1452,15 @@ Kaepernick's
 Kahneman
 Kailh
 Kalasea
+Kalasea's
 Kallax
 Kalr
+Kamaitachi
+Kaminski
 Kamlesh
 kamlesh
 Kamlesh's
+Kanai
 kanban
 Kanneman
 Kanno
@@ -1407,6 +1499,7 @@ keycard
 keychain
 Keychron
 KeyForge
+keyframe
 Keyprop
 keyspace
 keystore
@@ -1441,6 +1534,7 @@ kneewall
 Knopfler
 koa
 Kodi
+koi
 Konstnar
 Kontrol
 Koplow
@@ -1451,11 +1545,13 @@ KPRepublic
 Kreese
 ksanti
 kubernetes
+Kusum
 Kuttner
 Kveton
 kwargs
 Kwikset
 Kylo
+kyphotic
 L5R
 LaBrie
 lachromosity
@@ -1520,18 +1616,23 @@ Lezyne
 LGBTQ
 Lia
 Liber8
+libpurple
+liex
 lifecycle
 lifelink
 Lifesteal
 lignan
+Lihue
 Lilei
 Lilli
+Lilyfest
 liminal
 LinCastor
 Lindgren's
 Lindley
 linears
 LinkExtractor
+Linklater
 Linnea
 Linode
 Linscott
@@ -1540,6 +1641,7 @@ Lish
 Lispector's
 Lita
 literarily
+Lixia
 LK1800M
 Lobos
 localhost
@@ -1548,6 +1650,7 @@ Loctite
 log4j
 log4j2
 Logitech
+logorrhea
 logorrheic
 Lohrman
 Lok
@@ -1568,6 +1671,7 @@ Lowry
 LSV
 LTS
 lua
+Luc
 Luca
 LucasArts
 Ludovica
@@ -1581,6 +1685,7 @@ Lura's
 lustache
 luthier
 luthiers
+Lutron
 Luv
 Lyft
 Lynggaard
@@ -1598,6 +1703,7 @@ MacLachlan
 MacLean
 macOS
 Macports
+macropad
 MacVim
 Maeve
 Magering
@@ -1610,6 +1716,7 @@ Maildir
 mailtuils
 Makita
 Mal
+Malco
 Mallett
 Malmsteen
 manabase
@@ -1617,6 +1724,7 @@ Manafort
 Mandalorian
 Mandell
 Manfield
+manim
 Manufactory
 Manzanita
 Manziel
@@ -1648,6 +1756,7 @@ Mayumi
 Mayweather
 MBean
 mcabber
+McAffee
 mccanada
 mccanada's
 McCarran
@@ -1665,6 +1774,7 @@ MDC
 mDNS
 meatspace
 mech
+Mechanimation
 Mechina
 Mechina's
 mechs
@@ -1673,6 +1783,7 @@ MediaWiki
 MedicalHost
 medkit
 meds
+Meeseeks
 meetups
 megaship
 Melania
@@ -1681,6 +1792,7 @@ Mele's
 Melina
 Melisandre
 memcache
+Memoizing
 MEmu
 Meola
 Merc
@@ -1690,6 +1802,7 @@ Merkel
 Merkel's
 Merlyn
 Merlyn's
+Meross
 Merrell's
 Merrells
 metagame
@@ -1705,7 +1818,6 @@ Michinto
 Michonne
 Micic
 microaggressions
-microagreesion
 microcassette
 microcassettes
 micronaps
@@ -1713,8 +1825,10 @@ MICROplate
 microservices
 Micucci
 Midgley
+Mielgo
 Mieville
 MiFi
+Mihrimah
 Mika
 Mikey
 mikeyb
@@ -1766,6 +1880,7 @@ Moab
 Moana's
 Mobee
 mobi
+mocap
 mockish
 Mockito
 Moda
@@ -1791,7 +1906,9 @@ Morello
 Morello's
 Moretti
 Moriah
+Morstan
 Morty
+Morty's
 moshers
 Mosquitos
 Mosscap
@@ -1847,6 +1964,7 @@ Nalgene
 NAMM
 nanites
 nanoc
+Nanoleaf
 Nanoweb
 Nasti
 Natalja
@@ -1890,6 +2008,7 @@ Nextdoor
 nfl
 nginx
 ngrok
+Nia
 Nialls
 nicka
 Nicki
@@ -1938,11 +2057,13 @@ Nyong'o
 Oankali
 OAuth
 OAuth2
+Obergefell
 O'Bleness
 Oblotzky
 obvs
 Ocasio
 OCD
+Odenkirk
 Odersky
 offseason
 offsite
@@ -1954,6 +2075,7 @@ Okja
 Okonkwo
 Okorafor
 Okorafor's
+Okta
 Okuda
 olded
 Oleg
@@ -1970,6 +2092,7 @@ Omri
 onboarding
 oncall
 OneMedical
+OnlyFans
 Oof
 ooloi
 OOP
@@ -2003,6 +2126,9 @@ Otep
 Otile
 OU
 outro
+overanalyze
+overanalyzed
+overanalyzing
 overcosted
 overdriven
 overengineered
@@ -2012,6 +2138,7 @@ overfeeling
 overhelpful
 overoptimistically
 overpromising
+overprovisioned
 overreactive
 overscanning
 overscans
@@ -2033,11 +2160,14 @@ Panga
 Panguitch
 Paniq
 Paperwhite
+Papillon
+Papillon's
 parallelizable
 Parkersburg
 Parkhurst
 Parkour
 Partita
+Parton
 PAs
 Pasa
 PassDynamicLink
@@ -2085,12 +2215,14 @@ Petrowski
 Petrucci
 Petrucci's
 Pettine
+PEX
 pfizer
 Phan
 phantomjs
 Phlebas
 pho
 photoshopped
+photoshopping
 Phrygian
 PianoFight
 Picard
@@ -2112,6 +2244,7 @@ Pittsburg
 Pixar
 pixelated
 PixelSearch
+Piya
 PJ
 pkpass
 plaintext
@@ -2149,6 +2282,7 @@ Pokémon
 Policygenius
 Pollet
 Polyphia
+Polyphia's
 Polyweb
 Pomon
 Ponza
@@ -2160,6 +2294,7 @@ poseable
 POSIX
 Postgres
 Potrero
+Potvad
 poundcake
 POV
 Powderfinger
@@ -2195,6 +2330,7 @@ Pricefield
 Prima
 prima
 Primavera
+Princeville
 Pringles
 Pripyat
 Prismo
@@ -2225,6 +2361,7 @@ pucatrade
 pucatrade's
 pushdefault
 putzed
+Pwnage
 PyCon
 Pyramaze
 Q1
@@ -2244,6 +2381,7 @@ Quickdraw
 Quicktime
 Quist
 Quist's
+quoque
 Quora
 Rabban
 Rabea
@@ -2306,6 +2444,7 @@ Reiss
 Reiss's
 rekey
 rekeying
+relitigate
 relogged
 remappings
 Remnin
@@ -2342,8 +2481,11 @@ retconned
 retconning
 retconsole
 retweet
+retweeted
 retweets
 reusability
+revanchism
+revanchist
 Revis
 revisitation
 rewatch
@@ -2358,6 +2500,7 @@ Rickheit
 rictus
 Rief
 Rigthfile
+rigueur
 Rillibee
 Rima
 RipIt
@@ -2377,6 +2520,7 @@ Roethlisberger
 roleplay
 roll20
 rom
+romcom
 Romo
 Romulan
 Romulans
@@ -2388,6 +2532,8 @@ RosewattaStone
 Rosey
 roshambo
 Rothfuss
+rotoscope
+rotoscoping
 routable
 Routh's
 Roveg
@@ -2402,6 +2548,7 @@ rsynced
 rubberband
 Rullo
 Rundeck
+runestones
 runlist
 RuntimeException
 Rushkoff
@@ -2420,6 +2567,7 @@ SaffronOlive's
 Sagat
 Sahai
 Sahai's
+Saia
 Sakishima
 Sakura
 Salesforce
@@ -2430,6 +2578,7 @@ Samy's
 Sansa
 Sansome
 Sapolsky
+Sarchet
 SASL
 Satchfunklius
 Satriani
@@ -2448,11 +2597,14 @@ Scarfe's
 Schaal
 Schabel
 Schaffer
+Schaibel
+Schaibel's
 ScheduledJob
 Schirmer
 Schlage
 Schlief
 schlub
+Scholomance
 schoolies
 Schumer
 Schumer's
@@ -2503,6 +2655,7 @@ Shackelford
 Shadowgrounds
 Shadowrun
 Shan
+Shankar
 Shaon
 shapeshifter
 shapeshifters
@@ -2511,6 +2664,7 @@ shapeways
 Sharab
 Sharab's
 Sharbino
+sharkbite
 sharpe
 Shattuck
 Shaub
@@ -2525,8 +2679,11 @@ Shereen's
 Shevek
 Shevel
 Shiftstone
+Shimazu
+shinethrough
 shitloads
 shitpile
+shitposting
 shitshow
 shittiness
 Shizuka
@@ -2551,6 +2708,7 @@ Simlish
 simplejson
 SimpleJSON
 Simplenote
+Sinan
 Sinead
 sinkful
 Siracusa
@@ -2580,6 +2738,7 @@ smcFanControl
 smidge
 Smoll
 smooshed
+s'more
 Smucker's
 Snapchat
 SNL
@@ -2620,13 +2779,16 @@ spindowns
 Spinozan
 Splashtop
 spoilerville
+Spooner
 Spotify
 Springwater
 sqft
 SQLite
 sqround
 SQS
+Srinivasan
 sshd
+SSO
 Stackdriver
 StackOverflow
 StandDesk
@@ -2647,12 +2809,15 @@ staycation
 Stayin
 stderr
 stdout
+steampunk
 Steelers
 stefan's
 Steph
+Steph's
 Stevonnie
 Stevonnie's
 StewMac
+Stickley
 Stimpson
 stoffel
 stoffel's
@@ -2713,6 +2878,8 @@ T8
 Ta'amu
 tablature
 tableflip
+tablespace
+Tackform
 Tacolicious
 tactiles
 Tadhg
@@ -2731,6 +2898,8 @@ Tannehill
 Tannehill's
 tapenade
 taqueria
+Tartt
+Tartt's
 Tascam
 tased
 TaskStack
@@ -2754,6 +2923,7 @@ templatizing
 temporalities
 temporality
 temporization
+Tenenbaums
 Tensorate
 Tepper
 Teramaze
@@ -2775,8 +2945,8 @@ Theraflu
 Thermarest
 Thibaut
 Thibaut's
+thockier
 thon
-thonkiness
 thopter
 thopters
 Thorman
@@ -2817,6 +2987,7 @@ tombstoned
 tombstoning
 Tomsula
 Tonra
+Tookie
 toolchain
 Toole
 toolset
@@ -2873,6 +3044,7 @@ Turtenwald
 Tuvan
 tv
 tvOS
+tweeted
 twentysomething
 twentysomethings
 Typesafe's
@@ -2885,6 +3057,7 @@ uapig
 UA's
 UASF
 Uber
+UberEats
 Ubibot
 UC
 UCB
@@ -2892,9 +3065,11 @@ Uchida
 Udemy
 udon
 UGB
+uglies
 UHD
 UIDs
 Ulloa
+Ulloa's
 UltiPro
 Ultrabeat
 ultralite
@@ -2906,6 +3081,7 @@ Umi
 unarchiving
 unassailably
 unassuageable
+unattainability
 unattracted
 unblockable
 UnBottle
@@ -2916,9 +3092,11 @@ unbubbled
 uncaffeinated
 uncentered
 unchosen
+uncirculating
 unclip
 uncommenting
 uncommons
+uncompelling
 uncontrived
 uncounterable
 uncracked
@@ -2946,6 +3124,7 @@ unimprinted
 unimprovably
 unindexed
 uninterrogated
+unknitted
 unlockable
 Unlubricated
 unmark
@@ -2954,6 +3133,9 @@ unmarshaling
 unmerge
 unmerged
 unpairable
+unpause
+unpausing
+unpayable
 unplayables
 unpopped
 unproxied
@@ -2981,8 +3163,8 @@ untucks
 untuned
 unwithered
 unworkable's
-<<<<<<< Updated upstream
 uploader
+upsell
 uptimes
 UptwnDowntwn
 URIs
@@ -3004,6 +3186,7 @@ Vai's
 Valente
 Valente's
 Valero
+vampiric
 Vanden
 Vanden Plas
 Vanellope
@@ -3031,6 +3214,7 @@ VESA
 Vestas
 Vesuvian
 Vevo
+VFX
 Viceland
 vicmd
 Vid
@@ -3069,6 +3253,7 @@ Vizio
 VMWare
 VOD
 VoiceOver
+voiceover
 voicings
 Voidbound
 VPC
@@ -3090,6 +3275,7 @@ wallflowering
 Waltner
 WandaVision
 Warg's
+Watch2Gether
 watchOS
 Watchwolves
 Waterdeep
@@ -3105,6 +3291,7 @@ weaponize
 weaponized
 webapp
 webapps
+WebAuthn
 WebDAV
 webdev
 webenv
@@ -3127,6 +3314,7 @@ Westworld
 WFH
 whataboutism
 WhatsApp
+Wheatley
 whiffers
 whitelist
 whitelists
@@ -3137,6 +3325,7 @@ wifebeater
 wifi
 Wil
 Wilk
+Willett
 Wilmore
 Wilmore's
 wilw
@@ -3159,6 +3348,7 @@ Wookie
 WordPerfect
 worktree
 worktrees
+worldbuilding
 WotC
 WoW
 WPN
@@ -3196,6 +3386,7 @@ Yik
 Ying
 Ying's
 Yinmeng
+Yinmeng's
 Yngwie
 yogini
 yoginis
@@ -3203,11 +3394,13 @@ yogle
 yolo
 yolo'd
 Yorick
+Yoshihiro
 Youch
 Youngers
 yourfood
 Yueh
 Yulish
+Yumi
 Yumm
 Yuval
 Zac
