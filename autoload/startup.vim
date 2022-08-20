@@ -241,23 +241,23 @@ function! startup#defaults()
     endfun
 
     fun! s:obj.writeApp() dict
-        call EditCurrentEntry()
-        vsplit
-        call EditCurrentIndex()
         exe 'cd' pages#root()
+        call pages#editPagesEntry()
+        vsplit
+        call pages#editCurrentIndex()
         wincmd h | wincmd =
     endfun
 
     fun! s:obj.newwriteApp() dict
+        exe 'cd' pages#root()
         call pages#editCurrentEntry()
         vsplit
         call pages#editCurrentIndex()
-        exe 'cd' pages#root()
         wincmd h | wincmd =
     endfun
 
     fun! s:obj.readApp() dict
-        exe 'cd' self.personalroot() . "zaurus/zlog/"
+        exe 'cd' pages#root()
         exe "Reading"
         exe "NERDTree"
         normal G
