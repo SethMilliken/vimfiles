@@ -509,10 +509,6 @@ nmap <silent> <Leader>tl :call timestamp#insert("long")<CR>
 imap <silent> <Leader>tl <C-r>=timestamp#text("long")<CR>
 nmap <silent> <Leader>fw :call FoldWrap()<CR>
 nmap <silent> <Leader>fi :call FoldInsert()<CR>
-nmap <silent> <Leader>wb :call StartWriting()<CR>
-imap <silent> <Leader>wb <Esc><Leader>ws
-nmap <silent> <Leader>wf :call FinishWriting()<CR>
-imap <silent> <Leader>wf <Esc><Leader>wf
 nmap <silent> <Leader>ll o<Esc>:call timestamp#insert("short") \| call FoldWrap()<CR>
 
 " }}}
@@ -528,7 +524,7 @@ for n in range(10)
      let k = n == "0" ? "10" : n
      for m in ["D", "A"]
          exec printf("imap <silent> <%s-%s> <Esc>%s", m, n, k)
-         exec printf("map <silent> <%s-%s> %sgt", m, n, k)
+         exec printf("map <silent> <%s-%s> %Sgt", m, n, k)
      endfor
 endfor
 
@@ -2179,128 +2175,6 @@ call Clipboard()
 " }}}
 let g:progress = glob("~/.vim/swap/reading_progress.txt")
 let g:pages_dir = glob("~/sandbox/personal/zaurus/zlog/")
-
-command! Reading :call ReadingMappings()
-function! ReadingMappings() " {{{
-    if bufname("%") == TocName()
-        set nocursorline nowrap nolist
-    else
-        set nocursorline wrap nolist spell
-    end
-    exe "cd " . g:pages_dir
-    if ProgressFileExists()
-        let lines = readfile(g:progress)
-        let current_entry = lines[0]
-        if strwidth(current_entry) > 0
-            exe "edit " . g:pages_dir . current_entry
-            if exists(":NERDTreeToggle") == 2
-                NERDTreeToggle
-                call search(current_entry)
-            end
-        end
-        exec 'map QQ :call UpdateReadingProgress()<CR>'
-    end
-endfunction
-
-"}}}
-command! UpdateReadingProgress :call UpdateReadingProgress()
-function! UpdateReadingProgress() " {{{
-    if ProgressFileExists()
-        let file_name = fnamemodify(expand("%"), ":p:t")
-        if strwidth(file_name) > 0 && IsPagesFile(file_name)
-            let lines = [file_name]
-            call writefile(lines, g:progress)
-            echo "Updated reading progress to: " . file_name
-        end
-    end
-endfunction
-
-"}}}
-function! ProgressFileExists() " {{{
-    return filereadable(g:progress)
-endfunction
-
-"}}}
-function! NotesToggle() " {{{
-    call BufferToggle("notes.txt")
-endfunction
-
-"}}}
-function! TocToggle() " {{{
-    call BufferToggle(TocName())
-    silent! call WhitespaceBGone()
-    normal G$
-endfunction
-
-"}}}
-function! PagesToggle() " {{{
-    call BufferToggle(CurrentEntryName())
-endfunction
-
-"}}}
-function! IsPagesFile(name) " {{{
-    return match(a:name, '[0-9]\{4}-[0-9]\{2}-[0-9]\{2}\.txt') > -1
-endfunction
-
-"}}}
-function! TocName() " {{{
-    return strftime("%Y-%m-index.txt")
-endfunction
-
-"}}}
-function! CurrentEntryName() " {{{
-    return timestamp#text("date") . ".txt"
-endfunction
-
-"}}}
-function! EditCurrentIndex() " {{{
-    let l:current = g:pages_dir . TocName()
-    " Switch to tab if one is opened with this file being edited
-    " Otherwise eidt it here
-    exec "edit " . l:current
-    Writing
-endfunction
-
-"}}}
-function! EditCurrentEntry() " {{{
-    "call pages#editCurrentEntry()
-    let l:current = g:pages_dir . CurrentEntryName()
-    " Switch to tab if one is opened with this file being edited
-    " Otherwise eidt it here
-    exec "edit " . l:current
-    Writing
-endfunction
-
-"}}}
-function! BufferToggle(bufname) " {{{
-    write
-    if buflisted(glob(a:bufname))
-        call BufferSwitch(a:bufname)
-    else
-        exec "tabedit " . a:bufname
-    end
-endfunction
-
-" }}}
-function! BufferSwitch(bufname) " {{{
-    let l:origswb = &swb
-    set swb=usetab
-    let l:curnr = bufnr("%")
-    let l:curname = expand("%:t")
-    if l:curname == a:bufname
-        if exists("g:orgnr") && buflisted(g:orgnr)
-            exec "sbuffer " . g:orgnr
-        else
-            echo "No original buffer."
-        end
-    else
-        let g:orgnr = l:curnr
-        exec "sbuffer " . bufnr(a:bufname)
-    end
-    exec "set swb=" . l:origswb
-endfunction
-
-" }}}
 
 " Restore tmp directory that appears to get reaped by OpenBSD
 command! TmpdirRestore call mkdir(fnamemodify(tempname(),":p:h"),"",0700)
