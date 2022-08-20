@@ -57,11 +57,15 @@ iabb berkz Berkeley, CA  94703
 iabb glas 2947 Glascock St
 iabb jingz Oakland, CA  94601
 iabb gros 191 Grosvenor St
+iabb grosz 191 Grosvenor St, Athens, OH  45701
+iabb bph Back Porch Hammock
+iabb frp Front Porch Swing
 iabb hnh half-and-half
 iabb cread <C-g>u_<C-r>=CurrentReading(0)<CR>_
 iabb cread2 <C-g>u_<C-r>=CurrentReading(1)<CR>_
 iabb cread3 <C-g>u_<C-r>=CurrentReading(2)<CR>_
 iabb cread4 <C-g>u_<C-r>=CurrentReading(3)<CR>_
+iabb cread5 <C-g>u_<C-r>=CurrentReading(4)<CR>_
 iabb babb <C-g>u_<C-r>=CurrentReading(0)<CR>_
 iabb aiptb <C-g>u_<C-r>=CurrentReading(1)<CR>_
 iabb ebbcb <C-g>u_<C-r>=CurrentReading(2)<CR>_
