@@ -1177,12 +1177,7 @@ augroup END
 augroup FuzzyFinder | au!
     au FileType fuf imap <buffer> <silent> <Tab> <Down>
     au FileType fuf imap <buffer> <silent> <S-Tab> <Up>
-augroup END
-
-" }}}
-" Fuf: " {{{
-augroup FuzzyFinder
-    au! FileType tLibInputList set nolist nornu nonu
+    au FileType tLibInputList set nolist nornu nonu
 augroup END
 
 " }}}
