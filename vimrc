@@ -1694,6 +1694,22 @@ map <C-e><C-e>  :CtrlPBuffer<CR>
 map <C-e>f  :call RecursiveFileSearch(":CtrlP")<CR>
 
 " }}}
+" Markdown: " {{{
+" https://github.com/preservim/vim-markdown
+augroup Markdown | au!
+    au BufRead *.md set conceallevel=2
+augroup END
+
+let g:vim_markdown_folding_disabled=0
+let g:vim_markdown_folding_level=1
+" let g:vim_markdown_no_default_key_mappings=1
+let g:vim_markdown_toc_autofit=1
+" let g:vim_markdown_fenced_languages=['ext=alias']
+let g:vim_markdown_strikethrough=1
+let g:vim_markdown_no_extensions_in_markdown=1
+let g:vim_markdown_autowrite=1
+
+" }}}
 " }}}
 " FuzzyFinder: " {{{
 " To transform wildignore into fuf_exclude...

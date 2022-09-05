@@ -115,6 +115,7 @@ refresh    vim-airline          https://github.com/vim-airline/vim-airline.git
 refresh    vim-airline-themes   https://github.com/vim-airline/vim-airline-themes.git
 refresh    vim-flake8           https://github.com/nvie/vim-flake8.git                         'pip install flake8'
 refresh    vim-javascript       https://github.com/pangloss/vim-javascript.git
+refersh    vim-markdown         https://github.com/preservim/vim-markdown.git
 refresh    vim-mtg-spell        git@github.com:SethMilliken/vim-mtg-spell.git
 refresh    vim-ruby             https://github.com/vim-ruby/vim-ruby.git
 refresh    vim-scala            https://github.com/derekwyatt/vim-scala.git
