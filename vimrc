@@ -2285,5 +2285,33 @@ endfunction
 " :let mapleader=","
 " :let mapleader=" "
 
+set termwinkey=<C-j>
+
+imap <C-s>` <Esc>:call SurroundPreviousWordWithBacktickAngleBrackets()<CR>
+function! SurroundPreviousWordWithBacktickAngleBrackets()
+  let save_cursor = getpos(".")
+  normal B
+  call InsertTextAtCursor("`<")
+  normal E
+  call InsertTextAfterCursor(">`")
+  call setpos(".", save_cursor)
+  normal 4l
+  startinsert!
+endfunction
+function! InsertTextAtCursor(text)
+  let cur_line_num = line('.')
+  let cur_col_num = col('.')
+  let orig_line = getline('.')
+  let modified_line = strpart(orig_line, 0, cur_col_num - 1) . a:text . strpart(orig_line, cur_col_num - 1)
+  call setline(cur_line_num, modified_line)
+endfunction
+function! InsertTextAfterCursor(text)
+  let cur_line_num = line('.')
+  let cur_col_num = col('.')
+  let orig_line = getline('.')
+  let modified_line = strpart(orig_line, 0, cur_col_num + 1) . a:text . strpart(orig_line, cur_col_num + 1)
+  call setline(cur_line_num, modified_line)
+endfunction
+
 " }}}
 " vim: set ft=vim fdm=marker cms=\ \"\ %s  :
