@@ -437,9 +437,9 @@ endfunction
 " }}}
 " }}}
 " Cmdline Window: shortcuts " {{{
-nnoremap :: q:
-nnoremap // q/
-nnoremap ?? q?
+nnoremap l; q:A
+nnoremap // q/A
+nnoremap ?? q?A
 
 " }}}
 " Cmdline Window: " {{{
