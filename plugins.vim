@@ -1,7 +1,7 @@
 " vim-plug: " {{{
 let g:plug_shallow = 0
 
-call plug#begin('~/.vim/bundle/')
+call plug#begin(g:vimhome . '/bundle/')
 Plug 'junegunn/vim-easy-align'
 Plug 'git@github.com:SethMilliken/gundo.vim.git'
 Plug 'https://github.com/kogakure/vim-sparkup.git'

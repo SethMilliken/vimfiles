@@ -38,7 +38,8 @@
 "let g:vimwiki_menu = ''
 
 " }}}
-source $HOME/.vim/plugins.vim
+let g:vimhome = fnamemodify(expand("$MYVIMRC"),":p:h")
+exe "source " . g:vimhome . "/plugins.vim"
 
 function! IsNexus() " {{{
     if !exists('g:is_nexus')
