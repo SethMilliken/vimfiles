@@ -29,15 +29,17 @@
 "   - consider: move ft-specific settings to individual files
 
 " Pathogen: " {{{
-set rtp+=~/.vim/bundle/pathogen/
-set rtp+=~/vimfiles
-set rtp+=~/vimfiles/bundle/pathogen/
-call pathogen#infect()
-"let g:did_install_default_menus = 1 " disable default macvim menus
-let g:did_install_syntax_menu = 1
-let g:vimwiki_menu = ''
+"set rtp+=~/.vim/bundle/pathogen/
+"set rtp+=~/vimfiles
+"set rtp+=~/vimfiles/bundle/pathogen/
+"call pathogen#infect()
+"""let g:did_install_default_menus = 1 " disable default macvim menus
+"let g:did_install_syntax_menu = 1
+"let g:vimwiki_menu = ''
 
 " }}}
+source $HOME/.vim/plugins.vim
+
 function! IsNexus() " {{{
     if !exists('g:is_nexus')
         if has("win32")
