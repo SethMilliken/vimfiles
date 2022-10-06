@@ -39,7 +39,11 @@
 
 " }}}
 let g:vimhome = fnamemodify(expand("$MYVIMRC"),":p:h")
+" Plugins: " {{{
+" Requires bootstrap of vim-plug:
+" git clone https://github.com/junegunn/vim-plug.git bundle/vim-plug/
 exe "source " . g:vimhome . "/plugins.vim"
+" }}}
 
 function! IsNexus() " {{{
     if !exists('g:is_nexus')
