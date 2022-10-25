@@ -42,7 +42,7 @@ function! TaskStackMappings() " {{{
     nmap <buffer> <silent> <C-n> /^@.* {\{3\}<CR>:nohls<CR>
     nmap <buffer> <silent> <Tab> /^\([A-Z]\+ \)\{1,\}<CR>:nohls<CR>
     nmap <buffer> <silent> <S-Tab> ?^\([A-Z]\+ \)\{1,\}<CR>:nohls<CR>
-    nmap <buffer> :w<CR> :call TaskstackSave()<CR>
+    nmap <buffer> :w<CR> :call WriteBufferIfWritable()<CR>
     nmap <buffer> <silent> <C-x>x :call TaskstackGroups()<CR>
     nmap <buffer> K :call TaskstackMoveToProjectPrompt()<CR>
     nmap <buffer> <C-y>k :call TaskstackMoveToProjectAutoDetect()<CR>
@@ -1344,15 +1344,6 @@ function! TaskstackHide() " {{{
         exe "normal :x\<CR>"
     endif
 endfunction
-
-" }}}
-if !exists("g:taskstacksave_loaded") " {{{
-    let g:taskstacksave_loaded = ""
-    function! TaskstackSave()
-        silent write
-        " call CommitSession() " FIXME: External Dependency
-    endfunction
-endif
 
 " }}}
 function! TaskstackEOL() " {{{
