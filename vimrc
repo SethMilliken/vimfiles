@@ -1015,9 +1015,11 @@ endfunction
 
 " }}}
 function! WriteBufferIfWritable() " {{{
-    if !exists('readonly') && !exists('buftype')
+    if &modified && !exists('readonly') && !exists('buftype')
         if filewritable(expand('%')) || match(expand('%'), "scp") == 0
+            let l:save_position = getpos(".")
             write
+            call setpos('.', l:save_position)
         end
     end
 endfunction
