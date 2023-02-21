@@ -18,10 +18,12 @@ iabb hr =>
 iabb ia iabb
 
 " Personal
+iabb aoc Advent of Code
 iabb cp2 Cyberpunk 2077
 iabb rl Rocket League
 iabb mke mechanical keyboard
 iabb mks mechanical keyboards
+iabb mked mechanical keyboard Discord
 iabb apwk Apple Wireless Keyboard
 iabb ono one-on-one
 iabb lablo laboratory.local
@@ -61,6 +63,9 @@ iabb grosz 191 Grosvenor St, Athens, OH  45701
 iabb bph Back Porch Hammock
 iabb frp Front Porch Swing
 iabb hnh half-and-half
+iabb acc Aurora Corne Choc
+iabb acm Aurora Corne MX
+iabb cz Corne-ish Zen
 iabb cread <C-g>u_<C-r>=CurrentReading(0)<CR>_
 iabb cread2 <C-g>u_<C-r>=CurrentReading(1)<CR>_
 iabb cread3 <C-g>u_<C-r>=CurrentReading(2)<CR>_
@@ -69,6 +74,12 @@ iabb cread5 <C-g>u_<C-r>=CurrentReading(4)<CR>_
 iabb babb <C-g>u_<C-r>=CurrentReading(0)<CR>_
 iabb aiptb <C-g>u_<C-r>=CurrentReading(1)<CR>_
 iabb ebbcb <C-g>u_<C-r>=CurrentReading(2)<CR>_
-iabb techb <C-g>u_<C-r>=CurrentReading(3)<CR>_
+iabb heatherb <C-g>u_<C-r>=CurrentReading(3)<CR>_
+iabb techb <C-g>u_<C-r>=CurrentReading(4)<CR>_
+iabb cshow <C-g>u_<C-r>=CurrentWatching(0)<CR>_
+iabb cshow2 <C-g>u_<C-r>=CurrentWatching(1)<CR>_
+iabb cshow3 <C-g>u_<C-r>=CurrentWatching(2)<CR>_
+iabb cshow4 <C-g>u_<C-r>=CurrentWatching(3)<CR>_
+iabb cshow5 <C-g>u_<C-r>=CurrentWatching(4)<CR>_
 
 " }}}
