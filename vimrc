@@ -208,6 +208,11 @@ set directory=$HOME/.vim/swap//,$HOME/vimfiles/swap//
 " Undo: centralized with unique names via //
 set undodir=$HOME/.vim/undo//,~/vimfiles/undo//
 
+" Mode-appropriate cursor in tmux in iTerm2
+let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
+let &t_SR = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=2\x7\<Esc>\\"
+let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
+
 " Sessionopts: defaults are blank,buffers,curdir,folds,help,options,tabpages,winsize
 set ssop=blank,buffers,curdir,folds,help,resize,slash,tabpages,unix,winpos,winsize
 
