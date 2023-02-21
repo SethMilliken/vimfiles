@@ -2,6 +2,7 @@
 let g:plug_shallow = 0
 
 call plug#begin(g:vimhome . '/bundle/')
+Plug 'https://github.com/easymotion/vim-easymotion.git'
 Plug 'https://github.com/jremmen/vim-ripgrep.git'
 Plug 'junegunn/vim-easy-align'
 Plug 'git@github.com:SethMilliken/gundo.vim.git'
