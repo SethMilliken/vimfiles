@@ -140,6 +140,7 @@ function! startup#defaults()
         if self.virtual() | return | end
         exe "edit " . self.vimhome() . "vimrc"
         exe "vsplit " . self.vimhome() . "gvimrc | wincmd t | wincmd ="
+        exe "tabnew " . self.vimhome() . "plugins.vim"
         exec "tabnew " . self.vimhome() . "autoload/startup.vim"
         tab help
         tabfirst
