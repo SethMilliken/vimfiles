@@ -29,14 +29,16 @@ function! pages#writingMappings() " {{{
     imap <buffer> <silent> Qq         <Esc>Qq
     map  <buffer> <silent> QQ         :call pages#notesToggle()<CR>
     imap <buffer> <silent> QQ         <Esc>QQ
-    map  <buffer> <silent> kj         :call pages#tocToggle()<CR>
-    imap <buffer> <silent> kj         <Esc>kj
-    map  <buffer> <silent> lj         :call pages#topicsToggle()<CR>
-    imap <buffer> <silent> lj         <Esc>lj
+    map  <buffer> <silent> ;j         :call pages#tocToggle()<CR>
+    imap <buffer> <silent> ;j         <Esc>;j
+    map  <buffer> <silent> ;h         :call pages#topicsToggle()<CR>
+    imap <buffer> <silent> ;h         <Esc>;h
     map  <buffer> <silent> ;l         :call pages#lastLines()<CR>
     imap <buffer> <silent> ;l         <Esc>;l
-    nmap <buffer> <silent> <Leader>wb :call pages#startWriting()<CR>
-    imap <buffer> <silent> <Leader>wb <Esc><Leader>ws
+    map  <buffer> <silent> ;k         :call pages#midlines()<CR>
+    imap <buffer> <silent> ;k         <Esc>;k
+    nmap <buffer> <silent> <Leader>wb :Pages<CR>
+    imap <buffer> <silent> <Leader>wb <Esc><Leader>wb
     nmap <buffer> <silent> <Leader>wf :call pages#finishWriting()<CR>
     imap <buffer> <silent> <Leader>wf <Esc><Leader>wf
     " Available bindings: ;j ;h ;k lh
@@ -157,6 +159,7 @@ function! pages#finishWriting() " {{{
     call WhitespaceBGone()
     normal G
     call text#insert_trailing_annotation("Finished typing")
+    normal zz
     write
 endfunction
 
@@ -188,8 +191,17 @@ endfunction
 
 "}}}
 function! pages#lastLines() " {{{
+    " TODO: save and restore cursor position and mode as well
     let orig = winnr()
     windo normal Gzt
+    exe orig . 'wincmd w'
+endfunction
+
+"}}}
+function! pages#midlines() " {{{
+    " TODO: save and restore cursor position and mode as well
+    let orig = winnr()
+    windo normal Gzz
     exe orig . 'wincmd w'
 endfunction
 
