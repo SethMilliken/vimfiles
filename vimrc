@@ -239,7 +239,7 @@ command! W :w
 nmap <S-Space> <C-f>
 " Why would I ever want to insert a ^Z?
 imap <C-z> <Esc><C-z>
-" Undo prases, not entire insert sessions
+" Undo phrases, not entire insert sessions
 imap . .<C-g>u
 imap ; ;<C-g>u
 imap , ,<C-g>u
@@ -270,8 +270,16 @@ nmap <C-e>l :bprev<CR>
 nmap <C-e>j :Herenow<CR>
 nmap <C-e>k :exec ":lcd .." \| echo "cwd now: " . getcwd()<CR>
 
-map g0 :tabfirst<CR>
-map g$ :tablast<CR>
+map <silent> gi <C-]>
+map <silent> go <Plug>(easymotion-s)
+map <silent> g0 :tabfirst<CR>
+map <silent> g$ :tablast<CR>
+map <silent> gA :call EndAppend()<CR>
+function! EndAppend() " {{{
+    normal GA
+    startinsert!
+endfunction
+" }}}
 
 " tmux copy/paste issue in mac os x workaround
 map <C-x>p :call system("ssh localhost pbcopy", getreg('*')) \| echo "Copied default register to pasteboard."<CR>
@@ -310,9 +318,10 @@ imap <C-y>v <Esc><C-y>v
 nmap <C-y>v :call ReloadVimrc()<CR>
 " Show snippets
 nmap <C-y>m :call MTGOListCleanup()<CR>
-nmap <C-y>s :call feedkeys(":call OpenRelatedSnippetFileInVsplit()\r\<Tab>\<Tab>", 't')<CR>
+nmap <C-y>n :call feedkeys(":call OpenRelatedSnippetFileInVsplit()\r\<Tab>\<Tab>", 't')<CR>
 nmap <C-y>a :AbbUp<CR>
 nmap <C-y>r :call EditCurrentReading()<CR>
+nmap <C-y>s :call EditCurrentWatching()<CR>
 nmap <C-y>d :call InsertDreams()<CR>
 nmap <C-y>A :vsplit ~/.vim/plugin/iabbs.vim<CR>
 imap <C-y>w <Esc><C-y>w
@@ -341,7 +350,7 @@ nmap <silent> <C-e>0 :e<CR>G
 
 " }}}
 " Save Session: " {{{
-nmap <Leader>\ :call CommitSession()<CR>
+" nmap <Leader>\ :call CommitSession()<CR>
 
 " }}}
 " Pages: " {{{
@@ -2246,13 +2255,26 @@ endfunction
 " }}}
 let g:current_reading_file = $HOME . "/sandbox/personal/lists/current_reading.txt"
 function! CurrentReading(entry = 0) " {{{
-    let l:file_lines = g:current_reading_file->readfile()
+    let l:file_lines = g:current_reading_file->readfile()->filter({_, v -> index(['#', '\n', ' ', ''], v[0]) == -1})
     return l:file_lines->get(a:entry)
 endfunction
 
 " }}}
 function! EditCurrentReading() " {{{
     exe "silent! tabnew " . g:current_reading_file
+    set noro
+endfunction
+
+" }}}
+let g:current_watching_file = $HOME . "/sandbox/personal/lists/current_watching.txt"
+function! CurrentWatching(entry = 0) " {{{
+    let l:file_lines = g:current_watching_file->readfile()->filter({_, v -> index(['#', '\n', ' ', ''], v[0]) == -1})
+    return l:file_lines->get(a:entry)
+endfunction
+
+" }}}
+function! EditCurrentWatching() " {{{
+    exe "silent! tabnew " . g:current_watching_file
     set noro
 endfunction
 
