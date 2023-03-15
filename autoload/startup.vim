@@ -200,7 +200,9 @@ function! startup#defaults()
     endfun
 
     fun! s:obj.scratchApp() dict
-        exe 'edit' self.docroot() . "scratch.scratch"
+        silent! PersonalScratch
+        call AdjustFont(+5)
+        "exe 'edit' self.docroot() . "scratch.scratch"
     endfun
 
     fun! s:obj.workscratchApp() dict

@@ -117,7 +117,7 @@ if has("gui_macvim")
     " frees <D-T>
     macm File.Open\ Tab\.\.\.                   key=<D-M-t>  action=addNewTab:
     " frees <D-f>
-    macm Edit.Find.Find\.\.\.                   key=<nop>
+    macm Edit.Find.Find…                   key=<nop>
     " }}}
 
     "" Map Cmd-w to close buffer

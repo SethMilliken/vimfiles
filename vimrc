@@ -57,6 +57,8 @@ function! IsNexus() " {{{
 endfunction
 
 "}}}
+" Neovim: {{{
+" Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
 
 "}}}
 " DEFAULTS: from example .vimrc " {{{
@@ -1425,7 +1427,7 @@ augroup END
 let g:vimwiki_hl_headers = 1                " hilight header colors
 let g:vimwiki_hl_cb_checked = 1             " hilight todo item colors
 let g:vimwiki_list_ignore_newline = 0       " convert newlines to <br /> in list
-let g:vimwiki_folding = 0                   " outline folding
+let g:vimwiki_folding = ''                  " disable folding
 let g:vimwiki_table_auto_fmt = 0            " don't use and conflicts with snipMate
 let g:vimwiki_fold_lists = 0                " folding of list subitems
 let g:vimwiki_autowriteall = 0
