@@ -182,12 +182,14 @@ catch
     colorscheme koehler
 endtry
 
-let mapleader="\\"                  " <Leader>
-"let mapleader="\<CR>"                  " <Leader>
+"let mapleader="\\"                  " <Leader>
+"let mapleader="\<Space>"            " experiment with using <Space> as <Leader>;
+                                     " creates unsettling lag-like behavior when there are insert mode
+                                     " <Leader> bindings.
+let mapleader="\<CR>"                " experiment with using <CR> as <Leader>
 
 "set foldcolumn=4                   " trying out fold indicator column
 "set display+=uhex                  " show unprintable hex characters as <xx>
-"let mapleader="\<Space>"                  " experiment with using <Space> as <Leader>.
 
 " use relative line numbers if available, otherwise just use line numbers
 exec "au BufReadPost * setl" (version > 702 ? 'rnu' : 'nu')
