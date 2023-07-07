@@ -43,7 +43,8 @@ function! s:MacSettings.New()
     let this = s:DefaultSettings.New()
     let this.os ="Mac OS X"
     function! this.setMappings()
-        nmap <silent> <D-t>     <Esc>:101tabnew<CR>
+        nmap <silent> <D-t>     <Esc>:tablast \| tabnew<CR>
+        nmap <silent> <D-w>     <Esc>:tabclose<CR>
     endfunction
     return copy(this)
 endfunction
