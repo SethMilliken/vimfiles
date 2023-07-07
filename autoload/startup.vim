@@ -343,6 +343,28 @@ function! startup#defaults()
         wincmd t | wincmd =
     endfun
 
+    fun! s:obj.qmkApp() dict
+        exe 'cd' self.coderoot() . "qmk_firmware"
+        exe 'edit keyboards/splitkb/aurora/corne/keymaps/SethMilliken/keymap.c'
+        exe 'tabedit keyboards/splitkb/aurora/corne/keymaps/SethMilliken/config.h'
+        exe 'vsplit users/SethMilliken/config.h'
+        exe 'tabedit users/SethMilliken/rules.mk'
+        tabfirst
+    endfun
+
+    fun! s:obj.zmkApp() dict
+        exe 'cd ' .. self.coderoot() . "zmk-configs"
+        edit config/corne.keymap
+        tabedit config/corneish_zen.keymap
+        tabedit config/splitkb_aurora_corne.keymap
+        tabedit config/corne.conf
+        vsplit  config/corneish_zen.conf
+        vsplit  config/splitkb_aurora_corne.conf
+        tabfirst
+    endfun
+
+    " WARNING: Beware bad modelines when editing multiple files
+
     return s:obj.New()
 endfunction
 
@@ -464,6 +486,12 @@ function! startup#AIRSHIP()
 
     fun! s:obj.TasksFile() dict
         return self.docroot() . "work.tst.txt"
+    endfun
+
+    fun! s:obj.ideaApp() dict
+        edit ~/.ideavimrc
+        exe 'cd ~/sandbox/code/ideavim'
+        exe 'vsplit' "./src/main/java/com/maddyhome/idea/vim/package-info.java"
     endfun
 
     return s:obj.New()
