@@ -33,6 +33,7 @@ iabb wrt with respect to
 iabb fo of
 iabb ot to
 iabb teh the
+iabb tothe to the
 iabb Teh The
 iabb hte the
 iabb Hte The
@@ -60,12 +61,16 @@ iabb glas 2947 Glascock St
 iabb jingz Oakland, CA  94601
 iabb gros 191 Grosvenor St
 iabb grosz 191 Grosvenor St, Athens, OH  45701
+iabb ches 343 Chester St, Oakland, CA
 iabb bph Back Porch Hammock
 iabb frp Front Porch Swing
 iabb hnh half-and-half
 iabb acc Aurora Corne Choc
 iabb acm Aurora Corne MX
 iabb cz Corne-ish Zen
+iabb sbs self-build Swept
+iabb nn nice!nano
+iabb nv nice!view
 iabb cread <C-g>u_<C-r>=CurrentReading(0)<CR>_
 iabb cread2 <C-g>u_<C-r>=CurrentReading(1)<CR>_
 iabb cread3 <C-g>u_<C-r>=CurrentReading(2)<CR>_
