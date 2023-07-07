@@ -2160,6 +2160,13 @@ endfunction
 " }}}
 
 " }}}
+" jq {{{
+command! JqFilter :call JqFilter()
+function! JqFilter()
+    :% !jq
+endfun
+
+" }}}
 " Scala {{{
   fun! SBT_JAR()
     return "/usr/local/Cellar/sbt/0.11.3/libexec/sbt-launch.jar"
