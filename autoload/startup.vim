@@ -112,7 +112,7 @@ function! startup#defaults()
         return "defaults"
     endfun
 
-    fun s:obj.docroot() dict
+    fun! s:obj.docroot() dict
         return $HOME . "/sandbox/personal/"
     endfun
 
@@ -120,7 +120,11 @@ function! startup#defaults()
         return $HOME . "/sandbox/personal/"
     endfun
 
-    fun s:obj.TasksFile() dict
+    fun! s:obj.coderoot() dict
+        return $HOME . "/sandbox/code/"
+    endfun
+
+    fun! s:obj.TasksFile() dict
         return self.personalroot() . "todo/" . self.class() . ".tst.txt"
     endfun
 
@@ -331,8 +335,12 @@ function! startup#defaults()
         wincmd t | wincmd =
     endfun
 
-    fun! s:obj.evoApp() dict
-        exe "edit scp://seth@araxia.net/sandbox/personal/projects/evony.tst"
+    fun! s:obj.ideavimApp() dict
+        exe 'cd ' self.coderoot() . 'ideavim'
+        exe 'edit ~/.ideavimrc'
+        exe 'vsplit ./src/main/java/com/maddyhome/idea/vim/package-info.java'
+        wincmd L
+        wincmd t | wincmd =
     endfun
 
     return s:obj.New()
