@@ -1,0 +1,280 @@
+" See https://github.com/JetBrains/ideavim/wiki
+""" Settings {{{
+set visualbell
+"set noerrorbells
+"set t_vb=
+set hls
+set nu
+set rnu
+set clipboard=ideaput,unnamed
+" set clipboard=ideaput
+set incsearch
+set showmode
+set ideajoin               " use IDEA to intelligently join lines
+set ideastatusicon=enabled " always show ideavim icon
+set ideavimsupport=dialog  " use ideavim in dialogs
+set idearefactormode=keep  " keep mode enabled before starting refactor
+
+"let mapleader="\\"
+let mapleader="\\"
+" workaround for not being able to set mapleader to <CR>
+" https://youtrack.jetbrains.com/issue/VIM-2817/Unable-to-set-enter-backspace-as-leader-key
+map <CR> <Leader>
+iunmap <CR>
+
+" }}}
+""" Basic Bindings"{{{
+nnoremap Y y$
+"noremap <silent><leader>/ :nohls<CR>
+noremap <Leader>/ :call Refresh()<CR>
+nmap <Leader>r :call ReloadConfiguration()<CR>
+nmap <silent><C-l> :call Refresh()<CR>
+
+"}}}
+""" Plugins"{{{
+Plug 'easymotion/vim-easymotion'
+Plug 'preservim/nerdtree'
+Plug 'tpope/vim-surround'
+Plug 'kana/vim-textobj-entire' " Adds ae and ie text-objects
+
+nmap <Leader>] :NERDTreeToggle<CR>
+let g:NERDTreeMapActivateNode='l'
+let g:NERDTreeMapPreview='h'
+
+"}}}
+""" IDEA Actions"{{{
+" All implemented commands:
+" https://github.com/JetBrains/ideavim/blob/master/src/main/java/com/maddyhome/idea/vim/package-info.java
+"" Prefixes
+" <C-s>: Alter code
+" <C-j>: Navigate
+nmap <D-k> <action>(RecentLocations)
+inoremap <Space> :action SaveAll<CR><Space>
+
+nmap <C-s>s <action>(InsertLiveTemplate)
+vmap <C-s>s <action>(SurroundWithLiveTemplate)
+imap <C-s>s <action>(InsertLiveTemplate)
+
+nmap <C-s><C-s> <action>(Refactorings.QuickListPopupAction)
+vmap <C-s><C-s> <action>(Refactorings.QuickListPopupAction)
+
+nmap <C-s>r <action>(RenameElement)
+vmap <C-s>r <action>(RenameElement)
+
+vmap <C-s>e <action>(ExtractMethod)
+
+nmap <C-s>i <action>(OptimizeImports)
+vmap <C-s>i <action>(OptimizeImports)
+imap <C-s>i <action>(OptimizeImports)
+
+" Cursor context
+nmap <C-j>h <action>(CallHierarchy)
+nmap <C-j>u <action>(FindUsages)
+nmap <C-j><C-b> <action>(ToggleBookmark)
+
+" File context
+omap <C-j>m <action>(FileStructurePopup)
+nmap <C-j>i <action>(ViewImportPopups)
+nmap <C-j>n <action>(ShowNavBar)
+nmap <C-j><C-r> <action>(GotoRelated)
+
+" No context
+nmap <C-j><C-j> <action>(SearchEverywhere)
+nmap <C-j>b <action>(ShowBookmarks)
+nmap <C-j>/ <action>(FindInPath)
+nmap <C-j>H <action>(LocalHistory.ShowHistory)
+nmap <C-j>a <action>(GotoAction)
+nmap <C-j>l :actionlist<Space>
+nmap <C-j>s <action>(GotoSymbol)
+nmap <C-j>c <action>(GotoClass)
+nmap <C-j>f <action>(GotoFile)
+nmap <C-j>g <action>(GotoGit)
+nmap <C-j><C-s> <action>(SelectIn)
+nmap <C-j>r :call ReloadConfiguration()<CR>
+"nmap <C-j>r <action>(RecentFiles)
+" nmap vak :call ReloadConfiguration()<CR>
+
+map <C-w><C-w> <action>(JumpToLastWindow)
+map <C-w>x <action>(HideActiveWindow)
+map <C-w>X <action>(HideAllWindows)
+
+" Navigation
+" Reserved: gg gj gl gk gv gq gu gw
+nmap ga <action>(ShowIntentionActions)
+nmap gb <action>(Back)
+nmap gc <action>(JumpToLastChange)
+nmap gd <action>(GotoDeclaration)
+nmap ge <action>(GotoNextError)
+nmap gE <action>(GotoPreviousError)
+nmap gf <action>(Forward)
+nmap gF :NERDTreeToggle<CR>
+"nmap gg <action>(MotionGotoFirstLine)
+nmap gh <action>(VcsShowPrevChangeMarker)
+nmap g; <action>(VcsShowNextChangeMarker)
+nmap gi <action>(GotoImplementation)
+nmap gm :action LocalHistory.ShowHistory<CR><Tab><Tab>
+"nmap gn <action>()
+nmap go <action>(AceAction)
+" nmap gp <action>()
+nmap gr <action>(ShowRecentTests)
+nmap gs <action>(GotoSuperMethod)
+nmap gt <action>(GotoTest)
+nmap gT <action>(ActivateRunToolWindow)
+"nmap gx <action>()
+"nmap gy <action>()
+nmap gz <action>(OpenProjectWindows)
+nmap [[ <action>(MethodUp)
+nmap ]] <action>(MethodDown)
+
+" Trial
+nmap ,M <action>(MoveEditorToOppositeTabGroup)
+nmap <Leader>w <action>(NextProjectWindow)
+nmap <Leader>l <action>(JumpToLastWindow)
+nmap <Leader>p <action>(ToggleLineBreakpoint)
+nmap <Leader>s <action>(ActivateStructureToolWindow)
+nmap <Leader>h <action>(ShowErrorDescription)
+nmap <Leader>H :call WhyNotBoth()<CR>
+nmap <Leader>i <action>(InspectCode)
+nmap <Leader>g <action>(Github.Open.In.Browser)
+nmap <Leader>c <action>(RecentChangedFiles)
+nmap <Leader>d <action>(ToggleRenderedDocPresentation)
+
+"Debug Trial
+nmap <C-m><C-m> <action>(JumpToLastWindow)
+nmap <C-m>D <action>(ActivateDebugToolWindow)
+nmap <C-m>d <action>(Debug)
+nmap <C-m>s <action>(StepOver)
+nmap <C-m>i <action>(StepInto)
+nmap <C-m>I <action>(ForceStepInto)
+nmap <C-m>o <action>(StepOut)
+nmap <C-m>c <action>(RunToCursor)
+nmap <C-m>e <action>(EvaluateExpression)
+nmap <C-m>r <action>(Resume)
+nmap <C-m>b <action>(ViewBreakpoints)
+nmap <C-m>B <action>(MuteBreakpoints)
+nmap <C-m>q <action>(Stop)
+
+"nmap <Leader>x :action Tool_External Tools_toolname<CR> " define external tool in idea settings
+"nmap <C-j>e <Action>(ShowErrorDescription)
+"nmap <C-s><C-s> <Action>(SmartSelect)
+"nmap <C-s>e <Action>(EditSmartGroup) " not useful
+
+" Test Running
+nmap ,T <action>(ActivateRunToolWindow)
+nmap ,t <action>(ContextRun)
+nmap ,c <action>(RunClass)
+nmap ,C <action>(ChooseRunConfiguration)
+nmap ,r <action>(Rerun)
+nmap ,f <action>(RerunFailedTests)
+nmap ,g <action>(Generate)
+
+" Action Mappings
+" Use "IdeaVIM: Track Action Ids" (from "Search Everywhere", <Shift><Shift>)
+" :actionlist for full list of actions
+vmap <C-l> <action>(SmartUnSelect)
+nmap <C-y>a :call AnnotateLines()<CR>
+nmap == <action>(ReformatCode)
+vmap = <action>(ReformatCode)
+
+" text-objects emulation
+nmap vad <action>($SelectAll)
+nmap vmm :call SelectMethod()<CR>
+nmap vim :call SelectMethodInner()<CR>
+nmap vam :call SelectMethodFull()<CR>
+nmap dim :call DeleteMethodInner()<CR>
+nmap dam :call DeleteMethodFull()<CR>
+nmap dom :call AltSelectMethod()<CR>
+
+" Folds
+nmap zc <action>(CollapseRegion)
+nmap zC <action>(CollapseRegionRecursively)
+nmap zo <action>(ExpandRegion)
+nmap zO <action>(ExpandRegionRecursively)
+nmap za <action>(ExpandRegion)
+nmap zA <action>(ExpandRegionRecursively)
+nmap zR <action>(ExpandAllRegions)
+nmap zM <action>(CollapseAllRegions)
+
+"}}}
+""" Java Method text-object Emulation"{{{
+""" https://youtrack.jetbrains.com/issue/VIM-480/Add-text-objects-for-code-constructs-like-a-method-and-a-class
+function! SelectMethodBase(post)
+    normal }
+    action MethodUp
+    exe "normal " . "_Vg_%" . a:post
+endfunction
+
+" Center Method
+function! SelectMethod(post="")
+    let l:base = "o" . "zz" . a:post
+    call SelectMethodBase(l:base)
+endfunction
+
+" Select contents of method
+function! SelectMethodInner(post="")
+    let l:base = "j" . "o" . "k" . "o" . a:post
+    call SelectMethod(l:base)
+endfunction
+
+" Select full method, including preceding whitespace
+function! SelectMethodFull(post="")
+    let l:base = "{" . a:post
+    call SelectMethod(l:base)
+endfunction
+
+function! DeleteMethodInner()
+    call SelectMethodInner("d")
+endfunction
+
+function! DeleteMethodFull()
+    call SelectMethodFull("d")
+endfunction
+
+function! AltSelectMethod()
+    normal }
+    action MethodUp
+    let lines = {'first': 0, 'last': 0, 'first_nb': 0}
+    let lines['first'] = line(".")
+    normal k
+    exe "/{"
+    normal _f{%
+    let lines['last'] = line(".")
+    exe "normal " . lines['first'] . "G"
+    exe "?^$"
+    let lines['first_ext'] = line(".") + 1
+    let lines['last_ext'] = lines['last'] + 1
+    " echo lines['first'] . "," . lines['last']
+    "exe "normal " . lines['first'] . "G" . "V" . lines['last'] . "G"
+    exe "normal " . lines['first_ext'] . "G" . "V" . lines['last_ext'] . "G" . "o"
+endfunction
+
+"}}}
+""" General Functions"{{{
+function! Refresh()
+    action Refresh
+    action HideSideWindows
+    set rnu
+    set nu
+    noh
+    echo "Refreshed"
+endfunction
+
+function! ReloadConfiguration()
+    source ~/.ideavimrc
+    echo "Reloaded .ideavimrc"
+endfunction
+
+function! AnnotateLines()
+    set nornu
+    set nonu
+    action Annotate
+endfunction
+
+function! WhyNotBoth()
+    action ShowErrorDescription
+    "action QuickJavaDoc
+endfunction
+
+echo "Loaded .ideavimrc"
+
+"}}}
