@@ -182,11 +182,14 @@ catch
     colorscheme koehler
 endtry
 
-"let mapleader="\\"                  " <Leader>
+let mapleader="\\"                  " <Leader>
 "let mapleader="\<Space>"            " experiment with using <Space> as <Leader>;
                                      " creates unsettling lag-like behavior when there are insert mode
                                      " <Leader> bindings.
-let mapleader="\<CR>"                " experiment with using <CR> as <Leader>
+"let mapleader="\<CR>"               " experiment with using <CR> as <Leader>
+                                     " similar unp;leant op-pending lag
+                                     " just going to update my keyboard layout
+                                     " to put \ in a better place
 
 "set foldcolumn=4                   " trying out fold indicator column
 "set display+=uhex                  " show unprintable hex characters as <xx>
