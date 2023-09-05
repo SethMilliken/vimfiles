@@ -349,6 +349,8 @@ function! startup#defaults()
         exe 'tabedit keyboards/splitkb/aurora/corne/keymaps/SethMilliken/config.h'
         exe 'vsplit users/SethMilliken/config.h'
         exe 'tabedit users/SethMilliken/rules.mk'
+        exe 'tabedit keyboards/hazel/bad_wings/keymaps/SethMilliken/keymap.c'
+        exe 'vsplit keyboards/hazel/bad_wings/keymaps/SethMilliken/rules.mk'
         tabfirst
     endfun
 
