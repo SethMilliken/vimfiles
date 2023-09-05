@@ -68,9 +68,12 @@ iabb hnh half-and-half
 iabb acc Aurora Corne Choc
 iabb acm Aurora Corne MX
 iabb cz Corne-ish Zen
+iabb ked keymap-drawer
 iabb sbs self-build Swept
 iabb nn nice!nano
 iabb nv nice!view
+iabb qit 1/4-20
+iabb uc USB-C
 iabb cread <C-g>u_<C-r>=CurrentReading(0)<CR>_
 iabb cread2 <C-g>u_<C-r>=CurrentReading(1)<CR>_
 iabb cread3 <C-g>u_<C-r>=CurrentReading(2)<CR>_
