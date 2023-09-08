@@ -264,6 +264,16 @@ vmap dC :normal gv"_xP<CR>
 nnoremap <expr> <Leader>p ':set cb=unnamed \| :put * \| set cb=<CR>'
 nnoremap <expr> <Leader>P ':set cb=unnamed \| :put! * \| set cb=<CR>'
 
+" consistent begin/end insert mode
+imap <PageUp> <Esc>ggI
+imap <PageDown> <Esc>GA
+map <PageUp> ggI
+map <PageDown> GA
+imap <Home> <Esc>I
+imap <End> <Esc>A
+map <Home> I
+map <End> A
+
 " sane-itize Y
 map Y y$
 
