@@ -2268,12 +2268,12 @@ endfunction
 " }}}
 command! WorkScratch call WorkScratch()
 function! WorkScratch() " {{{
-    exe "e " . RemotePath() . "work/ua/scratch.scratch"
+    exe "e " . RemotePath() . "work/airship/scratch.scratch"
 endfunction
 " }}}
 command! WorkTodo call WorkTodo()
 function! WorkTodo() " {{{
-    exe "e " . RemotePath() . "work/ua/work.tst"
+    exe "e " . RemotePath() . "work/airship/work.tst"
 endfunction
 
 " }}}
