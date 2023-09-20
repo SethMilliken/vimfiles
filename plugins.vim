@@ -2,6 +2,7 @@
 "let g:plug_shallow = 0
 
 call plug#begin(g:vimhome . '/bundle/')
+"Plug 'glacambre/firenvim'
 Plug 'https://github.com/easymotion/vim-easymotion.git'
 Plug 'https://github.com/jremmen/vim-ripgrep.git'
 Plug 'junegunn/vim-easy-align'
@@ -71,7 +72,6 @@ Plug 'yurifury/hexHighlight' " 'brew install jsl'
 Plug '~/.vim/bundle/vim-morning-pages/'
 Plug '~/.vim/bundle/vim-daily-record/'
 "Plug 'https://github.com/VimEz/Tmux.git'
-"Plug 'https://github.com/vim-scripts/vundle.git'
 "Plug 'https://github.com/vim-scripts/calendar.vim--Matsumoto.git'
 "Plug 'https://github.com/vim-scripts/AnsiEsc.vim.git'
 "Plug 'junegunn/vim-easy-align'

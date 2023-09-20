@@ -1345,8 +1345,8 @@ let g:sessionman_save_on_exit = 0
 
 " }}}
 " BufExplorer: " {{{
-map <silent> <C-Tab> :BufExplorer<CR>j
-map <silent> <C-S-Tab> :BufExplorer<CR>k
+"map <silent> <C-Tab> :BufExplorer<CR>j
+"map <silent> <C-S-Tab> :BufExplorer<CR>k
 " Unmap default bindings.
 if maparg("<Leader>be") =~ 'BufExplorer' | exe "nunmap <Leader>be" | endif
 if maparg("<Leader>bs") =~ 'BufExplorerHorizontalSplit' | exe "nunmap <Leader>bs" | endif
@@ -1921,6 +1921,17 @@ function! PluginInstall(plugin)
 endfunction
 
 " }}}
+" Ale {{{
+let g:airline#extensions#ale#enabled = 1
+
+nnoremap <Leader>ht :GhcModType<cr>
+nnoremap <Leader>htc :GhcModTypeClear<cr>
+autocmd FileType haskell nnoremap <buffer> <leader>? :call ale#cursor#ShowCursorDetail()<cr>
+let g:ale_linters ={
+      \   'haskell': ['hlint', 'hdevtools', 'hfmt'],
+      \}
+
+" }}}
 " Hexhighlight: " {{{
 nmap <Leader>ht <Plug>HexHighlightToggle
 nmap <Leader>hr <Plug>HexHighlightRefresh
@@ -2345,7 +2356,7 @@ endfunction
 " :let mapleader=","
 " :let mapleader=" "
 
-set termwinkey=<C-j>
+"set termwinkey=<C-j>
 
 imap <C-s>` <Esc>:call SurroundPreviousWordWithBacktickAngleBrackets()<CR>
 function! SurroundPreviousWordWithBacktickAngleBrackets()
