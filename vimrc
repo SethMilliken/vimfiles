@@ -1050,6 +1050,7 @@ function! WriteBufferIfWritable() " {{{
         if filewritable(expand('%')) || match(expand('%'), "scp") == 0
             let l:save_position = getpos(".")
             write
+            call text#showmessage("write", expand('%'))
             call setpos('.', l:save_position)
         end
     end

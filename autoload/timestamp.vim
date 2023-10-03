@@ -49,10 +49,10 @@ endfunction
 function! timestamp#autoUpdateToggle() "{{{
     if !exists("g:auto_timestamp_bypass")
         call timestamp#autoUpdateBypass()
-        echo "Timestamps: auto add/update DISABLED."
+        call timestamp#showmessage("auto add/update DISABLED.")
     else
         call timestamp#autoUpdateEnable()
-        echo "Timestamps: auto add/update ENABLED."
+        call timestamp#showmessage("auto add/update ENABLED.")
     end
 endfunction
 
@@ -72,9 +72,9 @@ function! timestamp#addOrUpdateSolicitingAnnotation() "{{{
             if len(l:originalannotations) > 0
                 silent! call timestamp#remove()
                 silent! call timestamp#addOrUpdate("", "force")
-                echo "Annotations removed."
+                call timestamp#showmessage("Annotations removed.")
             else
-                echo "Annotation aborted."
+                call timestamp#showmessage("Annotation aborted.")
             end
         end
     end
@@ -107,28 +107,33 @@ function! timestamp#addOrUpdate(annotation,...) "{{{
 endfunction
 
 "}}}
+function! timestamp#showmessage(message) "{{{
+    call text#showmessage("timestamp", a:message)
+endfunction
+
+"}}}
 function! timestamp#isUpdateOkay(line) "{{{
     let l:characters = 20
     if len(a:line) < l:characters
-        echo "No autotimestamp: line shorter than ". l:characters . " characters."
+        call timestamp#showmessage("No autotimestamp: line shorter than ". l:characters . " characters.")
         return 0
     elseif match(a:line, FoldMarkerOpen()) > 0
-        echo "No autotimestamp: line already has open foldmarker."
+        call timestamp#showmessage("No autotimestamp: line already has open foldmarker.")
         return 0
     elseif match(a:line, "^@") > -1
-        echo "No autotimestamp: category fold"
+        call timestamp#showmessage("No autotimestamp: category fold")
         return 0
     elseif match(a:line, FoldMarkerClose()) > 0
-        echo "No autotimestamp: line already has close foldmarker."
+        call timestamp#showmessage("No autotimestamp: line already has close foldmarker.")
         return 0
     elseif match(a:line, "^\\s\\+") > -1
-        echo "No autotimestamp: line begins with whitespace."
+        call timestamp#showmessage("No autotimestamp: line begins with whitespace.")
         return 0
     elseif match(a:line, "^x\\s\\|^o\\s\\|\\sx\\s\\|\\so\\s") > -1
-        echo "No autotimestamp: line contains completed marker."
+        call timestamp#showmessage("No autotimestamp: line contains completed marker.")
         return 0
     elseif len(text#strip(CommentStringOpen())) > 0 && match(a:line, "^" . CommentStringOpen()) > -1
-        echo "No autotimestamp: commented line"
+        call timestamp#showmessage("No autotimestamp: commented line")
         return 0
     else
         return 1

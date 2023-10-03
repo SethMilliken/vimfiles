@@ -101,7 +101,7 @@ function! s:ResetTogglers()
             exec "unlet " . item
         endif
     endfor
-    echo "Togglers reset."
+    call text#showmessage("taskstack", "Togglers reset.")
 endfunction
 
 "}}}
@@ -123,10 +123,10 @@ function! NullObject()
                         \ 'state': {},
                         \ }
     fu instance.foldsave() dict " {{{
-        echo "save"
+        call text#showmessage("taskstack", "save")
     endfu " }}}
     fu instance.foldrest() dict " {{{
-        echo "rest"
+        call text#showmessage("taskstack", "rest")
     endfu " }}}
 
     return instance
@@ -145,10 +145,10 @@ function! NullObject() " {{{
                         \ 'state': {},
                         \ }
     fu instance.foldsave() dict " {{{
-        echo "save"
+        call text#showmessage("taskstack", "save")
     endfu " }}}
     fu instance.foldrest() dict " {{{
-        echo "rest"
+        call text#showmessage("taskstack", "rest")
     endfu " }}}
 
     return instance
@@ -218,7 +218,7 @@ function! BaseObject(...) " {{{
     endfu " }}}
     fu instance._debug(...) dict " {{{
         if self['debug']
-            echo string(a:000)
+            call text#showmessage("taskstack", string(a:000))
         end
     endfu " }}}
     fu instance._address() dict " {{{
@@ -366,7 +366,7 @@ function! FoldContainer(...)
             let g:foldcontainer_cache['ALL'] = {}
         endif
         if has_key(g:foldcontainer_cache['ALL'], a:header)
-            " echo "cache hit: " . string(self['ALL'][a:header])
+            " call text#showmessage("taskstack", "cache hit: " . string(self['ALL'][a:header]))
             return g:foldcontainer_cache['ALL'][a:header]
         endif
         let l:new = FoldContainer()._new(a:header)
@@ -551,24 +551,24 @@ fu taskstack._layout3(list, location) dict " {{{
     " illegal for first item in list to be a list (can't put something into
     " nothing)
     let fulllist = copy(a:list)
-    echo string(peeklist)
+    call text#showmessage("taskstack", string(peeklist))
     if type(peeklist) == type(0)
         let nextitem = 0
     else
         let nextitem = get(peeklist, 0)
     end
-    echo string(nextitem)
+    call text#showmessage("taskstack", string(nextitem))
     let thisitem = get(fulllist, 0)
     let thisnode = self['nodes'][thisitem]
     if has_key(a:location, 'line')
-        echo thisnode._name() . " move_to " . a:location['line']
+        call text#showmessage("taskstack", thisnode._name() . " move_to " . a:location['line'])
         call thisnode.move_to(a:location['line'])
     endif
     let nextnode = self['nodes'][nextitem]
     let nextnode.move_under(thisnode)
 
     call remove(peeklist, 0)
-    echo string(peeklist)
+    call text#showmessage("taskstack", string(peeklist))
     if type(peeklist) == type(0)
         let nextitem = 0
     else
@@ -579,11 +579,11 @@ fu taskstack._layout3(list, location) dict " {{{
     return
     else
         if has_key(a:location, 'container')
-            echo thisnode._name() . " move_into " . a:location['container']._name()
+            call text#showmessage("taskstack", thisnode._name() . " move_into " . a:location['container']._name())
             call thisnode.move_into(a:location['container'])
         else
             if has_key(a:location, 'peer')
-                echo thisnode._name() . " move_under " . a:location['peer']._name()
+                call text#showmessage("taskstack", thisnode._name() . " move_under " . a:location['peer']._name())
                 call thisnode.move_under(a:location['peer'])
             endif
         endif
@@ -605,7 +605,7 @@ fu taskstack._instantiatenodes() dict " {{{
         let foldnode = g:foldcontainer.for(nodename)
         let self['nodes'][label] = foldnode
         call foldnode.create_at("$")
-        echo foldnode._name()
+        call text#showmessage("taskstack", foldnode._name())
     endfor
 endfu
 
@@ -685,7 +685,7 @@ function! s:Fold.setLowerPeer(argument) " {{{
         call add(self.lowerpeer, a:argument)
 endfunction " }}}
 function! s:Fold.name() " {{{
-        echo "My name is: " . self.header . " I think I start at " . string(self.topline) . " and end at " . string(self.bottomline)
+        call text#showmessage("taskstack", "My name is: " . self.header . " I think I start at " . string(self.topline) . " and end at " . string(self.bottomline))
 endfunction " }}}
 
 " let myfold = s:Fold.New("test")
@@ -728,7 +728,7 @@ function! NewFoldAgent(...) " {{{
     endfu
     fu! foldagent.debug(output)
         if &verbose > 0
-            echo printf("%s: %s", expand("<sfile>"), a:output)
+            call text#showmessage("taskstack", printf("%s: %s", expand("<sfile>"), a:output))
         endif
     endfu
     fu! foldagent._setstatus(from,to)
@@ -755,7 +755,7 @@ function! NewFoldAgent(...) " {{{
         end
         let matchpos = match(self.toggleset, indicator)
         if matchpos == -1
-            echo "No toggle match."
+            call text#showmessage("taskstack", "No toggle match.")
         elseif matchpos > 0
             call self._rotate_toggleset(matchpos)
         end
@@ -815,7 +815,7 @@ function! TaskstackMain(...) " {{{
         else
             normal gg
             if len(getline(".")) == 0
-                call text#append(s:main_node_name)
+                call text#append(s:main_node_name))
             else
                 exe "normal O" . s:main_node_name
             end
@@ -966,7 +966,7 @@ function! TaskstackCompleteItem(prefix) " {{{
         silent call MoveFoldToDateNode(TaskstackFoldbounds(), a:prefix)
     end
     call timestamp#autoUpdateEnable()
-    echo ""
+    call text#showmessage("taskstack", a:prefix . " item completed")
 endfunction
 
 " }}}
@@ -1028,7 +1028,7 @@ endfunction
 " }}}
 function! MoveFoldToDateNode(foldbounds, status) "{{{
         let l:state = g:stateinfo.New('foldsave')
-        echo "bounds: " . string(a:foldbounds) . " status: " . a:status
+        call text#showmessage("taskstack", "bounds: " . string(a:foldbounds) . " status: " . a:status)
     call TaskstackDate()
         let moveto_line = line(".")
         let mytext = getline(a:foldbounds[0])
@@ -1206,7 +1206,7 @@ function! BalancedMove(destination) " {{{
     let last_visible = line("w$")
     let original_line = line(".")
     let in_range = index(range(first_visible, last_visible), a:destination[0])
-    " echo [[first_visible, last_visible], a:destination, in_range, original_line]
+    " call text#showmessage("taskstack", [[first_visible, last_visible], a:destination, in_range, original_line])
     call cursor(a:destination)
     if in_range == -1
         "let offset_from_top = original_line - first_visible
