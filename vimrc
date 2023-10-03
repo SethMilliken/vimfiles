@@ -1198,7 +1198,6 @@ augroup VolatileScratch | au!
     au BufRead *.scratch nmap <buffer> <silent> :w<CR> :write \| :silent call ScratchCopy()<CR>
     au BufRead *.scratch imap <buffer> <silent> ZZ <Esc>ZZ
     au BufRead *.scratch vmap <buffer> <silent> ZZ <Esc>ZZ
-    au BufRead *.scratch doau FileType x.tst
     "au FocusLost *.scratch call ScratchCopy()
     au FocusGained *.scratch call ScratchPaste()
     au VimResized *.scratch call SetColorColumnBorder() | normal zz
