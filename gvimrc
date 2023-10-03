@@ -123,7 +123,7 @@ if has("gui_macvim")
 
     "" Map Cmd-w to close buffer
     "nmap <silent> <D-w> <Esc>:bd<CR>
-    nmap <silent> <D-w> <Esc>:tabclose<CR>
+    nmap <silent> <D-w> <Esc>:call CloseTab()<CR>
 
     "" Location list and quickfix navigation
     map  <silent> <D-p> :lne <CR>
@@ -141,10 +141,10 @@ if has("gui_macvim")
     " Tab-page ewly created with <D-t> shouldn't be in insert mode
     " just because we happen to be in it on invocation.
     "inoreme 10.295 &File.New\ Tab                          <Esc>:tabnew<CR>
-    "" Map Cmd-t to new tab, soliciting name
-    exec "nmap <silent> <D-t>     <Esc>:" . &tabpagemax . " tabnew \\| :SolicitTabName<CR>"
+    "" Map Cmd-t to new tab
+    nmap <silent> <D-t> <Esc>:$tabnew<CR>
     "" Map Cmd-Shift-t to rename tab
-    exec "nmap <silent> <D-T>   <Esc>:SolicitTabName<CR>"
+    nmap <silent> <D-T> <Esc>:SolicitTabName<CR>
 else
     set guifont=Ubuntu\ Mono\ derivative\ Powerline\:h12
 end
@@ -181,6 +181,15 @@ function! AdjustFont(increment) " {{{
     let &guifont = substitute( &guifont, '\d\+$', '\=eval(' .  replacement . ')', '')
     "exe "set columns=" . (columns - (a:increment * 10))
     "exe "set lines=" . (lines - (a:increment * 7))
+endfunction
+
+"}}}
+function! CloseTab() " {{{
+    if tabpagenr('$') == 1
+        :qal
+    else
+        :tabclose
+    endif
 endfunction
 
 "}}}
