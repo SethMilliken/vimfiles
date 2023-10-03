@@ -28,7 +28,7 @@ nnoremap Y y$
 "noremap <silent><leader>/ :nohls<CR>
 noremap <Leader>/ :call Refresh()<CR>
 nmap <Leader>r :call ReloadConfiguration()<CR>
-nmap <silent><C-l> :call Refresh()<CR>
+nmap <C-l> :call Refresh()<CR>
 
 "}}}
 """ Plugins"{{{
@@ -261,7 +261,6 @@ function! Refresh()
     set rnu
     set nu
     noh
-    echo "Refreshed"
 endfunction
 
 function! ReloadConfiguration()
