@@ -228,6 +228,10 @@ function! DefaultStatusLine()
     set statusline=%<\(%n\)\ %m%y%r\ %f\ %=%-14.(%l,%c%V%)\ %{CharacterCount()}\ %P
 endfunction
 
+" netrw writes annoyingly add a CR, requiring dismissing the message unless
+" cmdheight=2
+let g:netrw_silent=1
+
 "}}}
 " MAPPINGS: " {{{
 
