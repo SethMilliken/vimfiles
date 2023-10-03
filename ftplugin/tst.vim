@@ -21,33 +21,37 @@ function! TaskStackMappings() " {{{
     let b:completed_prefix = "o"
     set indentkeys-=o indentkeys-=0 showbreak=↳\ \ \ \ \   noai fdm=marker cms= sts=2 sw=2 isk+=# cpo+=n
 
-    map <buffer> <C-Space> <Plug>ToggleLine
-    map <buffer> QQ <Plug>CompleteItem
-    map <buffer> Qx <Plug>AbandonItem
-    map <buffer> Qr <Plug>ResetTogglers
-    map <buffer> QW :call TaskstackMoveItemToProject("@queue")<CR>
-    map <buffer> QA :call TaskstackMoveItemToProject("@active")<CR>
-    nmap <buffer> Nn :call TaskstackNewProjectItem()<CR>
-    nmap <buffer> Np :call TaskstackNewProjectItemFromPaste()<CR>
-    nmap <buffer> NP :call TaskstackNewItemFromPaste()<CR>
-    nmap <buffer> NN :call TaskstackNewItem()<CR>
-    imap <buffer> NN <C-c>:call TaskstackNewItem()<CR>
-    nmap <buffer> ZZ :call TaskstackHide()<CR>
-    imap <buffer> ZZ <C-c>:call TaskstackHide()<CR>
-    nmap <buffer> LL :call TaskstackScratch()<CR>
+    map <buffer> <silent> <C-Space> <Plug>ToggleLine
+    map <buffer> <silent> QQ <Plug>CompleteItem
+    map <buffer> <silent> Qx <Plug>AbandonItem
+    map <buffer> <silent> Qr <Plug>ResetTogglers
+    map <buffer> <silent> QW :call TaskstackMoveItemToProject("@queue")<CR>
+    map <buffer> <silent> QA :call TaskstackMoveItemToProject("@active")<CR>
+    nmap <buffer> <silent> Nn :call TaskstackNewProjectItem()<CR>
+    nmap <buffer> <silent> Np :call TaskstackNewProjectItemFromPaste()<CR>
+    nmap <buffer> <silent> NP :call TaskstackNewItemFromPaste()<CR>
+    nmap <buffer> <silent> NN :call TaskstackNewItem()<CR>
+    imap <buffer> <silent> NN <C-c>:call TaskstackNewItem()<CR>
+    nmap <buffer> <silent> ZZ :call TaskstackHide()<CR>
+    imap <buffer> <silent> ZZ <C-c>:call TaskstackHide()<CR>
+    nmap <buffer> <silent> LL :call TaskstackScratch()<CR>
     nmap <buffer> <silent> $ :call TaskstackEOL()<CR>
     nmap <buffer> <silent> <C-j> :call TaskstackMoveItemDown()<CR>
     nmap <buffer> <silent> <C-k> :call TaskstackMoveItemUp()<CR>
-    nmap <buffer> <silent> <C-p> ?^@.* {\{3\}<CR>:nohls<CR>
-    nmap <buffer> <silent> <C-n> /^@.* {\{3\}<CR>:nohls<CR>
+    "nmap <buffer> <silent> <C-p> ?^@.* {\{3\}<CR>:nohls<CR>
+    "nmap <buffer> <silent> <C-n> /^@.* {\{3\}<CR>:nohls<CR>
+    nmap <buffer> <silent> <C-n> :call TaskstackNextProject()<CR>
+    nmap <buffer> <silent> <C-p> :call TaskstackNextProject('b')<CR>
     nmap <buffer> <silent> <Tab> /^\([A-Z]\+ \)\{1,\}<CR>:nohls<CR>
     nmap <buffer> <silent> <S-Tab> ?^\([A-Z]\+ \)\{1,\}<CR>:nohls<CR>
-    nmap <buffer> :w<CR> :call WriteBufferIfWritable()<CR>
+    nmap <buffer> <silent> :w<CR> :call WriteBufferIfWritable()<CR>
     nmap <buffer> <silent> <C-x>x :call TaskstackGroups()<CR>
-    nmap <buffer> K :call TaskstackMoveToProjectPrompt()<CR>
-    nmap <buffer> <C-y>k :call TaskstackMoveToProjectAutoDetect()<CR>
-    nmap <buffer> <Leader>k :call TaskstackMoveItemToProject("@categorize")<CR>
-    nmap <buffer> <C-e>/ :call TaskstackNavigateToProjectPrompted()<CR>
+    nmap <buffer> <silent> K :call TaskstackMoveToProjectPrompt()<CR>
+    nmap <buffer> <silent> <C-y>k :call TaskstackMoveToProjectAutoDetect()<CR>
+    nmap <buffer> <silent> <Leader>k :call TaskstackMoveItemToProject("@categorize")<CR>
+    nmap <buffer> <silent> <C-e>/ :call TaskstackNavigateToProjectPrompted()<CR>
+    nmap <buffer> <silent> <D-[> :call TaskstackNextProject()<CR>
+    nmap <buffer> <silent> <D-]> :call TaskstackNextProject('b')<CR>
     nmap <buffer> <silent> <Tab> :call TaskstackNextProject()<CR>
     nmap <buffer> <silent> <S-Tab> :call TaskstackNextProject('b')<CR>
     if mapcheck('<CR>', 'n') == "" | nmap <unique> <buffer> <silent> <CR> "tyiW/<C-r>t<CR>ztzv<C-l> | end
@@ -1189,6 +1193,19 @@ function! TaskstackNavigateToProjectPrompted() " {{{
 endfunction
 
 "}}}
+function! TaskstackNextGroup(...) " {{{
+    let l:options = 'n'
+    if len(a:000) > 0
+        let l:options .= 'b'
+    end
+    let l:next_group = searchpos(CategoryRawMatchPattern(), l:options)
+    if l:next_group != [0, 0]
+        call BalancedMove(l:next_group)
+    endif
+    nohls
+endfunction
+
+"}}}
 function! TaskstackNextProject(...) " {{{
     let l:options = 'n'
     if len(a:000) > 0
@@ -1198,6 +1215,7 @@ function! TaskstackNextProject(...) " {{{
     if l:next_project != [0, 0]
         call BalancedMove(l:next_project)
     endif
+    nohls
 endfunction
 
 "}}}
