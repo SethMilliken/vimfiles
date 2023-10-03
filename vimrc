@@ -2330,6 +2330,7 @@ function! PersonalTodo() " {{{
     exe "tabe " . RemotePath() . "personal/todo/techtodo.txt"
     exe "tabe " . RemotePath() . "personal/projects/191-grosvenor.txt"
     wincmd t | wincmd =
+    tabfirst
 endfunction
 " }}}
 command! PersonalScratch call PersonalScratch()
