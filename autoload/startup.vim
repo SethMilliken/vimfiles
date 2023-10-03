@@ -185,6 +185,7 @@ function! startup#defaults()
 
     fun s:obj.todoApp() dict
         silent! PersonalTodo
+        call AdjustFont(+5)
     endfun
 
     fun s:obj.colloquyvimApp() dict
@@ -211,10 +212,12 @@ function! startup#defaults()
 
     fun! s:obj.workscratchApp() dict
         exe ':WorkScratch'
+        call AdjustFont(+5)
     endfun
 
     fun! s:obj.worktodoApp() dict
         exe ':WorkTodo'
+        call AdjustFont(+5)
     endfun
 
 
@@ -377,15 +380,7 @@ function! startup#SAMSARA()
     let s:obj = startup#defaults()
 
     fun! s:obj.class() dict
-        return "samara"
-    endfun
-
-    fun! s:obj.slateApp() dict
-        exe 'edit' ".slate.js"
-        vsplit ~/.slate-layouts/office.js
-        vsplit ~/.slate-layouts/work-internal.js
-        windo set nolist
-        wincmd t | wincmd =
+        return "samsara"
     endfun
 
     return s:obj.New()
