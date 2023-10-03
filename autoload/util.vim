@@ -131,7 +131,7 @@ endfunction
 
 " }}}
 " Blacklist Testing " {{{
-python << COMMENT
+python3 << COMMENT
 """
 unlet g:extra_blacklist
 let g:extra_blacklist = [
@@ -280,7 +280,7 @@ else
     unlet s:debug_mode
 endif
 
-python << BLOCKCOMMENT
+python3 << BLOCKCOMMENT
 """ Work in progress...
 
 noremap <unique> <script> <Plug>OpenFileFromScriptnames <SID>OpenFileFromScriptnames
