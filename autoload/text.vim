@@ -84,3 +84,12 @@ function! text#divider(string) "{{{
 endfunction
 
 "}}}
+function! text#showmessage(title, message) "{{{
+    if has('popupwin')
+        call popup_notification([a:title, a:message], {"pos": "topright", "col": winwidth(win_getid())})
+    else
+        echo a:title . ": " . a:message
+    endif
+endfunction
+
+"}}}
