@@ -16,6 +16,7 @@ iabb hr =>
 
 " Vimscript:
 iabb ia iabb
+iabb tsm call text#showmessage("foo",
 
 " Personal
 iabb aoc Advent of Code
