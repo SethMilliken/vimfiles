@@ -249,6 +249,9 @@ imap <C-z> <Esc><C-z>
 imap . .<C-g>u
 imap ; ;<C-g>u
 imap , ,<C-g>u
+" Undoable deletes in insert
+inoremap <C-w> <C-g>u<C-w>
+inoremap <C-u> <C-g>u<C-u>
 
 " c & p normalization
 nmap dD   <Cmd>normal! _y$"_dd<CR>
@@ -275,10 +278,6 @@ imap <End>      <Esc>A
 
 " sane-itize Y
 map Y y$
-
-" Undoable deletes in insert
-inoremap <C-w> <C-g>u<C-w>
-inoremap <C-u> <C-g>u<C-u>
 
 " Extended Navigation
 nmap <C-e>h :bnext<CR>
