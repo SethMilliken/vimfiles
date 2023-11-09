@@ -23,6 +23,8 @@ function! s:DefaultSettings.New()
         color araxia
         "" No toolbar, please.
         set guioptions-=T
+        "" Use OS Native Tabs
+        set guioptions+=e
         "" Simple, informative gui tabs (dirty, number, name without path)
         set tabpagemax=10
         " yank to system clipboard
@@ -72,10 +74,6 @@ if has("gui_running")
     "set t_AB=[48;5;%dm                    " document this
     "set t_AF=[38;5;%dm                    " document this
     color araxia                             " hey, those are my colors!
-    " no toolbar, no scrollbars
-    for value in ['T','r','R','l','L']
-        exec "set guioptions -=" . value
-    endfor
     "" Simple, informative gui tabs (dirty, number, name without path)
     set tabpagemax=10                       " don't get ridiculous
 else
@@ -101,7 +99,7 @@ if has("gui_macvim")
     " NOTE: Have to unset menu commands in gvimrc
     " Free Command Key Bindings " {{{
     "macm File.Close                            key=<D-w> action=performClose:
-    macm File.Close                             key=<nop>
+     "macm File.Close                             key=<nop>
     "macm File.New\ Window                      key=<D-n> action=newWindow:
     "macm File.Save                             key=<D-s>
     "macm File.Save\ All                        key=<D-M-s> alt=YES
@@ -114,16 +112,16 @@ if has("gui_macvim")
     " frees <D-m>
     "macm Window.Zoom                           key=<nop>
     " frees <D-t>
-    macm File.New\ Tab                          key=<nop>
+    "macm File.New\ Tab                          key=<nop>
     " frees <D-T>
-    macm File.Open\ Tab\.\.\.                   key=<D-M-t>  action=addNewTab:
+    "macm File.Open\ Tab\.\.\.                   key=<D-M-t>  action=addNewTab:
     " frees <D-f>
     macm Edit.Find.Find…                   key=<nop>
     " }}}
 
     "" Map Cmd-w to close buffer
     "nmap <silent> <D-w> <Esc>:bd<CR>
-    nmap <silent> <D-w> <Esc>:call CloseTab()<CR>
+    "nmap <silent> <D-w> <Esc>:call CloseTab()<CR>
 
     "" Location list and quickfix navigation
     map  <silent> <D-p> :lne <CR>
@@ -173,6 +171,29 @@ nnoremap <C-Up> :silent! call AdjustFont(1)<CR>
 " Ctrl-Down Decrease font size
 nnoremap <C-Down> :silent! call AdjustFont(-1)<CR>
 
+" Tabs: switching " {{{
+" set Cmd-# on Mac and Alt-# elsewhere to switch tabs
+for n in range(10)
+     let k = n == "0" ? "10" : n
+     for m in ["D", "A"]
+         exec printf("imap <silent> <%s-%s> <Esc>%s", m, n, k)
+         exec printf("map <silent> <%s-%s> %Sgt", m, n, k)
+     endfor
+endfor
+
+" }}}
+" Windows: switching " {{{
+" Set <C-w># to switch between windows (use [count]<C-w> instead of
+" <C-w>[count] for other wincmds).
+for n in range(9)
+    let k = n == "0" ? "10" : n
+    for m in ["<C-w>"]
+        exec printf("nmap <silent> %s%s :%swincmd w<CR>", m, n, k)
+    endfor
+endfor
+
+" }}}
+
 function! AdjustFont(increment) " {{{
     " TODO: work out better resizing heuristic here
     let columns = &columns
@@ -195,6 +216,7 @@ endfunction
 "}}}
 
 set guitablabel=%!MyGuiTabLabel()
+call text#showmessage("MacVim", "loaded gvimrc")
 
 "}}}
 " vim:ft=vim:fdm=marker:nospell:cms=\ \"\ %s

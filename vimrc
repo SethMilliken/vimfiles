@@ -579,29 +579,6 @@ nmap <silent> -= :call append(line("."), text#divider("="))<CR>
 nmap <silent> -p :call append(line("."), [text#divider('-'), "", string(getreg('*')), ""])<CR>
 
 " }}}
-" Tabs: switching " {{{
-" set Cmd-# on Mac and Alt-# elsewhere to switch tabs
-for n in range(10)
-     let k = n == "0" ? "10" : n
-     for m in ["D", "A"]
-         exec printf("imap <silent> <%s-%s> <Esc>%s", m, n, k)
-         exec printf("map <silent> <%s-%s> %Sgt", m, n, k)
-     endfor
-endfor
-
-" }}}
-" Windows: switching " {{{
-" Set <C-w># to switch between windows (use [count]<C-w> instead of
-" <C-w>[count] for other wincmds).
-for n in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
-    let k = n == "0" ? "10" : n
-    for m in ["<C-w>"]
-        exec printf("nmap <silent> %s%s :%swincmd w<CR>", m, n, k)
-    endfor
-endfor
-
-" }}}
-
 "}}}
 " FUNCTIONS: " {{{
 " Character Count: " {{{
