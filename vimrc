@@ -111,7 +111,6 @@ if has("autocmd")
     " Put these in an autocmd group, so that we can delete them easily.
     augroup VimrcEx
     au!
-
         " When editing a file, always jump to the last known cursor position.
         " Don't do it when the position is invalid or when inside an event handler
         " (happens when dropping a file on gvim).
@@ -119,7 +118,8 @@ if has("autocmd")
                     \ if line("'\"") > 0 && line("'\"") <= line("$") |
                     \   exe "normal g`\"" |
                     \ endif
-
+        " use relative line numbers if available, otherwise just use line numbers
+        autocmd BufReadPost * exec "set " . (version > 702 ? 'rnu nu' : 'nu')
     augroup END
 endif " has("autocmd")
 "}}}
@@ -171,8 +171,6 @@ set wildmenu                        " show completion options
 set autoread                        " automatically reread fs changed files *autoread*
 set shellslash                      " always use /
 set undofile                        " experimental: will i actually use this?
-set rnu                             " turn on relative line numbers with current line number
-set nu                              " but show current absolute line number
 set showbreak=↳\ \ \ \              " show breaks and line up next line with previous
 set cpo+=n                          " use line number columns for wrapped text
 
@@ -193,9 +191,6 @@ let mapleader="\\"                  " <Leader>
 
 "set foldcolumn=4                   " trying out fold indicator column
 "set display+=uhex                  " show unprintable hex characters as <xx>
-
-" use relative line numbers if available, otherwise just use line numbers
-exec "au BufReadPost * setl" (version > 702 ? 'rnu' : 'nu')
 
 set wildignore+=*.o,*.sw?,*.git,*.svn,*.hg,**/build,*.?ib,*.png,*.jpg,*.jpeg,
             \*.mov,*.gif,*.bom,*.azw,*.lpr,*.mbp,*.mode1v3,*.gz,*.vmwarevm,
