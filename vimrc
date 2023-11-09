@@ -739,7 +739,7 @@ endfunction
 "}}}
 function! FoldWrap() "{{{
     " append closemarker first to prevent ruining current folds
-    call append(line("."), CommentedFoldMarkerClose())
+    call append(line("."), ["", CommentedFoldMarkerClose()])
     call setline(line("."), getline(".") . CommentedFoldMarkerOpen())
 endfunction
 
