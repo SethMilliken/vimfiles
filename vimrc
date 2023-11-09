@@ -2254,17 +2254,24 @@ endfunction
 " }}}
 
 function! RemotePath() " {{{
-    return "scp://seth@araxia.net/sandbox/"
+    if match(hostname(), "araxia.net") > -1
+        return $HOME . "/sandbox/"
+    else
+        return "scp://seth@araxia.net/sandbox/"
+    end
 endfunction
+
 " }}}
+let g:employer_name = "airship"
 command! WorkScratch call WorkScratch()
-function! WorkScratch() " {{{
-    exe "e " . RemotePath() . "work/airship/scratch.scratch"
+function! WorkScratch(path = RemotePath()) " {{{
+    exe "e " . a:path . "work/" . g:employer_name . "/scratch.scratch"
 endfunction
+
 " }}}
 command! WorkTodo call WorkTodo()
-function! WorkTodo() " {{{
-    exe "e " . RemotePath() . "work/airship/work.tst"
+function! WorkTodo(path = RemotePath()) " {{{
+    exe "e " . a:path . "work/" . g:employer_name . "/work.tst"
 endfunction
 
 " }}}
@@ -2300,8 +2307,8 @@ function! InsertDreams() " {{{
 endfunction
 
 " }}}
-command! PersonalTodo call PersonalTodo(RemotePath())
-function! PersonalTodo(path) " {{{
+command! PersonalTodo call PersonalTodo()
+function! PersonalTodo(path = RemotePath()) " {{{
     exe "edit"   a:path . "personal/todo/todo.txt"
     exe "vsplit" a:path . "personal/todo/techtodo.txt"
     wincmd t | wincmd =
@@ -2313,11 +2320,13 @@ function! PersonalTodo(path) " {{{
     wincmd t | wincmd =
     tabfirst
 endfunction
+
 " }}}
 command! PersonalScratch call PersonalScratch()
-function! PersonalScratch() " {{{
-    e scp://seth@araxia.net/sandbox/personal/scratch.scratch
+function! PersonalScratch(path = RemotePath()) " {{{
+    exe "edit"   a:path . "personal/scratch.scratch"
 endfunction
+
 " }}}
 
 " }}}
