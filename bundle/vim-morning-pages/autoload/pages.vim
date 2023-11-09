@@ -17,41 +17,46 @@ endfunction
 "}}}
 
 function! pages#writingMappings() " {{{
+    set nocursorline wrap nolist
     if bufname("%") == pages#tocName()
-        set nocursorline wrap nolist
-        map <buffer> NN :call pages#nextDate()<CR>
+        map <buffer> NN <Cmd>call pages#nextDate()<CR>
     else
-        set nocursorline wrap nolist spell
+        set spell
         set showbreak=
         set cpo-=n
     end
-    map  <buffer> <silent> Qq         :call pages#pagesToggle()<CR>
-    imap <buffer> <silent> Qq         <Esc>Qq
-    map  <buffer> <silent> QQ         :call pages#notesToggle()<CR>
-    imap <buffer> <silent> QQ         <Esc>QQ
-    map  <buffer> <silent> ;j         :call pages#tocToggle()<CR>
+    map  <buffer> <silent> ;;         <Cmd>call pages#pagesToggle()<CR>
+    imap <buffer> <silent> ;;         <Esc>;;
+    map  <buffer> <silent> ;n         <Cmd>call pages#notesToggle()<CR>
+    imap <buffer> <silent> ;n         <Esc>;n
+    map  <buffer> <silent> ;j         <Cmd>call pages#tocToggle()<CR>
     imap <buffer> <silent> ;j         <Esc>;j
-    map  <buffer> <silent> ;h         :call pages#topicsToggle()<CR>
+    map  <buffer> <silent> ;h         <Cmd>call pages#topicsToggle()<CR>
     imap <buffer> <silent> ;h         <Esc>;h
-    map  <buffer> <silent> ;l         :call pages#lastLines()<CR>
+    map  <buffer> <silent> ;c         <Cmd>call pages#conversationsToggle()<CR>
+    imap <buffer> <silent> ;c         <Esc>;c
+    map  <buffer> <silent> ;l         <Cmd>call pages#lastLines()<CR>
     imap <buffer> <silent> ;l         <Esc>;l
-    map  <buffer> <silent> ;k         :call pages#midlines()<CR>
+    map  <buffer> <silent> ;k         <Cmd>call pages#midlines()<CR>
     imap <buffer> <silent> ;k         <Esc>;k
-    nmap <buffer> <silent> <Leader>wb :Pages<CR>
+    map  <buffer> <silent> ;t         <Cmd>call pages#appendTimestamp()<CR>
+    imap <buffer> <silent> ;t         <Esc>;t
+    nmap <buffer> <silent> <Leader>wb <Cmd>Pages<CR>
     imap <buffer> <silent> <Leader>wb <Esc><Leader>wb
-    nmap <buffer> <silent> <Leader>wf :call pages#finishWriting()<CR>
+    nmap <buffer> <silent> <Leader>wf <Cmd>call pages#finishWriting()<CR>
     imap <buffer> <silent> <Leader>wf <Esc><Leader>wf
-    " Available bindings: ;j ;h ;k lh
+    " Available bindings: lh
 
     doau CharacterCount BufRead
 endfunction
 
 "}}}
 function! pages#readingMappings() " {{{
+    set nocursorline nolist
     if bufname("%") == pages#tocName()
-        set nocursorline nowrap nolist
+        set nowrap
     else
-        set nocursorline wrap nolist spell
+        set wrap spell
     end
     exe "cd " . pages#root()
     if pages#progressFileExists()
@@ -67,7 +72,7 @@ function! pages#readingMappings() " {{{
     else
         echo "No progress file."
     end
-    exec 'map! QQ :call pages#updateReadingProgress()<CR>'
+    exec 'map! QQ <Cmd>call pages#updateReadingProgress()<CR>'
 endfunction
 
 "}}}
@@ -83,14 +88,13 @@ function! pages#updateReadingProgress() " {{{
 endfunction
 
 "}}}
-
 function! pages#progressFileExists() " {{{
     return filereadable(g:progress)
 endfunction
 
 "}}}
 function! pages#bufferToggle(bufname) " {{{
-    write
+    silent! call WhitespaceBGone()
     if buflisted(glob(a:bufname))
         call pages#bufferSwitch(a:bufname)
     else
@@ -150,8 +154,12 @@ endfunction
 "}}}
 function! pages#tocToggle() " {{{
     call pages#bufferToggle(pages#tocName())
-    silent! call WhitespaceBGone()
     normal G$
+endfunction
+
+"}}}
+function! pages#conversationsToggle() " {{{
+    call pages#bufferToggle("conversations.tst")
 endfunction
 
 "}}}
@@ -206,8 +214,13 @@ function! pages#midlines() " {{{
 endfunction
 
 "}}}
+function! pages#appendTimestamp(time = localtime()) " {{{
+    call WhitespaceBGone()
+    let requested = pages#factory().New(a:time)
+    call requested.appendTimestamp()
+endfunction
 
-
+"}}}
 if !exists("*pages#editCurrentIndex")
     function! pages#editCurrentIndex() " {{{
         let l:current = g:pages_dir . pages#tocName()
@@ -221,6 +234,7 @@ endif
 "}}}
 if !exists("*pages#editPagesEntry")
     function! pages#editPagesEntry(time = localtime()) " {{{
+        call WriteBufferIfWritable()
         let requested = pages#factory().New(a:time)
         let previous = requested.before()
         if previous.exists()
@@ -269,6 +283,13 @@ function! pages#factory()
         return expand('%') == self.filename()
     endfun
 
+    fun! s:obj.appendTimestamp() dict
+        silent! call WhitespaceBGone()
+        call append("$", ["", strftime(s:timeformat), ""])
+        normal Go
+        startinsert
+    endfun
+
     fun! s:obj.editHere() dict
         if !self.isActive()
             exec "lcd " . g:pages_dir
@@ -277,11 +298,8 @@ function! pages#factory()
             " TODO: check for alrady existing buffer and swtich to it
         endif
         if self.exists()
-            " Check for "Finished typing" annotation and create newly indexed entry if it exists
-            silent! call WhitespaceBGone()
-            call append("$", ["", strftime(s:timeformat), ""])
-            normal Go
-            startinsert
+            " TODO: Check for "Finished typing" annotation and create newly indexed entry if it exists
+            call self.appendTimestamp()
         else
             call pages#pagesHeader()
             " write
