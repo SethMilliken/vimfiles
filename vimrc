@@ -288,6 +288,7 @@ nmap <C-e>k :exec ":lcd .." \| echo "cwd now: " . getcwd()<CR>
 map <silent> gi <C-]>
 map <silent> go <Plug>(easymotion-s)
 map <silent> g0 :tabfirst<CR>
+map <silent> g^ :tabfirst<CR>
 map <silent> g$ :tablast<CR>
 map <silent> gA :call EndAppend()<CR>
 function! EndAppend() " {{{
