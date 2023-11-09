@@ -236,14 +236,14 @@ let g:netrw_silent=1
 " MAPPINGS: " {{{
 
 " Zaurus: <C-Space> (<C-k><C-Space>) to invoke command mode in both insert and normal mode " {{{
-imap <Nul> <Esc>:
 nnoremap <Nul> :
+imap     <Nul> <Esc><Nul>
 
 " }}}
 " Annoyances: " {{{
 " Use my own help function for F1
-map <F1> :Help<CR>
-imap <F1> <Esc>:Help<CR>
+map  <F1> <Cmd>Help<CR>
+imap <F1> <Esc><F1>
 " I frequently hold shift too long...
 command! W :w
 " Handy but doesn't work in terminal
@@ -256,10 +256,10 @@ imap ; ;<C-g>u
 imap , ,<C-g>u
 
 " c & p normalization
-nmap dD :normal! _y$"_dd<CR>
-vmap dD :normal! gvygv"_x<CR>
-vmap <BS> :normal! gv"_x<CR>
-vmap dC :normal gv"_xP<CR>
+nmap dD   <Cmd>normal! _y$"_dd<CR>
+vmap dD   <Cmd>normal! gvygv"_x<CR>
+vmap <BS> <Cmd>normal! gv"_x<CR>
+vmap dC   <Cmd>normal gv"_xP<CR>
 "nnoremap <Leader>p :call text#append_line(getreg("*"), "below")<CR>
 "nnoremap <Leader>P :call text#append_line(getreg("*"), "above")<CR>
 "nnoremap <expr> <Leader>p ':put ' . v:register . '<CR>'
@@ -269,14 +269,14 @@ nnoremap <expr> <Leader>p ':set cb=unnamed \| :put * \| set cb=<CR>'
 nnoremap <expr> <Leader>P ':set cb=unnamed \| :put! * \| set cb=<CR>'
 
 " consistent begin/end insert mode
-imap <PageUp> <Esc>ggI
+map  <PageUp>   ggI
+imap <PageUp>   <Esc>ggI
+map  <PageDown> GA
 imap <PageDown> <Esc>GA
-map <PageUp> ggI
-map <PageDown> GA
-imap <Home> <Esc>I
-imap <End> <Esc>A
-map <Home> I
-map <End> A
+map  <Home>     I
+imap <Home>     <Esc>I
+map  <End>      A
+imap <End>      <Esc>A
 
 " sane-itize Y
 map Y y$
@@ -303,23 +303,23 @@ endfunction
 " }}}
 
 " tmux copy/paste issue in mac os x workaround
-map <C-x>p :call system("ssh localhost pbcopy", getreg('*')) \| echo "Copied default register to pasteboard."<CR>
-map <silent> <C-y>y :call system("netcopy", getreg('"')) \| echo "Copied unnamed register to local pasteboard."<CR>
+map <C-y>p :call system("ssh localhost pbcopy", getreg('*')) \| call text#showmessage("vim", "Copied default register to pasteboard.")<CR>
+map <silent> <C-y>y :call system("netcopy", getreg('"')) \| call text#showmessage("vim", "Copied unnamed register to local pasteboard.")<CR>
 
 map <silent> <C-x>y :call CopyToTmux()<CR>
 map <silent> <C-x>x :call CutToTmux()<CR>
-map <silent> <C-y>p :call PasteFromTmux()<CR>
+map <silent> <C-x>p :call PasteFromTmux()<CR>
 
 function! CopyToTmux() range " {{{
     silent! normal gv"py
     call system("tmux set-buffer -b vim " . shellescape(getreg('p')))
-    echo "Copied selection to tmux vim paste buffer."
+    call text#showmessage("vim", "Copied selection to tmux vim paste buffer.")
 endfunction
 " }}}
 function! CutToTmux() range " {{{
     silent! normal gv"px
     call system("tmux set-buffer -b vim " . shellescape(getreg('p')))
-    echo "Cut selection to tmux vim paste buffer."
+    call text#showmessage("vim", "Cut selection to tmux vim paste buffer.")
 endfunction
 " }}}
 function! PasteFromTmux() " {{{
@@ -329,86 +329,105 @@ endfunction
 " }}}
 " }}}
 " Reset: restore some default settings and redraw " {{{
-nnoremap <silent> <C-l> :call Reset() \| nohls<CR>
-imap <silent> <C-l> <Esc><C-l>
+nnoremap <silent> <C-l> <Cmd>call Reset() \| nohls<CR>
+imap     <silent> <C-l> <Esc><C-l>
 
 " }}}
 " Custom: <C-y> prefixed custom commands " {{{
 " Reload .vimrc
+nmap <C-y>v <Cmd>call ReloadVimrc()<CR>
 imap <C-y>v <Esc><C-y>v
-nmap <C-y>v :call ReloadVimrc()<CR>
 " Show snippets
-nmap <C-y>m :call MTGOListCleanup()<CR>
-nmap <C-y>n :call feedkeys(":call OpenRelatedSnippetFileInVsplit()\r\<Tab>\<Tab>", 't')<CR>
-nmap <C-y>a :AbbUp<CR>
-nmap <C-y>r :call EditCurrentReading()<CR>
-nmap <C-y>s :call EditCurrentWatching()<CR>
-nmap <C-y>d :call InsertDreams()<CR>
-nmap <C-y>A :vsplit ~/.vim/plugin/iabbs.vim<CR>
+nmap <C-y>n <Cmd>call feedkeys(":call OpenRelatedSnippetFileInVsplit()\r\<Tab>\<Tab>", 't')<CR>
+nmap <C-y>a <Cmd>AbbUp<CR>
+imap <C-y>a <Esc><C-y>a
+nmap <C-y>A <Cmd>vsplit ~/.vim/plugin/iabbs.vim<CR>
+imap <C-y>A <Esc><C-y>A
+nmap <C-y>d <Cmd>call InsertDreams()<CR>
+imap <C-y>d <Esc><C-y>d
+nmap <C-y>m <Cmd>call MTGOListCleanup()<CR>
+imap <C-y>m <Esc><C-y>m
+nmap <C-y>r <Cmd>call EditCurrentReading()<CR>
+imap <C-y>r <Esc><C-y>r
+nmap <C-y>s <Cmd>call EditCurrentWatching()<CR>
+imap <C-y>s <Esc><C-y>s
+nmap <C-y>w <Cmd>call WhitespaceBGone()<CR>
 imap <C-y>w <Esc><C-y>w
-nmap <C-y>w :call WhitespaceBGone()<CR>
 
-function! WhitespaceBGone()
-  let save_cursor = getpos(".")
-  silent! %s/\s\+$//ge
-  silent! %s/\($\n\s*\)\+\%$//e
-  set nolist
-  silent! write
-  call setpos(".", save_cursor)
-  echo "Whitespace-b-gone."
+function! IsBufferWriteable() " {{{
+    return &modified
+           && !exists('readonly')
+           && !exists('buftype')
+           && (filewritable(expand('%')) || match(expand('%'), "scp") == 0)
 endfunction
 
+" }}}
+function! WhitespaceBGone() " {{{
+    if IsBufferWriteable()
+        let l:save_cursor = getpos(".")
+        silent! %s/\s\+$//ge
+        silent! %s/\($\n\s*\)\+\%$//e
+        set nolist
+        silent! write
+        call setpos(".", l:save_cursor)
+        call text#showmessage("Whitespace-b-gone", expand('%'))
+    end
+endfunction
+
+" }}}
+function! WriteBufferIfWritable() " {{{
+    if IsBufferWriteable()
+        let l:save_cursor = getpos(".")
+        silent! write
+        call setpos('.', l:save_cursor)
+        call text#showmessage("write", expand('%'))
+    end
+endfunction
+
+" }}}
 " File path to pasteboard
-map <Leader>f :call text#file_to_pasteboard()<CR>
-map <Leader>F :call text#file_to_pasteboard(line("."))<CR>
+map <Leader>f <Cmd>call text#file_to_pasteboard()<CR>
+map <Leader>F <Cmd>call text#file_to_pasteboard(line("."))<CR>
 
 " Commit file
-map <Leader>o :call CheckinCheckup("show_prompt")<CR>
+map <Leader>o <Cmd>call CheckinCheckup("show_prompt")<CR>
 
 " }}}
 " Manual Tail: reload buffer from disk and go to end " {{{
-nmap <silent> <C-e>0 :e<CR>G
+nmap <silent> <C-e>0 <Cmd>e<CR>G
 
 " }}}
 " Save Session: " {{{
 " nmap <Leader>\ :call CommitSession()<CR>
 
 " }}}
-" Pages: " {{{
-nmap <Leader>je :echo "Use <Leader>pp (menmonic pages)"<CR>
-nmap <Leader>jy :echo "Use <Leader>po (mnemonic pages old)"<CR>
-nmap <Leader>pp :Pages<CR>
-nmap <Leader>po :Pages timestamp#yesterday()<CR>
-
-" }}}
 " Misc: " {{{
-nmap <silent> <Leader>] :NERDTreeToggle<CR>
-nmap <silent> <Leader>[ :TagbarToggle<CR>
-nmap <silent> <Leader>- :GundoToggle<CR>
-nmap <silent> <Leader>s :TBrowseScriptnames<CR>
-nmap <silent> <Leader>b :call feedkeys(":TBrowseOutput\<Space>", "t")<CR>
+nmap <silent> <Leader>] <Cmd>NERDTreeToggle<CR>
+nmap <silent> <Leader>[ <Cmd>TagbarToggle<CR>
+nmap <silent> <Leader>- <Cmd>GundoToggle<CR>
+nmap <silent> <Leader>s <Cmd>TBrowseScriptnames<CR>
+nmap <silent> <Leader>b <Cmd>call feedkeys(":TBrowseOutput\<Space>", "t")<CR>
 
-nmap <silent> <C-w>` :wincmd =<CR>
-
-nmap <silent> <C-w>V :vnew<CR>
+nmap <silent> <C-w>` <Cmd>wincmd =<CR>
+nmap <silent> <C-w>V <Cmd>vnew<CR>
 
 " }}}
 " Folds: " {{{
-nmap <silent> <Leader>= :call FoldDefaultNodes()<CR>:normal zv]z[zzt<CR><C-l>
-nmap <silent> <Leader>0 :silent normal zvzt<CR><C-l>
+nmap <silent> <Leader>= <Cmd>call FoldDefaultNodes()<CR>:normal zv]z[zzt<CR><C-l>
+nmap <silent> <Leader>0 <Cmd>silent normal zvzt<CR><C-l>
 
 " }}}
 " Scratch Buffer: close with ZZ " {{{
-nmap <silent> <Leader>c :call ScratchBuffer("scratch")<CR>
+nmap <silent> <Leader>c <Cmd>call ScratchBuffer("scratch")<CR>
 
 " }}}
 " Open URIs: " {{{
-nmap <silent> <Leader>/ :call HandleURI()<CR>
-nmap <silent> <Leader>ji :call HandleJIRA()<CR>
+nmap <silent> <Leader>/  <Cmd>call HandleURI()<CR>
+nmap <silent> <Leader>ji <Cmd>call HandleJIRA()<CR>
 
 " }}}
 " SQL: grab and format sql statement from current line " {{{
-nmap <silent> <Leader>q :call FormatSqlStatement()<CR>
+nmap <silent> <Leader>q <Cmd>call FormatSqlStatement()<CR>
 
 " }}}
 " Formatting: Wrap current or immediately preceding word in in <em> tag " {{{
@@ -422,8 +441,8 @@ inoremap <C-p> <C-r>=pumvisible() ? "\<lt>Up>" : "\<lt>C-o>:set completeopt+=men
 
 " }}}
 " Help: help help help " {{{
-nmap <Leader>hw     :help<CR>:silent call AdjustFont(-4)<CR>:set columns=115 lines=999<CR>:winc _<CR>:winc \|<CR>:help<Space>
-nmap <Leader>hg     :HelpGrep<CR>
+nmap <Leader>hw     <Cmd>help<CR>:silent call AdjustFont(-4)<CR>:set columns=115 lines=999<CR>:winc _<CR>:winc \|<CR>:help<Space>
+nmap <Leader>hg     <Cmd>HelpGrep<CR>
 command! Help :call HelpSmart()
 command! HelpGrep :call HelpSmart("grep")
 function! HelpSmart(...)" {{{
@@ -449,13 +468,13 @@ endfunction
 " }}}
 " }}}
 " Navigation: shortcuts " {{{
-nmap <C-e>/ :call HeaderLocationIndex()<CR>
-nmap <C-e>? :call FunctionLocationIndex()<CR>
-nmap <C-e>d :silent! lclose<CR>
-nmap <C-e>n :call SectionHeadNav(1, 0)<CR>
-nmap <C-e>N :call SectionHeadNav(1, 1)<CR>
-nmap <C-e>p :call SectionHeadNav(-1, 0)<CR>
-nmap <C-e>P :call SectionHeadNav(-1, 1)<CR>
+nmap <C-e>/ <Cmd>call HeaderLocationIndex()<CR>
+nmap <C-e>? <Cmd>call FunctionLocationIndex()<CR>
+nmap <C-e>d <Cmd>silent! lclose<CR>
+nmap <C-e>n <Cmd>call SectionHeadNav(1, 0)<CR>
+nmap <C-e>N <Cmd>call SectionHeadNav(1, 1)<CR>
+nmap <C-e>p <Cmd>call SectionHeadNav(-1, 0)<CR>
+nmap <C-e>P <Cmd>call SectionHeadNav(-1, 1)<CR>
 function! SectionHeadNav(count, mode) " {{{
     " TODO: mb preserve hls value and restore it?
     if a:count > 0
@@ -508,8 +527,8 @@ augroup END
 
 " }}}
 " Cmdline Convenience: " {{{
-map <Left>     /<Up>
-map <Right>    /<Down>
+map  <Left>    /<Up>
+map  <Right>   /<Down>
 nmap <Up>      :<Up>
 nmap <Down>    :<Down>
 
@@ -533,25 +552,25 @@ let g:timestamp_default_annotation = ""
 let g:timestamp_matchstring = '[0-9]\{4}-[0-9]\{2}-[0-9]\{2} [0-9:]\{8} [A-Z]\{3}'
 let g:timestamp_annotated_matchstring = escape(g:timestamp_matchstring . '\s*\({\(\w\+\s*\)*}\)*', '\')
 " Note: setting g:auto_timestamp_bypass will deactivate autotimestamp in contexts they would normally be active
-" yes, kids, I know WTF I'm doing WRT <C-y>
-nmap <silent> <C-y><C-u> :call timestamp#autoUpdateToggle()<CR>
-nmap <silent> <C-y>Y :call timestamp#addOrUpdate("", "force")<CR>
-nmap <silent> <C-y><C-y> :call timestamp#addOrUpdate("")<CR>
-nmap <silent> <C-y><C-t> :call timestamp#addOrUpdateSolicitingAnnotation()<CR>
-nmap <silent> <C-y><C-x> :call timestamp#remove()<CR>
-nmap <silent> <Leader>td :call timestamp#insert("date")<CR>
+nmap <silent> <C-y><C-u> <Cmd>call timestamp#autoUpdateToggle()<CR>
+nmap <silent> <C-y>Y     <Cmd>call timestamp#addOrUpdate("", "force")<CR>
+nmap <silent> <C-y><C-y> <Cmd>call timestamp#addOrUpdate("")<CR>
+nmap <silent> <C-y><C-t> <Cmd>call timestamp#addOrUpdateSolicitingAnnotation()<CR>
+nmap <silent> <C-y><C-x> <Cmd>call timestamp#remove()<CR>
+nmap <silent> <Leader>td <Cmd>call timestamp#insert("date")<CR>
 imap <silent> <Leader>td <C-r>=timestamp#text("date")<CR>
-nmap <silent> <Leader>ty :call timestamp#insert("date", timestamp#yesterday())<CR>
+nmap <silent> <Leader>ty <Cmd>call timestamp#insert("date", timestamp#yesterday())<CR>
 imap <silent> <Leader>ty <C-r>=timestamp#text("date", timestamp#yesterday())<CR>
-nmap <silent> <Leader>ts :call timestamp#insert("short")<CR>
+nmap <silent> <Leader>ts <Cmd>call timestamp#insert("short")<CR>
 imap <silent> <Leader>ts <C-r>=timestamp#text("short")<CR>
-nmap <silent> <Leader>tt :call timestamp#insert("time")<CR>
+nmap <silent> <Leader>tt <Cmd>call timestamp#insert("time")<CR>
 imap <silent> <Leader>tt <C-r>=timestamp#text("time")<CR>
-nmap <silent> <Leader>tl :call timestamp#insert("long")<CR>
+nmap <silent> <Leader>tl <Cmd>call timestamp#insert("long")<CR>
 imap <silent> <Leader>tl <C-r>=timestamp#text("long")<CR>
-nmap <silent> <Leader>fw :call FoldWrap()<CR>
-nmap <silent> <Leader>fi :call FoldInsert()<CR>
 nmap <silent> <Leader>ll o<Esc>:call timestamp#insert("short") \| call FoldWrap()<CR>
+
+nmap <silent> <Leader>fw <Cmd>call FoldWrap()<CR>
+nmap <silent> <Leader>fi <Cmd>call FoldInsert()<CR>
 
 " }}}
 " Tweaks: " {{{
@@ -735,7 +754,7 @@ function! CloseNode(label) "{{{
 endfunction
 
 "}}}
-function! InsertNode(label) "{{{
+function! InsertNode(label = "") "{{{
     let l:origview = winsaveview()
     call append(line(".") - 1, [""])
     normal k
@@ -747,12 +766,9 @@ endfunction
 
 "}}}
 function! FoldWrap() "{{{
-    " appending closemarker first to prevent ruining current folds
+    " append closemarker first to prevent ruining current folds
     call append(line("."), CommentedFoldMarkerClose())
-    call append(line("."), [CommentedFoldMarkerOpen(), ""])
-    " BUG: J on a line above an open comment line destroys subsequent fold states in the document unless there is a closed fold immediately above.
-    " normal Jj
-    normal 0"td$"_dd0"tPj
+    call setline(line("."), getline(".") . CommentedFoldMarkerOpen())
 endfunction
 
 "}}}
@@ -769,6 +785,7 @@ endfunction
 function! FoldInsert() "{{{
     normal O
     call FoldWrap()
+    startinsert
 endfunction
 
 "}}}
@@ -889,7 +906,7 @@ if !exists("g:reloadvim_function_loaded") " {{{
         silent source $MYVIMRC
         "silent edit
         redraw
-        echo "Resourced " . $MYVIMRC
+        call text#showmessage("vim", "Resourced " . $MYVIMRC)
     endfunction
 end
 
@@ -1049,19 +1066,6 @@ function! FormatSqlStatement() " {{{
 endfunction
 
 " }}}
-function! WriteBufferIfWritable() " {{{
-    if &modified && !exists('readonly') && !exists('buftype')
-        if filewritable(expand('%')) || match(expand('%'), "scp") == 0
-            let l:save_position = getpos(".")
-            write
-            call text#showmessage("write", expand('%'))
-            call setpos('.', l:save_position)
-        end
-    end
-endfunction
-
-" }}}
-
 " Vimperator Y Pentadactyl:
 function! FormFieldArchive() " {{{
     let l:contents = getbufline("%", 1, "$")
@@ -1414,7 +1418,7 @@ endfunction
 command! -nargs=0 AbbUp call AbbUp()
 function! AbbUp()
     so ~/.vim/plugin/iabbs.vim
-    echo "Abbreviations updated."
+    call text#showmessage("vim", "Abbreviations updated.")
 endfunction
 
 " }}}
@@ -2324,11 +2328,16 @@ function! InsertDreams() " {{{
 endfunction
 
 " }}}
-command! PersonalTodo call PersonalTodo()
-function! PersonalTodo() " {{{
-    exe "edit " . RemotePath() . "personal/todo/todo.txt"
-    exe "tabe " . RemotePath() . "personal/todo/techtodo.txt"
-    exe "tabe " . RemotePath() . "personal/projects/191-grosvenor.txt"
+command! PersonalTodo call PersonalTodo(RemotePath())
+function! PersonalTodo(path) " {{{
+    exe "edit"   a:path . "personal/todo/todo.txt"
+    exe "vsplit" a:path . "personal/todo/techtodo.txt"
+    wincmd t | wincmd =
+    exe "tabed"  a:path . "personal/projects/2947-glascock.txt"
+    exe "vsplit" a:path . "personal/projects/191-grosvenor.txt"
+    wincmd t | wincmd =
+    exe 'tabed'  a:path . "personal/todo/araxia.tst"
+    exe 'vsplit' a:path . "personal/todo/wintodo.txt"
     wincmd t | wincmd =
     tabfirst
 endfunction
