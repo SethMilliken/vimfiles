@@ -112,6 +112,10 @@ function! startup#defaults()
         return "defaults"
     endfun
 
+    fun! s:obj.baseroot() dict
+        return $HOME . "/sandbox/"
+    endfun
+
     fun! s:obj.docroot() dict
         return $HOME . "/sandbox/personal/"
     endfun
@@ -176,16 +180,20 @@ function! startup#defaults()
     endfun
 
     fun s:obj.listsApp() dict
-        exe 'edit' self.docroot() . "lists/readinglist.txt"
+        exe 'edit'   self.docroot() . "lists/readinglist.txt"
         exe 'vsplit' self.docroot() . "lists/videolist.txt"
         exe 'vsplit' self.docroot() . "lists/musiclist.txt"
-        exe 'vsplit' self.docroot() . "lists/wishlist.txt"
+        exe 'tabe'   self.docroot() . "lists/wishlist.txt"
         wincmd t | wincmd =
     endfun
 
     fun s:obj.todoApp() dict
         silent! PersonalTodo
         call AdjustFont(+5)
+    endfun
+
+    fun s:obj.wikiApp() dict
+        silent! VimwikiIndex
     endfun
 
     fun s:obj.colloquyvimApp() dict
@@ -358,13 +366,15 @@ function! startup#defaults()
     endfun
 
     fun! s:obj.zmkApp() dict
-        exe 'cd ' .. self.coderoot() . "zmk-configs"
-        edit config/corne.keymap
+        exe 'cd ' . self.coderoot() . "zmk-config"
+        edit    config/shared.dtsi
+        tabedit config/corne.keymap
         tabedit config/corneish_zen.keymap
         tabedit config/splitkb_aurora_corne.keymap
         tabedit config/corne.conf
         vsplit  config/corneish_zen.conf
         vsplit  config/splitkb_aurora_corne.conf
+        tabedit config/west.yml
         tabfirst
     endfun
 
@@ -643,20 +653,12 @@ function! startup#ARAXIA()
     endfun
 
     fun! s:obj.todoApp() dict
-        exe 'edit' self.docroot() . "todo/todo.txt"
-        exe 'vsplit' self.docroot() . "todo/techtodo.txt"
-        wincmd h
-        exe 'tabedit' self.docroot() . "lists/readinglist.txt"
-        exe 'vsplit' self.docroot() . "lists/videolist.txt"
-        wincmd h
-        exe 'tabedit' self.docroot() . "todo/araxia.tst"
-        exe 'vsplit' self.docroot() . "todo/wintodo.txt"
-        1tabn
+        call PersonalTodo(self.baseroot())
     endfun
 
     fun! s:obj.notesApp() dict
-        exe "edit" self.docroot() . "todo/araxia.tst"
-        exe "vsplit" self.docroot() . "todo/weechat.txt"
+        exe 'edit' self.docroot() . "todo/araxia.tst"
+        exe 'vsplit' self.docroot() . "todo/weechat.txt"
         wincmd t | wincmd =
     endfun
 
