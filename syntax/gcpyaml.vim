@@ -1,1 +1,0 @@
-/Users/seth.milliken/sandbox/code/gcp-infrastructure/dev/vim/syntax/gcpyaml.vim
