@@ -258,11 +258,11 @@ nmap dD   <Cmd>normal! _y$"_dd<CR>
 vmap dD   <Cmd>normal! gvygv"_x<CR>
 vmap <BS> <Cmd>normal! gv"_x<CR>
 vmap dC   <Cmd>normal gv"_xP<CR>
-"nnoremap <Leader>p :call text#append_line(getreg("*"), "below")<CR>
-"nnoremap <Leader>P :call text#append_line(getreg("*"), "above")<CR>
+"nnoremap <Leader>p <Cmd>call text#append_line(getreg("*"), "below")<CR>
+"nnoremap <Leader>P <Cmd>call text#append_line(getreg("*"), "above")<CR>
 "nnoremap <expr> <Leader>p ':put ' . v:register . '<CR>'
 "nnoremap <expr> <Leader>P ':put! ' . v:register . '<CR>'
-"nnoremap <Leader>y :call setreg("*", @0) \| echo "Pasteboard transferred to system clipboard."<CR>
+"nnoremap <Leader>y <Cmd>call setreg("*", @0) \| echo "Pasteboard transferred to system clipboard."<CR>
 nnoremap <expr> <Leader>p ':set cb=unnamed \| :put * \| set cb=<CR>'
 nnoremap <expr> <Leader>P ':set cb=unnamed \| :put! * \| set cb=<CR>'
 
@@ -280,17 +280,17 @@ imap <End>      <Esc>A
 map Y y$
 
 " Extended Navigation
-nmap <C-e>h :bnext<CR>
-nmap <C-e>l :bprev<CR>
-nmap <C-e>j :Herenow<CR>
-nmap <C-e>k :exec ":lcd .." \| echo "cwd now: " . getcwd()<CR>
+nmap <C-e>h <Cmd>bnext<CR>
+nmap <C-e>l <Cmd>bprev<CR>
+nmap <C-e>j <Cmd>Herenow<CR>
+nmap <C-e>k <Cmd>exec ":lcd .." \| echo "cwd now: " . getcwd()<CR>
 
 map <silent> gi <C-]>
 map <silent> go <Plug>(easymotion-s)
-map <silent> g0 :tabfirst<CR>
-map <silent> g^ :tabfirst<CR>
-map <silent> g$ :tablast<CR>
-map <silent> gA :call EndAppend()<CR>
+map <silent> g0 <Cmd>tabfirst<CR>
+map <silent> g^ <Cmd>tabfirst<CR>
+map <silent> g$ <Cmd>tablast<CR>
+map <silent> gA <Cmd>call EndAppend()<CR>
 function! EndAppend() " {{{
     normal GA
     startinsert!
@@ -298,12 +298,12 @@ endfunction
 " }}}
 
 " tmux copy/paste issue in mac os x workaround
-map <C-y>p :call system("ssh localhost pbcopy", getreg('*')) \| call text#showmessage("vim", "Copied default register to pasteboard.")<CR>
-map <silent> <C-y>y :call system("netcopy", getreg('"')) \| call text#showmessage("vim", "Copied unnamed register to local pasteboard.")<CR>
+map <silent> <C-y>p <Cmd>call system("ssh localhost pbcopy", getreg('*')) \| call text#showmessage("vim", "Copied default register to pasteboard.")<CR>
+map <silent> <C-y>y <Cmd>call system("netcopy", getreg('"')) \| call text#showmessage("vim", "Copied unnamed register to local pasteboard.")<CR>
 
-map <silent> <C-x>y :call CopyToTmux()<CR>
-map <silent> <C-x>x :call CutToTmux()<CR>
-map <silent> <C-x>p :call PasteFromTmux()<CR>
+map <silent> <C-x>y <Cmd>call CopyToTmux()<CR>
+map <silent> <C-x>x <Cmd>call CutToTmux()<CR>
+map <silent> <C-x>p <Cmd>call PasteFromTmux()<CR>
 
 function! CopyToTmux() range " {{{
     silent! normal gv"py
@@ -569,9 +569,9 @@ nmap <silent> <Leader>fi <Cmd>call FoldInsert()<CR>
 
 " }}}
 " Tweaks: " {{{
-nmap <silent> -- :call append(line("."), text#divider("-"))<CR>
-nmap <silent> -= :call append(line("."), text#divider("="))<CR>
-nmap <silent> -p :call append(line("."), [text#divider('-'), "", string(getreg('*')), ""])<CR>
+nmap <silent> -- <Cmd>call append(line("."), text#divider("-"))<CR>
+nmap <silent> -= <Cmd>call append(line("."), text#divider("="))<CR>
+nmap <silent> -p <Cmd>call append(line("."), [text#divider('-'), "", string(getreg('*')), ""])<CR>
 
 " }}}
 "}}}
@@ -883,8 +883,8 @@ if !exists("g:reloadvim_function_loaded") " {{{
 end
 
 " }}}
-noremap <C-k> :call AutoSpellCorrect(0)<CR>
-imap <C-k> <Esc>:call AutoSpellCorrect(1)<CR>
+noremap <C-k> <Cmd>call AutoSpellCorrect(0)<CR>
+imap    <C-k> <Esc><Cmd>call AutoSpellCorrect(1)<CR>
 function! AutoSpellCorrect(from_insert) " {{{
     set spelllang=en,mtg
     set dictionary=spell
@@ -1168,10 +1168,10 @@ command! -nargs=* Sub call text#insert_line("Subject: " . <q-args>)
 augroup VolatileScratch | au!
     "au BufRead *.scratch call SmallWindow()
     "au BufRead *.scratch nmap <buffer> <silent> <C-m> :call SmallWindow()<CR>
-    au BufRead *.scratch nmap <buffer> <silent> <C-y>g :exec "set lines=999 columns=" . (g:gundo_width + &columns) \| :GundoToggle<CR>
-    au BufRead *.scratch nmap <buffer> <silent> ZZ :wa \| :call ScratchCopy()<CR>
-    au BufRead *.scratch nmap <buffer> <silent> ZZ :call ScratchCopy()<CR>
-    au BufRead *.scratch nmap <buffer> <silent> :w<CR> :write \| :silent call ScratchCopy()<CR>
+    au BufRead *.scratch nmap <buffer> <silent> <C-y>g <Cmd>exec "set lines=999 columns=" . (g:gundo_width + &columns) \| :GundoToggle<CR>
+    au BufRead *.scratch nmap <buffer> <silent> ZZ <Cmd>wa \| :call ScratchCopy()<CR>
+    au BufRead *.scratch nmap <buffer> <silent> ZZ <Cmd>call ScratchCopy()<CR>
+    au BufRead *.scratch nmap <buffer> <silent> :w<CR> <Cmd>write \| :silent call ScratchCopy()<CR>
     au BufRead *.scratch imap <buffer> <silent> ZZ <Esc>ZZ
     au BufRead *.scratch vmap <buffer> <silent> ZZ <Esc>ZZ
     "au FocusLost *.scratch call ScratchCopy()
@@ -1709,9 +1709,9 @@ let g:ctrlp_mruf_max = 250
 
 let g:use_ctrlp = 1
 
-map <C-e>r :call RecursiveFileSearch(":CtrlPRoot")<CR>
-map <C-e><C-e>  :CtrlPBuffer<CR>
-map <C-e>f  :call RecursiveFileSearch(":CtrlP")<CR>
+map <C-e><C-e>  <Cmd>CtrlPBuffer<CR>
+map <C-e>r      <Cmd>call RecursiveFileSearch(":CtrlPRoot")<CR>
+map <C-e>f      <Cmd>call RecursiveFileSearch(":CtrlP")<CR>
 
 " }}}
 " Markdown: " {{{
@@ -1739,16 +1739,16 @@ let g:fuf_coveragefile_exclude = g:fuf_file_exclude
 let g:fuf_dataDir = '~/.vim/swap/.vim-fuf-data'
 let g:fuf_maxMenuWidth = 150
 if g:use_ctrlp == 0
-map <C-e>e  :FufBuffer<CR>
-map <C-e><C-e>  :FufBuffer<CR>
-map <C-e>f  :call RecursiveFileSearch(":FufCoverageFile")<CR>
+map  <silent> <C-e><C-e>  <Cmd>FufBuffer<CR>
+map  <silent> <C-e>e      <Cmd>FufBuffer<CR>
+map  <silent> <C-e>f      <Cmd>call RecursiveFileSearch(":FufCoverageFile")<CR>
 end
-map <C-e>t  :FufTag<CR>
-map <C-e>v  :VimFiles<CR>
-map <C-e>s  :Scriptnames<CR>
-map <C-e>w  :WikiPages<CR>
-imap <silent> <C-e>m <Esc>:call MTGNames('i')<CR>
-map <silent> <C-e>m :call MTGNames('n')<CR>
+map  <silent> <C-e>t      <Cmd>FufTag<CR>
+map  <silent> <C-e>v      <Cmd>VimFiles<CR>
+map  <silent> <C-e>s      <Cmd>Scriptnames<CR>
+map  <silent> <C-e>w      <Cmd>WikiPages<CR>
+imap <silent> <C-e>m      <Esc><Cmd>call MTGNames('i')<CR>
+map  <silent> <C-e>m      <Cmd>call MTGNames('n')<CR>
 
 " }}}
 " FILE SEARCH: " {{{
@@ -1927,7 +1927,7 @@ let g:loaded_vimpreviewtag = 1
 map <Leader><CR> 0"ty$:<C-r>t<CR>:echo "Executed: " . @t<CR>
 "vmap <Leader><CR> "ty \| exec ":call feedkeys(q:" . getreg("t") . ")"<CR>
 " Execute current line as an ex command (no status to allow echo).
-map <Leader><S-CR> :call feedkeys("\"tyyq:\"tp\r", "n")<CR>
+map <Leader><S-CR> <Cmd>call feedkeys("\"tyyq:\"tp\r", "n")<CR>
 
 " Automatic Behavior Per MacVim Instance: " {{{
 augroup Startup | au!
@@ -1949,7 +1949,7 @@ augroup Adium | au!
     au FocusLost *.adium call WriteBufferIfWritable()
 augroup END
 
-nmap <Leader>a :call feedkeys(":Adium \"", 't')<CR>
+nmap <Leader>a <Cmd>call feedkeys(":Adium \"", 't')<CR>
 command! -nargs=* Adium :call SendTextToFrontmostAdiumChat(<q-args>)
 function! SendTextToFrontmostAdiumChat(text)
     let message = escape(shellescape(a:text), '`')
@@ -1976,7 +1976,7 @@ endfunction
 
 " Binding for entering key-notation " {{{
 imap <C-e><C-k> <C-r>=KeyBindingElementSequencePrompted()<CR>
-imap kj <Esc>:call keynotation#parse()<CR>a
+imap kj <Esc><Cmd>call keynotation#parse()<CR>a
 
 function! KeyBindingElementSequencePrompted() " {{{
     call inputsave()
@@ -2094,7 +2094,7 @@ endfunction
 " }}}
 
 " <M-S-t>
-nmap ˇ :call SolicitTabName()<CR>
+nmap ˇ <Cmd>call SolicitTabName()<CR>
 
 " Execute visual selection as function contents: {{{
 function! ExecuteSelection() abort
@@ -2353,7 +2353,7 @@ endfunction
 
 "set termwinkey=<C-j>
 
-imap <C-s>` <Esc>:call SurroundPreviousWordWithBacktickAngleBrackets()<CR>
+imap <C-s>` <Esc><Cmd>call SurroundPreviousWordWithBacktickAngleBrackets()<CR>
 function! SurroundPreviousWordWithBacktickAngleBrackets()
   let save_cursor = getpos(".")
   normal B
