@@ -15,6 +15,11 @@ function! pages#isPagesFile(name) " {{{
 endfunction
 
 "}}}
+function! pages#rebalance() " {{{
+    wincmd =
+endfunction
+
+"}}}
 
 function! pages#writingMappings() " {{{
     set nocursorline wrap nolist
@@ -119,6 +124,7 @@ function! pages#bufferSwitch(bufname) " {{{
         exec "sbuffer " . bufnr(a:bufname)
     end
     exec "set swb=" . l:origswb
+    call pages#rebalance()
 endfunction
 
 " }}}
