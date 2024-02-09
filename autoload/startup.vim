@@ -263,14 +263,10 @@ function! startup#defaults()
         call pages#editPagesEntry()
         vsplit
         call pages#editCurrentIndex()
-        wincmd h | wincmd =
-    endfun
-
-    fun! s:obj.newwriteApp() dict
-        exe 'cd' pages#root()
-        call pages#editCurrentEntry()
+        exe 'tabnew' pages#root() . "topics.tst"
         vsplit
-        call pages#editCurrentIndex()
+        exe 'edit' pages#root() . "conversations.tst"
+        1tabn
         wincmd h | wincmd =
     endfun
 
