@@ -3,11 +3,6 @@
 " Computing:
 iabb mvi MacVim
 
-" Urban Airship
-iabb uac urbanairship.com
-iabb puac prod.urbanairship.com
-iabb uA Urban Airship
-
 " Auth:
 iabb oau OAuth
 
@@ -63,11 +58,13 @@ iabb jingz Oakland, CA  94601
 iabb gros 191 Grosvenor St
 iabb grosz 191 Grosvenor St, Athens, OH  45701
 iabb ches 343 Chester St, Oakland, CA
+iabb 4gull 4 Gull Lane, Martha's Vineyard, Guest Bedroom
 iabb bph Back Porch Hammock
 iabb frp Front Porch Swing
 iabb hnh half-and-half
 iabb acc Aurora Corne Choc
 iabb acm Aurora Corne MX
+iabb acmc Aurora Corne MX Chieftain
 iabb bw Bad Wings
 iabb cz Corne-ish Zen
 iabb hrm home row mods
@@ -77,17 +74,21 @@ iabb nn nice!nano
 iabb nv nice!view
 iabb qit 1/4-20
 iabb uc USB-C
+iabb ahk AutoHotkey
+iabb hpmi HomePod mini
 iabb Aipt AiPT
 iabb cread <C-g>u_<C-r>=CurrentReading(0)<CR>_
 iabb cread2 <C-g>u_<C-r>=CurrentReading(1)<CR>_
 iabb cread3 <C-g>u_<C-r>=CurrentReading(2)<CR>_
 iabb cread4 <C-g>u_<C-r>=CurrentReading(3)<CR>_
 iabb cread5 <C-g>u_<C-r>=CurrentReading(4)<CR>_
+iabb cread6 <C-g>u_<C-r>=CurrentReading(5)<CR>_
 iabb babb <C-g>u_<C-r>=CurrentReading(0)<CR>_
 iabb aiptb <C-g>u_<C-r>=CurrentReading(1)<CR>_
 iabb ebbcb <C-g>u_<C-r>=CurrentReading(2)<CR>_
-iabb heatherb <C-g>u_<C-r>=CurrentReading(3)<CR>_
+iabb heatb <C-g>u_<C-r>=CurrentReading(3)<CR>_
 iabb techb <C-g>u_<C-r>=CurrentReading(4)<CR>_
+iabb perb <C-g>u_<C-r>=CurrentReading(5)<CR>_
 iabb cshow <C-g>u_<C-r>=CurrentWatching(0)<CR>_
 iabb cshow2 <C-g>u_<C-r>=CurrentWatching(1)<CR>_
 iabb cshow3 <C-g>u_<C-r>=CurrentWatching(2)<CR>_
