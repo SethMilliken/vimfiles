@@ -299,6 +299,15 @@ function! EndAppend() " {{{
 endfunction
 " }}}
 
+" Experimental shortcuts for common operations
+map  <silent> ;a  :wall<CR>
+imap <silent> ;a  <Esc>;a
+map  <silent> ;w  :call WriteBufferIfWritable(1)<CR>
+imap <silent> ;w  <Esc>;w
+map  <silent> ;qa :qal<CR>
+map  <silent> ;qy :qal!<CR>
+map  <silent> ;qq :q!<CR>
+
 " tmux copy/paste issue in mac os x workaround
 map <silent> <C-y>p <Cmd>call system("ssh localhost pbcopy", getreg('*')) \| call text#showmessage("vim", "Copied default register to pasteboard.")<CR>
 map <silent> <C-y>y <Cmd>call system("netcopy", getreg('"')) \| call text#showmessage("vim", "Copied unnamed register to local pasteboard.")<CR>
@@ -372,12 +381,16 @@ function! WhitespaceBGone() " {{{
 endfunction
 
 " }}}
-function! WriteBufferIfWritable() " {{{
+function! WriteBufferIfWritable(show_unchanged = 0) " {{{
     if IsBufferWriteable()
         let l:save_cursor = getpos(".")
         silent! write
         call setpos('.', l:save_cursor)
         call text#showmessage("write", expand('%'))
+    else
+        if (a:show_unchanged)
+            call text#showmessage("no changes", expand('%'))
+        end
     end
 endfunction
 
