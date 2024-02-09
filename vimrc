@@ -619,6 +619,9 @@ let g:airline_powerline_fonts = 1
 let g:airline_theme='araxia'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#formatter = 'unique_tail'
+let g:airline#extensions#tabline#tab_nr_type = 1
+let g:airline#extensions#tabline#show_close_button = 0
+"let g:airline#extensions#tabline#close_symbol = "[X]"
 let g:airline_highlighting_cache = 1
 
 function! AirlineCcInit()
