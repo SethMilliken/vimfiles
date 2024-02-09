@@ -285,9 +285,11 @@ nmap <C-e>l <Cmd>bprev<CR>
 nmap <C-e>j <Cmd>Herenow<CR>
 nmap <C-e>k <Cmd>exec ":lcd .." \| echo "cwd now: " . getcwd()<CR>
 
+map  <silent> <Leader>e <Plug>(easymotion-s)
+imap <silent> <Leader>e <Esc><Leader>e
+
 map <silent> gi <C-]>
-map <silent> go <Plug>(easymotion-s)
-map <silent> g0 <Cmd>tabfirst<CR>
+map <silent> ge <Plug>(easymotion-s)
 map <silent> g^ <Cmd>tabfirst<CR>
 map <silent> g$ <Cmd>tablast<CR>
 map <silent> gA <Cmd>call EndAppend()<CR>
