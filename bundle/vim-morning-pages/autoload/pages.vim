@@ -176,14 +176,22 @@ endfunction
 
 "}}}
 function! pages#openDate() " {{{
-    normal "pyaw
-    let l:date = getreg('p')
+    " first try to find a date under the cursor
+    normal bh
+    let l:date = getline(".")->matchstr(timestamp#regex(), getcurpos()[2])
+    " otherwise try finding the first date in line
+    echo l:date
+    if match(l:date, timestamp#regex()) == -1
+        let l:date = getline(".")->matchstr(timestamp#regex())
+    endif
     if match(l:date, timestamp#regex()) > -1
         let l:requested = pages#factory().New(l:date)
     else
-        echo "Not a date"
+        echo "No date found on line matching: " . timestamp#regex()
         return 0
     endif
+    " TODO: implement more sophisticated buffer selection and window
+    " navigation for this
     if !pages#isPagesFile()
         wincmd w
     endif
