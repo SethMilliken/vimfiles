@@ -357,7 +357,7 @@ nmap <C-y>r <Cmd>call EditCurrentReading()<CR>
 imap <C-y>r <Esc><C-y>r
 nmap <C-y>s <Cmd>call EditCurrentWatching()<CR>
 imap <C-y>s <Esc><C-y>s
-nmap <C-y>w <Cmd>call WhitespaceBGone()<CR>
+nmap <C-y>w <Cmd>call CursorRestore(funcref("WhitespaceBGone"))<CR>
 imap <C-y>w <Esc><C-y>w
 
 function! IsBufferWriteable() " {{{
@@ -370,12 +370,10 @@ endfunction
 " }}}
 function! WhitespaceBGone() " {{{
     if IsBufferWriteable()
-        let l:save_cursor = getpos(".")
         silent! %s/\s\+$//ge
         silent! %s/\($\n\s*\)\+\%$//e
         set nolist
         silent! write
-        call setpos(".", l:save_cursor)
         call text#showmessage("Whitespace-b-gone", expand('%'))
     end
 endfunction
@@ -392,6 +390,15 @@ function! WriteBufferIfWritable(show_unchanged = 0) " {{{
             call text#showmessage("no changes", expand('%'))
         end
     end
+endfunction
+
+" }}}
+function! CursorRestore(wrapped) " {{{
+    let save_cursor = getpos(".")
+    "call text#showmessage("vim", "cursor saved")
+    call a:wrapped()
+    call setpos(".", save_cursor)
+    "call text#showmessage("vim", "cursor restored")
 endfunction
 
 " }}}
