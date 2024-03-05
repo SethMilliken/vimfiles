@@ -3,6 +3,9 @@ let s:DAY_SECONDS = 24 * 60 * 60
 let s:DATE_FORMAT = {}
 let s:DATE_FORMAT["short"] = "%Y-%m-%d"
 let s:DATE_FORMAT["long_win"] = "%#x %H:%M:%S"
+let s:DATE_REGEX = {}
+let s:DATE_REGEX["short"] = '[0-9]\{4}-[0-9]\{2}-[0-9]\{2}'
+"let s:DATE_REGEX["long_win"] = TODO
 let s:TIME_FORMAT = "%H:%M:%S %Z"
 " let s:DATE_FACTORY = timestamp#dateFactory()
 
@@ -15,6 +18,11 @@ endfunction
 " }}}
 function! timestamp#yesterday() "{{{
     return localtime() - s:DAY_SECONDS
+endfunction
+
+" }}}
+function! timestamp#regex(pattern = "short") "{{{
+    return s:DATE_REGEX[a:pattern]
 endfunction
 
 " }}}
