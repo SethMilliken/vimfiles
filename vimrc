@@ -2327,14 +2327,14 @@ endfunction
 " }}}
 command! PersonalTodo call PersonalTodo()
 function! PersonalTodo(path = RemotePath()) " {{{
-    exe "edit"   a:path . "personal/todo/todo.txt"
-    exe "vsplit" a:path . "personal/todo/techtodo.txt"
+    exe "edit"   a:path . "personal/todo/todo.tst"
+    exe "vsplit" a:path . "personal/todo/techtodo.tst"
     wincmd t | wincmd =
     exe "tabed"  a:path . "personal/projects/2947-glascock.txt"
     exe "vsplit" a:path . "personal/projects/191-grosvenor.txt"
     wincmd t | wincmd =
     exe 'tabed'  a:path . "personal/todo/araxia.tst"
-    exe 'vsplit' a:path . "personal/todo/wintodo.txt"
+    exe 'vsplit' a:path . "personal/todo/wintodo.tst"
     wincmd t | wincmd =
     tabfirst
 endfunction

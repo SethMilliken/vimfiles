@@ -564,7 +564,7 @@ function! startup#SETHPC()
     endfun
 
     fun! s:obj.TasksFile() dict
-        return self.docroot() . "todo/wintodo.txt"
+        return self.docroot() . "todo/wintodo.tst"
     endfun
 
     return s:obj.New()
@@ -592,7 +592,7 @@ function! startup#KSANTI()
     endfun
 
     fun! s:obj.TasksFile() dict
-        return self.docroot() . "todo/wintodo.txt"
+        return self.docroot() . "todo/wintodo.tst"
     endfun
 
     return s:obj.New()
