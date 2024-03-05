@@ -292,6 +292,7 @@ map <silent> gi <C-]>
 map <silent> ge <Plug>(easymotion-s)
 map <silent> g^ <Cmd>tabfirst<CR>
 map <silent> g$ <Cmd>tablast<CR>
+map <silent> gb <Cmd>tabprev<CR>
 map <silent> gA <Cmd>call EndAppend()<CR>
 function! EndAppend() " {{{
     normal GA
