@@ -1421,10 +1421,10 @@ endfunction
 " }}}
 " Todo Lists: " {{{
 augroup todolist | au!
-    au BufReadPost,FileReadPost *todo*,*list* doau FileType tst
-    au BufReadPost,FileReadPost *todo*,*list* set syntax+=.txt
-    au BufReadPost,FileReadPost *todo*,*list* map <buffer> <silent> <C-p> ?=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
-    au BufReadPost,FileReadPost *todo*,*list* map <buffer> <silent> <C-n> /=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
+    au BufReadPost,FileReadPost *todo doau FileType tst
+    au BufReadPost,FileReadPost *todo set syntax+=.txt
+    au BufReadPost,FileReadPost *todo map <buffer> <silent> <C-p> ?=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
+    au BufReadPost,FileReadPost *todo map <buffer> <silent> <C-n> /=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
 augroup END
 
 " }}}
