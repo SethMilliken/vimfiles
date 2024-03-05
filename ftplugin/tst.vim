@@ -32,6 +32,7 @@ function! TaskStackMappings() " {{{
     map <buffer> <silent> Qr <Plug>ResetTogglers
     map <buffer> <silent> QW :call TaskstackMoveItemToProject("@queue")<CR>
     map <buffer> <silent> QA :call TaskstackMoveItemToProject("@active")<CR>
+    map <buffer> <silent> gt :call NavigateToCursorCategory()<CR>
     nmap <buffer> <silent> Nn :call TaskstackNewProjectItem()<CR>
     nmap <buffer> <silent> Np :call TaskstackNewProjectItemFromPaste()<CR>
     nmap <buffer> <silent> NP :call TaskstackNewItemFromPaste()<CR>
@@ -1386,6 +1387,30 @@ function! Notify(headline,contents) " {{{
 endfunction
 
 " }}}
+function! NavigateToCursorCategory() " {{{
+    let s:CATEGORY_REGEX = "@\\zs\\S\\{2,}"
+    " first try to find the category under the cursor
+    normal bh
+    let l:category  = getline(".")->matchstr(s:CATEGORY_REGEX, getcurpos()[2])
+    " otherwise try finding the first category in line
+    if match("@" . l:category, s:CATEGORY_REGEX) == -1
+        let l:category = getline(".")->matchstr(s:CATEGORY_REGEX)
+    endif
+    if match("@" . l:category, s:CATEGORY_REGEX) == -1
+        echo "No category found on line matching: " . s:CATEGORY_REGEX
+        return 0
+    endif
+    let destination = NodeLocation("@" . l:category)
+    if destination > 0
+        call BalancedMove([destination, 0])
+    else
+        " TODO: open buffer with name if destination not in current buffer
+        let l:path = expand("%:p:h")
+        exec "edit " . l:path . "/" . l:category . ".tst"
+    endif
+endfunction
+
+"}}}
 
 " }}}
 call text#showmessage('ftplugin','applied tst')
