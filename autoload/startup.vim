@@ -353,11 +353,16 @@ function! startup#defaults()
     fun! s:obj.qmkApp() dict
         exe 'cd' self.coderoot() . "qmk_firmware"
         exe 'edit keyboards/splitkb/aurora/corne/keymaps/SethMilliken/keymap.c'
-        exe 'tabedit keyboards/splitkb/aurora/corne/keymaps/SethMilliken/config.h'
-        exe 'vsplit users/SethMilliken/config.h'
-        exe 'tabedit users/SethMilliken/rules.mk'
         exe 'tabedit keyboards/hazel/bad_wings/keymaps/SethMilliken/keymap.c'
+        exe 'tabedit keyboards/planck/keymaps/SethMilliken/keymap.c'
+        exe 'tabedit users/SethMilliken/rules.mk'
+        exe 'vsplit keyboards/splitkb/aurora/corne/keymaps/SethMilliken/rules.mk'
         exe 'vsplit keyboards/hazel/bad_wings/keymaps/SethMilliken/rules.mk'
+        exe 'vsplit keyboards/planck/keymaps/SethMilliken/rules.mk'
+        exe 'tabedit users/SethMilliken/config.h'
+        exe 'vsplit keyboards/splitkb/aurora/corne/keymaps/SethMilliken/config.h'
+        exe 'vsplit keyboards/hazel/bad_wings/keymaps/SethMilliken/config.h'
+        exe 'vsplit keyboards/planck/keymaps/SethMilliken/config.h'
         tabfirst
     endfun
 
