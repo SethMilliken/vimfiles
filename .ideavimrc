@@ -50,10 +50,10 @@ let g:NERDTreeMapPreview='h'
 " <C-j>: Navigate
 nmap <D-k> <action>(RecentLocations)
 
-vnoremap <M-j> :action MoveLineDown<CR>
-nnoremap <M-j> <action>(MoveLineDown)
-vnoremap <M-k> <action>(MoveLineiUp)
-nnoremap <M-k> <action>(MoveLineiUp)
+vmap <M-j> <action>(MoveLineDown)
+nmap <M-j> <action>(MoveLineDown)
+vmap <M-k> <action>(MoveLineUp)
+nmap <M-k> <action>(MoveLineUp)
 
 nmap <C-s>s <action>(InsertLiveTemplate)
 vmap <C-s>s <action>(SurroundWithLiveTemplate)
