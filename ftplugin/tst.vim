@@ -73,9 +73,10 @@ let s:dates_node_name     = "DATES"
 let s:notes_node_name     = "SCRATCH"
 
 augroup TaskStack | au!
+    au BufNewFile,BufRead *.tst,*.scratch set syntax=txt
     au WinLeave,FocusLost * nested silent! call WriteBufferIfWritable()
     " Use <C-c> to avoid adding or updating a timestamp after editing.
-    au InsertLeave *tst* :call timestamp#addOrUpdate("") " FIXME: External Dependency
+    au InsertLeave tst :call timestamp#addOrUpdate("") " FIXME: External Dependency
 augroup END
 
 noremap <script> <Plug>AbandonItem <SID>AbandonItem
