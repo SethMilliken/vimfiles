@@ -15,6 +15,11 @@
 " Todo:
 
 "}}}
+
+" Prevent multiple init
+if ! exists("b:did_tst_mappings_init")
+let b:did_tst_mappings_init = 1
+
 command! TaskStack :call TaskStackMappings()
 function! TaskStackMappings() " {{{
     let b:aborted_prefix = "x"
@@ -786,7 +791,7 @@ function! NewFoldAgent(...) " {{{
 endfunction
 
 " }}}
-"}}}
+" }}}
 " FUNCTIONS: " {{{
 
 " Navigation:
@@ -1383,4 +1388,6 @@ endfunction
 " }}}
 
 " }}}
+call text#showmessage('ftplugin','applied tst')
+endif " Prevent multiple init
 " vim: set sw=4 ft=vim fdm=marker cms=\ \"\ %s  :
