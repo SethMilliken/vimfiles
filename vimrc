@@ -2409,5 +2409,12 @@ function! InsertTextAfterCursor(text)
   call setline(cur_line_num, modified_line)
 endfunction
 
+command! -range JoinRange <line1>,<line2>call JoinLines()
+function! JoinLines() range
+    let lines = getline(a:firstline, a:lastline)->join('\\')
+    call deletebufline(bufnr('%'), a:firstline, a:lastline)
+    call setline(a:firstline, lines)
+endfunction
+
 " }}}
 " vim: set ft=vim fdm=marker cms=\ \"\ %s  :
