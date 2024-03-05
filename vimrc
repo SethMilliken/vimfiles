@@ -2147,7 +2147,12 @@ endfunction
 
 command! Herenow :call Herenow()
 function! Herenow() " {{{
-    exec ":lcd " . expand("%:p:h")
+    let l:bufname = expand("%:p:h")
+    if l:bufname->match("://") == 0
+        call text#showmessage("Herenow", "not with netrw resource: " . l:bufname)
+        return
+    endif
+    exec ":lcd " . l:bufname
     let b:git_dir = FugitiveExtractGitDir(expand('%:p'))
     echo "cwd now: " . getcwd()
 endfunction
