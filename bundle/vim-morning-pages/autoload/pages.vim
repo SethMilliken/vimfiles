@@ -10,8 +10,8 @@ function! pages#isPagesEntry(name) " {{{
 endfunction
 
 "}}}
-function! pages#isPagesFile(name) " {{{
-    return match(a:name, '[0-9]\{4}-[0-9]\{2}-[0-9]\{2}\.txt') > -1
+function! pages#isPagesFile(name = pages#currentFilename()) " {{{
+    return match(a:name, timestamp#regex() . '.txt') > -1
 endfunction
 
 "}}}
@@ -20,7 +20,11 @@ function! pages#rebalance() " {{{
 endfunction
 
 "}}}
+function! pages#currentFilename() " {{{
+    return fnamemodify(expand("%"), ":p:t")
+endfunction
 
+"}}}
 function! pages#writingMappings() " {{{
     set nocursorline wrap nolist
     if bufname("%") == pages#tocName()
@@ -50,6 +54,7 @@ function! pages#writingMappings() " {{{
     imap <buffer> <silent> <Leader>wb <Esc><Leader>wb
     nmap <buffer> <silent> <Leader>wf <Cmd>call pages#finishWriting()<CR>
     imap <buffer> <silent> <Leader>wf <Esc><Leader>wf
+    nmap <buffer> <silent> gt         <Cmd>call pages#openDate()<CR>
     " Available bindings: lh
 
     doau CharacterCount BufRead
@@ -83,7 +88,7 @@ endfunction
 "}}}
 function! pages#updateReadingProgress() " {{{
     if exists("g:progress")
-        let file_name = fnamemodify(expand("%"), ":p:t")
+        let file_name = pages#currentFilename()
         if strwidth(file_name) > 0 && pages#isPagesFile(file_name)
             let lines = [file_name]
             call writefile(lines, g:progress)
@@ -166,6 +171,22 @@ endfunction
 "}}}
 function! pages#conversationsToggle() " {{{
     call pages#bufferToggle("conversations.tst")
+endfunction
+
+"}}}
+function! pages#openDate() " {{{
+    normal "pyaw
+    let l:date = getreg('p')
+    if match(l:date, timestamp#regex()) > -1
+        let l:requested = pages#factory().New(l:date)
+    else
+        echo "Not a date"
+        return 0
+    endif
+    if !pages#isPagesFile()
+        wincmd w
+    endif
+    call l:requested.readHere()
 endfunction
 
 "}}}
@@ -263,9 +284,13 @@ function! pages#factory()
     let s:obj["timeField"] = "time unset"
     let s:obj["dateField"] = "date unset"
 
-    fun! s:obj.setTime(time) dict
-        let self["timeField"] = a:time
-        let self["dateField"] = strftime(s:dateformat,  a:time)
+    fun! s:obj.setTime(time = localtime()) dict
+        if match(a:time, timestamp#regex()) > -1
+            let self["timeField"] = strptime(s:dateformat, a:time)
+        else
+            let self["timeField"] = a:time
+        endif
+        let self["dateField"] = strftime(s:dateformat,  self["timeField"])
         return self
     endfun
 
@@ -296,13 +321,17 @@ function! pages#factory()
         startinsert
     endfun
 
-    fun! s:obj.editHere() dict
+    fun! s:obj.readHere() dict
         if !self.isActive()
             exec "lcd " . g:pages_dir
             exec "edit " . self.path()
         else
             " TODO: check for alrady existing buffer and swtich to it
         endif
+    endfun
+
+    fun! s:obj.editHere() dict
+        call self.readHere()
         if self.exists()
             " TODO: Check for "Finished typing" annotation and create newly indexed entry if it exists
             call self.appendTimestamp()
@@ -313,15 +342,15 @@ function! pages#factory()
         Writing
     endfun
 
-    func! s:obj.before()
+    fun! s:obj.before()
         let l:beforeEntryTime = self["timeField"] - s:oneDay
         return s:factory.New(l:beforeEntryTime)
-    endfunc
+    endfun
 
-    func! s:obj.after()
+    fun! s:obj.after()
         let l:afterEntryTime = self["timeField"] + s:oneDay
         return s:factory.New(l:afterEntryTime)
-    endfunc
+    endfun
 
 
    " Is there any point to a separate dict for the factory itself? Why not
@@ -332,7 +361,7 @@ function! pages#factory()
    " let s:factory = copy(s:obj)
    let s:factory = {}
     " constructor
-    fun! s:factory.New(time = localtime()) dict
+    fun! s:factory.New(time) dict
         let newobj = copy(s:obj)
         call newobj.setTime(a:time)
         return newobj
