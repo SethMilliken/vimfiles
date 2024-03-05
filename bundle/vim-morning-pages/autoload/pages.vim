@@ -31,6 +31,7 @@ function! pages#writingMappings() " {{{
         map <buffer> NN <Cmd>call pages#nextDate()<CR>
     else
         set spell
+        set spelllang=en,mtg
         set showbreak=
         set cpo-=n
     end
