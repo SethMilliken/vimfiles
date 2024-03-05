@@ -313,6 +313,7 @@ map  <silent> ;qq :q!<CR>
 map <silent> <C-y>p <Cmd>call system("ssh localhost pbcopy", getreg('*')) \| call text#showmessage("vim", "Copied default register to pasteboard.")<CR>
 map <silent> <C-y>y <Cmd>call system("netcopy", getreg('"')) \| call text#showmessage("vim", "Copied unnamed register to local pasteboard.")<CR>
 
+vmap <silent> yt    y<Esc>:call CopyToTmux()<CR>
 map <silent> <C-x>y <Cmd>call CopyToTmux()<CR>
 map <silent> <C-x>x <Cmd>call CutToTmux()<CR>
 map <silent> <C-x>p <Cmd>call PasteFromTmux()<CR>
