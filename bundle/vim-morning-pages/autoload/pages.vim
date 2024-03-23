@@ -56,7 +56,7 @@ function! pages#writingMappings() " {{{
     imap <buffer> <silent> <Leader>wb <Esc><Leader>wb
     nmap <buffer> <silent> <Leader>wf <Cmd>call pages#finishWriting()<CR>
     imap <buffer> <silent> <Leader>wf <Esc><Leader>wf
-    nmap <buffer> <silent> gt         <Cmd>call pages#openDate()<CR>
+    nmap <buffer> <silent> gi         <Cmd>call pages#openDate()<CR>
     " Available bindings: lh
 
     doau CharacterCount BufRead
@@ -187,7 +187,7 @@ endfunction
 "}}}
 function! pages#openDate() " {{{
     " first try to find a date under the cursor
-    normal bh
+    normal wb
     let l:date = getline(".")->matchstr(timestamp#regex(), getcurpos()[2])
     " otherwise try finding the first date in line
     echo l:date

@@ -32,7 +32,7 @@ function! TaskStackMappings() " {{{
     map <buffer> <silent> Qr <Plug>ResetTogglers
     map <buffer> <silent> QW :call TaskstackMoveItemToProject("@queue")<CR>
     map <buffer> <silent> QA :call TaskstackMoveItemToProject("@active")<CR>
-    map <buffer> <silent> gt :call NavigateToCursorCategory()<CR>
+    map <buffer> <silent> gi :call NavigateToCursorCategory()<CR>
     nmap <buffer> <silent> Nn :call TaskstackNewProjectItem()<CR>
     nmap <buffer> <silent> Np :call TaskstackNewProjectItemFromPaste()<CR>
     nmap <buffer> <silent> NP :call TaskstackNewItemFromPaste()<CR>
