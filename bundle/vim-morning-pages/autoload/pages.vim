@@ -28,7 +28,7 @@ endfunction
 "}}}
 function! pages#writingMappings() " {{{
     set nocursorline wrap nolist
-    if bufname("%") == pages#tocName()
+    if pages#isToc()
         map <buffer> NN <Cmd>call pages#nextDate()<CR>
     else
         set spell
@@ -57,6 +57,7 @@ function! pages#writingMappings() " {{{
     nmap <buffer> <silent> <Leader>wf <Cmd>call pages#finishWriting()<CR>
     imap <buffer> <silent> <Leader>wf <Esc><Leader>wf
     nmap <buffer> <silent> gi         <Cmd>call pages#openDate()<CR>
+    nmap <buffer> <silent> gI         <Cmd>call pages#openDate(v:true)<CR>
     " Available bindings: lh
 
     doau CharacterCount BufRead
@@ -65,7 +66,7 @@ endfunction
 "}}}
 function! pages#readingMappings() " {{{
     set nocursorline nolist
-    if bufname("%") == pages#tocName()
+    if pages#isToc()
         set nowrap
     else
         set wrap spell
@@ -145,6 +146,16 @@ function! pages#tocName() " {{{
 endfunction
 
 "}}}
+function! pages#tocRegex() " {{{
+    return '[0-9]\{4}-[0-9]\{2}-index.txt'
+endfunction
+
+"}}}
+function! pages#isToc() " {{{
+    return bufname("%")->match(pages#tocRegex()) > -1
+endfunction
+
+"}}}
 function! pages#currentEntryName() " {{{
     return timestamp#text("date") . ".txt"
 endfunction
@@ -190,16 +201,15 @@ function! pages#conversationsToggle() " {{{
 endfunction
 
 "}}}
-function! pages#openDate() " {{{
+function! pages#openDate(isAutoHeader = v:false) " {{{
     " first try to find a date under the cursor
     normal wb
     let l:date = getline(".")->matchstr(timestamp#regex(), getcurpos()[2])
     " otherwise try finding the first date in line
-    echo l:date
-    if match(l:date, timestamp#regex()) == -1
+    if l:date->match(timestamp#regex()) == -1
         let l:date = getline(".")->matchstr(timestamp#regex())
     endif
-    if match(l:date, timestamp#regex()) > -1
+    if l:date->match(timestamp#regex()) > -1
         let l:requested = pages#factory().New(l:date)
     else
         echo "No date found on line matching: " . timestamp#regex()
@@ -215,6 +225,9 @@ function! pages#openDate() " {{{
         wincmd w
     endif
     call l:requested.readHere()
+    if a:isAutoHeader
+        call pages#pagesHeader(l:requested)
+    endif
 endfunction
 
 "}}}
@@ -232,10 +245,12 @@ function! pages#startWriting() " {{{
 endfunction
 
 " }}}
-function! pages#pagesHeader() " {{{
-    call pages#startWriting()
-    call setline(line("$"), ["" , timestamp#text("journal", pages#currentFilename()) . ", CURRENT_LOCATION"])
-    normal G$
+function! pages#pagesHeader(date) " {{{
+    if line("0")->match("Started typing") == -1
+        call pages#startWriting()
+        call setline(line("$"), ["" , timestamp#text("journal", a:date.time()) . ", CURRENT_LOCATION"])
+        normal G$
+    endif
 endfunction
 
 " }}}
@@ -291,16 +306,17 @@ if !exists("*pages#editPagesEntry")
     function! pages#editPagesEntry(time = localtime()) " {{{
         call WriteBufferIfWritable()
         let requested = pages#factory().New(a:time)
-        let l:filenameDate = expand("%:t:r")
-        if match(l:filenameDate, timestamp#regex()) > -1
-            call requested.setTime(l:filenameDate)
-        endif
-        let previous = requested.before()
-        if previous.exists()
-            call requested.editHere()
+        let filenameDate = pages#factory().fromFilename()
+        if filenameDate.isRecent()
+            " Handle new entry created after date change
+            let previous = requested.before()
+            if !(previous.exists())
+                let requested = previous
+            endif
         else
-            call previous.editHere()
+            let requested = filenameDate
         endif
+        call requested.editHere()
     endfunction
 endif
 
@@ -372,7 +388,7 @@ function! pages#factory()
             " TODO: Check for "Finished typing" annotation and create newly indexed entry if it exists
             call self.appendTimestamp()
         else
-            call pages#pagesHeader()
+            call pages#pagesHeader(self)
             " write
         endif
         Writing
