@@ -304,19 +304,21 @@ endif
 "}}}
 if !exists("*pages#editPagesEntry")
     function! pages#editPagesEntry(time = localtime()) " {{{
+        " handle empty q-args from a command invocation
+        let l:time = empty(a:time) ? localtime() : a:time
         call WriteBufferIfWritable()
-        let requested = pages#factory().New(a:time)
-        let filenameDate = pages#factory().fromFilename()
-        if filenameDate.isRecent()
+        let l:requested = pages#factory().New(l:time)
+        let l:filenameDate = pages#factory().fromFilename()
+        if l:filenameDate.isRecent()
             " Handle new entry created after date change
-            let previous = requested.before()
-            if !(previous.exists())
-                let requested = previous
+            let l:previous = l:requested.before()
+            if !(l:previous.exists())
+                let l:requested = l:previous
             endif
         else
-            let requested = filenameDate
+            let l:requested = l:filenameDate
         endif
-        call requested.editHere()
+        call l:requested.editHere()
     endfunction
 endif
 
@@ -378,7 +380,7 @@ function! pages#factory()
             exec "lcd " . g:pages_dir
             exec "edit " . self.path()
         else
-            " TODO: check for alrady existing buffer and swtich to it
+            " TODO: check for alrady existing buffer and switch to it
         endif
     endfun
 
@@ -433,11 +435,11 @@ function! pages#factory()
     fun! s:factory.fromFilename() dict
         let newobj = copy(s:obj)
         let l:date = pages#currentEntryDate()
-        if match(l:date, timestamp#regex()) > -1
-            call newobj.setTime(l:date)
-        else
-            call newobj.setTime(localtime())
+        " if filename is not actually a date, use now
+        if match(l:date, timestamp#regex()) == -1
+            let l:date = localtime()
         endif
+        call newobj.setTime(l:date)
         return newobj
     endfun
 
