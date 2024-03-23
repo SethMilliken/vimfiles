@@ -362,7 +362,7 @@ function! pages#factory()
     endfun
 
     fun! s:obj.appendTimestamp() dict
-        silent! call WhitespaceBGone()
+        silent! call WhitespaceBGone(v:true)
         call append("$", ["", strftime(s:timeformat), ""])
         normal Go
         startinsert

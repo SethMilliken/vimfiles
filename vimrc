@@ -362,16 +362,16 @@ imap <C-y>s <Esc><C-y>s
 nmap <C-y>w <Cmd>call CursorRestore(funcref("WhitespaceBGone"))<CR>
 imap <C-y>w <Esc><C-y>w
 
-function! IsBufferWriteable() " {{{
-    return &modified
+function! IsBufferWriteable(modified_ignored = v:false) " {{{
+    return (a:modified_ignored || &modified)
            && !exists('readonly')
            && !exists('buftype')
            && (filewritable(expand('%')) || match(expand('%'), "scp") == 0)
 endfunction
 
 " }}}
-function! WhitespaceBGone() " {{{
-    if IsBufferWriteable()
+function! WhitespaceBGone(modified_ignored = v:false) " {{{
+    if IsBufferWriteable(a:modified_ignored)
         silent! %s/\s\+$//ge
         silent! %s/\($\n\s*\)\+\%$//e
         set nolist
