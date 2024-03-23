@@ -50,7 +50,7 @@ function! pages#writingMappings() " {{{
     imap <buffer> <silent> ;l         <Esc>;l
     map  <buffer> <silent> ;k         <Cmd>call pages#midlines()<CR>
     imap <buffer> <silent> ;k         <Esc>;k
-    map  <buffer> <silent> ;t         <Cmd>call pages#appendTimestamp()<CR>
+    map  <buffer> <silent> ;t         <Cmd>call pages#factory().today().appendTimestamp()<CR>
     imap <buffer> <silent> ;t         <Esc>;t
     nmap <buffer> <silent> <Leader>wb <Cmd>Pages<CR>
     imap <buffer> <silent> <Leader>wb <Esc><Leader>wb
@@ -281,13 +281,6 @@ function! pages#midlines() " {{{
     let orig = winnr()
     windo normal Gzz
     exe orig . 'wincmd w'
-endfunction
-
-"}}}
-function! pages#appendTimestamp(time = localtime()) " {{{
-    call WhitespaceBGone()
-    let requested = pages#factory().New(a:time)
-    call requested.appendTimestamp()
 endfunction
 
 "}}}
