@@ -29,26 +29,32 @@ endfunction
 function! timestamp#text(style, time = localtime()) "{{{
     let l:iswindows = has("win16") || has("win32") || has("win64")
     let l:dateformat = ""
+    " Convert date to unix timestamp if necessary
+    if match(a:time, timestamp#regex()) > -1
+        let l:time = strptime(s:DATE_FORMAT["short"], a:time)
+    else
+        let l:time = a:time
+    end
     if l:iswindows
         if a:style == "long"
-            let l:dateformat = strftime("%#x %H:%M:%S ", a:time)
+            let l:dateformat = strftime("%#x %H:%M:%S ", l:time)
         elseif a:style == "short"
-            let l:dateformat = strftime("%Y-%m-%d %H:%M:%S ", a:time)
+            let l:dateformat = strftime("%Y-%m-%d %H:%M:%S ", l:time)
         endif
-        let l:dateformat .= substitute(strftime("%#z", a:time), '\C[a-z]\+\($\| \)', '', 'g')
+        let l:dateformat .= substitute(strftime("%#z", l:time), '\C[a-z]\+\($\| \)', '', 'g')
     else
         if a:style == "long"
-            let l:dateformat = strftime("%Y %b %d %a %X %Z", a:time)
+            let l:dateformat = strftime("%Y %b %d %a %X %Z", l:time)
         elseif a:style == "journal"
-            let l:dateformat = strftime("%A, %B %d, %Y %H:%M:%S %Z", a:time)
+            let l:dateformat = strftime("%A, %B %d, %Y %H:%M:%S %Z", l:time)
         elseif a:style == "short"
-            let l:dateformat = strftime("%Y-%m-%d %H:%M:%S %Z", a:time)
+            let l:dateformat = strftime("%Y-%m-%d %H:%M:%S %Z", l:time)
         elseif a:style == "time"
-            let l:dateformat = strftime("%H:%M:%S %Z", a:time)
+            let l:dateformat = strftime("%H:%M:%S %Z", l:time)
         endif
     endif
     if a:style == "date"
-        let l:dateformat = strftime("%Y-%m-%d", a:time)
+        let l:dateformat = strftime("%Y-%m-%d", l:time)
     endif
     return l:dateformat
 endfunction
