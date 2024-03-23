@@ -1414,6 +1414,9 @@ endfunction
 "}}}
 
 " }}}
+
+call TaskStackMappings()
 call text#showmessage('ftplugin','applied tst')
+
 endif " Prevent multiple init
 " vim: set sw=4 ft=vim fdm=marker cms=\ \"\ %s  :
