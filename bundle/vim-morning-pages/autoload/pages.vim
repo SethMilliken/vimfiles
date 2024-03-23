@@ -150,6 +150,11 @@ function! pages#currentEntryName() " {{{
 endfunction
 
 "}}}
+function! pages#currentEntryDate() " {{{
+    return expand("%:t:r")
+endfunction
+
+"}}}
 function! pages#notesToggle() " {{{
     call pages#bufferToggle("notes.txt")
 endfunction
@@ -325,6 +330,10 @@ function! pages#factory()
         return self["dateField"]
     endfun
 
+    fun! s:obj.time() dict
+        return self["timeField"]
+    endfun
+
     fun! s:obj.filename() dict
         return self.date() . ".txt"
     endfun
@@ -379,6 +388,17 @@ function! pages#factory()
         return s:factory.New(l:afterEntryTime)
     endfun
 
+    fun! s:obj.equals(other)
+        return self.time() == a:other.time()
+    endfun
+
+    fun! s:obj.equalsDate(other)
+        return self.date() == a:other.date()
+    endfun
+
+    fun! s:obj.isRecent()
+        return self.equalsDate(s:factory.today()) || self.equalsDate(s:factory.yesterday())
+    endfun
 
    " Is there any point to a separate dict for the factory itself? Why not
    " just return New()?  This could have additional methods added to it that
@@ -392,6 +412,27 @@ function! pages#factory()
         let newobj = copy(s:obj)
         call newobj.setTime(a:time)
         return newobj
+    endfun
+
+    fun! s:factory.fromFilename() dict
+        let newobj = copy(s:obj)
+        let l:date = pages#currentEntryDate()
+        if match(l:date, timestamp#regex()) > -1
+            call newobj.setTime(l:date)
+        else
+            call newobj.setTime(localtime())
+        endif
+        return newobj
+    endfun
+
+    fun! s:factory.today() dict
+        let newobj = copy(s:obj)
+        call newobj.setTime(localtime())
+        return newobj
+    endfun
+
+    fun! s:factory.yesterday() dict
+        return s:factory.today().before()
     endfun
 
    return s:factory
