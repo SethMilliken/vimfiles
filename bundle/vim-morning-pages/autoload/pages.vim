@@ -3,7 +3,8 @@
 command! Writing :call pages#writingMappings()
 command! Reading :call pages#readingMappings()
 command! UpdateReadingProgress :call pages#updateReadingProgress()
-command! -nargs=? Pages :call pages#editPagesEntry(<args>)
+command! -nargs=? Pages :call pages#editPagesEntry(<q-args>)
+command! -nargs=? PagesToc :call pages#editToc(<q-args>)
 
 function! pages#isPagesEntry(name) " {{{
    return a:name =~ '\d\d\d\d-\d\d-\(index\|\d\d\)[[:alpha:]]*.txt'
@@ -170,6 +171,15 @@ function! pages#tocToggle() " {{{
 endfunction
 
 "}}}
+function! pages#editToc(month) " {{{
+    if a:month->matchstr(timestamp#regex()) == -1
+        echo "Not a month"
+    else
+        call pages#bufferToggle(a:month . "-index.txt")
+    endif
+endfunction
+
+"}}}
 function! pages#conversationsToggle() " {{{
     call pages#bufferToggle("conversations.tst")
 endfunction
@@ -193,6 +203,10 @@ function! pages#openDate() " {{{
     " TODO: implement more sophisticated buffer selection and window
     " navigation for this
     if !pages#isPagesFile()
+        " if only one window in tab, split first
+        if tabpagewinnr(tabpagenr(), "$") == 1
+            wincmd v
+        endif
         wincmd w
     endif
     call l:requested.readHere()
@@ -215,7 +229,7 @@ endfunction
 " }}}
 function! pages#pagesHeader() " {{{
     call pages#startWriting()
-    call setline(line("$"), ["" , timestamp#text("journal") . ", CURRENT_LOCATION"])
+    call setline(line("$"), ["" , timestamp#text("journal", pages#currentFilename()) . ", CURRENT_LOCATION"])
     normal G$
 endfunction
 
@@ -272,6 +286,10 @@ if !exists("*pages#editPagesEntry")
     function! pages#editPagesEntry(time = localtime()) " {{{
         call WriteBufferIfWritable()
         let requested = pages#factory().New(a:time)
+        let l:filenameDate = expand("%:t:r")
+        if match(l:filenameDate, timestamp#regex()) > -1
+            call requested.setTime(l:filenameDate)
+        endif
         let previous = requested.before()
         if previous.exists()
             call requested.editHere()
