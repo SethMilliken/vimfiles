@@ -83,21 +83,24 @@ iabb sbs self-build Swept
 iabb nn nice!nano
 iabb nv nice!view
 iabb uc USB-C
-iabb ahk AutoHotkey
-iabb hpmi HomePod mini
-iabb Aipt AiPT
-iabb cread <C-g>u_<C-r>=CurrentReading(0)<CR>_
-iabb cread2 <C-g>u_<C-r>=CurrentReading(1)<CR>_
-iabb cread3 <C-g>u_<C-r>=CurrentReading(2)<CR>_
-iabb cread4 <C-g>u_<C-r>=CurrentReading(3)<CR>_
-iabb cread5 <C-g>u_<C-r>=CurrentReading(4)<CR>_
-iabb cread6 <C-g>u_<C-r>=CurrentReading(5)<CR>_
-iabb babb <C-g>u_<C-r>=CurrentReading(0)<CR>_
-iabb aiptb <C-g>u_<C-r>=CurrentReading(1)<CR>_
-iabb ebbcb <C-g>u_<C-r>=CurrentReading(2)<CR>_
-iabb heatb <C-g>u_<C-r>=CurrentReading(3)<CR>_
-iabb techb <C-g>u_<C-r>=CurrentReading(4)<CR>_
-iabb perb <C-g>u_<C-r>=CurrentReading(5)<CR>_
+
+" Lists:
+iabb cread <C-g>u_<C-r>=CurrentReading("B&B")<CR>_
+iabb cread1 <C-g>u_<C-r>=CurrentReading("AiPT")<CR>_
+iabb cread2 <C-g>u_<C-r>=CurrentReading("EBBC")<CR>_
+iabb cread3 <C-g>u_<C-r>=CurrentReading("Heather")<CR>_
+iabb cread4 <C-g>u_<C-r>=CurrentReading("Tech")<CR>_
+iabb cread5 <C-g>u_<C-r>=CurrentReading("self")<CR>_
+iabb cread6 <C-g>u_<C-r>=CurrentReading("mag")<CR>_
+iabb cread7 <C-g>u_<C-r>=CurrentReading("MK")<CR>_
+iabb babb  <C-g>u_<C-r>=CurrentReading("B&B")<CR>_
+iabb aiptb <C-g>u_<C-r>=CurrentReading("AiPT")<CR>_
+iabb ebbcb <C-g>u_<C-r>=CurrentReading("EBBC")<CR>_
+iabb heatb <C-g>u_<C-r>=CurrentReading("Heather")<CR>_
+iabb techb <C-g>u_<C-r>=CurrentReading("tech")<CR>_
+iabb perb  <C-g>u_<C-r>=CurrentReading("self")<CR>_
+iabb zineb <C-g>u_<C-r>=CurrentReading("zine")<CR>_
+iabb mkhb  <C-g>u_<C-r>=CurrentReading("MK")<CR>_
 iabb cshow <C-g>u_<C-r>=CurrentWatching(0)<CR>_
 iabb cshow2 <C-g>u_<C-r>=CurrentWatching(1)<CR>_
 iabb cshow3 <C-g>u_<C-r>=CurrentWatching(2)<CR>_
