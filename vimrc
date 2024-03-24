@@ -2308,27 +2308,73 @@ endfunction
 
 " }}}
 let g:current_reading_file = $HOME . "/sandbox/personal/lists/current_reading.txt"
-function! CurrentReading(entry = 0) " {{{
+function! OldCurrentReading(entry = 0) " {{{
     let l:file_lines = g:current_reading_file->readfile()->filter({_, v -> index(['#', '\n', ' ', ''], v[0]) == -1})
     return l:file_lines->get(a:entry)
 endfunction
 
 " }}}
+let g:readinglist = $HOME . "/sandbox/personal/lists/readinglist.txt"
+function! CurrentReading(entry = "B&B") " {{{
+    if typename(a:entry) == "number"
+        let l:entry = ["B&B", "AiPT", "EBBC", "Heather", "tech", "self", "zine", "MK"][a:entry]
+    else
+        let l:entry = a:entry
+    endif
+
+    let l:match = g:readinglist
+                \ ->readfile()
+                \ ->filter({_, v -> index(['#', '\n', ' ', '', '@'], v[0]) == -1})
+                \ ->filter({_, m -> match(m, "[" . l:entry) > -1})
+                \ ->get(0)
+                \ ->trim(" -!+o")
+                \ ->split("[<[]")
+                \ ->get(0)
+                \ ->trim()
+    return l:match
+endfunction
+
+" }}}
 function! EditCurrentReading() " {{{
-    exe "silent! tabnew " . g:current_reading_file
+    exe "silent! tabnew " . g:readinglist
+    exe "tabm -1"
     set noro
 endfunction
 
 " }}}
 let g:current_watching_file = $HOME . "/sandbox/personal/lists/current_watching.txt"
-function! CurrentWatching(entry = 0) " {{{
+function! OldCurrentWatching(entry = 0) " {{{
     let l:file_lines = g:current_watching_file->readfile()->filter({_, v -> index(['#', '\n', ' ', ''], v[0]) == -1})
     return l:file_lines->get(a:entry)
 endfunction
 
 " }}}
+let g:watchlist = $HOME . "/sandbox/personal/lists/videolist.txt"
+function! CurrentWatching(entry = "") " {{{
+    if typename(a:entry) == "number"
+        " look for referrer
+        let l:entry = "[" . ["self", "erg"][a:entry]
+    else
+        " or just find the next item
+        let l:entry = empty(a:entry) ? "[-+!] " : "[" . a:entry
+    endif
+
+    let l:match = g:watchlist
+                \ ->readfile()
+                \ ->filter({_, v -> index(['#', '\n', ' ', '', '@'], v[0]) == -1})
+                \ ->filter({_, m -> match(m, l:entry) > -1})
+                \ ->get(0)
+                \ ->trim(" -!+o")
+                \ ->split("[<[{]")
+                \ ->get(0)
+                \ ->trim()
+    return l:match
+endfunction
+
+" }}}
 function! EditCurrentWatching() " {{{
-    exe "silent! tabnew " . g:current_watching_file
+    exe "silent! tabnew " . g:watchlist
+    exe "tabm -1"
     set noro
 endfunction
 
