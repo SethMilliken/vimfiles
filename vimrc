@@ -2255,7 +2255,7 @@ call Clipboard()
 
 " }}}
 let g:progress = glob("~/.vim/swap/reading_progress.txt")
-let g:pages_dir = glob("~/sandbox/personal/zaurus/zlog/")
+let g:pages_dir = glob("~/sandbox/pages/")
 
 " Restore tmp directory that appears to get reaped by OpenBSD
 command! TmpdirRestore call mkdir(fnamemodify(tempname(),":p:h"),"",0700)
