@@ -66,6 +66,15 @@ syntax match divider /^[^/[:space:]]\{30,}$/
 " modeline
 syntax region modeline start="^vim:" end="$" oneline
 
+" attribution
+syntax match attribution / <[[:print:]]\+>/
+
+" referral
+syntax match referral / \[[[:print:]]\+\]/
+
+" location
+syntax match location / {[[:print:]]\+}/
+
 " underline
 syntax match italic "_[^_]\{-}_"
 
@@ -93,5 +102,8 @@ highlight default link eoltimestamp Ignore
 highlight default link timestamp PreProc
 highlight default link italic Underlined
 highlight default link quotation Special
+highlight default link attribution Special
+highlight default link referral Constant
+highlight default link location MoreMsg
 
 " }}}
