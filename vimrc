@@ -313,20 +313,20 @@ map  <silent> ;qq :q!<CR>
 map <silent> <C-y>p <Cmd>call system("ssh localhost pbcopy", getreg('*')) \| call text#showmessage("vim", "Copied default register to pasteboard.")<CR>
 map <silent> <C-y>y <Cmd>call system("netcopy", getreg('"')) \| call text#showmessage("vim", "Copied unnamed register to local pasteboard.")<CR>
 
-vmap <silent> yt    y<Esc>:call CopyToTmux()<CR>
-map <silent> <C-x>y <Cmd>call CopyToTmux()<CR>
-map <silent> <C-x>x <Cmd>call CutToTmux()<CR>
-map <silent> <C-x>p <Cmd>call PasteFromTmux()<CR>
+vmap <silent> <C-p>y y<Esc>:call CopyToTmux()<CR>
+map  <silent> <C-p>y <Cmd>call CopyToTmux()<CR>
+map  <silent> <C-p>x <Cmd>call CutToTmux()<CR>
+map  <silent> <C-p>p <Cmd>call PasteFromTmux()<CR>
 
 function! CopyToTmux() range " {{{
     silent! normal gv"py
-    call system("tmux set-buffer -b vim " . shellescape(getreg('p')))
+    call system("tmux set-buffer -b vim -- " . shellescape(getreg('p')))
     call text#showmessage("vim", "Copied selection to tmux vim paste buffer.")
 endfunction
 " }}}
 function! CutToTmux() range " {{{
     silent! normal gv"px
-    call system("tmux set-buffer -b vim " . shellescape(getreg('p')))
+    call system("tmux set-buffer -b vim -- " . shellescape(getreg('p')))
     call text#showmessage("vim", "Cut selection to tmux vim paste buffer.")
 endfunction
 " }}}
