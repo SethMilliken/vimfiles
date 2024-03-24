@@ -1,31 +1,36 @@
 " Abbreviations: " {{{
 
-" Computing:
+" Technical:
 iabb mvi MacVim
-
-" Auth:
-iabb oau OAuth
-
-" Ruby:
-iabb hr =>
+iabb oauth OAuth
+iabb qit 1/4-20
+iabb ahk AutoHotkey
+iabb hpmi HomePod mini
+iabb gh GitHub
 
 " Vimscript:
 iabb ia iabb
-iabb tsm call text#showmessage("foo",
+iabb tsm call text#showmessage("HEADER", "MESSAGE")<Esc>5b
 
-" Personal
+" Personal:
+iabb Aipt AiPT
 iabb aoc Advent of Code
-iabb cp2 Cyberpunk 2077
-iabb rl Rocket League
-iabb mke mechanical keyboard
-iabb mks mechanical keyboards
-iabb mked mechanical keyboard Discord
-iabb apwk Apple Wireless Keyboard
-iabb ono one-on-one
+iabb bph Back Porch Hammock
+iabb frp Front Porch Swing
+iabb hnh half-and-half
 iabb lablo laboratory.local
+iabb od Office Desk
+iabb ono one-on-one
 iabb samlo samsara.local
 iabb worklo seth.local
 iabb wrt with respect to
+
+" Gaming:
+iabb cp2 Cyberpunk 2077
+iabb rl Rocket League
+iabb mkm Murders at Karlov Manor
+
+" Typos:
 iabb fo of
 iabb ot to
 iabb teh the
@@ -50,18 +55,23 @@ iabb doesn't' doesn't 
 iabb don't' don't 
 iabb won't' won't 
 iabb wouldn't' wouldn't 
+
+" Addresses:
 iabb jef 2426 Jefferson Ave
 iabb berk Berkeley
 iabb berkz Berkeley, CA  94703
 iabb glas 2947 Glascock St
 iabb jingz Oakland, CA  94601
 iabb gros 191 Grosvenor St
-iabb grosz 191 Grosvenor St, Athens, OH  45701
+iabb grosz Athens, OH  45701
 iabb ches 343 Chester St, Oakland, CA
 iabb 4gull 4 Gull Lane, Martha's Vineyard, Guest Bedroom
-iabb bph Back Porch Hammock
-iabb frp Front Porch Swing
-iabb hnh half-and-half
+
+" Keyboards:
+iabb mke mechanical keyboard
+iabb mks mechanical keyboards
+iabb mked mechanical keyboard Discord
+iabb apwk Apple Wireless Keyboard
 iabb acc Aurora Corne Choc
 iabb acm Aurora Corne MX
 iabb acmc Aurora Corne MX Chieftain
@@ -72,7 +82,6 @@ iabb ked keymap-drawer
 iabb sbs self-build Swept
 iabb nn nice!nano
 iabb nv nice!view
-iabb qit 1/4-20
 iabb uc USB-C
 iabb ahk AutoHotkey
 iabb hpmi HomePod mini
