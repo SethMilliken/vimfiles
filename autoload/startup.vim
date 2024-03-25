@@ -149,7 +149,9 @@ function! startup#defaults()
         exe "edit " . self.vimhome() . "vimrc"
         exe "vsplit " . self.vimhome() . "gvimrc | wincmd t | wincmd ="
         exe "tabnew " . self.vimhome() . "plugins.vim"
-        exec "tabnew " . self.vimhome() . "autoload/startup.vim"
+        exe "tabnew " . self.vimhome() . "autoload/startup.vim"
+        exe "tabnew " . self.vimhome() . "ftplugin/tst.vim"
+        exe "vsplit " . self.vimhome() . "ftdetect/tst.vim"
         tab help
         tabfirst
     endfun
@@ -266,6 +268,11 @@ function! startup#defaults()
         exe 'tabnew' pages#root() . "topics.tst"
         vsplit
         exe 'edit' pages#root() . "conversations.tst"
+        exe 'tabnew ' . self.vimhome() . 'bundle/vim-morning-pages/autoload/pages.vim'
+        vsplit
+        exe 'edit ' . self.vimhome() . 'bundle/vim-morning-pages/ftdetect/pages.vim'
+        split
+        exe 'edit ' . self.vimhome() . 'bundle/vim-morning-pages/ftplugin/pages.vim'
         1tabn
         wincmd h | wincmd =
     endfun
@@ -286,7 +293,7 @@ function! startup#defaults()
     endfun
 
     fun! s:obj.dairecApp() dict
-        exe 'cd' self.personalroot() . "dairec/"
+        exe 'cd' self.personalroot() . "../dairec/"
         exe 'edit' "summ.txt"
         normal Gk$
         exe 'split' "stat.txt"
