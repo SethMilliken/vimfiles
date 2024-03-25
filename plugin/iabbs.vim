@@ -98,13 +98,20 @@ iabb aiptb <C-g>u_<C-r>=CurrentReading("AiPT")<CR>_
 iabb ebbcb <C-g>u_<C-r>=CurrentReading("EBBC")<CR>_
 iabb heatb <C-g>u_<C-r>=CurrentReading("Heather")<CR>_
 iabb techb <C-g>u_<C-r>=CurrentReading("tech")<CR>_
-iabb perb  <C-g>u_<C-r>=CurrentReading("self")<CR>_
+iabb selfb  <C-g>u_<C-r>=CurrentReading("self")<CR>_
 iabb zineb <C-g>u_<C-r>=CurrentReading("zine")<CR>_
 iabb mkhb  <C-g>u_<C-r>=CurrentReading("MK")<CR>_
-iabb cshow <C-g>u_<C-r>=CurrentWatching(0)<CR>_
-iabb cshow2 <C-g>u_<C-r>=CurrentWatching(1)<CR>_
-iabb cshow3 <C-g>u_<C-r>=CurrentWatching(2)<CR>_
-iabb cshow4 <C-g>u_<C-r>=CurrentWatching(3)<CR>_
-iabb cshow5 <C-g>u_<C-r>=CurrentWatching(4)<CR>_
+iabb selfw <C-g>u_<C-r>=CurrentWatching( 0)<CR>_
+iabb ergw <C-g>u_<C-r>=CurrentWatching("erg")<CR>_
+iabb cwatch <C-g>u_<C-r>=CurrentWatching(0)<CR>_
+iabb cwatch1 <C-g>u_<C-r>=CurrentWatching(1)<CR>_
+iabb cwatch2 <C-g>u_<C-r>=CurrentWatching(2)<CR>_
+iabb cwatch3 <C-g>u_<C-r>=CurrentWatching(3)<CR>_
+iabb cwatch4 <C-g>u_<C-r>=CurrentWatching(4)<CR>_
+iabb cwatch5 <C-g>u_<C-r>=CurrentWatching(4)<CR>_
+iabb cwatch6 <C-g>u_<C-r>=CurrentWatching(6)<CR>_
+iabb cwatch7 <C-g>u_<C-r>=CurrentWatching(7)<CR>_
+iabb cwatch8 <C-g>u_<C-r>=CurrentWatching(8)<CR>_
+iabb cwatch9 <C-g>u_<C-r>=CurrentWatching(9)<CR>_
 
 " }}}
