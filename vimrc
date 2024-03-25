@@ -2331,7 +2331,7 @@ function! CurrentReading(entry = "B&B") " {{{
                 \ ->split("[<[]")
                 \ ->get(0)
                 \ ->trim()
-    return l:match
+    return len(l:match) == 1 ? "no match found for: " . a:entry : l:match
 endfunction
 
 " }}}
@@ -2350,25 +2350,28 @@ endfunction
 
 " }}}
 let g:watchlist = $HOME . "/sandbox/personal/lists/videolist.txt"
-function! CurrentWatching(entry = "") " {{{
+function! CurrentWatching(entry = 0) " {{{
+    let l:index = 0
     if typename(a:entry) == "number"
-        " look for referrer
-        let l:entry = "[" . ["self", "erg"][a:entry]
+        " find the nth item
+        let l:entry = "[-+!] "
+        let l:index = a:entry
     else
-        " or just find the next item
-        let l:entry = empty(a:entry) ? "[-+!] " : "[" . a:entry
+        " look for referrer
+        " TODO: Check that referrer is valid e.g. ["self", "erg"]
+        let l:entry = "[" . a:entry
     endif
 
     let l:match = g:watchlist
                 \ ->readfile()
                 \ ->filter({_, v -> index(['#', '\n', ' ', '', '@'], v[0]) == -1})
                 \ ->filter({_, m -> match(m, l:entry) > -1})
-                \ ->get(0)
+                \ ->get(l:index)
                 \ ->trim(" -!+o")
                 \ ->split("[<[{]")
                 \ ->get(0)
                 \ ->trim()
-    return l:match
+    return len(l:match) == 1 ? "no match found for: " . a:entry : l:match
 endfunction
 
 " }}}
