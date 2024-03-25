@@ -50,7 +50,7 @@ function! pages#writingMappings() " {{{
     imap <buffer> <silent> ;l         <Esc>;l
     map  <buffer> <silent> ;k         <Cmd>call pages#midlines()<CR>
     imap <buffer> <silent> ;k         <Esc>;k
-    map  <buffer> <silent> ;t         <Cmd>call pages#factory().today().appendTimestamp()<CR>
+    map  <buffer> <silent> ;t         <Cmd>call pages#Entry().today().appendTimestamp()<CR>
     imap <buffer> <silent> ;t         <Esc>;t
     nmap <buffer> <silent> <Leader>wb <Cmd>Pages<CR>
     imap <buffer> <silent> <Leader>wb <Esc><Leader>wb
@@ -210,7 +210,7 @@ function! pages#openDate(isAutoHeader = v:false) " {{{
         let l:date = getline(".")->matchstr(timestamp#regex())
     endif
     if l:date->match(timestamp#regex()) > -1
-        let l:requested = pages#factory().New(l:date)
+        let l:requested = pages#Entry().New(l:date)
     else
         echo "No date found on line matching: " . timestamp#regex()
         return 0
@@ -226,7 +226,7 @@ function! pages#openDate(isAutoHeader = v:false) " {{{
     endif
     call l:requested.readHere()
     if a:isAutoHeader
-        call pages#pagesHeader(l:requested)
+        call l:requested.insertHeader()
     endif
 endfunction
 
@@ -242,15 +242,6 @@ endfunction
 " }}}
 function! pages#startWriting() " {{{
     call text#insert_leading_annotation("Started typing")
-endfunction
-
-" }}}
-function! pages#pagesHeader(date) " {{{
-    if line("0")->match("Started typing") == -1
-        call pages#startWriting()
-        call setline(line("$"), ["" , timestamp#text("journal", a:date.time()) . ", CURRENT_LOCATION"])
-        normal G$
-    endif
 endfunction
 
 " }}}
@@ -300,8 +291,8 @@ if !exists("*pages#editPagesEntry")
         " handle empty q-args from a command invocation
         let l:time = empty(a:time) ? localtime() : a:time
         call WriteBufferIfWritable()
-        let l:requested = pages#factory().New(l:time)
-        let l:filenameDate = pages#factory().fromFilename()
+        let l:requested = pages#Entry().New(l:time)
+        let l:filenameDate = pages#Entry().fromFilename()
         if l:filenameDate.isRecent()
             " Handle new entry created after date change
             let l:previous = l:requested.before()
@@ -318,12 +309,15 @@ endif
 " }}}
 
 " Prototype for Pages Entry " {{{
-function! pages#factory()
+function! pages#Entry()
+    " Define Constants " {{{
     let s:oneDay = 24 * 60 * 60
     let s:dateformat = "%Y-%m-%d"
     let s:timeformat = "%H:%M:%S %Z"
-
+    " }}}
+    " Define Entry Prototype " {{{
     let s:obj = {}
+
     let s:obj["timeField"] = "time unset"
     let s:obj["dateField"] = "date unset"
 
@@ -383,10 +377,18 @@ function! pages#factory()
             " TODO: Check for "Finished typing" annotation and create newly indexed entry if it exists
             call self.appendTimestamp()
         else
-            call pages#pagesHeader(self)
+            call self.insertHeader()
             " write
         endif
         Writing
+    endfun
+
+    fun! s:obj.insertHeader() dict
+        if line("0")->match("Started typing") == -1
+            call pages#startWriting()
+            call setline(line("$"), ["" , timestamp#text("journal", self.time()) . ", CURRENT_LOCATION"])
+            normal G$
+        endif
     endfun
 
     fun! s:obj.before()
@@ -410,42 +412,39 @@ function! pages#factory()
     fun! s:obj.isRecent()
         return self.equalsDate(s:factory.today()) || self.equalsDate(s:factory.yesterday())
     endfun
+    " }}}
+    " Define Prototype Factory " {{{
+    let s:factory = {}
 
-   " Is there any point to a separate dict for the factory itself? Why not
-   " just return New()?  This could have additional methods added to it that
-   " are only available from the factory instance. Like what, though? How
-   " about `New()` itself?  In this case, does it even need to have any of the
-   " other methods?  Probably not. So that keeps a nice separation.
-   " let s:factory = copy(s:obj)
-   let s:factory = {}
-    " constructor
-    fun! s:factory.New(time) dict
+    " static functions
+    func! s:factory.dateFromCurrentFilename() dict
+        return expand("%:t:r")
+    endfunc
+
+    " instance constructors
+    func! s:factory.New(time) dict
         let newobj = copy(s:obj)
         call newobj.setTime(a:time)
         return newobj
-    endfun
+    endfunc
 
-    fun! s:factory.fromFilename() dict
-        let newobj = copy(s:obj)
-        let l:date = pages#currentEntryDate()
+    func! s:factory.fromFilename() dict
+        let l:date = self.dateFromCurrentFilename()
         " if filename is not actually a date, use now
         if match(l:date, timestamp#regex()) == -1
             let l:date = localtime()
         endif
-        call newobj.setTime(l:date)
-        return newobj
-    endfun
+        return self.New(l:date)
+    endfunc
 
-    fun! s:factory.today() dict
-        let newobj = copy(s:obj)
-        call newobj.setTime(localtime())
-        return newobj
-    endfun
+    func! s:factory.today() dict
+        return self.New(localtime())
+    endfunc
 
-    fun! s:factory.yesterday() dict
-        return s:factory.today().before()
-    endfun
-
+    func! s:factory.yesterday() dict
+        return self.today().before()
+    endfunc
+    " }}}
    return s:factory
 endfunction
 " }}}
