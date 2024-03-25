@@ -288,7 +288,7 @@ nmap <C-e>k <Cmd>exec ":lcd .." \| echo "cwd now: " . getcwd()<CR>
 map  <silent> <Leader>e <Plug>(easymotion-s)
 imap <silent> <Leader>e <Esc><Leader>e
 
-map <silent> gi <C-]>
+map <silent> gy <C-]>
 map <silent> ge <Plug>(easymotion-s)
 map <silent> g^ <Cmd>tabfirst<CR>
 map <silent> g$ <Cmd>tablast<CR>
