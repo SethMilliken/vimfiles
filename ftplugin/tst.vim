@@ -1234,6 +1234,8 @@ function! BalancedMove(destination) " {{{
     let original_line = line(".")
     let in_range = index(range(first_visible, last_visible), a:destination[0])
     " call text#showmessage("taskstack", [[first_visible, last_visible], a:destination, in_range, original_line])
+    " Set jump so we can easily return to the original line
+    normal m'
     call cursor(a:destination)
     if in_range == -1
         "let offset_from_top = original_line - first_visible
