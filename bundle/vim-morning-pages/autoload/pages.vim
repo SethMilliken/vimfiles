@@ -217,6 +217,8 @@ function! pages#openDate(isAutoHeader = v:false) " {{{
     endif
     " TODO: implement more sophisticated buffer selection and window
     " navigation for this
+    " Set jump so that we can come back here
+    normal m'
     if !pages#isPagesFile()
         " if only one window in tab, split first
         if tabpagewinnr(tabpagenr(), "$") == 1
