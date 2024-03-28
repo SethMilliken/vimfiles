@@ -34,7 +34,7 @@ function! TaskStackMappings() " {{{
     map <buffer> <silent> QA :call TaskstackMoveItemToProject("@active")<CR>
     nmap <buffer> <silent> Nn :call TaskstackNewProjectItem()<CR>
     nmap <buffer> <silent> Np :call TaskstackNewProjectItemFromPaste()<CR>
-    nmap <buffer> <silent> NP :call TaskstackNewItemFromPaste()<CR>
+    nmap <buffer> <silent> NP <Cmd>call tst#Project().fromWord().insertBelowProject()<CR>
     nmap <buffer> <silent> NN :call TaskstackNewItem()<CR>
     imap <buffer> <silent> NN <C-c>:call TaskstackNewItem()<CR>
     nmap <buffer> <silent> ZZ :call TaskstackHide()<CR>
@@ -962,6 +962,12 @@ function! TaskstackNewItemFromPaste() " {{{
 endfunction
 
 " }}}
+function! tst#newProject() " {{{
+    call TaskstackMain()
+    call TaskstackNewItemFromPasteAt(line("."))
+endfunction
+
+" }}}
 function! TaskstackSkipSticky() " {{{
     while match(getline('.'), '^[A-Z]\+') > -1
         normal j
@@ -1416,6 +1422,189 @@ function! NavigateToCursorCategory() " {{{
 endfunction
 
 "}}}
+
+" }}}
+
+" Project Prototype " {{{
+"
+" A Project is a container for Tasks
+" It can be a fold with a header beginning with "@"
+" Or it can be a file in a designated directory whose name
+" TODO: create tst project for writing this plugin
+" TODO: figure out how to properly document use of these prototypes and their
+" functions
+" TODO: create a function to find the Project with a name, looking first in
+" the current file, then in the designated directory, and offering to create
+" one or the other if neither exists
+" Example:
+"
+" @projectname {{{
+" - item one
+" - item two
+"
+" }}}
+"
+" Created 2024-03-25
+" Previous prototype effort was not well organized; this is an attempt to
+" reimplement much of that in a better way that is more consistent with other
+" prototype-based implementations
+
+funct! tst#Project() dict
+    " Define Prototype " {{{
+    let s:obj = {}
+    let s:obj["_name"] = "unset"
+
+    fun! s:obj.setName(name) dict
+        let self["_name"] = a:name
+        return self
+    endfun
+
+    fun! s:obj.name() dict
+        return self["_name"]
+    endfun
+
+    fun! s:obj.contents() dict
+        return [ "@" . self["_name"] . ' {{{', "", '}}}' ]
+    endfun
+
+    fun! s:obj.create_at(line) dict
+        "if self._isvalid()
+        "    call self.move_to(a:line)
+         " {{{else
+        "    let self['start'] = a:line + 1
+        mark '
+        call append(a:line, self.contents())
+        "end
+    endfun
+
+    fun! s:obj.insertBelowLine() dict
+        call self.create_at(line("."))
+    endfun
+
+    fun! s:obj.insertBelowProject() dict
+        call self.create_at(tst#Project().findEndFold())
+    endfun
+
+    " }}}
+    " Define Prototype Factory " {{{
+    let s:factory = {}
+
+    " static functions
+    func! s:factory.detectNameFromFold() dict
+        " TODO: implement
+        return "foo"
+    endfunc
+
+    func! s:factory.detectNameFromWord() dict
+        " TODO: do not stomp on quote register
+        normal wByW
+        return trim(getreg('"'), "@ ")
+    endfunc
+
+    func! s:factory.findEndFold() dict
+        let l:expression = "\\s*" . "}}}"
+        return search(l:expression, 'csw')
+    endfunc
+
+    " instance constructors
+    func! s:factory.New(name) dict
+        return copy(s:obj).setName(a:name)
+    endfunc
+
+    func! s:factory.fromFold() dict
+        let l:name = self.detectNameFromFold()
+        " if not in a fold, error
+        if len(l:name) == 0
+            " TODO: figure out what to do here
+            let l:name = "noname"
+        endif
+        return self.New(l:name)
+    endfunc
+
+    func! s:factory.fromWord() dict
+        let l:name = self.detectNameFromWord()
+        " if not on a word, error
+        if len(l:name) == 0
+            " TODO: figure out what to do here
+            let l:name = "noname"
+        endif
+        return self.New(l:name)
+    endfunc
+
+    " }}}
+   return s:factory
+endfunct
+
+" }}}
+" Fold Prototype " {{{
+"
+" A Fold container representing a vim fold
+" Used to navigate folds and manipulate their state
+"
+funct! tst#Fold()
+    " Define Prototype " {{{
+    let s:obj = {}
+    let s:obj["_start"] = 0
+    let s:obj["_end"] = 0
+
+    fun! s:obj.setStart(start) dict
+        let self["_start"] = a:start
+        return self
+    endfun
+
+    fun! s:obj.setEnd(end) dict
+        let self["_end"] = a:end
+        return self
+    endfun
+
+    fun! s:obj.contents() dict
+        return "unimplemented"
+    endfun
+
+    " }}}
+    " Define Prototype Factory " {{{
+    let s:factory = {}
+
+    " static functions
+    func! s:factory.detectHeader() dict
+        return "unimplemented"
+    endfunc
+
+    func! s:factory.findStartFold() dict
+        " TODO: add methods to determine markers
+        let l:expression = "\\s*" . "{{{"
+        return search(l:expression, 'bcsw')
+    endfunc
+
+    func! s:factory.findEndFold() dict
+        " TODO: add methods to determine markers
+        let l:expression = "\\s*" . "}}}"
+        return search(l:expression, 'csw')
+    endfunc
+
+    " instance constructors
+    func! s:factory.New(line) dict
+        " TODO: implement static methods to determine these
+        let l:start = 0
+        let l:end = 0
+        let newobj = copy(s:obj)
+        call newobj.setStart(l:start)
+        call newobj.setEnd(l:end)
+        return newobj
+    endfunc
+
+    " Finds fold containing current cursor location
+    func! s:factory.here() dict
+        return self.New(get("."))
+    endfunc
+
+    func! s:factory.there() dict
+        return self.New(get("."))
+    endfunc
+
+    " }}}
+   return s:factory
+endfunct
 
 " }}}
 
