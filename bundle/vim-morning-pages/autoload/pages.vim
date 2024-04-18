@@ -248,11 +248,15 @@ endfunction
 
 "}}}
 function! pages#nextDate() " {{{
-    normal G
-    let l:extdate = timestamp#dateFactory().extractFirstDateFromLine()
-    call setline(line('$'), [ getline('$'), l:extdate.next().date() . " " ])
-    normal G$
-    startinsert!
+    silent! call WhitespaceBGone()
+    let l:lastline = getline("$")
+    let l:extdate = timestamp#dateFactory().extractFirstDateFromLine(l:lastline)
+    let l:today = pages#Entry().today()
+    let l:date = empty(l:lastline) ? strftime("%Y-%m-01") : l:extdate.next().date()
+    if empty(l:lastline) || l:today.timeStart() > l:extdate.timeStart()
+      call setline(line('$'), [ getline('$') ]->filter('!empty(v:val)') + [ l:date . " " ])
+    end
+    normal G$0
 endfunction
 
 "}}}
