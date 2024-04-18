@@ -242,20 +242,6 @@ function! pages#openDate(isAutoHeader = v:false) " {{{
 endfunction
 
 "}}}
-function! pages#finishWriting() " {{{
-    call WhitespaceBGone()
-    normal G
-    call text#insert_trailing_annotation("Finished typing")
-    normal zz
-    write
-endfunction
-
-" }}}
-function! pages#startWriting() " {{{
-    call text#insert_leading_annotation("Started typing")
-endfunction
-
-" }}}
 function! pages#root() " {{{
     return g:pages_dir
 endfunction
@@ -389,15 +375,13 @@ function! pages#Entry()
             call self.appendTimestamp()
         else
             call self.insertHeader()
-            " write
         endif
         Writing
     endfun
 
     fun! s:obj.insertHeader() dict
-        if line("0")->match("Started typing") == -1
-            call pages#startWriting()
-            call setline(line("$"), ["" , timestamp#text("journal", self.time()) . ", CURRENT_LOCATION"])
+        if getline("1")->match("Started typing") == -1
+            call setline(1, [ getline("1") ]->filter('!empty(v:val)') + [ text#annotation("Started typing"), "" , timestamp#text("journal", localtime()) . ", CURRENT_LOCATION"])
             normal G$
         endif
     endfun
@@ -430,6 +414,14 @@ function! pages#Entry()
     " static functions
     func! s:factory.dateFromCurrentFilename() dict
         return expand("%:t:r")
+    endfunc
+
+    func! s:factory.FinishWriting() dict
+      call WhitespaceBGone()
+      normal G
+      call text#insert_trailing_annotation("Finished typing")
+      normal zz
+      write
     endfunc
 
     " instance constructors
