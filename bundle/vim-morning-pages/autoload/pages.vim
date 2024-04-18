@@ -410,6 +410,10 @@ function! pages#Entry()
         return self.date() == a:other.date()
     endfun
 
+    fun! s:obj.timeStart()
+        return strptime(s:dateformat, self.date())
+    endfun
+
     fun! s:obj.isRecent()
         return self.equalsDate(s:factory.today()) || self.equalsDate(s:factory.yesterday())
     endfun
