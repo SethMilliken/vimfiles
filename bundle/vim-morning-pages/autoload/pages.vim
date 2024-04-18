@@ -186,6 +186,16 @@ function! pages#tocToggle() " {{{
 endfunction
 
 "}}}
+function! pages#tocAppend() " {{{
+    call pages#bufferToggle(pages#tocName(), v:false)
+    normal G$
+    let l:last = getline("$")
+    let l:sep =  (getline(".") =~ "[0-9; ]\s*$") ? "" : ";"
+    call setline(line("$"), trim(l:last) .  l:sep . " ")
+    startinsert!
+endfunction
+
+"}}}
 function! pages#editToc(month) " {{{
     if a:month->matchstr(timestamp#regex()) == -1
         echo "Not a month"
