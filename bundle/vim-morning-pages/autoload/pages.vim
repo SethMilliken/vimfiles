@@ -279,6 +279,7 @@ if !exists("*pages#editCurrentIndex")
         " Otherwise eidt it here
         exec "edit " . l:current
         Writing
+        call pages#nextDate()
     endfunction
 endif
 
