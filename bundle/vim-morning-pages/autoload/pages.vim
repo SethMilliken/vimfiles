@@ -354,10 +354,15 @@ function! pages#Entry()
     endfun
 
     fun! s:obj.appendTimestamp() dict
+        call self.closeUndoBlock()
         silent! call WhitespaceBGone(v:true)
         call append("$", ["", strftime(s:timeformat), ""])
         normal Go
         startinsert
+    endfun
+
+    fun! s:obj.closeUndoBlock() dict
+        let &g:undolevels = &g:undolevels
     endfun
 
     fun! s:obj.readHere() dict
