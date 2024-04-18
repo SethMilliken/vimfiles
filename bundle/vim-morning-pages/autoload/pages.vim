@@ -108,33 +108,30 @@ function! pages#progressFileExists() " {{{
 endfunction
 
 "}}}
-function! pages#bufferToggle(bufname) " {{{
-    silent! call WhitespaceBGone()
-    if buflisted(glob(a:bufname))
-        call pages#bufferSwitch(a:bufname)
+function! pages#bufferToggle(bufname, toggle = v:true) " {{{
+  let l:curnr = bufnr("%")
+  let l:curname = expand("%:t")
+  silent! call WhitespaceBGone()
+  if l:curname == a:bufname
+    if a:toggle == v:true
+      let l:open_win = exists("g:orgnr") ? win_findbuf(bufnr(g:orgnr)) : []
+      if !empty(l:open_win)
+        call win_gotoid(l:open_win[0])
+      else
+        echo "No original buffer."
+      endif
+    endif
+  else
+    let g:orgnr = l:curnr
+    let l:open_win = win_findbuf(bufnr(a:bufname))
+    if !empty(l:open_win)
+      call win_gotoid(l:open_win[0])
     else
-        exec "tabedit " . a:bufname
-    end
-endfunction
-
-" }}}
-function! pages#bufferSwitch(bufname) " {{{
-    let l:origswb = &swb
-    set swb=usetab
-    let l:curnr = bufnr("%")
-    let l:curname = expand("%:t")
-    if l:curname == a:bufname
-        if exists("g:orgnr") && buflisted(g:orgnr)
-            exec "sbuffer " . g:orgnr
-        else
-            echo "No original buffer."
-        end
-    else
-        let g:orgnr = l:curnr
-        exec "sbuffer " . bufnr(a:bufname)
-    end
-    exec "set swb=" . l:origswb
-    call pages#rebalance()
+      exec "tabedit " . a:bufname
+      tabm -1
+    endif
+  endif
+  call pages#rebalance()
 endfunction
 
 " }}}
