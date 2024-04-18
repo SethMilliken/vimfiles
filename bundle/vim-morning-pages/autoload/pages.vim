@@ -36,6 +36,8 @@ function! pages#writingMappings() " {{{
         set showbreak=
         set cpo-=n
     end
+    map  <buffer> <silent> QQ         <Cmd>call pages#tocAppend()<CR>
+    imap <buffer> <silent> QQ         <Esc>QQ
     map  <buffer> <silent> ;;         <Cmd>call pages#pagesToggle()<CR>
     imap <buffer> <silent> ;;         <Esc>;;
     map  <buffer> <silent> ;n         <Cmd>call pages#notesToggle()<CR>
@@ -50,14 +52,14 @@ function! pages#writingMappings() " {{{
     imap <buffer> <silent> ;l         <Esc>;l
     map  <buffer> <silent> ;k         <Cmd>call pages#midlines()<CR>
     imap <buffer> <silent> ;k         <Esc>;k
-    map  <buffer> <silent> ;t         <Cmd>call pages#Entry().today().appendTimestamp()<CR>
-    imap <buffer> <silent> ;t         <Esc>;t
+    map  <buffer> <silent> ;f         <Cmd>call pages#Entry().today().appendTimestamp()<CR>
+    imap <buffer> <silent> ;f         <Esc>;f
     nmap <buffer> <silent> <Leader>wb <Cmd>Pages<CR>
     imap <buffer> <silent> <Leader>wb <Esc><Leader>wb
-    nmap <buffer> <silent> <Leader>wf <Cmd>call pages#finishWriting()<CR>
+    nmap <buffer> <silent> <Leader>wf <Cmd>call pages#Entry().FinishWriting()<CR>
     imap <buffer> <silent> <Leader>wf <Esc><Leader>wf
-    nmap <buffer> <silent> gi         <Cmd>call pages#openDate()<CR>
-    nmap <buffer> <silent> gI         <Cmd>call pages#openDate(v:true)<CR>
+    nmap <buffer> <silent> gy         <Cmd>call pages#openDate(v:true)<CR>
+    nmap <buffer> <silent> gY         <Cmd>call pages#openDate()<CR>
     " Available bindings: lh
 
     doau CharacterCount BufRead
