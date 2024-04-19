@@ -227,6 +227,10 @@ function! timestamp#dateFactory() "{{{
         return self["timeField"]
     endfun
 
+    fun! s:obj.timeStart() dict
+        return strptime(s:dateFormat, self.date())
+    endfun
+
     fun! s:obj.abb() dict
         return strftime("%c", self.time())->strpart(0,3)
     endfun
@@ -244,8 +248,8 @@ function! timestamp#dateFactory() "{{{
 
     let s:factory = {}
 
-    func! s:factory.extractFirstDateFromLine() dict
-        let l:extdate = self.extractAllDatesFromLine()->get(0)
+    func! s:factory.extractFirstDateFromLine(line = getline('.')) dict
+        let l:extdate = self.extractAllDatesFromLine(a:line)->get(0)
         return self.fromDateString(l:extdate)
     endfun
 
@@ -257,7 +261,7 @@ function! timestamp#dateFactory() "{{{
         return self.New(l:date_epoch)
     endfun
 
-    func! s:factory.extractAllDatesFromLine(text = getline('.'), match_idx = 0) dict
+    func! s:factory.extractAllDatesFromLine(text = getline('.')) dict
         return matchlist(a:text, s:dateRegexp)
     endfun
 

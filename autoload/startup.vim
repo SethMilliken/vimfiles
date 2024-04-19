@@ -150,8 +150,10 @@ function! startup#defaults()
         exe "vsplit " . self.vimhome() . "gvimrc | wincmd t | wincmd ="
         exe "tabnew " . self.vimhome() . "plugins.vim"
         exe "tabnew " . self.vimhome() . "autoload/startup.vim"
-        exe "tabnew " . self.vimhome() . "ftplugin/tst.vim"
-        exe "vsplit " . self.vimhome() . "ftdetect/tst.vim"
+        exe "tabnew " . self.vimhome() . "bundle/vim-taskstack/ftplugin/tst.vim"
+        exe "vsplit " . self.vimhome() . "bundle/vim-taskstack/ftdetect/tst.vim"
+        exe "tabnew " . self.vimhome() . "bundle/vim-taskstack/autoload/tst.vim"
+        exe "vsplit " . self.vimhome() . "autoload/testing.vim"
         tab help
         tabfirst
     endfun

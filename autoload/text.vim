@@ -29,9 +29,13 @@ function! text#append_line(text, direction) "{{{
 endfunction
 
 "}}}
+function! text#annotation(label) "{{{
+    return printf("[ %s: %s ]", a:label, timestamp#text("short"))
+endfunction
+
+"}}}
 function! text#insert_annotation(label, line) "{{{
-    let result = printf("[ %s: %s ]", a:label, timestamp#text("short"))
-    call append(a:line, result)
+    call append(a:line, text#annotation(a:label))
 endfunction
 
 "}}}
@@ -84,11 +88,16 @@ function! text#divider(string) "{{{
 endfunction
 
 "}}}
-function! text#showmessage(title, message) "{{{
-    if has('popupwin')
-        call popup_notification([a:title, a:message], {"pos": "topright", "col": winwidth(win_getid())})
+function! text#showmessage(...) "{{{
+    if type(a:000[0]) == v:t_list
+        let l:payload = a:000[0] + a:000[1:]
     else
-        echo a:title . ": " . a:message
+        let l:payload = a:000
+    endif
+    if has('popupwin')
+        call popup_notification(l:payload, {"pos": "topright", "col": winwidth(win_getid())})
+    else
+        echo l:payload->join("\n")
     endif
 endfunction
 
