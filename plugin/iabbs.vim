@@ -9,11 +9,17 @@ iabb hpmi HomePod mini
 iabb gh GitHub
 
 " Vimscript:
+iabb vns vim9script
+iabb vls legacy vimscript
+iabb vs vimscript
 iabb ia iabb
 iabb tsm call text#showmessage("HEADER", "MESSAGE")<Esc>5b
 
 " Personal:
 iabb Aipt AiPT
+iabb aig aipt.group
+iabb bbst bluebutterfly.studio
+iabb saig `@seth:aipt.group`
 iabb aoc Advent of Code
 iabb bph Back Porch Hammock
 iabb frp Front Porch Swing
