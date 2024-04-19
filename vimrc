@@ -2294,7 +2294,7 @@ function! RemotePath() " {{{
 endfunction
 
 " }}}
-let g:employer_name = "airship"
+let g:employer_name = "search"
 command! WorkScratch call WorkScratch()
 function! WorkScratch(path = RemotePath()) " {{{
     exe "e " . a:path . "work/" . g:employer_name . "/scratch.scratch"
