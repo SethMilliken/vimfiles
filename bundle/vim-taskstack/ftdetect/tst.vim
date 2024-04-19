@@ -1,1 +1,1 @@
-au BufNewFile,BufRead *.tst,*.scratch setfiletype tst
+au BufNewFile,BufRead *.tst,*.scratch set filetype=tst

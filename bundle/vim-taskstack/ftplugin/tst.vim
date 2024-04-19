@@ -66,6 +66,8 @@ function! TaskStackMappings() " {{{
     map <buffer> <silent> gy :call NavigateToCursorCategory()<CR>
 
     if mapcheck('<CR>', 'n') == "" | nmap <unique> <buffer> <silent> <CR> "tyiW/<C-r>t<CR>ztzv<C-l> | end
+
+    call text#showmessage('ftplugin','applied tst')
 endfunction
 
 "}}}
@@ -1426,10 +1428,11 @@ endfunction
 
 "}}}
 
+function! ProjectNew(name)
+    return s:tst9.ProjectNew(a:name)
+endfunction
 " }}}
 
-call TaskStackMappings()
-call text#showmessage('ftplugin','applied tst')
-
+TaskStack
 endif " Prevent multiple init
 " vim: set sw=4 ft=vim fdm=marker cms=\ \"\ %s  :

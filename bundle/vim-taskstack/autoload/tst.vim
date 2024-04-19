@@ -5,9 +5,11 @@ import autoload "logging.vim"
 var log = logging.Logger.new()
 
 # Constants {{{
-export const UNSET = "UNSET"
-export const FOLD_MARKER_OPEN  = split(&foldmarker, ",")[0]
-export const FOLD_MARKER_CLOSE = split(&foldmarker, ",")[1]
+const UNSET = "UNSET"
+const FOLD_MARKER_OPEN  = split(&foldmarker, ",")[0]
+const FOLD_MARKER_CLOSE = split(&foldmarker, ",")[1]
+const PROJECT_RAW_MATCH_PATTERN = '^@\zs\(\<[-_.+[:alnum:]]*\>\.*\s*\)\{,3}\ze\s\+'
+const CATEGORY_RAW_MATCH_PATTERN = '^\zs\([A-Z]\{3,}\s*\)\{1,3}\ze\s\+'
 
 # }}}
 # Base {{{
@@ -18,7 +20,7 @@ abstract class BaseClass
     # FIXME: vim 9.0 inexplicably locks up when extending an abstract class with a
     # class that has instance variables unless the abstract class has at least
     # one instance variable
-    this.fixme: number
+    #this.fixme: number
 
     def SetMark()
         mark '
@@ -50,7 +52,7 @@ endclass
 # Previous prototype effort was not well organized; this is an attempt to
 # reimplement much of that using vim9script classes
 export class Project extends BaseClass
-    this._name = UNSET
+    var _name = UNSET
 
     def new(this._name)
     enddef
@@ -91,11 +93,33 @@ export class Project extends BaseClass
 
     # static functions
     static def DetectNameFromCurrentFold(): string
-        return "TODO"
+        final containing_line = Project.LineOfContainingFold(line('.'))
+        if (containing_line > -1)
+            return Project.DetectHeaderName(containing_line)
+        endif
+        return UNSET
+    enddef
+
+    static def LineOfContainingFold(line: number): number
+        var i = line
+        while i > -1 && !Project.IsProjectHeaderLine(i)
+            i = i - 1
+        endwhile
+        return i
+    enddef
+
+    static def IsProjectHeaderLine(line: number): bool
+        final project = Project.DetectHeaderName(line)
+        return (len(project) > 0)
     enddef
 
     static def DetectNameFromCurrentWord(): string
         return trim(expand('<cWORD>'), "@")
+    enddef
+
+    static def DetectHeaderName(line: number): string
+        final project_name = matchstr(getline(line), '\(' .. PROJECT_RAW_MATCH_PATTERN .. '\|' .. CATEGORY_RAW_MATCH_PATTERN .. '\)' .. FOLD_MARKER_OPEN)
+        return project_name
     enddef
 
     static def FindEndFold(): number
@@ -112,8 +136,8 @@ endclass
 # Used to navigate folds and manipulate their state
 #
 export class Fold extends BaseClass
-    this._start = 0
-    this._end = 0
+    var _start = 0
+    var _end = 0
 
     def SetStart(startLine: number)
         this._start = startLine
@@ -164,5 +188,13 @@ endclass
 export def ProjectFromWord(): Project
     return Project.newFromWord()
 enddef
+
+export def ProjectNew(name: string): Project
+    return Project.new(name)
+enddef
+
+#var proj = Project.new("some")
+#log.Info($'{proj.GetName()}')
+#log.Info($'{Project.IsProjectHeaderLine(43)}')
 
 # }}}
