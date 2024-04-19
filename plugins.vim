@@ -1,3 +1,7 @@
+" built-in: " {{{
+packadd! editorconfig " see https://editorconfig.org/
+
+" }}}
 " vim-plug: " {{{
 "let g:plug_shallow = 0
 
@@ -65,7 +69,9 @@ Plug 'vimwiki/vimwiki'
 Plug 'weierophinney/paster.vim'
 Plug 'yurifury/hexHighlight' " 'brew install jsl'
 Plug '~/.vim/bundle/vim-morning-pages/'
+Plug '~/.vim/bundle/vim-taskstack/'
 Plug 'https://araxia.net/~/git/vim-daily-record.git'
+Plug 'junegunn/vader.vim'
 "Plug 'https://github.com/VimEz/Tmux.git'
 "Plug 'https://github.com/vim-scripts/calendar.vim--Matsumoto.git'
 "Plug 'https://github.com/vim-scripts/AnsiEsc.vim.git'
