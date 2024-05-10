@@ -391,7 +391,8 @@ function! pages#Entry()
 
     fun! s:obj.insertHeader() dict
         if getline("1")->match("Started typing") == -1
-            call setline(1, [ getline("1") ]->filter('!empty(v:val)') + [ text#annotation("Started typing"), "" , timestamp#text("journal", localtime()) . ", CURRENT_LOCATION"])
+            let l:stamp = self.isRecent() ? localtime() : self.time()
+            call setline(1, [ getline("1") ]->filter('!empty(v:val)') + [ text#annotation("Started typing"), "" , timestamp#text("journal", l:stamp) . ", CURRENT_LOCATION"])
             normal G$
         endif
     endfun
