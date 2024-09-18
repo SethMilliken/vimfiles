@@ -290,6 +290,8 @@ imap <silent> <Leader>e <Esc><Leader>e
 
 map <silent> gy <C-]>
 map <silent> ge <Plug>(easymotion-s)
+
+map <silent> g0 <Cmd>tabfirst<CR>
 map <silent> g^ <Cmd>tabfirst<CR>
 map <silent> g$ <Cmd>tablast<CR>
 map <silent> gb <Cmd>tabprev<CR>
