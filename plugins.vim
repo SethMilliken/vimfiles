@@ -1,5 +1,5 @@
 " built-in: " {{{
-packadd! editorconfig " see https://editorconfig.org/
+silent! packadd! editorconfig " see https://editorconfig.org/
 
 " }}}
 " vim-plug: " {{{
