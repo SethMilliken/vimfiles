@@ -3,19 +3,19 @@
 - Added notes
 - Corrected cms
 - Updated lots of mappings
-	= <F-1> to <Esc>
+  = <F-1> to <Esc>
 - Redid <C-L> refresh as function that does additional cleanups
 - Cmnline-window specific mappings
-	= <C-y> to execute line and return to cmnline-window
-	= ZZ to close cmdline-window
-	= :: shortcut to open cmdline-window
+  = <C-y> to execute line and return to cmnline-window
+  = ZZ to close cmdline-window
+  = :: shortcut to open cmdline-window
 - Adjusted "accordion mode"
 - Updated Timestamp() function and bindings
 - Redid <Cmd-#> and <Alt-#> switch tabs mapping definitions to use for loop
 - Updated FoldWrap() 
-	= uses &commentstring
-	= trims whitespace from closing marker
+  = uses &commentstring
+  = trims whitespace from closing marker
 - FoldInsert() uses FoldWrap
 - BufExplorer mappings
-	= <C-Tab> to enter BufExplorer
-	= <Tab> to select current buffer
+  = <C-Tab> to enter BufExplorer
+  = <Tab> to select current buffer
