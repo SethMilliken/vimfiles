@@ -631,6 +631,39 @@ function! startup#KSANTI()
 endfunction
 
 " }}}
+" Host WASTELAND " {{{
+function! startup#WASTELAND()
+    let s:obj = startup#defaults()
+
+    fun! s:obj.docroot() dict
+        return "/mnt/c/Users/seth/"
+    endfun
+
+    fun! s:obj.class() dict
+        return "wasteland"
+    endfun
+
+    fun! s:obj.dotfilesApp() dict
+        edit ~/vimfiles/vimrc
+    endfun
+
+    fun! s:obj.vimhome() dict
+        return "~/vimfiles/"
+    endfun
+
+    fun! s:obj.ahkApp() dict
+        exe "edit " . self.docroot() . "Documents/AutoHotkey/AutoHotkey.ahk"
+        exe "tabnew " . self.docroot() . "Documents/AutoHotkey/winmap.ahk"
+    endfun
+
+    fun! s:obj.TasksFile() dict
+        return self.docroot() . "todo/wintodo.tst"
+    endfun
+
+    return s:obj.New()
+endfunction
+
+" }}}
 " Host ROCKBOX " {{{
 function! startup#ROCKBOX()
     let s:obj = startup#defaults()
