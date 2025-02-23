@@ -145,6 +145,11 @@ function! pages#tocName() " {{{
 endfunction
 
 "}}}
+function! pages#tocDate() " {{{
+    return bufname("%")->substitute("-index.txt", "", "")
+endfunction
+
+"}}}
 function! pages#tocRegex() " {{{
     return '[0-9]\{4}-[0-9]\{2}-index.txt'
 endfunction
@@ -252,7 +257,7 @@ function! pages#nextDate() " {{{
     let l:lastline = getline("$")
     let l:extdate = timestamp#dateFactory().extractFirstDateFromLine(l:lastline)
     let l:today = pages#Entry().today()
-    let l:date = empty(l:lastline) ? strftime("%Y-%m-01") : l:extdate.next().date()
+    let l:date = empty(l:lastline) ? pages#tocDate() . "-01" : l:extdate.next().date()
     if empty(l:lastline) || l:today.timeStart() > l:extdate.timeStart()
       call setline(line('$'), [ getline('$') ]->filter('!empty(v:val)') + [ l:date . " " ])
     end
@@ -280,7 +285,7 @@ if !exists("*pages#editCurrentIndex")
     function! pages#editCurrentIndex() " {{{
         let l:current = g:pages_dir . pages#tocName()
         " Switch to tab if one is opened with this file being edited
-        " Otherwise eidt it here
+        " Otherwise edit it here
         exec "edit " . l:current
         Writing
         call pages#nextDate()
