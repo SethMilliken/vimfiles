@@ -1201,12 +1201,12 @@ augroup VolatileScratch | au!
     au BufRead *.scratch nmap <buffer> <silent> <C-y>g <Cmd>exec "set lines=999 columns=" . (g:gundo_width + &columns) \| :GundoToggle<CR>
     au BufRead *.scratch nmap <buffer> <silent> ZZ <Cmd>wa \| :call ScratchCopy()<CR>
     au BufRead *.scratch nmap <buffer> <silent> ZZ <Cmd>call ScratchCopy()<CR>
-    au BufRead *.scratch nmap <buffer> <silent> :w<CR> <Cmd>write \| :silent call ScratchCopy()<CR>
     au BufRead *.scratch imap <buffer> <silent> ZZ <Esc>ZZ
     au BufRead *.scratch vmap <buffer> <silent> ZZ <Esc>ZZ
     "au FocusLost *.scratch call ScratchCopy()
     au FocusGained *.scratch call ScratchPaste()
     au VimResized *.scratch call SetColorColumnBorder() | normal zz
+    "au BufWrite <Cmd>call ScratchCopy()<CR>
 augroup END
 
 augroup Vimput | au!
