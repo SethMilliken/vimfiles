@@ -1406,8 +1406,8 @@ endfunction
 function! NavigateToCursorCategory() " {{{
     let s:CATEGORY_REGEX = "@\\zs\\S\\{2,}"
     " first try to find the category under the cursor
-    normal bh
-    let l:category  = getline(".")->matchstr(s:CATEGORY_REGEX, getcurpos()[2])
+    normal wb
+    let l:category  = getline(".")->matchstr(s:CATEGORY_REGEX, getcurpos()[2] - 1)
     " otherwise try finding the first category in line
     if match("@" . l:category, s:CATEGORY_REGEX) == -1
         let l:category = getline(".")->matchstr(s:CATEGORY_REGEX)
