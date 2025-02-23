@@ -7,11 +7,13 @@ iabb qit 1/4-20
 iabb ahk AutoHotkey
 iabb hpmi HomePod mini
 iabb gh GitHub
+iabb yt YouTube
+iabb wo WebObjects
 
 " Vimscript:
 iabb vns vim9script
 iabb vls legacy vimscript
-iabb vs vimscript
+iabb vsc vimscript
 iabb ia iabb
 iabb tsm call text#showmessage("HEADER", "MESSAGE")<Esc>5b
 
@@ -30,11 +32,18 @@ iabb ono one-on-one
 iabb samlo samsara.local
 iabb worklo seth.local
 iabb wrt with respect to
+iabb -- —
+iabb caj Cup-A-Joe, Sutter & Leavenworth
+iabb tam _The Atlantic_
+iabb stod start-of-day routine
 
 " Gaming:
 iabb cp2 Cyberpunk 2077
 iabb rl Rocket League
+iabb sgw Sniper Ghost Warrior Contracts
 iabb mkm Murders at Karlov Manor
+iabb otj Outlaws of Thunder Junction
+iabb blb Bloomburrow
 
 " Typos:
 iabb fo of
@@ -86,6 +95,7 @@ iabb cz Corne-ish Zen
 iabb hrm home row mods
 iabb ked keymap-drawer
 iabb sbs self-build Swept
+iabb tyc Typeractive Choc
 iabb nn nice!nano
 iabb nv nice!view
 iabb uc USB-C
@@ -106,6 +116,7 @@ iabb heatb <C-g>u_<C-r>=CurrentReading("Heather")<CR>_
 iabb techb <C-g>u_<C-r>=CurrentReading("tech")<CR>_
 iabb selfb  <C-g>u_<C-r>=CurrentReading("self")<CR>_
 iabb zineb <C-g>u_<C-r>=CurrentReading("zine")<CR>_
+iabb anthb <C-g>u_<C-r>=CurrentReading("ANTH")<CR>_
 iabb mkhb  <C-g>u_<C-r>=CurrentReading("MK")<CR>_
 iabb selfw <C-g>u_<C-r>=CurrentWatching( 0)<CR>_
 iabb ergw <C-g>u_<C-r>=CurrentWatching("erg")<CR>_
