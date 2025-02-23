@@ -2318,7 +2318,7 @@ endfunction
 
 " }}}
 let g:readinglist = $HOME . "/sandbox/personal/lists/readinglist.txt"
-function! CurrentReading(entry = "B&B") " {{{
+function! CurrentReading(entry = "self") " {{{
     if typename(a:entry) == "number"
         let l:entry = ["B&B", "AiPT", "EBBC", "Heather", "tech", "self", "zine", "MK"][a:entry]
     else
