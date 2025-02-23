@@ -310,6 +310,7 @@ imap <silent> ;w  <Esc>;w
 map  <silent> ;qa :qal<CR>
 map  <silent> ;qy :qal!<CR>
 map  <silent> ;qq :q!<CR>
+map  <silent> ;p  <Cmd>call pages#openDate()<CR>
 
 " tmux copy/paste issue in mac os x workaround
 map <silent> <C-y>p <Cmd>call system("ssh localhost pbcopy", getreg('*')) \| call text#showmessage("vim", "Copied default register to pasteboard.")<CR>
