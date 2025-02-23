@@ -186,9 +186,11 @@ function! startup#defaults()
     fun s:obj.listsApp() dict
         exe 'edit'   self.docroot() . "lists/readinglist.txt"
         exe 'vsplit' self.docroot() . "lists/videolist.txt"
-        exe 'vsplit' self.docroot() . "lists/musiclist.txt"
-        exe 'tabe'   self.docroot() . "lists/wishlist.txt"
         wincmd t | wincmd =
+        exe 'tabe'   self.docroot() . "lists/musiclist.txt"
+        exe 'vsplit' self.docroot() . "lists/wishlist.txt"
+        wincmd t | wincmd =
+        1tabn
     endfun
 
     fun s:obj.todoApp() dict
@@ -677,6 +679,8 @@ function! startup#ARAXIA()
         exe 'vsplit' "todo/weechat.txt"
         wincmd h
         exe 'tabnew' "projects/guitar.txt"
+        exe 'vsplit' "projects/pr0.txt"
+        wincmd h
         1tabn
     endfun
 
