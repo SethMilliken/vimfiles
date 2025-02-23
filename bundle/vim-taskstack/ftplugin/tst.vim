@@ -52,7 +52,6 @@ function! TaskStackMappings() " {{{
     nmap <buffer> <silent> <C-p> :call TaskstackNextProject('b')<CR>
     nmap <buffer> <silent> <Tab> /^\([A-Z]\+ \)\{1,\}<CR>:nohls<CR>
     nmap <buffer> <silent> <S-Tab> ?^\([A-Z]\+ \)\{1,\}<CR>:nohls<CR>
-    nmap <buffer> <silent> :w<CR> :call WriteBufferIfWritable()<CR>
     nmap <buffer> <silent> <C-x>x :call TaskstackGroups()<CR>
     nmap <buffer> <silent> K :call TaskstackMoveToProjectPrompt()<CR>
     nmap <buffer> <silent> <C-y>k :call TaskstackMoveToProjectAutoDetect()<CR>
@@ -81,7 +80,8 @@ let s:notes_node_name     = "SCRATCH"
 
 augroup TaskStack | au!
     au BufNewFile,BufRead *.tst,*.scratch set syntax=txt
-    au WinLeave,FocusLost * nested silent! call WriteBufferIfWritable()
+    au WinLeave,FocusLost * doau BufWriteCmd *
+    au BufWriteCmd * call WriteBufferIfWritable()
     " Use <C-c> to avoid adding or updating a timestamp after editing.
     au InsertLeave tst :call timestamp#addOrUpdate("") " FIXME: External Dependency
 augroup END
