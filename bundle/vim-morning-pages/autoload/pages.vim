@@ -146,7 +146,7 @@ endfunction
 
 "}}}
 function! pages#tocDate() " {{{
-    return bufname("%")->substitute("-index.txt", "", "")
+    return bufname("%")->fnamemodify(":t")->substitute("-index.txt", "", "")
 endfunction
 
 "}}}
