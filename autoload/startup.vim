@@ -726,6 +726,83 @@ function! startup#ARAXIA()
         wincmd t | wincmd =
     endfun
 
+    fun! s:obj.sieveApp() dict
+        cd ~/sieve/
+
+        edit default.sieve
+        vsplit testing.sieve
+        vsplit common.sieve
+        split  address-validation.sieve
+        wincmd h
+        split  _post-process.sieve
+        wincmd h
+        split  _default.sieve
+        wincmd k
+
+        tabnew _move-by-priority.sieve
+        vsplit _strip-headers.sieve
+        vsplit _rewrite-headers.sieve
+        split  _flags.sieve
+        wincmd h
+        split  _deliverable.sieve
+        wincmd h
+        split  _undeliverable.sieve
+        wincmd k
+
+        tabnew lists.sieve
+        vsplit _handle-list.sieve
+        wincmd h
+
+        tabnew spam.sieve
+        vsplit impersonal.sieve
+        vsplit personal.sieve
+        split  nobounce.sieve
+        wincmd h
+        wincmd h
+
+        tabnew high-priority.sieve
+        vsplit moderate-priority.sieve
+        vsplit low-priority.sieve
+        wincmd h
+        wincmd h
+
+        tabnew attention.sieve
+        vsplit athens.sieve
+        vsplit oakland.sieve
+        split  political.sieve
+        split  media.sieve
+        wincmd h
+        split  employment.sieve
+        split  updates.sieve
+        wincmd h
+        split gaming.sieve
+        split health.sieve
+        wincmd k
+        wincmd k
+
+        tabnew receipts.sieve
+        vsplit finance.sieve
+        vsplit commerce.sieve
+        split  social.sieve
+        wincmd h
+        split support.sieve
+        wincmd h
+        wincmd h
+
+        wincmd t | wincmd =
+        1tabn
+    endfun
+
+    fun! s:obj.reprocessApp() dict
+        cd ~/sieve/
+        edit   _reprocess.sieve
+        vsplit reprocess
+        split  _strip-headers.sieve
+        wincmd h
+        tabnew _consolidate.sieve
+        1tabn
+    endfun
+
     return s:obj.New()
 endfunction
 
