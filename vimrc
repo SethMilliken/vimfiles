@@ -374,8 +374,9 @@ nmap <C-y>a <Cmd>AbbUp<CR>
 imap <C-y>a <Esc><C-y>a
 nmap <C-y>A <Cmd>vsplit ~/.vim/plugin/iabbs.vim<CR>
 imap <C-y>A <Esc><C-y>A
-nmap <C-y>d <Cmd>call InsertDreams()<CR>
-imap <C-y>d <Esc><C-y>d
+nmap <C-y>D <Cmd>call InsertDreams()<CR>
+imap <C-y>D <Esc><C-y>d
+"nmap <C-y>d <Cmd>call ToggleDigraph(0)<CR>
 nmap <C-y>m <Cmd>call MTGOListCleanup()<CR>
 imap <C-y>m <Esc><C-y>m
 nmap <C-y>r <Cmd>call EditCurrentReading()<CR>
@@ -954,6 +955,14 @@ function! AutoSpellCorrect(from_insert) " {{{
     normal 1z=
     call setbufvar('%', '&spell', l:spell_setting)
     call setpos('.', l:save_position)
+    if a:from_insert
+        startinsert!
+    endif
+endfunction
+
+" }}}
+function! ToggleDigraph(from_insert) " {{{
+    set digraph! digraph?
     if a:from_insert
         startinsert!
     endif
