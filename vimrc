@@ -1258,6 +1258,10 @@ augroup FuzzyFinder | au!
 augroup END
 
 " }}}
+" Ripgrep: " {{{
+command! -nargs=+ Rip :Rg <q-args>
+
+" }}}
 " Twitvim: " {{{
 augroup Twitvim
     au! FileType twitvim set nonu | :wincmd L | set rnu
