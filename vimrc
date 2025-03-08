@@ -253,6 +253,25 @@ imap , ,<C-g>u
 inoremap <C-w> <C-g>u<C-w>
 inoremap <C-u> <C-g>u<C-u>
 
+" Remap digraph
+inoremap <C-g>d <C-k>
+
+" Remap original <C-g> operations
+noremap <C-g>f <Cmd>:f<CR>
+noremap <C-g>F 9<C-g>
+
+" Better mnemonics for some useful digraphs
+digraph dd  176 " °  DEGREE SIGN
+digraph eu 8364 " €  EURO SIGN
+digraph dc 8451 " ℃  DEGREE CELSIUS
+digraph df 8457 " ℉  DEGREE FAHRENHEIT
+digraph om 8486 " Ω  OHM SIGN
+digraph mb 9837 " ♭  MUSIC FLAT SIGN
+digraph mn 9838 " ♮  MUSIC NATURAL SIGN
+digraph mx 9839 " ♯  MUSIC SHARP SIGN
+digraph n- 8211 " –  EN DASH
+digraph m- 8212 " —  EM DASH
+
 " c & p normalization
 nmap dD   <Cmd>normal! _y$"_dd<CR>
 vmap dD   <Cmd>normal! gvygv"_x<CR>
@@ -1777,9 +1796,9 @@ map  <silent> <C-e>t      <Cmd>FufTag<CR>
 map  <silent> <C-e>v      <Cmd>VimFiles<CR>
 map  <silent> <C-e>s      <Cmd>Scriptnames<CR>
 map  <silent> <C-e>w      <Cmd>WikiPages<CR>
-imap <silent> <C-e>m      <Esc><Cmd>call MTGNames('i')<CR>
-map  <silent> <C-e>m      <Cmd>call MTGNames('n')<CR>
 
+map  <silent> <C-g>m      <Cmd>call MTGNames('n')<CR>
+imap <silent> <C-g>m      <Esc><Cmd>call MTGNames('i')<CR>
 " }}}
 " FILE SEARCH: " {{{
 command! DotFiles call DotFiles()
