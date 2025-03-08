@@ -149,15 +149,26 @@ function! startup#defaults()
 
     fun! s:obj.vimApp() dict
         if self.virtual() | return | end
-        exe "edit " . self.vimhome() . "vimrc"
-        exe "vsplit " . self.vimhome() . "gvimrc | wincmd t | wincmd ="
-        exe "tabnew " . self.vimhome() . "plugins.vim"
-        exe "tabnew " . self.vimhome() . "autoload/startup.vim"
-        exe "tabnew " . self.vimhome() . "bundle/vim-taskstack/ftplugin/tst.vim"
-        exe "vsplit " . self.vimhome() . "bundle/vim-taskstack/ftdetect/tst.vim"
-        exe "tabnew " . self.vimhome() . "bundle/vim-taskstack/autoload/tst.vim"
-        exe "vsplit " . self.vimhome() . "autoload/testing.vim"
+        exe "cd " . self.vimhome()
+
+        edit vimrc
+        vsplit gvimrc | wincmd t | wincmd =
+
+        tabnew plugins.vim
+
+        tabnew autoload/startup.vim
+
+        tabnew bundle/vim-morning-pages/autoload/pages.vim
+        vsplit bundle/vim-daily-record/ftplugin/dairec.vim
+
+        tabnew bundle/vim-taskstack/ftplugin/tst.vim
+        vsplit bundle/vim-taskstack/ftdetect/tst.vim
+
+        tabnew bundle/vim-taskstack/autoload/tst.vim
+        vsplit autoload/testing.vim
+
         tab help
+
         tabfirst
     endfun
 
