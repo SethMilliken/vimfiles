@@ -308,12 +308,13 @@ map  <silent> <Leader>e <Plug>(easymotion-s)
 imap <silent> <Leader>e <Esc><Leader>e
 
 map <silent> gy <C-]>
+map <silent> go <C-]>
+map <silent> gb <C-o>
 map <silent> ge <Plug>(easymotion-s)
 
 map <silent> g0 <Cmd>tabfirst<CR>
 map <silent> g^ <Cmd>tabfirst<CR>
 map <silent> g$ <Cmd>tablast<CR>
-map <silent> gb <Cmd>tabprev<CR>
 map <silent> gA <Cmd>call EndAppend()<CR>
 function! EndAppend() " {{{
     normal GA
@@ -582,10 +583,17 @@ nmap <Down>    :<Down>
  "nmap <silent> <C-e>l <C-w>l:call AccordionMode()<CR><C-l>
  "nmap <silent> <C-e>- :call AccordionMode()<CR><C-l>
  "noremap <silent> <C-e><C-e> <C-e>
- "function! AccordionMode()
-     "set winminheight=0 winheight=9999
-     "set winheight=10 winminheight=10
- "endfunction
+ noremap <silent> <C-w>z <Cmd>call AccordionMode()<CR>
+ function! AccordionMode()
+     if &winminheight > 0
+         set winminheight=0 winminheight=0
+         set winheight=999 winwidth=999
+     else
+         set winminheight=1 winminwidth=1
+         set winheight=20 winwidth=20
+     endif
+     wincmd =
+ endfunction
 
 " }}}
 " Timestamps: " {{{
