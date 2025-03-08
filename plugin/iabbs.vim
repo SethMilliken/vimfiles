@@ -20,17 +20,23 @@ iabb tsm call text#showmessage("HEADER", "MESSAGE")<Esc>5b
 " Personal:
 iabb Aipt AiPT
 iabb aig aipt.group
+iabb axn araxia.net
 iabb bbst bluebutterfly.studio
 iabb saig `@seth:aipt.group`
 iabb aoc Advent of Code
 iabb bph Back Porch Hammock
+iabb ebbc East Bay Book Club
+iabb bab Books & Brews
+iabb alng Alameda Natural Grocery
 iabb frp Front Porch Swing
 iabb hnh half-and-half
-iabb lablo laboratory.local
+iabb lalo laboratory.local
+iabb walo wasteland.local
+iabb kslo ksanti.local
+iabb salo samsara.local
+iabb selo seth.local
 iabb od Office Desk
 iabb ono one-on-one
-iabb samlo samsara.local
-iabb worklo seth.local
 iabb wrt with respect to
 iabb -- —
 iabb caj Cup-A-Joe, Sutter & Leavenworth
