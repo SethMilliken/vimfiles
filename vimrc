@@ -2036,15 +2036,20 @@ endfunction
 " }}}
 
 " Binding for entering key-notation " {{{
-imap <C-e><C-k> <C-r>=KeyBindingElementSequencePrompted()<CR>
+imap <C-g>k <C-r>=KeyBindingElementSequencePrompted(0)<CR>
+imap <C-g><C-k> <C-r>=KeyBindingElementSequencePrompted(1)<CR>
 imap kj <Esc><Cmd>call keynotation#parse()<CR>a
 
-function! KeyBindingElementSequencePrompted() " {{{
+function! KeyBindingElementSequencePrompted(quoted) " {{{
     call inputsave()
     let input = input("Key: ")
     call inputrestore()
     let result = KeyBindingElementSequence(input)
-    return result
+    if a:quoted ==  1
+        return "`" . result . "`"
+    else
+        return result
+    endif
 endfunction
 
 " }}}
@@ -2057,7 +2062,6 @@ endfunction
 " }}}
 function! KeyBindingElement(input) " {{{
     let elements = split(a:input, " ")
-    let elements[0] = toupper(elements[0])
     if elements[0] == 'B'  | return "<Bar>"       | endif
     if elements[0] == 'E'  | return "<Esc>"       | endif
     if elements[0] == 'EN' | return "<End>"       | endif
