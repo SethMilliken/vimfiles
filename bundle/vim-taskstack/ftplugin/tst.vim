@@ -64,7 +64,7 @@ function! TaskStackMappings() " {{{
 
     map <buffer> <silent> gy :call NavigateToCursorCategory()<CR>
 
-    if mapcheck('<CR>', 'n') == "" | nmap <unique> <buffer> <silent> <CR> "tyiW/<C-r>t<CR>ztzv<C-l> | end
+    if mapcheck('<CR>', 'n') == "" | noremap <unique> <buffer> <silent> <CR> "tyiW/<C-r>t<CR>ztzv<C-l> | end
 
     call text#showmessage('ftplugin','applied tst')
 endfunction
