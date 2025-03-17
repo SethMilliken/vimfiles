@@ -1,15 +1,19 @@
-- add a new tip to ~/.vim/vimtips.txt
-- <Leader>b to browse output of a command
+- add a new tip to ~/.vim/vimtips.txt (<C-e><BS>)
+- <Leader>b or :Redir to browse output of a command
 - try something different
 - do something new
 - use i_<C-t> and i_<C-d> for insert mode indentation
-- use Command-Shift-/ for menu navigation
+- macOS: use Command-Shift-/ for menu navigation
 - use <C-m> for <CR>
-- use <C-h> for <Del>
-- use <C-c> for <Esc> (ish)
+- use <C-h> for <BS>
+- use <C-c> for <Esc> (without expanding abbreviations)
 - practice using i_C-[, i_C-o, and i_C-c
 - use scratch to quickly record notes to be moved elsewhere later
 - use taskstack for queuing up todo items even if you're not actively doing them now
 - sit up straight
-#- replace only visual selection with s/\%Vregex\%V/foo/g
+- replace only visual selection with s/\%Vregex\%V/foo/g
+- `<C-s>b` to wrap previous `<word>` in backticks and angle brackets
+- hope for the best
+- drink some water
+- Use `autocmd BufWrite <buffer> ...` as a one-time hook in a file editing function
 # vim:spell
