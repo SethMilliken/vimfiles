@@ -341,29 +341,22 @@ map  <silent> ;qq :q!<CR>
 map  <silent> ;p  <Cmd>call pages#openDate()<CR>
 
 " tmux copy/paste issue in mac os x workaround
-map <silent> <C-y>p <Cmd>call system("ssh localhost pbcopy", getreg('*')) \| call text#showmessage("vim", "Copied default register to pasteboard.")<CR>
+map <silent> <C-y>l <Cmd>call system("ssh localhost pbcopy", getreg('*')) \| call text#showmessage("vim", "Copied default register to pasteboard.")<CR>
 map <silent> <C-y>y <Cmd>call system("netcopy", getreg('"')) \| call text#showmessage("vim", "Copied unnamed register to local pasteboard.")<CR>
 
-vmap <silent> <C-p>y y<Esc>:call CopyToTmux()<CR>
-map  <silent> <C-p>y <Cmd>call CopyToTmux()<CR>
-map  <silent> <C-p>x <Cmd>call CutToTmux()<CR>
-map  <silent> <C-p>p <Cmd>call PasteFromTmux()<CR>
+map  <C-y>p <Cmd>call CopyFromTmux()<CR>"pp
+map  <C-y>P <Cmd>call CopyFromTmux()<CR>"pP
+vmap <C-y>x x<Cmd>call CopyToTmux()<CR>
+vmap  <C-y><C-y> y<Cmd>call CopyToTmux()<CR>
 
 function! CopyToTmux() range " {{{
-    silent! normal gv"py
-    call system("tmux set-buffer -b vim -- " . shellescape(getreg('p')))
-    call text#showmessage("vim", "Copied selection to tmux vim paste buffer.")
+    let @p = shellescape(getreg('"'))
+    call system("tmux set-buffer -b vim -- " . @p)
+    call text#showmessage("vim", "Set tmux vim paste buffer to:", @p)
 endfunction
 " }}}
-function! CutToTmux() range " {{{
-    silent! normal gv"px
-    call system("tmux set-buffer -b vim -- " . shellescape(getreg('p')))
-    call text#showmessage("vim", "Cut selection to tmux vim paste buffer.")
-endfunction
-" }}}
-function! PasteFromTmux() " {{{
+function! CopyFromTmux() " {{{
     let @p = system("tmux show-buffer -b vim")
-    normal "pp
 endfunction
 " }}}
 " }}}
