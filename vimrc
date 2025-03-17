@@ -1496,14 +1496,21 @@ augroup Vimwiki | au!
     au BufReadPost,BufNewFile *.wiki doau FileType tst
     au FileType vimwiki set foldlevel=99
     au FileType vimwiki set syntax=txt.vimwiki
-    au FileType vimwiki map <buffer> <silent> <C-p> ?=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
-    au FileType vimwiki map <buffer> <silent> <C-n> /=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
-    au FileType *vimwiki* nmap <buffer> <silent> <CR> :call VimwikiFollowLinkMod()<CR>
-    au FileType vimwiki nested map <buffer> <silent> <Leader>w2 <Esc>:w<CR>:VimwikiAll2HTML<CR><Esc>:echo "Saved wiki to HTML."<CR>
+    au FileType *vimwiki* call VimwikiMappings()
 augroup END
 
 " }}}
 " Vimwiki Configuration: " {{{
+function! VimwikiMappings()  " {{{
+    map <buffer> <silent> <C-p> ?=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
+    map <buffer> <silent> <C-n> /=\{1,} \(.*\) =\{1,}<CR>zt:nohlsearch<CR>
+    nmap <buffer> <silent> <CR> :call VimwikiFollowLinkMod()<CR>
+    map <buffer> <silent> <Leader>w2 <Esc>:w<CR>>:VimwikiAll2HTML<CR><Esc>:echo "Saved wiki to HTML."<CR>
+    map <buffer> <Leader>wm <Cmd>map <buffer><CR>
+    map <buffer> <Leader>wl <Cmd>call vimwiki#base#linkify()<CR>
+    map <buffer> <Leader>wt <Cmd>VimwikiTOC<CR>
+endfunction
+" }}}
 "" let wiki.nested_syntaxes = {'python': 'python'}
 let g:vimwiki_hl_headers = 1                " hilight header colors
 let g:vimwiki_hl_cb_checked = 1             " hilight todo item colors
