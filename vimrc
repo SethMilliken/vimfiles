@@ -1302,7 +1302,7 @@ augroup END
 " }}}
 " Vimscript: " {{{
 augroup Vimscript
-    au! FileType vim nmap <buffer> <silent> <C-y>t :echo "Generating vimscript tags..." \| exe ":silent !ctags -f ~/.vim/tags -R --languages=vim ~/.vim/autoload/*.vim ~/.vim/.vimrc ~/.vim/.gvimrc ~/.vim/bundle/*.vim" \| :echo "Generated vimscript tags."<CR>
+    au! FileType vim nmap <buffer> <silent> <C-y>t :echo "Generating vimscript tags..." \| exe ":silent !ctags -f ~/.vim/tags -R --languages=vim ~/.vim/autoload/*.vim ~/.vim/vimrc ~/.vim/gvimrc ~/.vim/bundle/*.vim" \| :echo "Generated vimscript tags."<CR>
 augroup END
 
 " }}}
