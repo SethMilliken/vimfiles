@@ -38,8 +38,9 @@ iabb selo seth.local
 iabb od Office Desk
 iabb ono one-on-one
 iabb wrt with respect to
-iabb -- —
+iabb m- —
 iabb caj Cup-A-Joe, Sutter & Leavenworth
+iabb ang Alameda Natural Grocery
 iabb tam _The Atlantic_
 iabb stod start-of-day routine
 
@@ -101,7 +102,7 @@ iabb cz Corne-ish Zen
 iabb hrm home row mods
 iabb ked keymap-drawer
 iabb sbs self-build Swept
-iabb tyc Typeractive Choc
+iabb tcs Typeractive Choc Scout
 iabb nn nice!nano
 iabb nv nice!view
 iabb uc USB-C
