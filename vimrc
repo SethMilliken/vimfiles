@@ -2468,4 +2468,5 @@ function! JoinLines() range
 endfunction
 
 " }}}
+call util#Init()
 " vim: set ft=vim fdm=marker cms=\ \"\ %s  :

@@ -22,6 +22,7 @@
 "
 " External Definitions: see fold contents " {{{
 
+function! util#Init() " {{{
 if !exists(":GrepPreviousMessageOutput")
     command! -nargs=? -complete=command GrepPreviousMessageOutput :call s:GrepPreviousMessageOutput(<f-args>)
 endif
@@ -31,17 +32,18 @@ endif
 if !exists(":RedirectedMessageOutputGrep")
     command! -nargs=* -complete=command RedirectedMessageOutputGrep :call s:GrepRedirectedMessageOutput(<f-args>)
 endif
-
+command! -nargs=? -complete=command Redir  :call s:RedirectMessageOutputFromCommand(<f-args>)
+endfunction
+" }}}
 " }}}
 
 "
 " TODO: take a function for postprocessing of redir buffer
 "
 " TODO: map this to something else.
-"map <buffer> K <Esc>:w<CR>:so %<CR>:Redir 
+"map <buffer> K <Esc>:w<CR>:so %<CR>:Redir
 
-command! -nargs=? -complete=command Redir  :call RedirectMessageOutputFromCommand(<f-args>)
-function! RedirectMessageOutputFromCommand(command) " {{{
+function! s:RedirectMessageOutputFromCommand(command) " {{{
     let quoted_command = "\"" . a:command . "\""
     echo "Redirecting output of: " . quoted_command
     let l:command_output = ""
@@ -49,7 +51,7 @@ function! RedirectMessageOutputFromCommand(command) " {{{
         silent execute a:command
     redir END
     if l:command_output != ""
-        vert new | set bt=nofile | set ft=vim | call setline("$", split(l:command_output, "\n")) | call append(0, ["Output from " .quoted_command . ":", ""])
+        tab new | set bt=nofile | set ft=vim | call setline("$", split(l:command_output, "\n")) | call append(0, ["Output from " .quoted_command . ":", ""])
         let &undolevels = &undolevels
     else
         echo "Command had no output: ". quoted_command
@@ -88,56 +90,56 @@ endfunction
 " }}}
 function! s:ValidHistoryLine(attempt) " {{{
     let l:index = a:attempt
-    if !exists("s:full_blacklist")
-        let s:full_blacklist = s:BlackList()
+    if !exists("s:full_blocklist")
+        let s:full_blocklist = s:Blocklist()
     endif
     if l:index == 0
         let l:index = 1
     end
     let l:command_candidate = histget("cmd", -l:index)
-    if match(l:command_candidate, s:full_blacklist) > -1
+    if match(l:command_candidate, s:full_blocklist) > -1
         return s:ValidHistoryLine(l:index + 1)
     endif
-    unlet s:full_blacklist
+    unlet s:full_blocklist
     return l:command_candidate
 endfunction
 
 " }}}
-function! s:BlackList() " {{{
-    let l:full_blacklist = s:DefaultBlackList()
-    if exists("g:extra_blacklist")
-        if type(g:extra_blacklist) == type([])
-            let l:full_blacklist = extend(g:extra_blacklist, l:full_blacklist)
+function! s:Blocklist() " {{{
+    let l:full_blocklist = s:DefaultBlocklist()
+    if exists("g:extra_blocklist")
+        if type(g:extra_blocklist) == type([])
+            let l:full_blocklist = extend(g:extra_blocklist, l:full_blocklist)
         else
-            echohl WarningMsg | echo "g:extra_blacklist" . " must be a List." | echohl None
+            echohl WarningMsg | echo "g:extra_blocklist" . " must be a List." | echohl None
         endif
     endif
-    return join(l:full_blacklist, "\\|")
+    return join(l:full_blocklist, "\\|")
 endfunction
 
 " }}}
-function! s:DefaultBlackList() " {{{
-    let l:blacklist =   [
-                        \ 'GrepRedirectedMessageOutput',
-                        \ 'ValidHistoryLine',
-                        \ 'RedirectMessageOutput',
-                        \ 'GrepMessages',
-                        \ '^so[urce]\{,4}',
-                        \ '^w[rite]\{,4}',
-                        \ '^h[elp]\{,3}',
-                        \ ]
-    return l:blacklist
+function! s:DefaultBlocklist() " {{{
+    let l:blocklist =   [                                 \
+                          'GrepRedirectedMessageOutput'   \
+                        , 'ValidHistoryLine'              \
+                        , 'RedirectMessageOutput'         \
+                        , 'GrepMessages'                  \
+                        , '^so[urce]\{,4}'                \
+                        , '^w[rite]\{,4}'                 \
+                        , '^h[elp]\{,3}'                  \
+                        ]
+    return l:blocklist
 endfunction
 
 " }}}
-" Blacklist Testing " {{{
+" Blocklist Testing " {{{
 python3 << COMMENT
 """
-unlet g:extra_blacklist
-let g:extra_blacklist = [
-                        \ ':e',
-                        \ '^w',
-                        \ ]
+unlet g:extra_blocklist
+let g:extra_blocklist = [      \
+                          ':e' \
+                        , '^w' \
+                          ]
 """
 COMMENT
 " }}}
@@ -320,7 +322,7 @@ function! s:Foo()
 endfunction
 
 function! s:Test1()
-    let g:extra_blacklist = [
+    let g:extra_blocklist = [
                             \ 'scriptnames',
                             \ ]
     call histadd("cmd", "set")
@@ -329,18 +331,18 @@ function! s:Test1()
 endfunction
 
 function! s:Test2()
-    let g:extra_blacklist = 2
+    let g:extra_blocklist = 2
     call histadd("cmd", "set")
     call GrepMessages("Options")
 endfunction
 
 function! s:ResetTest()
-    if exists("g:extra_blacklist")
-        unlet g:extra_blacklist
+    if exists("g:extra_blocklist")
+        unlet g:extra_blocklist
     endif
 endfunction
 
 
 " }}}
 
-" vim: fdm=marker fdl=0 cms=\ "\ %s
+" vim: fdm=marker cms=\ "\ %s
