@@ -2039,63 +2039,16 @@ augroup END
 command! -nargs=* Colloquy :call SendTextToFrontmostColloquyChat(<q-args>)
 function! SendTextToFrontmostColloquyChat(text)
     let message = escape(shellescape(a:text), '`')
-    silent! exe printf("!ssh samsara osascript ~/bin/%s_gateway.scpt %s", "colloquy", message)
+    silent! exe printf("!ssh samsara osascript ~/bin/%s_gateway.rcpt %s", "colloquy", message)
 endfunction
 
 " }}}
 
-" Binding for entering key-notation " {{{
-imap <C-g>k <C-r>=KeyBindingElementSequencePrompted(0)<CR>
-imap <C-g><C-k> <C-r>=KeyBindingElementSequencePrompted(1)<CR>
-imap kj <Esc><Cmd>call keynotation#parse()<CR>a
-
-function! KeyBindingElementSequencePrompted(quoted) " {{{
-    call inputsave()
-    let input = input("Key: ")
-    call inputrestore()
-    let result = KeyBindingElementSequence(input)
-    if a:quoted ==  1
-        return "`" . result . "`"
-    else
-        return result
-    endif
-endfunction
-
-" }}}
-function! KeyBindingElementSequence(input) " {{{
-    let elements = split(a:input, ",")
-    let result = join(map(elements, 'KeyBindingElement(v:val)'), '')
-    return result
-endfunction
-
-" }}}
-function! KeyBindingElement(input) " {{{
-    let elements = split(a:input, " ")
-    if elements[0] == 'B'  | return "<Bar>"       | endif
-    if elements[0] == 'E'  | return "<Esc>"       | endif
-    if elements[0] == 'EN' | return "<End>"       | endif
-    if elements[0] == 'H'  | return "<Left>"      | endif
-    if elements[0] == 'HO' | return "<Home>"      | endif
-    if elements[0] == 'J'  | return "<Right>"     | endif
-    if elements[0] == 'K'  | return "<Up>"        | endif
-    if elements[0] == 'L'  | return "<Down>"      | endif
-    if elements[0] == 'LE' | return "<Leader>"    | endif
-    if elements[0] == 'LT' | return "<lt>"        | endif
-    if elements[0] == 'PD' | return "<PageUp>"    | endif
-    if elements[0] == 'PU' | return "<PageDown>"  | endif
-    if elements[0] == 'SP' | return "<Space>"     | endif
-    if elements[0] == 'T'  | return "<Tab>"       | endif
-    if len(elements) == 3
-        let elements[1] = toupper(elements[1])
-    endif
-    if len(elements) > 0
-        return "<" . join(elements, "-") . ">"
-    else
-        return ""
-    endif
-endfunction
-
-" }}}
+" key-notation bindings " {{{
+let g:keynotation_invoke = '<C-s>k'
+map <C-g>k <Cmd>keynotation#PromptedSequence(0)<CR>
+imap <C-g>k <C-r>=keynotation#PromptedSequence(0)<CR>
+imap <C-g><C-k> <C-r>=keynotation#PromptedSequence(1)<CR>
 
 " }}}
 

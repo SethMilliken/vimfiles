@@ -2,9 +2,79 @@
 " Enter vim key-notation in a sparkup-y way.
 "
 if exists('g:keynotation_invoke')
-    exec "imap " . g:keynotation_invoke . " <Esc>:call keynotation#parse()<CR>"
+    exec "imap " . g:keynotation_invoke . " <Cmd>call keynotation#parse()<CR>"
 end
 
+" TODO: use visual markers to identify the input to parse()
+"vmap <C-g><C-s> <Cmd>call s:showMarkers()<CR>
+function! s:showMarkers()"{{{
+    call text#showmessage(string(getpos("'<")) .. string(getpos("'>")))
+endfunction
+
+"}}}
+function! keynotation#PromptedSequence(quoted) " {{{
+    call inputsave()
+    let input = input("Key: ")
+    call inputrestore()
+    let result = keynotation#Sequence(input)
+    if a:quoted ==  1
+        return "`" . result . "`"
+    else
+        return result
+    endif
+endfunction
+
+" }}}
+function! keynotation#Sequence(input) " {{{
+    let elements = a:input->split(',\|;')
+    let result = join(map(elements, 's:parseElement(v:val)'), '')
+    echo result
+    return result
+endfunction
+
+" }}}
+function! s:parseElement(input) " {{{
+    let atoms = a:input->split(' \|\.\|\-')
+    let text = atoms->map('s:lookup(v:val)')->join('-')
+    if len(text) > 0
+        let result = "<" . text . ">"
+        return result->substitute('\([csma]\)-', '\=toupper(submatch(1)) .. "-"', "g")
+    else
+        return ""
+    endif
+endfunction
+
+" }}}
+function! s:lookup(input) " {{{
+    let lookup_table = {
+                       \   'bar': "Bar"
+                       \ , 'esc': "Esc"
+                       \ , 'end': "End"
+                       \ , 'h': "Left"
+                       \ , 'home': "Home"
+                       \ , 'j': "Right"
+                       \ , 'k': "Up"
+                       \ , 'l': "Down"
+                       \ , 'lead': "Leader"
+                       \ , 'lt': "lt"
+                       \ , 'gt': "gt"
+                       \ , 'pu': "PageUp"
+                       \ , 'pd': "PageDown"
+                       \ , 'sp': "Space"
+                       \ , 'tab': "Tab"
+                       \ }
+    try
+        return lookup_table[a:input]
+    catch /E716/ " item not in table
+        return a:input
+    endtry
+endfunction
+
+" }}}
+
+" FIXME: this does not appear to work correctly
+
+" TODO: sample text and result
 let g:keynotation_sentinel_list = [";", ">"]
 function! keynotation#parse() " {{{
     exe "set undolevels=" . &undolevels
