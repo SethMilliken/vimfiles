@@ -316,6 +316,8 @@ imap <silent> <Leader>e <Esc><Leader>e
 map <silent> gy <C-]>
 map <silent> go <C-]>
 map <silent> gb <C-o>
+map <silent> gc <Cmd>cnext<CR>
+map <silent> gC <Cmd>cprev<CR>
 map <silent> ge <Plug>(easymotion-s)
 
 map <silent> g0 <Cmd>tabfirst<CR>
@@ -1682,8 +1684,6 @@ map <D-j>w <Esc>:exe 'cd' g:engage_dir \| pwd<CR>
 map <D-j>p <Esc>:cd ~/sandbox/personal/<CR>
 map <D-j>e <Esc>:GrepEngage<Space>
 map <D-j>n <Esc>:GrepWork<Space>
-map <Space>k <Esc>:cclose \| cnext<CR>
-map <Space>j <Esc>:cclose \| cprev<CR>
 command! -nargs=1 GrepEngage call GrepEngage(<f-args>)
 function! GrepEngage(string)
     echo "Searching Engage codebase for \"" . a:string . "\"...."
