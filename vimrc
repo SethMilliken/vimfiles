@@ -1283,6 +1283,8 @@ augroup END
 " }}}
 " Ripgrep: " {{{
 command! -nargs=+ Rip :Rg <q-args>
+map <C-e><C-s> :Rip<Space>
+imap <C-e><C-s> <Esc>:Rip<Space>
 
 " }}}
 " Twitvim: " {{{
