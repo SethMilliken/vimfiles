@@ -726,6 +726,14 @@ function! startup#ARAXIA()
         wincmd t | wincmd =
     endfun
 
+    fun! s:obj.muttApp() dict
+        cd ~
+        edit ~/.muttrc
+        tabnew ~/.mutt/mailcap
+        tabnew ~/.mutt/aliases
+        1tabn
+    endfun
+
     fun! s:obj.sieveApp() dict
         cd ~/sieve/
 
