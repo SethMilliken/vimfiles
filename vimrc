@@ -1011,16 +1011,28 @@ function! Reset() " {{{
 endfunction
 
 " }}}
+map <C-e><BS> <Cmd>call EditVimHints()<CR>
+if !exists("g:hint_filename")
+    let g:hint_filename = g:vimhome . "/vimtips.txt"
+endif
+function! EditVimHints() " {{{
+    exe "tabe " . g:hint_filename
+    tabm -1
+    autocmd BufWrite <buffer> call LoadHintList()
+endfunction
+
+" }}}
+function! LoadHintList() " {{{
+    let g:random_hint_list = readfile(g:hint_filename, '')
+    let comment_character = '#'
+    call filter(g:random_hint_list, 'strpart(v:val, 0, 1) != comment_character')
+endfunction
+
+" }}}
 function! RandomHint() " {{{
-    let comment_character = "#"
     try
         if !exists("g:random_hint_list")
-            if !exists("g:hint_filename")
-                let g:hint_filename = $HOME . "/.vim/vimtips.txt"
-            endif
-            let g:random_hint_list = readfile(g:hint_filename, '')
-            let comment_character = '#'
-            call filter(g:random_hint_list, 'strpart(v:val, 0, 1) != comment_character')
+            call LoadHintList()
         endif
         let hint_count = len(g:random_hint_list)
         if has("python") || has("python3")
