@@ -2455,13 +2455,21 @@ endfunction
 
 "set termwinkey=<C-j>
 
-imap <C-s>` <Esc><Cmd>call SurroundPreviousWordWithBacktickAngleBrackets()<CR>
+imap <C-s>` <Cmd>call SurroundPreviousWordWithBacktickAngleBrackets()<CR>
+imap <C-s>u <Cmd>call SurroundPreviousWordWithUnderscores()<CR>
+imap <C-s><C-b> <C-s>`
 function! SurroundPreviousWordWithBacktickAngleBrackets()
+    call SurroundPreviousWordWith("`<",">`")
+endfunction
+function! SurroundPreviousWordWithUnderscores()
+    call SurroundPreviousWordWith("_","_")
+endfunction
+function! SurroundPreviousWordWith(prefix,suffix)
   let save_cursor = getpos(".")
   normal B
-  call InsertTextAtCursor("`<")
+  call InsertTextAtCursor(a:prefix)
   normal E
-  call InsertTextAfterCursor(">`")
+  call InsertTextAfterCursor(a:suffix)
   call setpos(".", save_cursor)
   normal 4l
   startinsert!
@@ -2477,7 +2485,7 @@ function! InsertTextAfterCursor(text)
   let cur_line_num = line('.')
   let cur_col_num = col('.')
   let orig_line = getline('.')
-  let modified_line = strpart(orig_line, 0, cur_col_num + 1) . a:text . strpart(orig_line, cur_col_num + 1)
+  let modified_line = strpart(orig_line, 0, cur_col_num) . a:text . strpart(orig_line, cur_col_num)
   call setline(cur_line_num, modified_line)
 endfunction
 
