@@ -375,17 +375,18 @@ nmap <C-y>a <Cmd>AbbUp<CR>
 imap <C-y>a <Esc><C-y>a
 nmap <C-y>A <Cmd>vsplit ~/.vim/plugin/iabbs.vim<CR>
 imap <C-y>A <Esc><C-y>A
+nmap <C-y>w <Cmd>call CursorRestore(funcref("WhitespaceBGone"))<CR>
+imap <C-y>w <Esc><C-y>w
+
+"TODO: migrate to <C-e> prefix?
 nmap <C-y>D <Cmd>call InsertDreams()<CR>
 imap <C-y>D <Esc><C-y>d
-"nmap <C-y>d <Cmd>call ToggleDigraph(0)<CR>
 nmap <C-y>m <Cmd>call MTGOListCleanup()<CR>
 imap <C-y>m <Esc><C-y>m
 nmap <C-y>r <Cmd>call EditCurrentReading()<CR>
 imap <C-y>r <Esc><C-y>r
 nmap <C-y>s <Cmd>call EditCurrentWatching()<CR>
 imap <C-y>s <Esc><C-y>s
-nmap <C-y>w <Cmd>call CursorRestore(funcref("WhitespaceBGone"))<CR>
-imap <C-y>w <Esc><C-y>w
 
 function! IsBufferWriteable(modified_ignored = v:false) " {{{
     return (a:modified_ignored || &modified)
@@ -559,7 +560,7 @@ augroup cmdline-window
     au CmdwinEnter * inoremap <buffer> <CR> <Esc>0"ty$<C-c><C-c>:<C-r>t<CR>
     " Quickly close cmdline-window
     au CmdwinEnter * map <buffer> ZZ <C-c><C-c>
-    au CmdwinEnter * inoremap <buffer> ZZ <Esc>ZZ
+    au CmdwinEnter * imap <buffer> ZZ <Esc>ZZ
 augroup END
 
 " }}}
@@ -603,11 +604,11 @@ let g:timestamp_default_annotation = ""
 let g:timestamp_matchstring = '[0-9]\{4}-[0-9]\{2}-[0-9]\{2} [0-9:]\{8} [A-Z]\{3}'
 let g:timestamp_annotated_matchstring = escape(g:timestamp_matchstring . '\s*\({\(\w\+\s*\)*}\)*', '\')
 " Note: setting g:auto_timestamp_bypass will deactivate autotimestamp in contexts they would normally be active
-nmap <silent> <C-y><C-u> <Cmd>call timestamp#autoUpdateToggle()<CR>
-nmap <silent> <C-y>Y     <Cmd>call timestamp#addOrUpdate("", "force")<CR>
-nmap <silent> <C-y><C-y> <Cmd>call timestamp#addOrUpdate("")<CR>
-nmap <silent> <C-y><C-t> <Cmd>call timestamp#addOrUpdateSolicitingAnnotation()<CR>
-nmap <silent> <C-y><C-x> <Cmd>call timestamp#remove()<CR>
+nmap <silent> <C-e><C-u> <Cmd>call timestamp#autoUpdateToggle()<CR>
+nmap <silent> <C-e>Y     <Cmd>call timestamp#addOrUpdate("", "force")<CR>
+nmap <silent> <C-e><C-y> <Cmd>call timestamp#addOrUpdate("")<CR>
+nmap <silent> <C-e><C-t> <Cmd>call timestamp#addOrUpdateSolicitingAnnotation()<CR>
+nmap <silent> <C-e><C-x> <Cmd>call timestamp#remove()<CR>
 nmap <silent> <Leader>td <Cmd>call timestamp#insert("date")<CR>
 imap <silent> <Leader>td <C-r>=timestamp#text("date")<CR>
 nmap <silent> <Leader>ty <Cmd>call timestamp#insert("date", timestamp#yesterday())<CR>
@@ -943,7 +944,7 @@ end
 
 " }}}
 noremap <C-k> <Cmd>call AutoSpellCorrect(0)<CR>
-imap    <C-k> <Esc><Cmd>call AutoSpellCorrect(1)<CR>
+imap    <C-k> <Cmd>call AutoSpellCorrect(1)<CR>
 function! AutoSpellCorrect(from_insert) " {{{
     set spelllang=en,mtg
     set dictionary=spell
@@ -1356,7 +1357,7 @@ augroup END
 
 " }}}
 " Gundo: " {{{
-nnoremap <C-y>g :GundoToggle<CR>
+nnoremap <C-y>g <Cmd>GundoToggle<CR>
 
 " }}}
 " Git Commit: " {{{
@@ -1818,7 +1819,7 @@ map  <silent> <C-e>s      <Cmd>Scriptnames<CR>
 map  <silent> <C-e>w      <Cmd>WikiPages<CR>
 
 map  <silent> <C-g>m      <Cmd>call MTGNames('n')<CR>
-imap <silent> <C-g>m      <Esc><Cmd>call MTGNames('i')<CR>
+imap <silent> <C-g>m      <Cmd>call MTGNames('i')<CR>
 " }}}
 " FILE SEARCH: " {{{
 command! DotFiles call DotFiles()
