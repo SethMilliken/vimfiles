@@ -1376,7 +1376,8 @@ nnoremap <C-y>g <Cmd>GundoToggle<CR>
 " }}}
 " Git Commit: " {{{
 augroup Git | au!
-    au BufNewFile,BufRead *.gitcommit setf gitcommit
+    au BufNewFile,BufRead gitcommit setf gitcommit
+    au BufNewFile,BufRead COMMIT_EDITMSG normal gg
     au FileType gitcommit nnoremap <buffer> <silent> <C-n> :DiffGitCached<CR>
     au FileType gitcommit\|gitconfig set nolist ts=4 sts=4 sw=4 | wincmd L
     au FileType gitconfig set noet | wincmd L
