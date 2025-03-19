@@ -16,6 +16,7 @@
 
 "}}}
 "
+command! -nargs=1 Vap :call startup#handler().<args>
 " Create proper object based on hostname. " {{{
 function! startup#handler()
     let l:host = startup#host()
