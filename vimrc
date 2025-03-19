@@ -57,12 +57,6 @@ function! IsNexus() " {{{
 endfunction
 
 "}}}
-" CtrlP: {{{
-let g:ctrlp_open_new_file = 'tj'
-let g:ctrlp_open_multiple_files = '2tj'
-let g:ctrlp_tabpage_position = 'al'
-
-"}}}
 " Neovim: {{{
 " Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
 
@@ -1190,6 +1184,12 @@ if &verbose > 0
 endif
 
 " }}}
+" CtrlP: {{{
+let g:ctrlp_open_new_file = 'tj'
+let g:ctrlp_open_multiple_files = '2tj'
+let g:ctrlp_tabpage_position = 'al'
+
+"}}}
 " Scratch: " {{{
 let g:volatile_scratch_columns = 100
 let g:volatile_scratch_lines = 10
