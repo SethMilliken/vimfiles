@@ -7,6 +7,7 @@ silent! packadd! editorconfig " see https://editorconfig.org/
 
 call plug#begin(g:vimhome . '/bundle/')
 "Plug 'glacambre/firenvim'
+Plug 'https://github.com/mattn/emmet-vim.git'
 Plug 'https://github.com/easymotion/vim-easymotion.git'
 Plug 'junegunn/vim-easy-align'
 Plug 'git@github.com:SethMilliken/gundo.vim.git'
