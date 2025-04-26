@@ -394,6 +394,17 @@ function! startup#defaults()
         tabfirst
     endfun
 
+    fun! s:obj.jubblyApp() dict
+        exe 'cd ' . self.coderoot() . "jubbly"
+        edit    index.html
+        vsplit  card.html
+        tabedit projects/tasks/card.html
+        vsplit  projects/tasks/card.sccs
+        vsplit  projects/tasks/cards.csv
+        tabedit TODO.tst
+        tabfirst
+    endfun
+
     fun! s:obj.zmkApp() dict
         exe 'cd ' . self.coderoot() . "zmk-config"
         edit    config/shared.dtsi
