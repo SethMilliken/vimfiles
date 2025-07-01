@@ -89,13 +89,26 @@ endfunction
 
 "}}}
 function! text#showmessage(...) "{{{
+    call text#showpopup({}, a:000)
+endfunction
+
+"}}}
+function! text#debug(...) "{{{
+    let default_options = { "time": 30000 }
+    call text#showpopup(default_options, a:000)
+endfunction
+
+"}}}
+function! text#showpopup(options, ...) "{{{
+    let default_options = {"pos": "topright", "col": winwidth(win_getid())}
+    let merged_options =  default_options->extend(a:options)
     if type(a:000[0]) == v:t_list
         let l:payload = a:000[0] + a:000[1:]
     else
         let l:payload = a:000
     endif
     if has('popupwin')
-        call popup_notification(l:payload, {"pos": "topright", "col": winwidth(win_getid())})
+        call popup_notification(l:payload, merged_options)
     else
         echo l:payload->join("\n")
     endif
