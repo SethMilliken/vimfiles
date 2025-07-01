@@ -39,14 +39,17 @@ iabb od Office Desk
 iabb ono one-on-one
 iabb wrt with respect to
 iabb m- —
+iabb n- –
 iabb caj Cup-A-Joe, Sutter & Leavenworth
 iabb ang Alameda Natural Grocery
 iabb tam _The Atlantic_
 iabb stod start-of-day routine
+iabb wot _The Wheel of Time_
 
 " Gaming:
 iabb cp2 Cyberpunk 2077
 iabb rl Rocket League
+iabb cfg Card-Forge
 iabb sgw Sniper Ghost Warrior Contracts
 iabb mkm Murders at Karlov Manor
 iabb otj Outlaws of Thunder Junction
