@@ -27,6 +27,10 @@ iabb aoc Advent of Code
 iabb bph Back Porch Hammock
 iabb ebbc East Bay Book Club
 iabb bab Books & Brews
+iabb bimp book impressions:
+iabb simp show impressions:
+iabb mimp movie impressions:
+iabb gimp game impressions:
 iabb alng Alameda Natural Grocery
 iabb frp Front Porch Swing
 iabb hnh half-and-half
