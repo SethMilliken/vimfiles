@@ -471,6 +471,7 @@ nmap <silent> <Leader>c <Cmd>call ScratchBuffer("scratch")<CR>
 
 " }}}
 " Open URIs: " {{{
+nmap <silent> <Leader>b  <Cmd>call HandleBook()<CR>
 nmap <silent> <Leader>/  <Cmd>call HandleURI()<CR>
 nmap <silent> <Leader>ji <Cmd>call HandleJIRA()<CR>
 
@@ -1060,6 +1061,21 @@ function! RandomHint() " {{{
 endfunction
 
 " }}}
+function! HandleBook() " {{{
+  let l:base_url= "https://www.goodreads.com/search?q="
+  let l:matches = matchlist(getline("."), '[-+=ox!] \([-0-9A-z'':., ]*\)[ ]\{1,}\(<\([A-z''., ]*\)>\)\{,1}\(.*\)')
+  call text#debug(string(l:matches))
+  let l:book = l:matches->get(1, '')
+  let l:author = l:matches->get(3, '')
+  let l:uri = l:base_url . tlib#url#Encode(l:book)
+  if len(l:author) > 0
+    let l:uri = l:uri . tlib#url#Encode(" " . l:author)
+  endif
+  call OpenURI(l:uri, "Book", "Book")
+  call CopyUnnamedToLocal()
+endfunction
+
+" }}}
 function! HandleJIRA() " {{{
   " Keep in sync with ~/.vim/after/syntax/txt.vim
   let l:expression = '\%([A-Z]\{2,}\)[:# -]\+[0-9]\+'
@@ -1084,6 +1100,8 @@ function! OpenURI(uri, success, failure) " {{{
   if a:uri != ""
       if has("win32")
           exec "silent !start rundll32.exe url.dll,FileProtocolHandler " . a:uri
+      elseif hostname() == "araxia.net"
+          call text#showmessage("OpenURI", "URI from araxia.net: " . a:uri)
       else
           if len(matchstr(a:uri, '.*docs.google.com.*')) > 0
               exec "silent !open -b com.google.Chrome \"" . a:uri . "\""
@@ -1096,7 +1114,7 @@ function! OpenURI(uri, success, failure) " {{{
               endif
           endif
       endif
-      let @+ = a:uri
+      let @" = a:uri
       echomsg "Opened " . a:success  . ": " . a:uri
   else
       echomsg "No " . a:failure . " found in line."
