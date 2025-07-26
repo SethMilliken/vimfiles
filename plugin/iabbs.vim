@@ -115,34 +115,21 @@ iabb nv nice!view
 iabb uc USB-C
 
 " Lists:
-iabb cread <C-g>u_<C-r>=CurrentReading("B&B")<CR>_
-iabb cread1 <C-g>u_<C-r>=CurrentReading("AiPT")<CR>_
-iabb cread2 <C-g>u_<C-r>=CurrentReading("EBBC")<CR>_
-iabb cread3 <C-g>u_<C-r>=CurrentReading("Heather")<CR>_
-iabb cread4 <C-g>u_<C-r>=CurrentReading("Tech")<CR>_
-iabb cread5 <C-g>u_<C-r>=CurrentReading("self")<CR>_
-iabb cread6 <C-g>u_<C-r>=CurrentReading("mag")<CR>_
-iabb cread7 <C-g>u_<C-r>=CurrentReading("MK")<CR>_
-iabb babb  <C-g>u_<C-r>=CurrentReading("B&B")<CR>_
-iabb aiptb <C-g>u_<C-r>=CurrentReading("AiPT")<CR>_
-iabb ebbcb <C-g>u_<C-r>=CurrentReading("EBBC")<CR>_
-iabb heatb <C-g>u_<C-r>=CurrentReading("Heather")<CR>_
-iabb techb <C-g>u_<C-r>=CurrentReading("tech")<CR>_
-iabb selfb  <C-g>u_<C-r>=CurrentReading("self")<CR>_
-iabb zineb <C-g>u_<C-r>=CurrentReading("zine")<CR>_
-iabb anthb <C-g>u_<C-r>=CurrentReading("ANTH")<CR>_
-iabb mkhb  <C-g>u_<C-r>=CurrentReading("MK")<CR>_
-iabb selfw <C-g>u_<C-r>=CurrentWatching( 0)<CR>_
-iabb ergw <C-g>u_<C-r>=CurrentWatching("erg")<CR>_
+iabb cread  <C-g>u_<C-r>=CurrentReading(0)<CR>_
 iabb cwatch <C-g>u_<C-r>=CurrentWatching(0)<CR>_
-iabb cwatch1 <C-g>u_<C-r>=CurrentWatching(1)<CR>_
-iabb cwatch2 <C-g>u_<C-r>=CurrentWatching(2)<CR>_
-iabb cwatch3 <C-g>u_<C-r>=CurrentWatching(3)<CR>_
-iabb cwatch4 <C-g>u_<C-r>=CurrentWatching(4)<CR>_
-iabb cwatch5 <C-g>u_<C-r>=CurrentWatching(4)<CR>_
-iabb cwatch6 <C-g>u_<C-r>=CurrentWatching(6)<CR>_
-iabb cwatch7 <C-g>u_<C-r>=CurrentWatching(7)<CR>_
-iabb cwatch8 <C-g>u_<C-r>=CurrentWatching(8)<CR>_
-iabb cwatch9 <C-g>u_<C-r>=CurrentWatching(9)<CR>_
+iabb rbab   <C-g>u_<C-r>=CurrentReading("B&B")<CR>_
+iabb raipt  <C-g>u_<C-r>=CurrentReading("AiPT")<CR>_
+iabb rebbc  <C-g>u_<C-r>=CurrentReading("EBBC")<CR>_
+iabb rheat  <C-g>u_<C-r>=CurrentReading("Heather")<CR>_
+iabb rtech  <C-g>u_<C-r>=CurrentReading("tech")<CR>_
+iabb rself  <C-g>u_<C-r>=CurrentReading("self")<CR>_
+iabb raudi  <C-g>u_<C-r>=CurrentReading("audit")<CR>_
+iabb rzine  <C-g>u_<C-r>=CurrentReading("zine")<CR>_
+iabb ranth  <C-g>u_<C-r>=CurrentReading("ANTH")<CR>_
+iabb rmk    <C-g>u_<C-r>=CurrentReading("MK")<CR>_
+iabb wself  <C-g>u_<C-r>=CurrentWatching("self")<CR>_
+iabb werg   <C-g>u_<C-r>=CurrentWatching("erg")<CR>_
+iabb wlaugh <C-g>u_<C-r>=CurrentWatching("laugh")<CR>_
+iabb wveg   <C-g>u_<C-r>=CurrentWatching("veg")<CR>_
 
 " }}}
