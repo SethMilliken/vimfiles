@@ -184,7 +184,9 @@ export class Fold extends BaseClass
 endclass
 
 # Legacy vimscript Integration
-# Apparently cannot instantiate vim9script classes from legacy vimscript
+# Legacy vimscript cannot instantiate vim9script classes, so
+# these must use the vim9-autoload functionality, invoked as
+# e.g. `call tst#ProjectFromWord()`
 export def ProjectFromWord(): Project
     return Project.newFromWord()
 enddef
@@ -197,4 +199,10 @@ enddef
 #log.Info($'{proj.GetName()}')
 #log.Info($'{Project.IsProjectHeaderLine(43)}')
 
+export def FileEntry(file: string, entry: string): string # {{{
+    # reimplement in vim9script
+    return "Unimplemented"
+enddef
+
+# }}}
 # }}}
