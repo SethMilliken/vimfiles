@@ -2359,29 +2359,95 @@ endfunction
 " }}}
 let g:current_reading_file = $HOME . "/sandbox/personal/lists/current_reading.txt"
 function! OldCurrentReading(entry = 0) " {{{
-    let l:file_lines = g:current_reading_file->readfile()->filter({_, v -> index(['#', '\n', ' ', ''], v[0]) == -1})
+    return GetEntryFromFile(g:current_reading_file, a:entry)
+endfunction
+
+" }}}
+let g:current_watching_file = $HOME . "/sandbox/personal/lists/current_watching.txt"
+function! OldCurrentWatching(entry = 0) " {{{
+    return GetEntryFromFile(g:current_watching_file, a:entry)
+endfunction
+
+" }}}
+function! GetEntryFromFile(file, entry = 0) " {{{
+    let l:file_lines = a:file
+                \ ->readfile()
+                \ ->filter({_, v -> index(['#', '\n', ' ', ''], v[0]) == -1})
     return l:file_lines->get(a:entry)
 endfunction
 
 " }}}
+function! ReadingCategories(A="", L="", P="") " {{{
+    return ['AiPT', 'audit', 'B&B', 'EBBC', 'Heather', 'MK', 'self', 'tech', 'zine']
+                \ ->filter({_, v -> v =~? a:A . ".*"})
+                \ ->sort()
+endfunction
+
+" }}}
+function! WatchingCategories(A="", L="", P="") " {{{
+    let l:FilterCaseInsensitive = {_, v -> v =~? a:A . ".*"}
+    return ['erg', 'self', 'veg', 'laugh']
+                \ ->filter(l:FilterCaseInsensitive)
+                \ ->sort()
+endfunction
+
+" }}}
+" TODO: move functions to tst.vim
 let g:readinglist = $HOME . "/sandbox/personal/lists/readinglist.txt"
+command! -nargs=1 -complete=customlist,ReadingCategories Read call InsertCurrentReading(<f-args>)
+function! InsertCurrentReading(entry = "self") " {{{
+  let save_cursor = getpos(".")
+  let reading = CurrentReading(a:entry)
+  call InsertTextAfterCursor(reading)
+  let save_cursor[2] = save_cursor[2] + len(reading)
+  call setpos(".", save_cursor)
+  startinsert!
+endfunction
+
+" }}}
 function! CurrentReading(entry = "self") " {{{
+    let l:entry = a:entry
     if typename(a:entry) == "number"
-        let l:entry = ["B&B", "AiPT", "EBBC", "Heather", "tech", "self", "zine", "MK"][a:entry]
-    else
-        let l:entry = a:entry
+        let l:entry = ReadingCategories()->get(a:entry, a:entry)
+    endif
+    if typename(l:entry) != "number"
+         " look for category tag
+         let l:entry = '\[' . l:entry . ']'
     endif
 
-    let l:match = g:readinglist
-                \ ->readfile()
-                \ ->filter({_, v -> index(['#', '\n', ' ', '', '@'], v[0]) == -1})
-                \ ->filter({_, m -> match(m, "[" . l:entry) > -1})
-                \ ->get(0)
-                \ ->trim(" -!+o")
-                \ ->split("[<[]")
-                \ ->get(0)
-                \ ->trim()
-    return len(l:match) == 1 ? "no match found for: " . a:entry : l:match
+    return tst#FileEntry(g:readinglist, l:entry)
+endfunction
+
+" }}}
+function! CurrentReadingCompletion(findstart, base, surround = "_") " {{{
+    if a:findstart
+        return col(".")
+    endif
+    let l:titles = []
+    for l:category in ReadingCategories()
+        call add(l:titles, a:surround . CurrentReading(l:category) . a:surround)
+    endfor
+    return l:titles
+endfunction
+
+" }}}
+function! CurrentReadingCompletionBare(findstart, base, surround = "_") " {{{
+    return CurrentReadingCompletion(a:findstart, a:base, "")
+endfunction
+
+" }}}
+let g:watchlist = $HOME . "/sandbox/personal/lists/videolist.txt"
+function! CurrentWatching(entry = 0) " {{{
+    let l:entry = a:entry
+    if typename(a:entry) == "number"
+        let l:entry = WatchingCategories()->get(a:entry, a:entry)
+    endif
+    if typename(l:entry) != "number"
+         " look for category tag
+         let l:entry = '\[' . l:entry . ']'
+    endif
+
+    return tst#FileEntry(g:watchlist, l:entry)
 endfunction
 
 " }}}
@@ -2389,39 +2455,6 @@ function! EditCurrentReading() " {{{
     exe "silent! tabnew " . g:readinglist
     exe "tabm -1"
     set noro
-endfunction
-
-" }}}
-let g:current_watching_file = $HOME . "/sandbox/personal/lists/current_watching.txt"
-function! OldCurrentWatching(entry = 0) " {{{
-    let l:file_lines = g:current_watching_file->readfile()->filter({_, v -> index(['#', '\n', ' ', ''], v[0]) == -1})
-    return l:file_lines->get(a:entry)
-endfunction
-
-" }}}
-let g:watchlist = $HOME . "/sandbox/personal/lists/videolist.txt"
-function! CurrentWatching(entry = 0) " {{{
-    let l:index = 0
-    if typename(a:entry) == "number"
-        " find the nth item
-        let l:entry = "[-+!] "
-        let l:index = a:entry
-    else
-        " look for referrer
-        " TODO: Check that referrer is valid e.g. ["self", "erg"]
-        let l:entry = "[" . a:entry
-    endif
-
-    let l:match = g:watchlist
-                \ ->readfile()
-                \ ->filter({_, v -> index(['#', '\n', ' ', '', '@'], v[0]) == -1})
-                \ ->filter({_, m -> match(m, l:entry) > -1})
-                \ ->get(l:index)
-                \ ->trim(" -!+o")
-                \ ->split("[<[{]")
-                \ ->get(0)
-                \ ->trim()
-    return len(l:match) == 1 ? "no match found for: " . a:entry : l:match
 endfunction
 
 " }}}
