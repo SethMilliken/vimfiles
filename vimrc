@@ -335,8 +335,8 @@ map  <silent> ;qq :q!<CR>
 map  <silent> ;p  <Cmd>call pages#openDate()<CR>
 
 " tmux copy/paste issue in mac os x workaround
-map <silent> <C-y>l <Cmd>call system("ssh localhost pbcopy", getreg('*')) \| call text#showmessage("vim", "Copied default register to pasteboard.")<CR>
-map <silent> <C-y>y <Cmd>call system("netcopy", getreg('"')) \| call text#showmessage("vim", "Copied unnamed register to local pasteboard.")<CR>
+map <silent> <C-y>l <Cmd>call CopyDefaultToLocal()<CR>
+map <silent> <C-y>y <Cmd>call CopyUnnamedToLocal()<CR>
 
 map  <C-y>p <Cmd>call CopyFromTmux()<CR>"pp
 map  <C-y>P <Cmd>call CopyFromTmux()<CR>"pP
@@ -351,6 +351,16 @@ endfunction
 " }}}
 function! CopyFromTmux() " {{{
     let @p = system("tmux show-buffer -b vim")
+endfunction
+" }}}
+function! CopyDefaultToLocal() " {{{
+    call system("ssh localhost pbcopy", getreg('*'))
+    call text#showmessage("vim", "Copied default register to pasteboard.")
+endfunction
+" }}}
+function! CopyUnnamedToLocal() " {{{
+    call system("netcopy", getreg('"'))
+    call text#showmessage("vim", "Copied unnamed register to local pasteboard.")
 endfunction
 " }}}
 " }}}
