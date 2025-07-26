@@ -141,7 +141,8 @@ function! startup#defaults()
         exe 'edit' "$HOME/.hammerspoon/init.lua"
         vsplit $HOME/.hammerspoon/bindings.lua
         windo set noro
-        wincmd t | wincmd =
+        tabdo wincmd t | wincmd =
+        tabfirst
     endfun
 
     fun! s:obj.vimhome() dict
@@ -153,7 +154,7 @@ function! startup#defaults()
         exe "cd " . self.vimhome()
 
         edit vimrc
-        vsplit gvimrc | wincmd t | wincmd =
+        vsplit gvimrc
 
         tabnew plugins.vim
 
@@ -170,6 +171,7 @@ function! startup#defaults()
 
         tab help
 
+        tabdo wincmd t | wincmd =
         tabfirst
     endfun
 
@@ -201,11 +203,10 @@ function! startup#defaults()
     fun s:obj.listsApp() dict
         exe 'edit'   self.docroot() . "lists/readinglist.txt"
         exe 'vsplit' self.docroot() . "lists/videolist.txt"
-        wincmd t | wincmd =
         exe 'tabe'   self.docroot() . "lists/musiclist.txt"
         exe 'vsplit' self.docroot() . "lists/wishlist.txt"
-        wincmd t | wincmd =
-        1tabn
+        tabdo wincmd t | wincmd =
+        tabfirst
     endfun
 
     fun s:obj.todoApp() dict
@@ -229,8 +230,10 @@ function! startup#defaults()
 
     fun s:obj.sourcecodeApp() dict
         edit ~/.vim/vimrc
-        vsplit ~/.vim/gvimrc | wincmd t | wincmd =
-        tabnew ~/.vim/autoload/startup.vim | tabprev
+        vsplit ~/.vim/gvimrc
+        tabnew ~/.vim/autoload/startup.vim
+        tabdo wincmd t | wincmd =
+        tabfirst
     endfun
 
     fun! s:obj.scratchApp() dict
@@ -271,7 +274,7 @@ function! startup#defaults()
         exe "edit ~/.tmux/profiles/" . tolower(startup#host()) . ".tmux"
         vsplit ~/.tmux/.tmux.conf
         windo set nolist
-        wincmd t | wincmd =
+        tabdo wincmd t | wincmd =
     endfun
 
     fun! s:obj.vimwikiApp() dict
@@ -292,8 +295,10 @@ function! startup#defaults()
         exe 'edit ' . self.vimhome() . 'bundle/vim-morning-pages/ftdetect/pages.vim'
         split
         exe 'edit ' . self.vimhome() . 'bundle/vim-morning-pages/ftplugin/pages.vim'
-        1tabn
-        wincmd h | wincmd =
+        split
+        exe 'edit' . pages#root() . "transcribe.tst"
+        tabdo wincmd t | wincmd =
+        tabfirst
     endfun
 
     fun! s:obj.readApp() dict
@@ -308,7 +313,8 @@ function! startup#defaults()
         exe 'cd' self.personalroot() . "writing/missives/"
         exe 'edit' "scratchpad.tst"
         exe 'vsplit' self.personalroot() . "todo/write.tst"
-        wincmd t | wincmd =
+        tabdo wincmd t | wincmd =
+        tabfirst
     endfun
 
     fun! s:obj.dairecApp() dict
@@ -319,8 +325,8 @@ function! startup#defaults()
         normal ggjw
         tabnew ~/.vim/bundle/vim-daily-record/ftplugin/dairec.vim
         vsplit ~/.vim/bundle/vim-daily-record/ftdetect/dairec.vim
-        wincmd h
-        1tabn
+        tabdo wincmd t | wincmd =
+        tabfirst
     endfun
 
     fun! s:obj.mailApp() dict
@@ -336,8 +342,8 @@ function! startup#defaults()
         exe 'tabnew' "blacklist"
         exe 'vsplit' "blacklines"
         exe 'split' "strictdomains"
-        wincmd h
-        1tabn
+        tabdo wincmd t | wincmd =
+        tabfirst
     endfun
 
     fun! s:obj.defaultApp() dict
@@ -356,24 +362,22 @@ function! startup#defaults()
         exe "edit ~/.tmux/profiles/" . toupper(startup#host()) . ".tmux"
         vsplit ~/.tmux/profiles/ua.tmux
         vsplit ~/.tmux/profiles/write.tmux
-        wincmd L
         windo set nolist
-        wincmd t | wincmd =
         tabedit ~/.tmux/functions/mode-app-keys.tmux
         tabedit ~/.tmux/themes/araxia.theme.tmux
         tabedit ~/.tmux/main.tmux
         vsplit ~/.tmux/.tmux.conf
-        wincmd L
         windo set nolist
-        wincmd t | wincmd =
+        tabdo wincmd t | wincmd =
+        tabfirst
     endfun
 
     fun! s:obj.ideavimApp() dict
         exe 'cd ' self.coderoot() . 'ideavim'
         exe 'edit ~/.ideavimrc'
         exe 'vsplit ./src/main/java/com/maddyhome/idea/vim/package-info.java'
-        wincmd L
-        wincmd t | wincmd =
+        tabdo wincmd t | wincmd =
+        tabfirst
     endfun
 
     fun! s:obj.qmkApp() dict
@@ -391,6 +395,7 @@ function! startup#defaults()
         exe 'vsplit keyboards/hazel/bad_wings/keymaps/SethMilliken/config.h'
         exe 'vsplit keyboards/planck/keymaps/SethMilliken/config.h'
         exe 'tabedit readme.md'
+        tabdo wincmd t | wincmd =
         tabfirst
     endfun
 
@@ -402,19 +407,24 @@ function! startup#defaults()
         vsplit  projects/tasks/card.sccs
         vsplit  projects/tasks/cards.csv
         tabedit TODO.tst
+        tabdo wincmd t | wincmd =
         tabfirst
     endfun
 
     fun! s:obj.zmkApp() dict
         exe 'cd ' . self.coderoot() . "zmk-config"
         edit    config/shared.dtsi
+        tabedit config/planck_overrides.dtsi
         tabedit config/corne.keymap
         tabedit config/corneish_zen.keymap
         tabedit config/splitkb_aurora_corne.keymap
+        tabedit config/planck_rev6.keymap
         tabedit config/corne.conf
         vsplit  config/corneish_zen.conf
         vsplit  config/splitkb_aurora_corne.conf
+        vsplit  config/planck_rev6.conf
         tabedit config/west.yml
+        tabdo wincmd t | wincmd =
         tabfirst
     endfun
 
@@ -498,12 +508,11 @@ function! startup#AIRSHIP()
     fun! s:obj.wmApp() dict
         exe 'edit' "$HOME/.hammerspoon/init.lua"
         vsplit $HOME/.hammerspoon/bindings.lua
-        wincmd t | wincmd =
         tabe $HOME/.slate.js
         vsplit $HOME/.slate-layouts/office.js
         vsplit $HOME/.slate-layouts/work-internal.js
         windo set noro
-        wincmd t | wincmd =
+        tabdo wincmd t | wincmd =
         tabfirst
     endfun
 
@@ -518,10 +527,9 @@ function! startup#AIRSHIP()
         split ~/.tmux/main.tmux
         split ~/.tmux/.tmux.conf
         split ~/.tmux/profiles/wallet.tmux
-        wincmd L
-        windo set nolist
-        windo set noro
-        wincmd t | wincmd =
+        windo set nolist | set noro
+        tabdo wincmd t | wincmd =
+        tabfirst
     endfun
 
     fun! s:obj.gcpApp() dict
@@ -666,6 +674,8 @@ function! startup#WASTELAND()
     fun! s:obj.ahkApp() dict
         exe "edit " . self.docroot() . "Documents/AutoHotkey/AutoHotkey.ahk"
         exe "tabnew " . self.docroot() . "Documents/AutoHotkey/winmap.ahk"
+        tabdo wincmd t | wincmd =
+        tabfirst
     endfun
 
     fun! s:obj.TasksFile() dict
@@ -738,11 +748,10 @@ function! startup#ARAXIA()
     fun! s:obj.scratchApp() dict
         exe 'edit' self.personalroot() . "scratch.scratch"
         exe 'vsplit' "todo/weechat.txt"
-        wincmd h
         exe 'tabnew' "projects/guitar.txt"
         exe 'vsplit' "projects/pr0.txt"
-        wincmd h
-        1tabn
+        tabdo wincmd t | wincmd =
+        tabfirst
     endfun
 
     fun! s:obj.qrithApp() dict
@@ -750,11 +759,11 @@ function! startup#ARAXIA()
         exe 'edit' "ongoing.txt"
         exe 'vsplit' "inventory.txt"
         exe 'split' "unanswered_questions.txt"
-        wincmd h
         exe 'tabnew' "."
         " open last few session notes in vsplits
         normal GGkkkgskgskgskgs
-        1tabn
+        tabdo wincmd t | wincmd =
+        tabfirst
     endfun
 
     fun! s:obj.weechatpApp() dict
@@ -762,7 +771,8 @@ function! startup#ARAXIA()
         vsplit ~/.weechat_personal/irc.conf
         vsplit ~/.weechat_personal/plugins.conf
         windo set nolist
-        wincmd t | wincmd =
+        tabdo wincmd t | wincmd =
+        tabfirst
     endfun
 
     fun! s:obj.weechatApp() dict
@@ -770,7 +780,8 @@ function! startup#ARAXIA()
         vsplit ~/.weechat/irc.conf
         vsplit ~/.weechat/plugins.conf
         windo set nolist
-        wincmd t | wincmd =
+        tabdo wincmd t | wincmd =
+        tabfirst
     endfun
 
     fun! s:obj.muttApp() dict
@@ -778,7 +789,8 @@ function! startup#ARAXIA()
         edit ~/.muttrc
         tabnew ~/.mutt/mailcap
         tabnew ~/.mutt/aliases
-        1tabn
+        tabdo wincmd t | wincmd =
+        tabfirst
     endfun
 
     fun! s:obj.sieveApp() dict
@@ -792,7 +804,6 @@ function! startup#ARAXIA()
         split  _post-process.sieve
         wincmd h
         split  _default.sieve
-        wincmd k
 
         tabnew _move-by-priority.sieve
         vsplit _strip-headers.sieve
@@ -802,24 +813,18 @@ function! startup#ARAXIA()
         split  _deliverable.sieve
         wincmd h
         split  _undeliverable.sieve
-        wincmd k
 
         tabnew lists.sieve
         vsplit _handle-list.sieve
-        wincmd h
 
         tabnew spam.sieve
         vsplit impersonal.sieve
         vsplit personal.sieve
         split  nobounce.sieve
-        wincmd h
-        wincmd h
 
         tabnew high-priority.sieve
         vsplit moderate-priority.sieve
         vsplit low-priority.sieve
-        wincmd h
-        wincmd h
 
         tabnew attention.sieve
         vsplit athens.sieve
@@ -832,8 +837,6 @@ function! startup#ARAXIA()
         wincmd h
         split gaming.sieve
         split health.sieve
-        wincmd k
-        wincmd k
 
         tabnew receipts.sieve
         vsplit finance.sieve
@@ -841,11 +844,9 @@ function! startup#ARAXIA()
         split  social.sieve
         wincmd h
         split support.sieve
-        wincmd h
-        wincmd h
 
-        wincmd t | wincmd =
-        1tabn
+        tabdo wincmd t | wincmd =
+        tabfirst
     endfun
 
     fun! s:obj.reprocessApp() dict
@@ -853,9 +854,9 @@ function! startup#ARAXIA()
         edit   _reprocess.sieve
         vsplit reprocess
         split  _strip-headers.sieve
-        wincmd h
         tabnew _consolidate.sieve
-        1tabn
+        tabdo wincmd t | wincmd =
+        tabfirst
     endfun
 
     return s:obj.New()
@@ -868,18 +869,6 @@ function! startup#RETCONSOLE()
 
     fun! s:obj.class() dict
         return "retconsole"
-    endfun
-
-    fun! s:obj.wmApp() dict
-        exe 'edit' "$HOME/.hammerspoon/init.lua"
-        vsplit $HOME/.hammerspoon/bindings.lua
-        windo set noro
-        wincmd t | wincmd =
-    endfun
-
-    fun! s:obj.todoApp() dict
-        silent! PersonalTodo
-        call AdjustFont(+5)
     endfun
 
     return s:obj.New()
