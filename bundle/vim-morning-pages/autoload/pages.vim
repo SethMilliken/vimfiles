@@ -54,6 +54,10 @@ function! pages#writingMappings() " {{{
     imap <buffer> <silent> ;k         <Esc>;k
     map  <buffer> <silent> ;f         <Cmd>call pages#Entry().today().appendTimestamp()<CR>
     imap <buffer> <silent> ;f         <Esc>;f
+    map  <buffer> <silent> ;r         <Cmd>call pages#readingCompletion()<CR>
+    imap <buffer> <silent> ;r         <Esc>;r
+    map  <buffer> <silent> ;R         <Cmd>call pages#readingCompletionBare()<CR>
+    imap <buffer> <silent> ;R         <Esc>;R
     nmap <buffer> <silent> <Leader>wb <Cmd>Pages<CR>
     imap <buffer> <silent> <Leader>wb <Esc><Leader>wb
     nmap <buffer> <silent> <Leader>wf <Cmd>call pages#Entry().FinishWriting()<CR>
@@ -63,6 +67,20 @@ function! pages#writingMappings() " {{{
     " Available bindings: lh
 
     doau CharacterCount BufRead
+endfunction
+
+"}}}
+function! pages#readingCompletion() " {{{
+  set completefunc=CurrentReadingCompletion
+  startinsert!
+  call feedkeys("\<C-x>\<C-u>")
+endfunction
+
+"}}}
+function! pages#readingCompletionBare() " {{{
+  set completefunc=CurrentReadingCompletionBare
+  startinsert!
+  call feedkeys("\<C-x>\<C-u>")
 endfunction
 
 "}}}
