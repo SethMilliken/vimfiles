@@ -1432,32 +1432,6 @@ function! ProjectNew(name) " {{{
 endfunction
 
 " }}}
-function! tst#FileEntry(file, entry) " {{{
-    " TODO: reimplement in vim9script
-    "return s:tst9.FileEntry(a:file, a:entry)
-    let l:index = 0
-    if typename(a:entry) == "number"
-        let l:index = a:entry
-        let l:FilterEntry = {_, v -> 1}
-    else
-        let l:FilterEntry = {_, m -> match(m, a:entry) > -1}
-    endif
-    let l:FilterNonEntries = {_, v -> index(['#', '\n', ' ', '', '@', '='], v[0]) == -1}
-    let l:FilterFolds = {_, v -> index(['{'], v->split('\zs')->get(-1)) == -1}
-    let l:match = a:file
-                \ ->readfile()
-                \ ->filter(l:FilterNonEntries)
-                \ ->filter(l:FilterFolds)
-                \ ->filter(l:FilterEntry)
-                \ ->get(l:index)
-                \ ->trim(" -!+ox=")
-                \ ->split("[<[]")
-                \ ->get(0)
-                \ ->trim()
-    return len(l:match) == 1 ? "no match found for: " . a:entry : l:match
-endfunction
-
-" }}}
 
 TaskStack
 endif " Prevent multiple init

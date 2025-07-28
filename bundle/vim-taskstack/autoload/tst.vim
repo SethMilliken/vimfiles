@@ -200,8 +200,28 @@ enddef
 #log.Info($'{Project.IsProjectHeaderLine(43)}')
 
 export def FileEntry(file: string, entry: string): string # {{{
-    # reimplement in vim9script
-    return "Unimplemented"
+    var idx = 0
+    var FilterEntry = (_, v) => true
+    if typename(entry) == "number"
+        idx = str2nr(entry)
+    else
+        FilterEntry = (_, m) => match(m, entry) > -1
+    endif
+    var FilterNonEntries = (_, v) => index(['#', '\n', ' ', '', '@' ], v[0]) == -1
+    var FilterIgnoredEntries = (_, v) => index(['x', '=', 'o'], v[0]) == -1
+    var FilterFolds = (_, v) => index(['{'], v->split('\zs')->get(-1)) == -1
+    var match = file
+                \ ->readfile()
+                \ ->filter(FilterNonEntries)
+                \ ->filter(FilterIgnoredEntries)
+                \ ->filter(FilterFolds)
+                \ ->filter(FilterEntry)
+                \ ->get(idx)
+                \ ->trim(" -!+ox=")
+                \ ->split("[<[]")
+                \ ->get(0)
+                \ ->trim()
+    return len(match) == 1 ? "no match found for: " .. entry : match
 enddef
 
 # }}}
